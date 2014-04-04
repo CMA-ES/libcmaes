@@ -43,8 +43,8 @@ to minimize the Rosenbrock function in 20D with 100 offsprings. To see available
 ```
 
 ### References
-(1) 
-(2) Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395. http://hal.archives-ouvertes.fr/inria-00382093/en
-(3) N. Hansen, A. Auger, R. Ros, S. Finck, P. Posik: Comparing Results of 31 Algorithms from the Black-Box Optimization Benchmarking BBOB-2009. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM. http://www.lri.fr/~hansen/ws1p34.pdf
-(4) https://www.lri.fr/~hansen/
-(5) https://www.lri.fr/~hansen/cmaes_inmatlab.html
+- (1) Hansen, N. and A. Ostermeier (2001). Completely Derandomized Self-Adaptation in Evolution Strategies. Evolutionary Computation, 9(2), pp. 159-195.
+- (2) Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395. http://hal.archives-ouvertes.fr/inria-00382093/en
+- (3) N. Hansen, A. Auger, R. Ros, S. Finck, P. Posik: Comparing Results of 31 Algorithms from the Black-Box Optimization Benchmarking BBOB-2009. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM. http://www.lri.fr/~hansen/ws1p34.pdf
+- (4) https://www.lri.fr/~hansen/
+- (5) https://www.lri.fr/~hansen/cmaes_inmatlab.html
