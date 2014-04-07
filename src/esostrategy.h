@@ -9,7 +9,7 @@ namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
 
-  template<class TParameters,class TSolutions>
+  template<class TParameters,class TSolutions,class TStopCriteria>
     class ESOStrategy
   {
   public:
@@ -34,7 +34,7 @@ namespace libcmaes
     bool stop();
 
     bool optimize();
-
+    
     Candidate best_solution() const;
     
     FitFunc _func;

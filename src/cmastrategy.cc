@@ -92,6 +92,10 @@ namespace libcmaes
     
     // set mean.
     _solutions._xmean = xmean;
+
+    // other stuff.
+    _solutions.update_eigenv_bounds(_esolver._eigenSolver.eigenvalues());
+    _solutions._niter = _niter;
   }
 
   template <class TCovarianceUpdate>
@@ -101,19 +105,22 @@ namespace libcmaes
       return false;
     
     //TODO: other termination criterions.
-    double diff_value = 100.0;
+    /*double diff_value = 100.0;
     if (_solutions._best_candidates_hist.size()>1)
       {
 	diff_value = _solutions._best_candidates_hist.back()._fvalue - _solutions._best_candidates_hist.at(_solutions._best_candidates_hist.size()-2)._fvalue;
-      }
+	}*/
 
-    LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << " / f-diff value=" << diff_value << std::endl;
+    LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << std::endl;
     
     // for now a simple diff in func value, for testing purposes.
     if (/*fabs(diff_value) < 1e-12
-	  ||*/ (_parameters._max_iter > 0 && _niter >= _parameters._max_iter))
+	  ||*/ (_parameters._max_iter > 0 && _niter >= _parameters._max_iter)
+	  || _stopcriteria.stop(_parameters,_solutions))
       return true;
     else return false;
+
+    //TODO: use stopcriteria class.
   }
 
   template <class TCovarianceUpdate>

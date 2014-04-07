@@ -8,7 +8,14 @@
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
 
+#include <assert.h>
+
 using namespace libcmaes;
+
+bool compEp(const double &a, const double &b, const double &epsilon)
+{
+  return fabs(a-b) <= epsilon;
+}
 
 // classical test functions for single-objective optimization problems.
 FitFunc ackleys = [](const double *x, const int N)
@@ -122,14 +129,18 @@ FitFunc styblinski_tang = [](const double *x, const int N)
 };
 
 std::map<std::string,FitFunc> mfuncs;
+std::map<std::string,Candidate> msols;
 std::map<std::string,FitFunc>::const_iterator mit;
 
 void fillupfuncs()
 {
   mfuncs["ackleys"]=ackleys;
+  msols["ackleys"]=Candidate(0.0,dVec::Constant(2,0));
   mfuncs["fsphere"]=fsphere;
+  msols["fsphere"]=Candidate(0.0,dVec::Constant(20,0));
   mfuncs["cigtab"]=cigtab;
   mfuncs["rosenbrock"]=rosenbrock;
+  msols["rosenbrock"]=Candidate(0.0,dVec::Constant(20,1));
   mfuncs["beale"]=beale;
   mfuncs["goldstein_price"]=goldstein_price;
   mfuncs["booth"]=booth;
@@ -154,6 +165,7 @@ DEFINE_int32(lambda,10,"number of offsprings");
 DEFINE_int32(max_iter,1000,"maximum number of iteration (-1 for unlimited)");
 DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
+DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 
 int main(int argc, char *argv[])
 {
@@ -178,12 +190,16 @@ int main(int argc, char *argv[])
       mit = mfuncs.begin();
       while(mit!=mfuncs.end())
 	{
-	  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter);
+	  int dim = msols[(*mit).first]._x.rows();
+	  CMAParameters cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
 	  cmaparams._quiet = true;
 	  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[(*mit).first],cmaparams);
 	  cmaes.optimize();
 	  Candidate c = cmaes.best_solution();
-	  //TODO: check on solution.
+	  //TODO: check on solution in x space.
+	  if (compEp(c._fvalue,msols[(*mit).first]._fvalue,FLAGS_epsilon))
+	    LOG(INFO) << (*mit).first << " -- OK\n";
+	  else LOG(INFO) << (*mit).first << " -- FAILED\n";
 	  ++mit;
 	}
       exit(1);

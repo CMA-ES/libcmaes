@@ -25,6 +25,8 @@ namespace libcmaes
 
     void update_best_candidates();
 
+    void update_eigenv_bounds(const dVec &eigenv);
+    
     Candidate best_candidate() const
     {
       return _best_candidates_hist.back();
@@ -43,6 +45,13 @@ namespace libcmaes
     double _sigma;
     std::vector<Candidate> _candidates;
     std::vector<Candidate> _best_candidates_hist;
+
+    double _sigma_init; /**< initial sigma, used in termination criteria. */
+    double _max_eigenv; /**< max eigenvalue, for termination criteria. */
+    double _min_eigenv; /**< min eigenvalue, for termination criteria. */
+    int _niter; /**< number of iterations to reach this solution, for termination criteria. */
+    int _kcand;
+    std::vector<Candidate> _k_best_candidates_hist; /**< k-th best candidate history, for termination criteria, k is kcand=1+floor(0.1+lambda/4). */
   };
 
 }
