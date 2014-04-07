@@ -151,8 +151,9 @@ void fillupfuncs()
 DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");
 DEFINE_int32(lambda,10,"number of offsprings");
-DEFINE_int32(max_iter,-1,"maximum number of iteration (-1 for unlimited)");
+DEFINE_int32(max_iter,1000,"maximum number of iteration (-1 for unlimited)");
 DEFINE_bool(list,false,"returns a list of available functions");
+DEFINE_bool(all,false,"test on all functions");
 
 int main(int argc, char *argv[])
 {
@@ -170,6 +171,20 @@ int main(int argc, char *argv[])
       for (auto imap: mfuncs)
 	std::cout << imap.first << " ";
       std::cout << std::endl;
+      exit(1);
+    }
+  else if (FLAGS_all)
+    {
+      mit = mfuncs.begin();
+      while(mit!=mfuncs.end())
+	{
+	  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter);
+	  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[(*mit).first],cmaparams);
+	  cmaes.optimize();
+	  Candidate c = cmaes.best_solution();
+	  //TODO: check on solution.
+	  ++mit;
+	}
       exit(1);
     }
   

@@ -7,10 +7,12 @@ Other implementations can be found in (5).
 Main functionalities:
 At the moment, the library implements a vanilla version of CMA-ES (1).
 Current functionalities include:
+
 - high-level API for using in external applications;
 - a test exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
 
 Dependencies:
+
 - [eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) for all matrix operations;
 - [glog](https://code.google.com/p/google-glog/) for logging events and debug;
 - [gflags](https://code.google.com/p/gflags/) for command line parsing.

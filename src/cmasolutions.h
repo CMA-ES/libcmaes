@@ -24,6 +24,11 @@ namespace libcmaes
     }
 
     void update_best_candidates();
+
+    Candidate best_candidate() const
+    {
+      return _best_candidates_hist.back();
+    }
     
     int size() const
     {

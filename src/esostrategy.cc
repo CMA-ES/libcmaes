@@ -15,15 +15,6 @@ namespace libcmaes
     _solutions = TSolutions(_parameters._dim,_parameters._lambda);
   }
   
-  /*template<class TParameters,class TSolutions>
-  ESOStrategy<TParameters,TSolutions>::ESOStrategy(FitFunc &func,
-						   const int &dim,
-						   const int &lambda)
-    :_func(func),_nevals(0),_niter(0)
-  {
-    //_solutions = Solutions(dim,lambda);
-    }*/
-
   template<class TParameters,class TSolutions>
   ESOStrategy<TParameters,TSolutions>::~ESOStrategy()
   {
@@ -43,6 +34,12 @@ namespace libcmaes
       }
   }
 
+  template<class TParameters,class TSolutions>
+  Candidate ESOStrategy<TParameters,TSolutions>::best_solution() const
+  {
+    return _solutions.best_candidate();
+  }
+  
   template class ESOStrategy<CMAParameters,CMASolutions>;
   
 }

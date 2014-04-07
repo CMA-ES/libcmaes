@@ -18,16 +18,10 @@ namespace libcmaes
 	:TESOStrategy(func,parameters)
 	{
 	}
-      /*ESOptimizer(FitFunc &func,
-		  const int &dim,
-		const int &lambda) //deprecated
-	:TESOStrategy(func,dim,lambda)
-      {
-      };*/
       
       ~ESOptimizer() {};
 
-      bool optimize() { return TESOStrategy::optimize(); };
+      bool optimize() { return TESOStrategy::optimize(); }
     };
 
 }

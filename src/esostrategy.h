@@ -3,6 +3,7 @@
 #define ESOSTRATEGY_H
 
 #include "eo_matrix.h" // to include Eigen everywhere.
+#include "candidate.h"
 
 namespace libcmaes
 {
@@ -14,9 +15,7 @@ namespace libcmaes
   public:
     ESOStrategy(FitFunc &func,
 		TParameters &parameters);
-    /*ESOStrategy(FitFunc &func,
-		const int &dim,
-		const int &lambda);*/
+
   protected:
     ~ESOStrategy();
 
@@ -36,6 +35,8 @@ namespace libcmaes
 
     bool optimize();
 
+    Candidate best_solution() const;
+    
     FitFunc _func;
     int _nevals;  /**< number of function evaluations. */
     int _niter;  /**< number of iterations. */
