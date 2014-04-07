@@ -13,7 +13,7 @@ namespace libcmaes
 					      CMAParameters &parameters)
     :ESOStrategy(func,parameters)
   {    
-    LOG(INFO) << "CMA-ES / dim=" << _parameters._dim << " / lambda=" << _parameters._lambda << " / mu=" << _parameters._mu << " / mueff=" << _parameters._muw << std::endl;
+    LOG_IF(INFO,!_parameters._quiet) << "CMA-ES / dim=" << _parameters._dim << " / lambda=" << _parameters._lambda << " / mu=" << _parameters._mu << " / mueff=" << _parameters._muw << std::endl;
   }
 
   template <class TCovarianceUpdate>
@@ -107,7 +107,7 @@ namespace libcmaes
 	diff_value = _solutions._best_candidates_hist.back()._fvalue - _solutions._best_candidates_hist.at(_solutions._best_candidates_hist.size()-2)._fvalue;
       }
 
-    LOG(INFO) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << " / f-diff value=" << diff_value << std::endl;
+    LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << " / f-diff value=" << diff_value << std::endl;
     
     // for now a simple diff in func value, for testing purposes.
     if (/*fabs(diff_value) < 1e-12

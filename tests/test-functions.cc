@@ -179,6 +179,7 @@ int main(int argc, char *argv[])
       while(mit!=mfuncs.end())
 	{
 	  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter);
+	  cmaparams._quiet = true;
 	  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[(*mit).first],cmaparams);
 	  cmaes.optimize();
 	  Candidate c = cmaes.best_solution();
