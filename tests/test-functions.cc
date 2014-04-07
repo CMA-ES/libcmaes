@@ -65,7 +65,7 @@ FitFunc booth = [](const double *x, const int N)
   return pow(x[0]+2.0*x[1]-7,2) + pow(2*x[0]+x[1]-5,2);
 };
 
-FitFunc butkin = [](const double *x, const int N)
+FitFunc bukin = [](const double *x, const int N)
 {
   return 100.0 * sqrt(fabs(x[1]-0.01*x[0]*x[0])) + 0.01*fabs(x[0]+10.0);
 };
@@ -144,7 +144,7 @@ void fillupfuncs()
   mfuncs["beale"]=beale;
   mfuncs["goldstein_price"]=goldstein_price;
   mfuncs["booth"]=booth;
-  mfuncs["butkin"]=butkin;
+  mfuncs["bukin"]=bukin;
   mfuncs["matyas"]=matyas;
   mfuncs["levi"]=levi;
   mfuncs["camel"]=camel;
