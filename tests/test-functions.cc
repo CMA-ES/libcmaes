@@ -148,6 +148,16 @@ FitFunc rastrigin = [](const double *x, const int N)
   return val;
 };
 
+FitFunc elli = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0] * x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += exp(log(1000.0)*2.0*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+  return val;
+};
+
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,Candidate> msols;
 std::map<std::string,FitFunc>::const_iterator mit;
@@ -178,6 +188,7 @@ void fillupfuncs()
   mfuncs["schaffer2"]=schaffer2;
   mfuncs["styblinski_tang"]=styblinski_tang;
   mfuncs["rastrigin"]=rastrigin;
+  mfuncs["elli"]=elli;
 }
 
 // command line options.
