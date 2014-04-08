@@ -1,0 +1,39 @@
+if (!exists("dim")) dim=10
+if (!exists("filename")) filename='out.dat'
+
+set style function lines
+set size 1.0, 1.0
+set origin 0.0, 0.0
+set multiplot
+set size 0.5,0.5
+set origin 0.0,0.5
+set grid
+#unset key
+
+# Plot fvalue, sigma, kappa
+set title "f-value, sigma, kappa"
+set xlabel "function evaluations"
+plot filename u 2:1 w lines title "f-value", filename u 2:3 w lines title "sigma", filename u 2:4 w lines title "kappa"
+
+# Plot xmean
+set size 0.5,0.5
+set origin 0.0,0.0
+set title "Eigenvalues"
+set logscale y
+unset key
+plot for [i=4:(dim+4)] filename u 2:i w lines
+unset logscale y
+
+# Plot std deviation
+set size 0.5,0.5
+set origin 0.5,0.5
+plot for [i=25:(dim+25-1)] filename u 2:i w lines
+
+# Plot eigenvalues
+set origin 0.5,0.
+set logscale y
+plot for [i=15:(dim+15-1)] filename u 2:i w lines
+
+pause -1 "Hit return to continue"
+
+#unset multiplot
