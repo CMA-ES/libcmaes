@@ -43,6 +43,11 @@ to minimize the Rosenbrock function in 20D with 100 offsprings. To see available
 ```
 ./test_functions --list
 ```
+to plot results, use a file output and then the included Gnuplot script
+```
+./test_functions --fname rastrigin --dim 10 --lambda 200 --max_iter 130 --fplot out.dat -sigma0 5 -x0 5
+gnuplot -e "filename='out.dat'" cma_multiplt.dem
+```
 
 ### References
 - (1) Hansen, N. and A. Ostermeier (2001). Completely Derandomized Self-Adaptation in Evolution Strategies. Evolutionary Computation, 9(2), pp. 159-195.
