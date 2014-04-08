@@ -151,9 +151,11 @@ namespace libcmaes
   {
     static std::string sep = " ";
     _fplotstream << fabs(_solutions._best_candidates_hist.back()._fvalue) << sep
-		 << _solutions._sigma << sep;
-    //for (int i=0;i<_parameters._dim;i++)
+		 << _nevals << sep << _solutions._sigma << sep << sqrt(_solutions._max_eigenv/_solutions._min_eigenv);
     _fplotstream << _esolver._eigenSolver.eigenvalues().transpose() << sep;
+
+    //TODO: plot standard deviation in all coordinates.
+
     _fplotstream << std::endl;
   }
   

@@ -108,7 +108,7 @@ namespace libcmaes
     StopCriteriaFunc conditionCov = [](const CMAParameters &cmap, const CMASolutions &cmas)
       {
 	static double bound = 1e14;
-	double kappa = sqrt(cmas._max_eigenv) / sqrt(cmas._min_eigenv);
+	double kappa = cmas._max_eigenv / cmas._min_eigenv;
 	if (kappa > bound)
 	  {
 	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria conditionCov => kappa=" << kappa << std::endl;
