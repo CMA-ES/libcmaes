@@ -24,6 +24,13 @@ The library makes use of C++ policy design for modularity, performance and putti
 libcmaes is designed and implemented by Emmanuel Benazera on behalf of INRIA Saclay / Research group TAO / LAL Appstats.
 
 ### Build
+Beware of dependencies, typically on Debian/Ubuntu Linux, do:
+
+```
+sudo apt-get install libgoogle-glog-dev libgflags-dev libeigen3-dev
+```
+
+For compiling with basic options enabled:
 ```
 ./autogen.sh
 ./configure
