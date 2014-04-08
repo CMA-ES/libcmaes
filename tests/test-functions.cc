@@ -4,6 +4,7 @@
 #include <random>
 #include <iostream>
 #include <math.h>
+#include <float.h>
 #include <glog/logging.h>
 
 //#define STRIP_FLAG_HELP 1
@@ -138,6 +139,15 @@ FitFunc styblinski_tang = [](const double *x, const int N)
   return 0.5*val;
 };
 
+FitFunc rastrigin = [](const double *x, const int N)
+{
+  static double A = 10.0;
+  double val = A*N;
+  for (int i=0;i<N;i++)
+    val += x[i]*x[i] - A*cos(2*M_PI*x[i]);
+  return val;
+};
+
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,Candidate> msols;
 std::map<std::string,FitFunc>::const_iterator mit;
@@ -167,6 +177,7 @@ void fillupfuncs()
   mfuncs["schaffer1"]=schaffer1;
   mfuncs["schaffer2"]=schaffer2;
   mfuncs["styblinski_tang"]=styblinski_tang;
+  mfuncs["rastrigin"]=rastrigin;
 }
 
 // command line options.
@@ -178,6 +189,8 @@ DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
+DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
+DEFINE_double(x0,-DBL_MAX,"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 
 int main(int argc, char *argv[])
 {
@@ -227,7 +240,7 @@ int main(int argc, char *argv[])
       LOG(ERROR) << FLAGS_fname << " function does not exist, run with --list to get the list of all functions. Exiting.\n";
       exit(1);
     }
-  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_fplot);
+  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0);
   ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);
   cmaes.optimize();
 }

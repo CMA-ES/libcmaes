@@ -71,7 +71,7 @@ namespace libcmaes
     StopCriteriaFunc tolX = [](const CMAParameters &cmap, const CMASolutions &cmas)
       {
 	static double tolx = 1e-12;
-	double factor = cmas._sigma / cmas._sigma_init;
+	double factor = cmas._sigma / cmap._sigma_init;
 	double tfactor = tolx * factor;
 	// test1: all components of pc . factor < tolx.
 	for (int i=0;i<cmas._pc.rows();i++)
@@ -88,7 +88,7 @@ namespace libcmaes
     StopCriteriaFunc tolUpSigma = [](const CMAParameters &cmap, const CMASolutions &cmas)
       {
 	static double tolupsigma = 1e20;
-	double factor = cmas._sigma / cmas._sigma_init;
+	double factor = cmas._sigma / cmap._sigma_init;
 	double rhs = tolupsigma * sqrt(cmas._max_eigenv);
 	if (factor > rhs)
 	  {

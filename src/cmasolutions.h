@@ -4,6 +4,7 @@
 
 #include "candidate.h"
 #include "eo_matrix.h"
+#include "cmaparameters.h"
 #include <vector>
 #include <algorithm>
 
@@ -13,8 +14,7 @@ namespace libcmaes
   {
   public:
     CMASolutions() {};
-    CMASolutions(const int &dim,
-		 const int &ncandidates);
+    CMASolutions(Parameters &p);
     ~CMASolutions();
 
     void sort()
@@ -46,7 +46,6 @@ namespace libcmaes
     std::vector<Candidate> _candidates;
     std::vector<Candidate> _best_candidates_hist;
 
-    double _sigma_init; /**< initial sigma, used in termination criteria. */
     double _max_eigenv; /**< max eigenvalue, for termination criteria. */
     double _min_eigenv; /**< min eigenvalue, for termination criteria. */
     int _niter; /**< number of iterations to reach this solution, for termination criteria. */

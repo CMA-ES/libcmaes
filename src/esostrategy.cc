@@ -13,7 +13,7 @@ namespace libcmaes
 						   TParameters &parameters)
     :_func(func),_nevals(0),_niter(0),_parameters(parameters)
   {
-    _solutions = TSolutions(_parameters._dim,_parameters._lambda);
+    _solutions = TSolutions(_parameters);
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>

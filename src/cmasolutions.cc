@@ -5,19 +5,22 @@
 namespace libcmaes
 {
 
-  CMASolutions::CMASolutions(const int &dim,
-		       const int &ncandidates)
+  CMASolutions::CMASolutions(Parameters &p)
     :_hsig(1),_max_eigenv(0.0),_min_eigenv(0.0),_niter(0),_kcand(1)
   {
-    _cov = dMat::Identity(dim,dim);
-    _xmean = dVec::Random(dim) * 4.0; // initial mean randomly sampled from -4,4 in all dimensions.
-    //_xmean = dVec::Constant(dim,0.5);
-    _sigma = _sigma_init = 1.0/static_cast<double>(dim); // XXX: sqrt(trace(cov)/dim)
+    _cov = dMat::Identity(p._dim,p._dim);
+    if (p._x0 == -DBL_MAX)
+      _xmean = dVec::Random(p._dim) * 4.0; // initial mean randomly sampled from -4,4 in all dimensions.
+    else _xmean = dVec::Constant(p._dim,p._x0);
+    std::cerr << "xmean: " << _xmean.transpose() << std::endl;
+    if (static_cast<CMAParameters&>(p)._sigma_init > 0.0)
+      _sigma = static_cast<CMAParameters&>(p)._sigma_init;
+    else static_cast<CMAParameters&>(p)._sigma_init = _sigma = 1.0/static_cast<double>(p._dim); // XXX: sqrt(trace(cov)/dim)
     
-    _psigma = dVec::Zero(dim);
-    _pc = dVec::Zero(dim);
-    _candidates.resize(ncandidates);
-    _kcand = static_cast<int>(1.0+floor(0.1+ncandidates/4.0));
+    _psigma = dVec::Zero(p._dim);
+    _pc = dVec::Zero(p._dim);
+    _candidates.resize(p._lambda);
+    _kcand = static_cast<int>(1.0+floor(0.1+p._lambda/4.0));
   }
 
   CMASolutions::~CMASolutions()
