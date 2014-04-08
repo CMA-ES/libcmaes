@@ -70,7 +70,7 @@ namespace libcmaes
 
     // update psigma, Eq. (3)
     _solutions._psigma = (1.0-_parameters._csigma)*_solutions._psigma
-      + sqrt(_parameters._csigma*(2.0-_parameters._csigma)*_parameters._muw) * Csqinv * diffxmean; //TODO: use _facs_ps instead of sqrt...
+      + _parameters._fact_ps * Csqinv * diffxmean;
     double norm_ps = _solutions._psigma.norm();
 
     // update pc, Eq. (4)
@@ -78,7 +78,7 @@ namespace libcmaes
     double val_for_hsig = sqrt(1.0-pow(1.0-_parameters._csigma,2.0*(_niter+1)))*(1.4+2.0/(_parameters._dim+1))*_parameters._chi;
     if (norm_ps < val_for_hsig)
       _solutions._hsig = 0; //TODO: simplify equation instead.
-    _solutions._pc = (1-_parameters._cc) * _solutions._pc + _solutions._hsig * sqrt(_parameters._cc * (2.0 - _parameters._cc) * _parameters._muw) * diffxmean;
+    _solutions._pc = (1.0-_parameters._cc) * _solutions._pc + _solutions._hsig * _parameters._fact_pc * diffxmean;
     dMat spc = _solutions._pc * _solutions._pc.transpose();
     
     // covariance update, Eq (5).
@@ -108,25 +108,14 @@ namespace libcmaes
     if (_niter == 0)
       return false;
     
-    //TODO: other termination criterions.
-    /*double diff_value = 100.0;
-    if (_solutions._best_candidates_hist.size()>1)
-      {
-	diff_value = _solutions._best_candidates_hist.back()._fvalue - _solutions._best_candidates_hist.at(_solutions._best_candidates_hist.size()-2)._fvalue;
-	}*/
-
     LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << std::endl;
     if (!_parameters._fplot.empty())
       plot();
     
-    // for now a simple diff in func value, for testing purposes.
-    if (/*fabs(diff_value) < 1e-12
-	  ||*/ (_parameters._max_iter > 0 && _niter >= _parameters._max_iter)
-	  || _stopcriteria.stop(_parameters,_solutions))
+    if ((_parameters._max_iter > 0 && _niter >= _parameters._max_iter)
+	|| _stopcriteria.stop(_parameters,_solutions))
       return true;
     else return false;
-
-    //TODO: use stopcriteria class.
   }
 
   template <class TCovarianceUpdate>
