@@ -14,11 +14,15 @@ namespace libcmaes
     :ESOStrategy(func,parameters)
   {    
     LOG_IF(INFO,!_parameters._quiet) << "CMA-ES / dim=" << _parameters._dim << " / lambda=" << _parameters._lambda << " / mu=" << _parameters._mu << " / mueff=" << _parameters._muw << std::endl;
+    if (!_parameters._fplot.empty())
+      _fplotstream.open(_parameters._fplot);
   }
 
   template <class TCovarianceUpdate>
   CMAStrategy<TCovarianceUpdate>::~CMAStrategy()
   {
+    if (!_parameters._fplot.empty())
+      _fplotstream.close();
   }
   
   template <class TCovarianceUpdate>
@@ -112,6 +116,8 @@ namespace libcmaes
 	}*/
 
     LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << std::endl;
+    if (!_parameters._fplot.empty())
+      plot();
     
     // for now a simple diff in func value, for testing purposes.
     if (/*fabs(diff_value) < 1e-12
@@ -138,6 +144,17 @@ namespace libcmaes
 	_niter++;
       }
     return true;
+  }
+
+  template <class TCovarianceUpdate>
+  void CMAStrategy<TCovarianceUpdate>::plot()
+  {
+    static std::string sep = " ";
+    _fplotstream << fabs(_solutions._best_candidates_hist.back()._fvalue) << sep
+		 << _solutions._sigma << sep;
+    //for (int i=0;i<_parameters._dim;i++)
+    _fplotstream << _esolver._eigenSolver.eigenvalues().transpose() << sep;
+    _fplotstream << std::endl;
   }
   
   template class CMAStrategy<CovarianceUpdate>;

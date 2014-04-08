@@ -8,6 +8,7 @@
 #include "cmasolutions.h"
 #include "cmastopcriteria.h"
 #include "eigenmvn.h"
+#include <fstream>
 
 namespace libcmaes
 {
@@ -26,10 +27,13 @@ namespace libcmaes
       bool stop();
 
       bool optimize();
+
+      void plot();
       
     private:
       EigenMultivariateNormal<double> _esolver;
       CMAStopCriteria _stopcriteria;
+      std::ofstream _fplotstream; /**< plotting file stream, not in parameters because of copy-constructor hell. */
     };
   
 }

@@ -8,8 +8,8 @@ namespace libcmaes
 {
 
   CMAParameters::CMAParameters(const int &dim, const int &lambda,
-			       const int &max_iter)
-    :Parameters(dim,lambda,max_iter)
+			       const int &max_iter, const std::string &fplot)
+    :Parameters(dim,lambda,max_iter,fplot)
   {
     _mu = ceil(_lambda / 2.0);
     _weights = dVec::Zero(_mu);
@@ -42,6 +42,7 @@ namespace libcmaes
 
   CMAParameters::~CMAParameters()
   {
+    
   }
   
 }

@@ -1,6 +1,7 @@
 #include "esoptimizer.h"
 #include "cmastrategy.h"
 #include <map>
+#include <random>
 #include <iostream>
 #include <math.h>
 #include <glog/logging.h>
@@ -16,6 +17,15 @@ bool compEp(const double &a, const double &b, const double &epsilon)
 {
   return fabs(a-b) <= epsilon;
 }
+
+// frand for debug.
+typedef std::mt19937 myrng; // Mersenne Twister.
+myrng rng;
+std::uniform_real_distribution<> uint_dist(0,1);
+FitFunc frand = [](const double *x, const int N)
+{
+  return uint_dist(rng);
+};
 
 // classical test functions for single-objective optimization problems.
 FitFunc ackleys = [](const double *x, const int N)
@@ -134,6 +144,7 @@ std::map<std::string,FitFunc>::const_iterator mit;
 
 void fillupfuncs()
 {
+  mfuncs["frand"]=frand;
   mfuncs["ackleys"]=ackleys;
   msols["ackleys"]=Candidate(0.0,dVec::Constant(2,0));
   mfuncs["fsphere"]=fsphere;
@@ -166,6 +177,7 @@ DEFINE_int32(max_iter,1000,"maximum number of iteration (-1 for unlimited)");
 DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
+DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
 
 int main(int argc, char *argv[])
 {
@@ -190,6 +202,11 @@ int main(int argc, char *argv[])
       mit = mfuncs.begin();
       while(mit!=mfuncs.end())
 	{
+	  if ((*mit).first == "frand")
+	    {
+	      ++mit;
+	      continue;
+	    }
 	  int dim = msols[(*mit).first]._x.rows();
 	  CMAParameters cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
 	  cmaparams._quiet = true;
@@ -210,7 +227,7 @@ int main(int argc, char *argv[])
       LOG(ERROR) << FLAGS_fname << " function does not exist, run with --list to get the list of all functions. Exiting.\n";
       exit(1);
     }
-  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter);
+  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_fplot);
   ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);
   cmaes.optimize();
 }

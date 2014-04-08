@@ -12,7 +12,7 @@ namespace libcmaes
   public:
     CMAParameters() {};
     CMAParameters(const int &dim, const int &lambda,
-		  const int &max_iter=-1);
+		  const int &max_iter=-1, const std::string &fplot="");
     ~CMAParameters();
     
     int _mu;
