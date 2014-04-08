@@ -191,6 +191,7 @@ DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,-DBL_MAX,"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_uint64(seed,0,"seed for random generator");
 
 int main(int argc, char *argv[])
 {
@@ -240,7 +241,7 @@ int main(int argc, char *argv[])
       LOG(ERROR) << FLAGS_fname << " function does not exist, run with --list to get the list of all functions. Exiting.\n";
       exit(1);
     }
-  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0);
+  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
   ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);
   cmaes.optimize();
 }

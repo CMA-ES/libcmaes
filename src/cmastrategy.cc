@@ -12,7 +12,8 @@ namespace libcmaes
   CMAStrategy<TCovarianceUpdate>::CMAStrategy(FitFunc &func,
 					      CMAParameters &parameters)
     :ESOStrategy(func,parameters)
-  {    
+  {
+    _esolver = EigenMultivariateNormal<double>(false,_parameters._seed); // seeding the multivariate normal generator.
     LOG_IF(INFO,!_parameters._quiet) << "CMA-ES / dim=" << _parameters._dim << " / lambda=" << _parameters._lambda << " / mu=" << _parameters._mu << " / mueff=" << _parameters._muw << std::endl;
     if (!_parameters._fplot.empty())
       _fplotstream.open(_parameters._fplot);
@@ -29,7 +30,9 @@ namespace libcmaes
   dMat CMAStrategy<TCovarianceUpdate>::ask()
   {
     // sample for multivariate normal distribution.
-    _esolver = EigenMultivariateNormal<double>(_solutions._xmean,_solutions._cov);
+    //_esolver = EigenMultivariateNormal<double>(_solutions._xmean,_solutions._cov);
+    _esolver.setMean(_solutions._xmean);
+    _esolver.setCovar(_solutions._cov);
     dMat pop = _esolver.samples(_parameters._lambda,_solutions._sigma); // Eq (1).
     
     //TODO: rescale to function space as needed.

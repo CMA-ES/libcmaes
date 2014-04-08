@@ -12,7 +12,6 @@ namespace libcmaes
     if (p._x0 == -DBL_MAX)
       _xmean = dVec::Random(p._dim) * 4.0; // initial mean randomly sampled from -4,4 in all dimensions.
     else _xmean = dVec::Constant(p._dim,p._x0);
-    std::cerr << "xmean: " << _xmean.transpose() << std::endl;
     if (static_cast<CMAParameters&>(p)._sigma_init > 0.0)
       _sigma = static_cast<CMAParameters&>(p)._sigma_init;
     else static_cast<CMAParameters&>(p)._sigma_init = _sigma = 1.0/static_cast<double>(p._dim); // XXX: sqrt(trace(cov)/dim)

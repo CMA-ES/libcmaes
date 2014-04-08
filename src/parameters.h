@@ -4,6 +4,7 @@
 
 #include <string>
 #include <float.h>
+#include <time.h>
 
 namespace libcmaes
 {
@@ -14,9 +15,12 @@ namespace libcmaes
   Parameters():_dim(0),_lambda(0),_max_iter(0)
       {}
   Parameters(const int &dim, const int &lambda, const int &max_iter,
-	     const double &x0=-DBL_MAX, const std::string &fplot="")
-    :_dim(dim),_lambda(lambda),_max_iter(max_iter),_quiet(false),_fplot(fplot),_x0(x0)
+	     const double &x0=-DBL_MAX, const std::string &fplot="",
+	     const uint64_t &seed=0)
+    :_dim(dim),_lambda(lambda),_max_iter(max_iter),_quiet(false),_fplot(fplot),_x0(x0),_seed(seed)
     {
+      if (_seed == 0) // seed is not forced.
+	_seed = static_cast<uint64_t>(time(NULL));
     }
   ~Parameters()
     {
@@ -29,6 +33,8 @@ namespace libcmaes
     bool _quiet; /**< quiet all outputs. */
     std::string _fplot; /**< plotting file, if specified. */
     double _x0; /**< initial mean vector value for all components. */
+
+    uint64_t _seed; /**< seed for random generator. */
   };
   
 }

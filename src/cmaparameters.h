@@ -15,7 +15,8 @@ namespace libcmaes
     CMAParameters(const int &dim, const int &lambda,
 		  const int &max_iter=-1, const std::string &fplot="",
 		  const double &sigma_init=-1.0,
-		  const double &x0=-DBL_MAX);
+		  const double &x0=-DBL_MAX,
+		  const uint64_t &seed=0);
     ~CMAParameters();
     
     int _mu;

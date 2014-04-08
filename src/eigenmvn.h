@@ -55,6 +55,7 @@ namespace Eigen {
 
 	template<typename Index>
 	inline const Scalar operator() (Index, Index = 0) const { return norm(rng); }
+	inline void seed(const uint64_t &s) { rng.seed(s); }
       };
 
     template<typename Scalar>
@@ -63,7 +64,7 @@ namespace Eigen {
     template<typename Scalar>
       struct functor_traits<scalar_normal_dist_op<Scalar> >
       { enum { Cost = 50 * NumTraits<Scalar>::MulCost, PacketAccess = false, IsRepeatable = false }; };
-
+    
   } // end namespace internal
 
   /**
@@ -83,14 +84,20 @@ namespace Eigen {
     SelfAdjointEigenSolver<Matrix<Scalar,Dynamic,Dynamic> > _eigenSolver; // drawback: this creates a useless eigenSolver when using Cholesky decomposition, but it yields access to eigenvalues and vectors
     
   public:
-    EigenMultivariateNormal() {}; // dummy constructor.
-  EigenMultivariateNormal(const Matrix<Scalar,Dynamic,1>& mean,const Matrix<Scalar,Dynamic,Dynamic>& covar,
-			  const bool use_cholesky=false)
-      :_use_cholesky(use_cholesky)
+    EigenMultivariateNormal(const bool &use_cholesky=false,
+			    const uint64_t &seed=std::mt19937::default_seed)
+      :_use_cholesky(false)
       {
-	setMean(mean);
-	setCovar(covar);
-      }
+	randN.seed(seed);
+      };
+  EigenMultivariateNormal(const Matrix<Scalar,Dynamic,1>& mean,const Matrix<Scalar,Dynamic,Dynamic>& covar,
+			  const bool &use_cholesky=false,const uint64_t &seed=std::mt19937::default_seed)
+      :_use_cholesky(use_cholesky)
+    {
+      randN.seed(seed);
+      setMean(mean);
+      setCovar(covar);
+    }
 
     void setMean(const Matrix<Scalar,Dynamic,1>& mean) { _mean = mean; }
     void setCovar(const Matrix<Scalar,Dynamic,Dynamic>& covar)
