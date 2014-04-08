@@ -15,7 +15,7 @@ set title "f-value, sigma, kappa"
 set xlabel "function evaluations"
 plot filename u 2:1 w lines title "f-value", filename u 2:3 w lines title "sigma", filename u 2:4 w lines title "kappa"
 
-# Plot xmean
+# Plot eigenvalues
 set size 0.5,0.5
 set origin 0.0,0.0
 set title "Eigenvalues"
@@ -24,14 +24,16 @@ unset key
 plot for [i=4:(dim+4)] filename u 2:i w lines
 unset logscale y
 
-# Plot std deviation
+# Plot xmean
 set size 0.5,0.5
 set origin 0.5,0.5
+set title "X mean"
 plot for [i=25:(dim+25-1)] filename u 2:i w lines
 
-# Plot eigenvalues
+# Plot std deviation
 set origin 0.5,0.
 set logscale y
+set title "Std deviation"
 plot for [i=15:(dim+15-1)] filename u 2:i w lines
 
 pause -1 "Hit return to continue"
