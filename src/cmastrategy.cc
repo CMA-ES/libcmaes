@@ -77,10 +77,10 @@ namespace libcmaes
     double norm_ps = _solutions._psigma.norm();
 
     // update pc, Eq. (4)
-    _solutions._hsig = 1;
+    _solutions._hsig = 0;
     double val_for_hsig = sqrt(1.0-pow(1.0-_parameters._csigma,2.0*(_niter+1)))*(1.4+2.0/(_parameters._dim+1))*_parameters._chi;
     if (norm_ps < val_for_hsig)
-      _solutions._hsig = 0; //TODO: simplify equation instead.
+      _solutions._hsig = 1; //TODO: simplify equation instead.
     _solutions._pc = (1.0-_parameters._cc) * _solutions._pc + _solutions._hsig * _parameters._fact_pc * diffxmean;
     dMat spc = _solutions._pc * _solutions._pc.transpose();
     
