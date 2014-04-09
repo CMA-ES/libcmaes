@@ -1,5 +1,6 @@
 #include "esoptimizer.h"
 #include "cmastrategy.h"
+#include "ipopcmastrategy.h"
 #include <map>
 #include <random>
 #include <iostream>
@@ -196,6 +197,7 @@ DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");
 DEFINE_int32(lambda,10,"number of offsprings");
 DEFINE_int32(max_iter,1000,"maximum number of iteration (-1 for unlimited)");
+DEFINE_int32(max_fevals,-1,"maximum budget as number of function evaluations (-1 for unlimited)");
 DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
@@ -203,6 +205,7 @@ DEFINE_string(fplot,"","file where to store data for later plotting of results a
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,-DBL_MAX,"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
+DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop");
 
 int main(int argc, char *argv[])
 {
@@ -252,7 +255,15 @@ int main(int argc, char *argv[])
       LOG(ERROR) << FLAGS_fname << " function does not exist, run with --list to get the list of all functions. Exiting.\n";
       exit(1);
     }
-  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
-  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);
-  cmaes.optimize();
+  CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
+  if (FLAGS_alg == "cmaes")
+    {
+      ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);
+      cmaes.optimize();
+    }
+  else if (FLAGS_alg == "ipop")
+    {
+      ESOptimizer<IPOPCMAStrategy,CMAParameters> ipop(mfuncs[FLAGS_fname],cmaparams);
+      ipop.optimize();
+    }
 }

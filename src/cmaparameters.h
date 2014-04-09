@@ -11,9 +11,10 @@ namespace libcmaes
   class CMAParameters : public Parameters
   {
   public:
-    CMAParameters() {};
+    CMAParameters() {}; //TODO: var init even if this constructor is not supposed to be used for now.
     CMAParameters(const int &dim, const int &lambda,
-		  const int &max_iter=-1, const std::string &fplot="",
+		  const int &max_iter=-1, const int &max_fevals=-1,
+		  const std::string &fplot="",
 		  const double &sigma_init=-1.0,
 		  const double &x0=-DBL_MAX,
 		  const uint64_t &seed=0);
@@ -34,6 +35,8 @@ namespace libcmaes
     double _chi; // norm of N(0,I).
 
     double _sigma_init;
+
+    int _nrestarts; // when applicable.
   };
   
 }
