@@ -20,6 +20,40 @@ bool compEp(const double &a, const double &b, const double &epsilon)
   return fabs(a-b) <= epsilon;
 }
 
+dMat orthogonalBasis(const int N)
+{
+  static dMat b(N,N);
+  static bool initialized = false;
+
+  if (initialized)
+    return b;
+  
+  std::random_device rd;
+  std::normal_distribution<double> norm(0,1.0);
+  std::mt19937 gen(rd()); //TODO: seed ?
+  initialized = true;
+  double sp = 0.0;
+  
+  for (int i=0;i<b.rows();i++)
+    {
+      /* sample from Gaussian. */
+      for (int j=0;j<b.cols();j++)
+	b(i,j) = norm(gen);
+      /* substract projection of previous vectors */
+      for (int j=i-1;j>=0;--j)
+	{
+	  sp = 0.0;
+	  for (int k=0;k<N;++k)
+	    sp += b(i,k)*b(j,k); // scalar product.
+	  for (int k=0;k<N;k++)
+	    b(i,k) -= sp * b(j,k);
+	}
+      double sn = b.norm();
+      b /= sn;
+    }
+  return b;
+};
+
 // frand for debug.
 typedef std::mt19937 myrng; // Mersenne Twister.
 myrng rng;
@@ -159,6 +193,66 @@ FitFunc elli = [](const double *x, const int N)
   return val;
 };
 
+FitFunc tablet = [](const double *x, const int N)
+{
+  double val = 1e6*x[0]*x[0];
+  for (int i=1;i<N;i++)
+    val += x[i]*x[i];
+  return val;
+};
+
+FitFunc cigar = [](const double *x, const int N)
+{
+  double val = 0.0;
+  for (int i=1;i<N;i++)
+    val += x[i]*x[i];
+  val *= 1e6;
+  val += x[0]*x[0];
+  return val;
+};
+
+FitFunc ellirot = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0]*x[0];
+  dMat b = orthogonalBasis(N);
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    {
+      double y = 0.0;
+      for (int k=0;k<N;k++)
+	y += b(i,k)*x[k];
+      val += exp(log(1e6)*2.0*static_cast<double>(i)/(N-1)) * y*y;
+    }
+  return val;
+};
+
+FitFunc diffpow = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0]*x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += pow(fabs(x[i]),2.0+10.0*static_cast<double>(i)/(N-1));
+  return val;
+};
+
+FitFunc diffpowrot = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0]*x[0];
+  dMat b = orthogonalBasis(N);
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    {
+      double y = 0.0;
+      for (int k=0;k<N;k++)
+	y += b(i,k)*x[k];
+      val += pow(fabs(y),2.0+10.0*static_cast<double>(i)/(N-1));
+    }
+  return val;
+};
+
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,Candidate> msols;
 std::map<std::string,FitFunc>::const_iterator mit;
@@ -190,6 +284,11 @@ void fillupfuncs()
   mfuncs["styblinski_tang"]=styblinski_tang;
   mfuncs["rastrigin"]=rastrigin;
   mfuncs["elli"]=elli;
+  mfuncs["tablet"]=tablet;
+  mfuncs["cigar"]=cigar;
+  mfuncs["ellirot"]=ellirot;
+  mfuncs["diffpow"]=diffpow;
+  mfuncs["diffpowrot"]=diffpowrot;
 }
 
 // command line options.
