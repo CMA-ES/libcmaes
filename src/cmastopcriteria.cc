@@ -111,7 +111,7 @@ namespace libcmaes
 	double kappa = cmas._max_eigenv / cmas._min_eigenv;
 	if (kappa > bound)
 	  {
-	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria conditionCov => kappa=" << kappa << std::endl;
+	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria conditionCov => min eigenv=" << cmas._min_eigenv << " / max eigenv=" << cmas._max_eigenv << " / kappa=" << kappa << std::endl;
 	    return CONDITIONCOV;
 	  }
 	return CONT;
