@@ -28,13 +28,13 @@ unset logscale y
 set size 0.5,0.5
 set origin 0.5,0.5
 set title "X mean"
-plot for [i=25:(dim+25-1)] filename u 2:i w lines
+plot for [i=(2*dim+5):(3*dim+5-1)] filename u 2:i w lines
 
 # Plot std deviation
 set origin 0.5,0.
 set logscale y
 set title "Std deviation"
-plot for [i=15:(dim+15-1)] filename u 2:i w lines
+plot for [i=dim+5:(2*dim+5-1)] filename u 2:i w lines
 
 pause -1 "Hit return to continue"
 
