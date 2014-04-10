@@ -12,7 +12,7 @@ namespace libcmaes
 			       const std::string &fplot,
 			       const double &sigma_init, const double &x0,
 			       const uint64_t &seed)
-    :Parameters(dim,lambda,max_iter,max_fevals,x0,fplot,seed),_sigma_init(sigma_init),_nrestarts(9)
+    :Parameters(dim,lambda,max_iter,max_fevals,x0,fplot,seed),_sigma_init(sigma_init),_nrestarts(9),_lazy_update(false),_lazy_value(0)
   {
     _mu = floor(_lambda / 2.0);
     _weights = dVec::Zero(_mu);
@@ -43,6 +43,8 @@ namespace libcmaes
     _fact_pc = sqrt(_cc * (2.0 - _cc) * _muw);
     
     _chi = sqrt(static_cast<double>(_dim))*(1.0-1.0/(4.0*_dim) + 1.0/(21.0*_dim*_dim));
+
+    _lazy_value = 1.0/(_c1+_cmu)/_dim/10.0;
   }
 
   CMAParameters::~CMAParameters()

@@ -38,6 +38,7 @@ namespace libcmaes
     }
     
     dMat _cov; /**< covariance matrix. */
+    dMat _csqinv; /** inverse root square of covariance matrix. */
     dVec _xmean; /**< distribution mean. */
     dVec _psigma;
     dVec _pc;
@@ -51,6 +52,9 @@ namespace libcmaes
     int _niter; /**< number of iterations to reach this solution, for termination criteria. */
     int _kcand;
     std::vector<Candidate> _k_best_candidates_hist; /**< k-th best candidate history, for termination criteria, k is kcand=1+floor(0.1+lambda/4). */
+    int _eigeniter; /**< eigenvalues computation last step, lazy-update only. */
+
+    bool _updated_eigen; /**< last update is not lazy. */
   };
 
 }

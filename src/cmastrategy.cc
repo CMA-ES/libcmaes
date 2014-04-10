@@ -14,7 +14,7 @@ namespace libcmaes
     :ESOStrategy(func,parameters)
   {
     _esolver = EigenMultivariateNormal<double>(false,_parameters._seed); // seeding the multivariate normal generator.
-    LOG_IF(INFO,!_parameters._quiet) << "CMA-ES / dim=" << _parameters._dim << " / lambda=" << _parameters._lambda << " / mu=" << _parameters._mu << " / mueff=" << _parameters._muw << std::endl;
+    LOG_IF(INFO,!_parameters._quiet) << "CMA-ES / dim=" << _parameters._dim << " / lambda=" << _parameters._lambda << " / mu=" << _parameters._mu << " / mueff=" << _parameters._muw << " / c1=" << _parameters._c1 << " / cmu=" << _parameters._cmu << " / lazy_update=" << _parameters._lazy_update << std::endl;
     if (!_parameters._fplot.empty())
       _fplotstream.open(_parameters._fplot);
   }
@@ -29,10 +29,18 @@ namespace libcmaes
   template <class TCovarianceUpdate>
   dMat CMAStrategy<TCovarianceUpdate>::ask()
   {
+    // compute eigenvalues and eigenvectors.
+    _solutions._updated_eigen = false;
+    if (_niter == 0 || !_parameters._lazy_update
+	|| _niter - _solutions._eigeniter > _parameters._lazy_value)
+      {
+	_solutions._eigeniter = _niter;
+	_esolver.setMean(_solutions._xmean);
+	_esolver.setCovar(_solutions._cov);
+	_solutions._updated_eigen = true;
+      }
+    
     // sample for multivariate normal distribution.
-    //_esolver = EigenMultivariateNormal<double>(_solutions._xmean,_solutions._cov);
-    _esolver.setMean(_solutions._xmean);
-    _esolver.setCovar(_solutions._cov);
     dMat pop = _esolver.samples(_parameters._lambda,_solutions._sigma); // Eq (1).
     
     //TODO: rescale to function space as needed.
@@ -69,11 +77,12 @@ namespace libcmaes
     
     // reusable variables.
     dVec diffxmean = 1.0/_solutions._sigma * (xmean-_solutions._xmean); // (m^{t+1}-m^t)/sigma^t
-    dMat Csqinv = _esolver._eigenSolver.operatorInverseSqrt();
+    if (_solutions._updated_eigen)
+      _solutions._csqinv = _esolver._eigenSolver.operatorInverseSqrt();
 
     // update psigma, Eq. (3)
     _solutions._psigma = (1.0-_parameters._csigma)*_solutions._psigma
-      + _parameters._fact_ps * Csqinv * diffxmean;
+      + _parameters._fact_ps * _solutions._csqinv * diffxmean;
     double norm_ps = _solutions._psigma.norm();
 
     // update pc, Eq. (4)
@@ -111,7 +120,8 @@ namespace libcmaes
     if (_niter == 0)
       return false;
     
-    LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << std::endl;
+    LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << (_parameters._lazy_update && _solutions._updated_eigen ? " / cupdate="+std::to_string(_solutions._updated_eigen) : "");
+      //LOG_IF<< std::endl;
     if (!_parameters._fplot.empty())
       plot();
     

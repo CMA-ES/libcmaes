@@ -308,6 +308,7 @@ DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated
 DEFINE_double(x0,-DBL_MAX,"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop");
+DEFINE_bool(lazy_update,false,"covariance lazy update");
 
 int main(int argc, char *argv[])
 {
@@ -358,6 +359,7 @@ int main(int argc, char *argv[])
       exit(1);
     }
   CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
+  cmaparams._lazy_update = FLAGS_lazy_update;
   if (FLAGS_alg == "cmaes")
     {
       ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);

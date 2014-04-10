@@ -37,6 +37,8 @@ namespace libcmaes
     double _sigma_init;
 
     int _nrestarts; // when applicable.
+    bool _lazy_update; /**< covariance lazy update. */
+    double _lazy_value; /**< reference trigger for lazy update. */
   };
   
 }

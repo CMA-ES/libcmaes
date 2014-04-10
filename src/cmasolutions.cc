@@ -6,7 +6,7 @@ namespace libcmaes
 {
 
   CMASolutions::CMASolutions(Parameters &p)
-    :_hsig(1),_max_eigenv(0.0),_min_eigenv(0.0),_niter(0),_kcand(1)
+    :_hsig(1),_max_eigenv(0.0),_min_eigenv(0.0),_niter(0),_kcand(1),_eigeniter(0),_updated_eigen(true)
   {
     _cov = dMat::Identity(p._dim,p._dim);
     if (p._x0 == -DBL_MAX)
