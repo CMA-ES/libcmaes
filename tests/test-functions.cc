@@ -22,22 +22,22 @@ bool compEp(const double &a, const double &b, const double &epsilon)
 
 dMat orthogonalBasis(const int N)
 {
-  static dMat b(N,N);
+  static dMat b = dMat::Zero(N,N);
   static bool initialized = false;
 
   if (initialized)
     return b;
   
   std::random_device rd;
-  std::normal_distribution<double> norm(0,1.0);
+  std::normal_distribution<double> norm(0.0,1.0);
   std::mt19937 gen(rd()); //TODO: seed ?
   initialized = true;
   double sp = 0.0;
   
-  for (int i=0;i<b.rows();i++)
+  for (int i=0;i<N;i++)
     {
       /* sample from Gaussian. */
-      for (int j=0;j<b.cols();j++)
+      for (int j=0;j<N;j++)
 	b(i,j) = norm(gen);
       /* substract projection of previous vectors */
       for (int j=i-1;j>=0;--j)
@@ -48,8 +48,11 @@ dMat orthogonalBasis(const int N)
 	  for (int k=0;k<N;k++)
 	    b(i,k) -= sp * b(j,k);
 	}
-      double sn = b.norm();
-      b /= sn;
+      sp = 0.0;
+      for (int k=0;k<N;++k)
+	sp += b(i,k)*b(i,k);
+      for (int k=0;k<N;++k)
+	b(i,k) /= sqrt(sp);
     }
   return b;
 };
@@ -359,10 +362,12 @@ int main(int argc, char *argv[])
     {
       ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);
       cmaes.optimize();
+      LOG(INFO) << "optimization took " << cmaes._elapsed_optimize_ms / 1000.0 << " seconds\n";
     }
   else if (FLAGS_alg == "ipop")
     {
       ESOptimizer<IPOPCMAStrategy,CMAParameters> ipop(mfuncs[FLAGS_fname],cmaparams);
       ipop.optimize();
+      LOG(INFO) << "optimization took " << ipop._elapsed_optimize_ms / 1000.0 << " seconds\n";
     }
 }
