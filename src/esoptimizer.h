@@ -7,24 +7,6 @@
 #include "parameters.h"
 #include "cmastrategy.h"
 
-/* errors */
-enum {
-  /* reaches convergence. */
-  OPTI_SUCCESS = 0,
-  OPTI_STOP,
-  /* intial variables already minimize the objective function. */
-  OPTI_ALREADY_MINIMIZED,
-
-  /* unknown error */
-  OPTI_ERR_UNKNOWN = -1024,
-  /* insufficient memory. */
-  OPTI_ERR_OUTOFMEMORY,
-  /* invalid number of variables specified. */
-  OPTI_ERR_INVALID_N,
-  /* the algorithm has reached a termination criteria without reaching the objective. */
-  OPTI_ERR_TERMINATION
-};
-
 /* algorithms */
 enum {
   /* vanilla version of CMA-ES. */

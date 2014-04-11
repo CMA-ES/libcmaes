@@ -14,13 +14,13 @@ namespace libcmaes
   enum CMAStopCritType
   {
     CONT = 0,
-    AUTOMAXITER = 10,
-    TOLHISTFUN = 11,
-    EQUALFUNVALS = 12,
-    TOLX = 13,
-    TOLUPSIGMA = 14,
-    STAGNATION = 15,
-    CONDITIONCOV = 16
+    AUTOMAXITER = -10,
+    TOLHISTFUN = 1, // convergence
+    EQUALFUNVALS = -11,
+    TOLX = -12,
+    TOLUPSIGMA = -13,
+    STAGNATION = -14,
+    CONDITIONCOV = -15
   };
 
   class CMAStopCriteria

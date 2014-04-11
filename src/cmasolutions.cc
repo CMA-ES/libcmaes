@@ -1,5 +1,6 @@
 
 #include "cmasolutions.h"
+#include "opti_err.h"
 #include <iostream>
 
 namespace libcmaes
@@ -8,7 +9,15 @@ namespace libcmaes
   CMASolutions::CMASolutions(Parameters &p)
     :_hsig(1),_max_eigenv(0.0),_min_eigenv(0.0),_niter(0),_kcand(1),_eigeniter(0),_updated_eigen(true),_run_status(0),_elapsed_time(0)
   {
-    _cov = dMat::Identity(p._dim,p._dim);
+    try
+      {
+	_cov = dMat::Identity(p._dim,p._dim);
+      }
+    catch (std::bad_alloc &e)
+      {
+	_run_status = OPTI_ERR_OUTOFMEMORY;
+	return;
+      }
     if (p._x0 == -DBL_MAX)
       _xmean = dVec::Random(p._dim) * 4.0; // initial mean randomly sampled from -4,4 in all dimensions.
     else _xmean = dVec::Constant(p._dim,p._x0);

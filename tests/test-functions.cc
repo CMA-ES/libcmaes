@@ -370,5 +370,7 @@ int main(int argc, char *argv[])
   else if (FLAGS_alg == "ipop")
     cmaparams._algo = IPOP_CMAES;
   CMASolutions cmasols = cmaes(mfuncs[FLAGS_fname],cmaparams);
-  LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+  if (cmasols._run_status >= 0)
+    LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+  else LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
  }

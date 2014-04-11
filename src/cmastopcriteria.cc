@@ -139,7 +139,7 @@ namespace libcmaes
     int r = 0;
     for (auto imap : _scriteria)
       {
-	if ((r=imap.second(cmap,cmas))>0)
+	if ((r=imap.second(cmap,cmas))!=0)
 	  return r;
       }
     return 0;

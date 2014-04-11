@@ -2,6 +2,7 @@
 //#define NDEBUG 1
 
 #include "cmastrategy.h"
+#include "opti_err.h"
 #include <glog/logging.h>
 #include <iostream>
 
@@ -125,6 +126,9 @@ namespace libcmaes
   template <class TCovarianceUpdate>
   bool CMAStrategy<TCovarianceUpdate>::stop()
   {
+    if (_solutions._run_status < 0) // an error occured, most likely out of memory at cov matrix creation.
+      return true;
+    
     if (_niter == 0)
       return false;
     
@@ -135,7 +139,7 @@ namespace libcmaes
       plot();
     
     if ((_parameters._max_iter > 0 && _niter >= _parameters._max_iter)
-	|| _stopcriteria.stop(_parameters,_solutions))
+	|| (_solutions._run_status = _stopcriteria.stop(_parameters,_solutions)) != 0)
       return true;
     else return false;
   }
@@ -154,7 +158,9 @@ namespace libcmaes
 	tell();
 	_niter++;
       }
-    return 1; //TODO: error/success code.
+    if (_solutions._run_status >= 0)
+      return OPTI_SUCCESS;
+    else return OPTI_ERR_TERMINATION; // exact termination code is in _solutions._run_status.
   }
 
   template <class TCovarianceUpdate>
