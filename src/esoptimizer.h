@@ -17,11 +17,18 @@ enum {
 
 namespace libcmaes
 {
-  
+  /**
+   * \brief an optimizer main class. 
+   */
   template <class TESOStrategy,class TParameters>
     class ESOptimizer : public TESOStrategy
     {
     public:
+      /**
+       * \brief constructor
+       * @param func function to minimize
+       * @param parameters optimization parameters
+       */
       ESOptimizer(FitFunc &func,
 		  TParameters &parameters)
 	:TESOStrategy(func,parameters)
@@ -30,8 +37,10 @@ namespace libcmaes
       
       ~ESOptimizer() {};
 
-      
-      
+      /**
+       * \brief finds the minimum of a function, by calling on the underlying
+       *        procedure of the EOSOptimizer object, like a variety of flavor of CMA-ES.
+       */
       int optimize()
       {
 	std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();

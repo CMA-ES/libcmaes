@@ -23,15 +23,28 @@ namespace libcmaes
     CONDITIONCOV = -15
   };
 
+  /**
+   * \brief CMA-ES termination criteria, see reference paper in cmastrategy.h
+   */
   class CMAStopCriteria
   {
   public:
+    /**
+     * \brief Constructor: instanciates a predefined set of termination criteria
+     *        tests, see reference paper in cmastrategy.h
+     */
     CMAStopCriteria();
     ~CMAStopCriteria();
 
+    /**
+     * \brief Termination criteria evaluation: the function iterates and 
+     *        evaluates the predefined criteria.
+     * @return 0 if no termination criteria triggers, the termination code 
+     *           otherwise (< 0 for an error, > 1 for a partial success).
+     */
     int stop(const CMAParameters &cmap, const CMASolutions &cmas) const;
     
-    std::map<int,StopCriteriaFunc> _scriteria;
+    std::map<int,StopCriteriaFunc> _scriteria; /**< the set of predefined criteria, with priorities. */
     bool _active; /**< whether these termination criteria are active. */
   };
   
