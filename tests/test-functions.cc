@@ -298,7 +298,7 @@ void fillupfuncs()
 DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");
 DEFINE_int32(lambda,10,"number of offsprings");
-DEFINE_int32(max_iter,1000,"maximum number of iteration (-1 for unlimited)");
+DEFINE_int32(max_iter,-1,"maximum number of iteration (-1 for unlimited)");
 DEFINE_int32(max_fevals,-1,"maximum budget as number of function evaluations (-1 for unlimited)");
 DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
