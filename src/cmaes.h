@@ -8,19 +8,21 @@
 
 namespace libcmaes
 {
-  //TODO: return solution object.
   CMASolutions cmaes(FitFunc &func,
-		     CMAParameters &parameters)
+		     CMAParameters &parameters,
+		     ProgressFunc<CMAParameters,CMASolutions> &pfunc=CMAStrategy<CovarianceUpdate>::_defaultPFunc)
   {
     if (parameters._algo == CMAES_DEFAULT)
       {
 	ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes_vanilla(func,parameters);
+	cmaes_vanilla.set_progress_func(pfunc);
 	cmaes_vanilla.optimize();
 	return cmaes_vanilla._solutions;
       }
     else if (parameters._algo == IPOP_CMAES)
       {
 	ESOptimizer<IPOPCMAStrategy,CMAParameters> ipop(func,parameters);
+	ipop.set_progress_func(pfunc);
 	ipop.optimize();
 	return ipop._solutions;
       }

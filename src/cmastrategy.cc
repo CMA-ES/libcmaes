@@ -7,12 +7,20 @@
 
 namespace libcmaes
 {
-
+  
+  template <class TCovarianceUpdate>
+  ProgressFunc<CMAParameters,CMASolutions> CMAStrategy<TCovarianceUpdate>::_defaultPFunc = [](const CMAParameters &cmaparams, const CMASolutions &cmasols)
+  {
+    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "");
+    return 0;
+  };
+  
   template <class TCovarianceUpdate>
   CMAStrategy<TCovarianceUpdate>::CMAStrategy(FitFunc &func,
 					      CMAParameters &parameters)
     :ESOStrategy(func,parameters)
   {
+    _pfunc = _defaultPFunc;
     _esolver = EigenMultivariateNormal<double>(false,_parameters._seed); // seeding the multivariate normal generator.
     LOG_IF(INFO,!_parameters._quiet) << "CMA-ES / dim=" << _parameters._dim << " / lambda=" << _parameters._lambda << " / mu=" << _parameters._mu << " / mueff=" << _parameters._muw << " / c1=" << _parameters._c1 << " / cmu=" << _parameters._cmu << " / lazy_update=" << _parameters._lazy_update << std::endl;
     if (!_parameters._fplot.empty())
@@ -120,8 +128,9 @@ namespace libcmaes
     if (_niter == 0)
       return false;
     
-    LOG_IF(INFO,!_parameters._quiet) << "iter=" << _niter << " / evals=" << _nevals << " / f-value=" << _solutions._best_candidates_hist.back()._fvalue <<  " / sigma=" << _solutions._sigma << (_parameters._lazy_update && _solutions._updated_eigen ? " / cupdate="+std::to_string(_solutions._updated_eigen) : "");
-      //LOG_IF<< std::endl;
+    if (_pfunc(_parameters,_solutions)) // progress function.
+      return true; // end on progress function internal termination, possibly custom.
+    
     if (!_parameters._fplot.empty())
       plot();
     

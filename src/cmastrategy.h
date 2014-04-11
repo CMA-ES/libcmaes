@@ -20,6 +20,10 @@ namespace libcmaes
 		  CMAParameters &parameters);
       ~CMAStrategy();
 
+      /**
+       * \brief generates nsols new candidate solutions, sampled from a 
+       *        multivariate normal distribution.
+       */
       dMat ask();
 
       void tell();
@@ -29,11 +33,16 @@ namespace libcmaes
       int optimize();
 
       void plot();
+
+      void set_progress_func(ProgressFunc<CMAParameters,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
       
     private:
       EigenMultivariateNormal<double> _esolver;
       CMAStopCriteria _stopcriteria;
       std::ofstream _fplotstream; /**< plotting file stream, not in parameters because of copy-constructor hell. */
+
+    public:
+      static ProgressFunc<CMAParameters,CMASolutions> _defaultPFunc;
     };
   
 }

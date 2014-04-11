@@ -9,6 +9,9 @@ namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
 
+  template<class TParameters,class TSolutions>
+    using ProgressFunc = std::function<int (const TParameters, const TSolutions)>; // template aliasing.
+  
   template<class TParameters,class TSolutions,class TStopCriteria>
     class ESOStrategy
   {
@@ -19,12 +22,7 @@ namespace libcmaes
   protected:
     ~ESOStrategy();
 
-  public:
-    /**
-     * \brief generates nsols new candidate solutions, sampled from a 
-     *        multivariate normal distribution.
-     * TODO: move to CMAStrategy as specific to CMA-ES?
-     */
+  public:    
     dMat ask();
 
     void eval(const dMat &candidates);
@@ -43,6 +41,7 @@ namespace libcmaes
     int _niter;  /**< number of iterations. */
     TSolutions _solutions;
     TParameters _parameters;
+    ProgressFunc<TParameters,TSolutions> _pfunc; /**< possibly custom progress function. */
   };
   
 }
