@@ -1,6 +1,7 @@
-#include "esoptimizer.h"
+/*#include "esoptimizer.h"
 #include "cmastrategy.h"
-#include "ipopcmastrategy.h"
+#include "ipopcmastrategy.h"*/
+#include "cmaes.h"
 #include <map>
 #include <random>
 #include <iostream>
@@ -341,9 +342,13 @@ int main(int argc, char *argv[])
 	  int dim = msols[(*mit).first]._x.rows();
 	  CMAParameters cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
 	  cmaparams._quiet = true;
-	  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[(*mit).first],cmaparams);
-	  cmaes.optimize();
-	  Candidate c = cmaes.best_solution();
+	  cmaparams._lazy_update = FLAGS_lazy_update;
+	  if (FLAGS_alg == "cmaes")
+	    cmaparams._algo = CMAES_DEFAULT;
+	  else if (FLAGS_alg == "ipop")
+	    cmaparams._algo = IPOP_CMAES;
+	  CMASolutions cmasols = cmaes(mfuncs[(*mit).first],cmaparams);
+	  Candidate c = cmasols.best_candidate();
 	  //TODO: check on solution in x space.
 	  if (compEp(c._fvalue,msols[(*mit).first]._fvalue,FLAGS_epsilon))
 	    LOG(INFO) << (*mit).first << " -- OK\n";
@@ -361,15 +366,9 @@ int main(int argc, char *argv[])
   CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
   cmaparams._lazy_update = FLAGS_lazy_update;
   if (FLAGS_alg == "cmaes")
-    {
-      ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(mfuncs[FLAGS_fname],cmaparams);
-      cmaes.optimize();
-      LOG(INFO) << "optimization took " << cmaes._elapsed_optimize_ms / 1000.0 << " seconds\n";
-    }
+    cmaparams._algo = CMAES_DEFAULT;
   else if (FLAGS_alg == "ipop")
-    {
-      ESOptimizer<IPOPCMAStrategy,CMAParameters> ipop(mfuncs[FLAGS_fname],cmaparams);
-      ipop.optimize();
-      LOG(INFO) << "optimization took " << ipop._elapsed_optimize_ms / 1000.0 << " seconds\n";
-    }
-}
+    cmaparams._algo = IPOP_CMAES;
+  CMASolutions cmasols = cmaes(mfuncs[FLAGS_fname],cmaparams);
+  LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+ }

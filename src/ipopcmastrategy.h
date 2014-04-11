@@ -16,7 +16,7 @@ namespace libcmaes
 
     void tell();
 
-    bool optimize();
+    int optimize();
     
   };
 }

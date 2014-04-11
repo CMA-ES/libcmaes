@@ -132,7 +132,7 @@ namespace libcmaes
   }
 
   template <class TCovarianceUpdate>
-  bool CMAStrategy<TCovarianceUpdate>::optimize()
+  int CMAStrategy<TCovarianceUpdate>::optimize()
   {
     //debug
     //DLOG(INFO) << "optimize()\n";
@@ -145,7 +145,7 @@ namespace libcmaes
 	tell();
 	_niter++;
       }
-    return true;
+    return 1; //TODO: error/success code.
   }
 
   template <class TCovarianceUpdate>

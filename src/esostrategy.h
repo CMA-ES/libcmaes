@@ -33,8 +33,9 @@ namespace libcmaes
     
     bool stop();
 
-    bool optimize();
-    
+    int optimize();
+
+    // deprecated.
     Candidate best_solution() const;
     
     FitFunc _func;

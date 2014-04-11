@@ -20,7 +20,7 @@ namespace libcmaes
     CMAStrategy::tell();
   }
 
-  bool IPOPCMAStrategy::optimize()
+  int IPOPCMAStrategy::optimize()
   {
     for (int r=0;r<_parameters._nrestarts;r++)
       {
@@ -40,6 +40,6 @@ namespace libcmaes
 	    break;
 	  }
       }
-    return true;
+    return 1; //TODO: error/sucess code.
   }
 }

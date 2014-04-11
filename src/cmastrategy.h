@@ -26,7 +26,7 @@ namespace libcmaes
 
       bool stop();
 
-      bool optimize();
+      int optimize();
 
       void plot();
       

@@ -55,6 +55,10 @@ namespace libcmaes
     int _eigeniter; /**< eigenvalues computation last step, lazy-update only. */
 
     bool _updated_eigen; /**< last update is not lazy. */
+
+    // status of the run.
+    int _run_status;
+    int _elapsed_time;
   };
 
 }
