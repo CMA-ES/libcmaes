@@ -160,12 +160,12 @@ FitFunc mccormick = [](const double *x, const int N)
   return sin(x[0]+x[1])+pow(x[0]-x[1],2) - 1.5*x[0] + 2.5*x[1] + 1.0;
 };
 
-FitFunc schaffer1 = [](const double *x, const int N)
+FitFunc schaffer2 = [](const double *x, const int N)
 {
   return 0.5 + (pow(sin(x[0]*x[0]-x[1]*x[1]),2)-0.5) / pow(1.0+0.001*(x[0]*x[0]+x[1]*x[1]),2);
 };
 
-FitFunc schaffer2 = [](const double *x, const int N)
+FitFunc schaffer4 = [](const double *x, const int N)
 {
   return 0.5 + (cos(sin(fabs(x[0]*x[0]-x[1]*x[1])))-0.5) / pow(1.0+0.001*(x[0]*x[0]+x[1]*x[1]),2);
 };
@@ -283,8 +283,8 @@ void fillupfuncs()
   mfuncs["eggholder"]=eggholder;
   mfuncs["holdertable"]=holdertable;
   mfuncs["mccormick"]=mccormick;
-  mfuncs["schaffer1"]=schaffer1;
   mfuncs["schaffer2"]=schaffer2;
+  mfuncs["schaffer4"]=schaffer4;
   mfuncs["styblinski_tang"]=styblinski_tang;
   mfuncs["rastrigin"]=rastrigin;
   mfuncs["elli"]=elli;
@@ -295,6 +295,14 @@ void fillupfuncs()
   mfuncs["diffpowrot"]=diffpowrot;
 }
 
+void printAvailFuncs()
+{
+  std::cout << "available functions: ";
+  for (auto imap: mfuncs)
+    std::cout << imap.first << " ";
+  std::cout << std::endl;
+}
+  
 // command line options.
 DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");
@@ -323,10 +331,7 @@ int main(int argc, char *argv[])
 
   if (FLAGS_list)
     {
-      std::cout << "available functions: ";
-      for (auto imap: mfuncs)
-	std::cout << imap.first << " ";
-      std::cout << std::endl;
+      printAvailFuncs();
       exit(1);
     }
   else if (FLAGS_all)
@@ -361,6 +366,7 @@ int main(int argc, char *argv[])
   if ((mit=mfuncs.find(FLAGS_fname))==mfuncs.end())
     {
       LOG(ERROR) << FLAGS_fname << " function does not exist, run with --list to get the list of all functions. Exiting.\n";
+      printAvailFuncs();
       exit(1);
     }
   CMAParameters cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
@@ -370,7 +376,7 @@ int main(int argc, char *argv[])
   else if (FLAGS_alg == "ipop")
     cmaparams._algo = IPOP_CMAES;
   CMASolutions cmasols = cmaes(mfuncs[FLAGS_fname],cmaparams);
-  if (cmasols._run_status >= 0)
-    LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
-  else LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
- }
+  if (cmasols._run_status < 0)
+    LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
+  LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+}
