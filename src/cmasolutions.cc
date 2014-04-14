@@ -5,7 +5,7 @@
 
 namespace libcmaes
 {
-
+  
   CMASolutions::CMASolutions(Parameters &p)
     :_hsig(1),_max_eigenv(0.0),_min_eigenv(0.0),_niter(0),_kcand(1),_eigeniter(0),_updated_eigen(true),_run_status(0),_elapsed_time(0)
   {
@@ -39,6 +39,20 @@ namespace libcmaes
   {
     _best_candidates_hist.push_back(_candidates.at(0)); // supposed candidates is sorted.
     _k_best_candidates_hist.push_back(_candidates.at(_kcand));
+
+    _bfvalues.push_back(_candidates.at(0)._fvalue);
+    if (_bfvalues.size() > 20)
+      _bfvalues.erase(_bfvalues.begin());
+
+    // get median of candidate's scores, used in termination criteria (stagnation).
+    double median = 0.0;
+    size_t csize = _candidates.size();
+    if (csize % 2 == 0)
+      median = (_candidates[csize/2-1]._fvalue + _candidates[csize/2]._fvalue)/2.0;
+    else median = _candidates[csize/2]._fvalue;
+    _median_fvalues.push_back(median);
+    if (_median_fvalues.size() > static_cast<size_t>(ceil(0.2*_niter+120+30*_xmean.size()/static_cast<double>(_candidates.size()))))
+      _median_fvalues.erase(_median_fvalues.begin());
     
     //debug
     /*std::cerr << "ordered candidates:\n";
@@ -49,10 +63,13 @@ namespace libcmaes
     //debug
   }
 
-  void CMASolutions::update_eigenv_bounds(const dVec &eigenv)
+  void CMASolutions::update_eigenv(const dVec &eigenvalues,
+				   const dMat &eigenvectors)
   {
-    _max_eigenv = eigenv.maxCoeff();
-    _min_eigenv = eigenv.minCoeff();
+    _max_eigenv = eigenvalues.maxCoeff();
+    _min_eigenv = eigenvalues.minCoeff();
+    _leigenvalues = eigenvalues;
+    _leigenvectors = eigenvectors;
   }
   
 }

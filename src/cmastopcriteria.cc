@@ -8,6 +8,18 @@
 namespace libcmaes
 {
 
+  // computes median of a vector.
+  double median(std::vector<double> scores)
+  {
+    double median;
+    size_t size = scores.size();
+    std::sort(scores.begin(), scores.end());
+    if (size  % 2 == 0)
+      median = (scores[size / 2 - 1] + scores[size / 2]) / 2;
+    else median = scores[size / 2];
+    return median;
+  }
+  
   CMAStopCriteria::CMAStopCriteria()
     :_active(true)
   {
@@ -100,10 +112,20 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc>(TOLUPSIGMA,tolUpSigma));
     StopCriteriaFunc stagnation = [](const CMAParameters &cmap, const CMASolutions &cmas)
       {
-	//TODO: requires median func values to be stored.
-	
+	if (cmas._bfvalues.size() < 20 || cmas._median_fvalues.size() < 20)
+	  return CONT;
+	double medianbv = median(cmas._bfvalues);
+	std::vector<double> oldest_median_fvalues(20);
+	std::copy_n(cmas._median_fvalues.begin(),20,oldest_median_fvalues.begin());
+	double old_medianbv = median(oldest_median_fvalues);
+	if (medianbv > old_medianbv)
+	  {
+	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria stagnation => oldmedianfvalue=" << old_medianbv << " / newmedianfvalue=" << medianbv << std::endl;
+	    return STAGNATION;
+	  }
 	return CONT;
       };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc>(STAGNATION,stagnation));
 
     StopCriteriaFunc conditionCov = [](const CMAParameters &cmap, const CMASolutions &cmas)
       {
@@ -119,13 +141,30 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc>(CONDITIONCOV,conditionCov));
     StopCriteriaFunc noEffectAxis = [](const CMAParameters &cmap, const CMASolutions &cmas)
       {
-	
-	return CONT;
+	double fact = 0.1*cmas._sigma;
+	for (int i=0;i<cmap._dim;i++)
+	  {
+	    double ei = fact * sqrt(cmas._leigenvalues(i));
+	    for (int j=0;j<cmap._dim;j++)
+	      if (cmas._xmean[i] != cmas._xmean[i] + ei * cmas._leigenvectors(i,j))
+		return CONT;
+	  }
+	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectAxis\n";
+	return NOEFFECTAXIS;
       };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc>(NOEFFECTAXIS,noEffectAxis));
     StopCriteriaFunc noEffectCoor = [](const CMAParameters &cmap, const CMASolutions &cmas)
       {
+	double fact = 0.2*cmas._sigma;
+	for (int i=0;i<cmap._dim;i++)
+	  if (cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
+	    {
+	      LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
+	      return NOEFFECTCOOR;
+	    }
 	return CONT;
       };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc>(NOEFFECTCOOR,noEffectCoor));
   }
 
   CMAStopCriteria::~CMAStopCriteria()

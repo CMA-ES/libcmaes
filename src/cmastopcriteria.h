@@ -20,7 +20,9 @@ namespace libcmaes
     TOLX = -12,
     TOLUPSIGMA = -13,
     STAGNATION = -14,
-    CONDITIONCOV = -15
+    CONDITIONCOV = -15,
+    NOEFFECTAXIS = -16,
+    NOEFFECTCOOR = -17
   };
 
   /**

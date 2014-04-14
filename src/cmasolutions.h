@@ -17,7 +17,7 @@ namespace libcmaes
     CMASolutions(Parameters &p);
     ~CMASolutions();
 
-    void sort()
+    void sort_candidates()
     {
       std::sort(_candidates.begin(),_candidates.end(),
 		[](Candidate const &c1, Candidate const &c2){return c1._fvalue < c2._fvalue;});
@@ -25,7 +25,8 @@ namespace libcmaes
 
     void update_best_candidates();
 
-    void update_eigenv_bounds(const dVec &eigenv);
+    void update_eigenv(const dVec &eigenvalues,
+		       const dMat &eigenvectors);
     
     Candidate best_candidate() const
     {
@@ -49,11 +50,15 @@ namespace libcmaes
 
     double _max_eigenv; /**< max eigenvalue, for termination criteria. */
     double _min_eigenv; /**< min eigenvalue, for termination criteria. */
+    dVec _leigenvalues; /**< last computed eigenvalues, for termination criteria. */
+    dMat _leigenvectors; /**< last computed eigenvectors, for termination criteria. */
     int _niter; /**< number of iterations to reach this solution, for termination criteria. */
     int _kcand;
     std::vector<Candidate> _k_best_candidates_hist; /**< k-th best candidate history, for termination criteria, k is kcand=1+floor(0.1+lambda/4). */
+    std::vector<double> _bfvalues; /**< best function values over the past 20 steps, for termination criteria. */
+    std::vector<double> _median_fvalues; /**< median function values of some steps, in the past, for termination criteria. */
+    
     int _eigeniter; /**< eigenvalues computation last step, lazy-update only. */
-
     bool _updated_eigen; /**< last update is not lazy. */
 
     // status of the run.

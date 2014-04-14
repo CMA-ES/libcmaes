@@ -70,7 +70,7 @@ namespace libcmaes
     //debug
     
     // sort candidates.
-    _solutions.sort();
+    _solutions.sort_candidates();
 
     //TODO: test for flat values (same value almost everywhere).
 
@@ -119,7 +119,8 @@ namespace libcmaes
     _solutions._xmean = xmean;
 
     // other stuff.
-    _solutions.update_eigenv_bounds(_esolver._eigenSolver.eigenvalues());
+    _solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
+			     _esolver._eigenSolver.eigenvectors());
     _solutions._niter = _niter;
   }
 
