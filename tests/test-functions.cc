@@ -391,4 +391,6 @@ int main(int argc, char *argv[])
   if (cmasols._run_status < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "best optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
-}
+  LOG(INFO) << cmasols << std::endl;
+  //cmasols.print(std::cout,1);
+ }

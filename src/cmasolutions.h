@@ -74,7 +74,15 @@ namespace libcmaes
     {
       return _candidates.size();
     }
-    
+
+    /**
+     * \brief print the solution object out.
+     * @param out output stream
+     * @param verb_level verbosity level: 0 for short, 1 for debug.
+     */
+    std::ostream& print(std::ostream &out,
+			const int &verb_level=0) const;
+
     dMat _cov; /**< covariance matrix. */
     dMat _csqinv; /** inverse root square of covariance matrix. */
     dVec _xmean; /**< distribution mean. */
@@ -103,6 +111,8 @@ namespace libcmaes
     int _elapsed_time; /**< final elapsed time of stochastic optimization. */
   };
 
+  std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);
+  
 }
 
 #endif

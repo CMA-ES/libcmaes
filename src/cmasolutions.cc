@@ -80,5 +80,24 @@ namespace libcmaes
     _leigenvalues = eigenvalues;
     _leigenvectors = eigenvectors;
   }
+
+  std::ostream& CMASolutions::print(std::ostream &out,
+				    const int &verb_level) const
+  {
+    out << "best solution => f-value=" << best_candidate()._fvalue << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms";
+    if (verb_level)
+      {
+	out << "\ncovdiag=" << _cov.diagonal().transpose() << std::endl;
+	out << "psigma=" << _psigma.transpose() << std::endl;
+	out << "pc=" << _pc.transpose() << std::endl;
+      }
+    return out;
+  }
+
+  std::ostream& operator<<(std::ostream &out, const CMASolutions &cmas)
+  {
+    cmas.print(out,0);
+    return out;
+  }
   
 }
