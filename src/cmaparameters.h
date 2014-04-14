@@ -16,7 +16,7 @@ namespace libcmaes
 		  const int &max_iter=-1, const int &max_fevals=-1,
 		  const std::string &fplot="",
 		  const double &sigma_init=-1.0,
-		  const double &x0=-DBL_MAX,
+		  const double &x0=std::numeric_limits<double>::min(),
 		  const uint64_t &seed=0);
     ~CMAParameters();
     
@@ -30,8 +30,8 @@ namespace libcmaes
     double _dsigma;
     
     // computed once at init for speeding up operations.
-    double _fact_ps; //TODO.
-    double _fact_pc; //TODO.
+    double _fact_ps;
+    double _fact_pc;
     double _chi; // norm of N(0,I).
 
     double _sigma_init;

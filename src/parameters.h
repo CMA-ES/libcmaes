@@ -3,8 +3,8 @@
 #define PARAMETERS_H
 
 #include <string>
-#include <float.h>
 #include <time.h>
+#include <limits>
 
 namespace libcmaes
 {
@@ -16,7 +16,7 @@ namespace libcmaes
       {}
   Parameters(const int &dim, const int &lambda, const int &max_iter,
 	     const int &max_fevals=-1,
-	     const double &x0=-DBL_MAX, const std::string &fplot="",
+	     const double &x0=std::numeric_limits<double>::min(), const std::string &fplot="",
 	     const uint64_t &seed=0)
     :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
       _quiet(false),_fplot(fplot),_x0(x0),_seed(seed),_algo(0)
@@ -36,7 +36,7 @@ namespace libcmaes
     bool _quiet; /**< quiet all outputs. */
     std::string _fplot; /**< plotting file, if specified. */
     double _x0; /**< initial mean vector value for all components. */
-
+    
     uint64_t _seed; /**< seed for random generator. */
     int _algo; /**< selected algorithm. */
   };

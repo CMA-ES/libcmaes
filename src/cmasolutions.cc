@@ -1,6 +1,7 @@
 
 #include "cmasolutions.h"
 #include "opti_err.h"
+#include <limits>
 #include <iostream>
 
 namespace libcmaes
@@ -18,7 +19,7 @@ namespace libcmaes
 	_run_status = OPTI_ERR_OUTOFMEMORY;
 	return;
       }
-    if (p._x0 == -DBL_MAX)
+    if (p._x0 == std::numeric_limits<double>::min())
       _xmean = dVec::Random(p._dim) * 4.0; // initial mean randomly sampled from -4,4 in all dimensions.
     else _xmean = dVec::Constant(p._dim,p._x0);
     if (static_cast<CMAParameters&>(p)._sigma_init > 0.0)

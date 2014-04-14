@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iterator>
 #include <glog/logging.h>
+#include <limits>
 #include <iostream>
 
 namespace libcmaes
@@ -42,7 +43,7 @@ namespace libcmaes
 	int histlength = std::min(histthresh,histsize);
 	if (histlength < histthresh) // not enough data
 	  return CONT;
-	std::pair<double,double> frange(DBL_MAX,DBL_MIN);
+	std::pair<double,double> frange(std::numeric_limits<double>::max(),std::numeric_limits<double>::min());
 	for (int i=0;i<histlength;i++)
 	  {
 	    double val = cmas._best_candidates_hist.at(histsize-1-i)._fvalue;

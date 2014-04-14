@@ -4,9 +4,9 @@
 #include "cmaes.h"
 #include <map>
 #include <random>
+#include <limits>
 #include <iostream>
 #include <math.h>
-#include <float.h>
 #include <glog/logging.h>
 
 //#define STRIP_FLAG_HELP 1
@@ -323,7 +323,7 @@ DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
-DEFINE_double(x0,-DBL_MAX,"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
