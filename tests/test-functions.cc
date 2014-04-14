@@ -259,7 +259,10 @@ FitFunc diffpowrot = [](const double *x, const int N)
 
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,Candidate> msols;
+std::map<std::string,CMAParameters> mparams;
 std::map<std::string,FitFunc>::const_iterator mit;
+std::map<std::string,Candidate>::const_iterator fmit;
+std::map<std::string,CMAParameters>::const_iterator pmit;
 
 void fillupfuncs()
 {
@@ -287,10 +290,16 @@ void fillupfuncs()
   mfuncs["schaffer4"]=schaffer4;
   mfuncs["styblinski_tang"]=styblinski_tang;
   mfuncs["rastrigin"]=rastrigin;
+  msols["rastrigin"]=Candidate(0.0,dVec::Constant(10,1));
+  mparams["rastrigin"]=CMAParameters(10,200,-1,-1,"",4.0,5.0,1234); // 1234 is seed.
   mfuncs["elli"]=elli;
+  msols["elli"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["tablet"]=tablet;
+  msols["tablet"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["cigar"]=cigar;
+  msols["cigar"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["ellirot"]=ellirot;
+  msols["ellirot"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["diffpow"]=diffpow;
   mfuncs["diffpowrot"]=diffpowrot;
 }
@@ -339,13 +348,16 @@ int main(int argc, char *argv[])
       mit = mfuncs.begin();
       while(mit!=mfuncs.end())
 	{
-	  if ((*mit).first == "frand")
+	  if ((fmit=msols.find((*mit).first))==msols.end())
+	    //if ((*mit).first == "frand")
 	    {
 	      ++mit;
 	      continue;
 	    }
 	  int dim = msols[(*mit).first]._x.rows();
 	  CMAParameters cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
+	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
+	    cmaparams = (*pmit).second;
 	  cmaparams._quiet = true;
 	  cmaparams._lazy_update = FLAGS_lazy_update;
 	  if (FLAGS_alg == "cmaes")
@@ -355,7 +367,7 @@ int main(int argc, char *argv[])
 	  CMASolutions cmasols = cmaes(mfuncs[(*mit).first],cmaparams);
 	  Candidate c = cmasols.best_candidate();
 	  //TODO: check on solution in x space.
-	  if (compEp(c._fvalue,msols[(*mit).first]._fvalue,FLAGS_epsilon))
+	  if (compEp(c._fvalue,(*fmit).second._fvalue,FLAGS_epsilon))
 	    LOG(INFO) << (*mit).first << " -- OK\n";
 	  else LOG(INFO) << (*mit).first << " -- FAILED\n";
 	  ++mit;
