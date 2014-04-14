@@ -30,14 +30,16 @@ namespace libcmaes
 	CMAStrategy::optimize();
 
 	// capture best solution.
-	if (r == 0
+	capture_best_solution(best_run);
+	/*if (r == 0
 	    || _solutions.best_candidate()._fvalue < best_run.best_candidate()._fvalue)
-	  best_run = _solutions;
+	    best_run = _solutions;*/
 	
 	// reset parameters and solutions.
-	_parameters._lambda *= 2.0;
-	_solutions = CMASolutions(_parameters);
-	_niter = 0;
+	lambda_inc();
+	reset_search_state();
+	/*_solutions = CMASolutions(_parameters);
+	  _niter = 0;*/
 
 	// do not restart if max budget function calls is reached (TODO: or fitness... i.e. if we know the function).
 	if (_parameters._max_fevals > 0
@@ -52,4 +54,23 @@ namespace libcmaes
       return OPTI_SUCCESS;
     return OPTI_ERR_TERMINATION; // exact termination code is in _solutions._run_status.
   }
+
+  void IPOPCMAStrategy::lambda_inc()
+  {
+    _parameters._lambda *= 2.0;
+    LOG_IF(INFO,!_parameters._quiet) << "Restart => lambda_l=" << _parameters._lambda << " / lambda_old=" << _parameters._lambda / 2.0 << std::endl;
+  }
+
+  void IPOPCMAStrategy::reset_search_state()
+  {
+    _solutions = CMASolutions(_parameters);
+    _niter = 0;
+  }
+
+  void IPOPCMAStrategy::capture_best_solution(CMASolutions &best_run)
+  {
+    if (best_run._candidates.empty() || _solutions.best_candidate()._fvalue < best_run.best_candidate()._fvalue)
+      best_run = _solutions;
+  }
+  
 }

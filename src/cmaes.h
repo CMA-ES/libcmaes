@@ -5,6 +5,7 @@
 #include "esoptimizer.h"
 #include "cmastrategy.h"
 #include "ipopcmastrategy.h"
+#include "bipopcmastrategy.h"
 
 namespace libcmaes
 {
@@ -25,6 +26,13 @@ namespace libcmaes
 	ipop.set_progress_func(pfunc);
 	ipop.optimize();
 	return ipop._solutions;
+      }
+    else if (parameters._algo == BIPOP_CMAES)
+      {
+	ESOptimizer<BIPOPCMAStrategy,CMAParameters> bipop(func,parameters);
+	bipop.set_progress_func(pfunc);
+	bipop.optimize();
+	return bipop._solutions;
       }
     return CMASolutions();
   };

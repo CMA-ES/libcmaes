@@ -11,8 +11,10 @@
 enum {
   /* vanilla version of CMA-ES. */
   CMAES_DEFAULT = 0,
-  /* IPOP-CMA-ES. */
-  IPOP_CMAES = 1
+  /* IPOP-CMA-ES */
+  IPOP_CMAES = 1,
+  /* BIPOP-CMA-ES */
+  BIPOP_CMAES = 2
 };
 
 namespace libcmaes
