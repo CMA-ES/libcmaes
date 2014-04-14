@@ -2,6 +2,7 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+#include "eo_matrix.h"
 #include <string>
 #include <time.h>
 #include <limits>
@@ -19,7 +20,20 @@ namespace libcmaes
 	     const double &x0=std::numeric_limits<double>::min(), const std::string &fplot="",
 	     const uint64_t &seed=0)
     :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
-      _quiet(false),_fplot(fplot),_x0(x0),_seed(seed),_algo(0)
+      _quiet(false),_fplot(fplot),_seed(seed),_algo(0)
+    {
+      if (_seed == 0) // seed is not forced.
+	_seed = static_cast<uint64_t>(time(NULL));
+      _x0min = _x0max = dVec::Constant(_dim,x0);
+    }
+  Parameters(const int &dim, const int &lambda, const int &max_iter,
+	     const int &max_fevals=-1,
+	     const double &x0min=std::numeric_limits<double>::min(),
+	     const double &x0max=std::numeric_limits<double>::max(),
+	     const std::string &fplot="",
+	     const uint64_t &seed=0)
+    :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
+      _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0)
     {
       if (_seed == 0) // seed is not forced.
 	_seed = static_cast<uint64_t>(time(NULL));
@@ -35,7 +49,8 @@ namespace libcmaes
     
     bool _quiet; /**< quiet all outputs. */
     std::string _fplot; /**< plotting file, if specified. */
-    double _x0; /**< initial mean vector value for all components. */
+    dVec _x0min; /**< initial mean vector min bound value for all components. */
+    dVec _x0max; /**< initial mean vector max bound value for all components. */
     
     uint64_t _seed; /**< seed for random generator. */
     int _algo; /**< selected algorithm. */
