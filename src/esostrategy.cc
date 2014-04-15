@@ -44,5 +44,4 @@ namespace libcmaes
   }
   
   template class ESOStrategy<CMAParameters,CMASolutions,CMAStopCriteria>;
-  //template class ESOStrategy<ACMAParameters,CMASolutions,CMAStopCriteria>;
 }

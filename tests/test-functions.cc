@@ -349,7 +349,6 @@ int main(int argc, char *argv[])
       while(mit!=mfuncs.end())
 	{
 	  if ((fmit=msols.find((*mit).first))==msols.end())
-	    //if ((*mit).first == "frand")
 	    {
 	      ++mit;
 	      continue;
