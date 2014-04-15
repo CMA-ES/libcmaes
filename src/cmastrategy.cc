@@ -141,5 +141,5 @@ namespace libcmaes
   }
   
   template class CMAStrategy<CovarianceUpdate>;
-  
+  template class CMAStrategy<ACovarianceUpdate>;
 }

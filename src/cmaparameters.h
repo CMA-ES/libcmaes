@@ -39,6 +39,14 @@ namespace libcmaes
     int _nrestarts; // when applicable.
     bool _lazy_update; /**< covariance lazy update. */
     double _lazy_value; /**< reference trigger for lazy update. */
+
+    // active cma.
+    double _cm; /**< learning rate for the mean. */
+    double _alphacov;
+    double _alphaminusold;
+    double _deltamaxsigma;
+    double _lambdamintarget;
+    double _alphaminusmin;
   };
   
 }

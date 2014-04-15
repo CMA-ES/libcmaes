@@ -325,7 +325,7 @@ DEFINE_string(fplot,"","file where to store data for later plotting of results a
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
-DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop & bipop");
+DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop & abipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
 
 int main(int argc, char *argv[])
@@ -366,6 +366,12 @@ int main(int argc, char *argv[])
 	    cmaparams._algo = IPOP_CMAES;
 	  else if (FLAGS_alg == "bipop")
 	    cmaparams._algo = BIPOP_CMAES;
+	  else if (FLAGS_alg == "acmaes")
+	    cmaparams._algo = aCMAES;
+	  else if (FLAGS_alg == "aipop")
+	    cmaparams._algo = aIPOP_CMAES;
+	  else if (FLAGS_alg == "abipop")
+	    cmaparams._algo = aBIPOP_CMAES;
 	  CMASolutions cmasols = cmaes(mfuncs[(*mit).first],cmaparams);
 	  Candidate c = cmasols.best_candidate();
 	  //TODO: check on solution in x space.
@@ -391,6 +397,12 @@ int main(int argc, char *argv[])
     cmaparams._algo = IPOP_CMAES;
   else if (FLAGS_alg == "bipop")
     cmaparams._algo = BIPOP_CMAES;
+  else if (FLAGS_alg == "acmaes")
+    cmaparams._algo = aCMAES;
+  else if (FLAGS_alg == "aipop")
+    cmaparams._algo = aIPOP_CMAES;
+  else if (FLAGS_alg == "abipop")
+    cmaparams._algo = aBIPOP_CMAES;
   CMASolutions cmasols = cmaes(mfuncs[FLAGS_fname],cmaparams);
   if (cmasols._run_status < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;

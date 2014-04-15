@@ -6,7 +6,8 @@
 
 namespace libcmaes
 {
-  class IPOPCMAStrategy : public CMAStrategy<CovarianceUpdate>
+  template <class TCovarianceUpdate>
+  class IPOPCMAStrategy : public CMAStrategy<TCovarianceUpdate>
   {
   public:
     IPOPCMAStrategy(FitFunc &func,

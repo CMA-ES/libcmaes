@@ -3,10 +3,12 @@
 #define CMASTRATEGY_H
 
 #include "esostrategy.h"
-#include "covarianceupdate.h"
 #include "cmaparameters.h"
+//#include "acmaparameters.h"
 #include "cmasolutions.h"
 #include "cmastopcriteria.h"
+#include "covarianceupdate.h"
+#include "acovarianceupdate.h"
 #include "eigenmvn.h"
 #include <fstream>
 

@@ -22,17 +22,38 @@ namespace libcmaes
       }
     else if (parameters._algo == IPOP_CMAES)
       {
-	ESOptimizer<IPOPCMAStrategy,CMAParameters> ipop(func,parameters);
+	ESOptimizer<IPOPCMAStrategy<CovarianceUpdate>,CMAParameters> ipop(func,parameters);
 	ipop.set_progress_func(pfunc);
 	ipop.optimize();
 	return ipop._solutions;
       }
     else if (parameters._algo == BIPOP_CMAES)
       {
-	ESOptimizer<BIPOPCMAStrategy,CMAParameters> bipop(func,parameters);
+	ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate>,CMAParameters> bipop(func,parameters);
 	bipop.set_progress_func(pfunc);
 	bipop.optimize();
 	return bipop._solutions;
+      }
+    else if (parameters._algo == aCMAES)
+      {
+	ESOptimizer<CMAStrategy<ACovarianceUpdate>,CMAParameters> acmaes(func,parameters);
+	acmaes.set_progress_func(pfunc);
+	acmaes.optimize();
+	return acmaes._solutions;
+      }
+    else if (parameters._algo == aIPOP_CMAES)
+      {
+	ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate>,CMAParameters> aipop(func,parameters);
+	aipop.set_progress_func(pfunc);
+	aipop.optimize();
+	return aipop._solutions;
+      }
+    else if (parameters._algo == aBIPOP_CMAES)
+      {
+	ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate>,CMAParameters> abipop(func,parameters);
+	abipop.set_progress_func(pfunc);
+	abipop.optimize();
+	return abipop._solutions;
       }
     return CMASolutions();
   };

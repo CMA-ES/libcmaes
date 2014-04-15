@@ -1,6 +1,7 @@
 
 #include "esostrategy.h"
 #include "cmaparameters.h" // in order to pre-instanciated template into library.
+//#include "acmaparameters.h"
 #include "cmasolutions.h"
 #include "cmastopcriteria.h"
 #include <iostream>
@@ -43,5 +44,5 @@ namespace libcmaes
   }
   
   template class ESOStrategy<CMAParameters,CMASolutions,CMAStopCriteria>;
-  
+  //template class ESOStrategy<ACMAParameters,CMASolutions,CMAStopCriteria>;
 }
