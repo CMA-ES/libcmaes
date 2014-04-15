@@ -16,8 +16,9 @@ namespace libcmaes
     _gen = std::mt19937(rd());
     _gen.seed(static_cast<uint64_t>(time(NULL)));
     _unif = std::uniform_real_distribution<>(0,1);
-    _lambda_def = 4.0+ceil(3.0+log(CMAStrategy<TCovarianceUpdate>::_parameters._dim));
+    //_lambda_def = 4.0+ceil(3.0+log(CMAStrategy<TCovarianceUpdate>::_parameters._dim));
     CMAStrategy<TCovarianceUpdate>::_parameters._lambda = _lambda_def;
+    CMAStrategy<TCovarianceUpdate>::_parameters._mu = floor(_lambda_def / 2.0);
     CMAStrategy<TCovarianceUpdate>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate>::_parameters);
   }
 
