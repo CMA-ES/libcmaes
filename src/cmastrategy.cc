@@ -79,45 +79,9 @@ namespace libcmaes
 
     //TODO: update best value, as needed.
 
-    // compute mean, Eq. (2)
-    dVec xmean = dVec::Zero(_parameters._dim);
-    for (int i=0;i<_parameters._mu;i++)
-      xmean += _parameters._weights[i] * _solutions._candidates.at(i)._x;
+    // CMA-ES update, depends on the selected 'flavor'.
+    TCovarianceUpdate::update(_parameters,_esolver,_solutions);
     
-    // reusable variables.
-    dVec diffxmean = 1.0/_solutions._sigma * (xmean-_solutions._xmean); // (m^{t+1}-m^t)/sigma^t
-    if (_solutions._updated_eigen)
-      _solutions._csqinv = _esolver._eigenSolver.operatorInverseSqrt();
-
-    // update psigma, Eq. (3)
-    _solutions._psigma = (1.0-_parameters._csigma)*_solutions._psigma
-      + _parameters._fact_ps * _solutions._csqinv * diffxmean;
-    double norm_ps = _solutions._psigma.norm();
-
-    // update pc, Eq. (4)
-    _solutions._hsig = 0;
-    double val_for_hsig = sqrt(1.0-pow(1.0-_parameters._csigma,2.0*(_niter+1)))*(1.4+2.0/(_parameters._dim+1))*_parameters._chi;
-    if (norm_ps < val_for_hsig)
-      _solutions._hsig = 1; //TODO: simplify equation instead.
-    _solutions._pc = (1.0-_parameters._cc) * _solutions._pc + _solutions._hsig * _parameters._fact_pc * diffxmean;
-    dMat spc = _solutions._pc * _solutions._pc.transpose();
-    
-    // covariance update, Eq (5).
-    dMat wdiff = dMat::Zero(_parameters._dim,_parameters._dim);
-    for (int i=0;i<_parameters._mu;i++)
-      {
-	dVec difftmp = _solutions._candidates.at(i)._x - _solutions._xmean;
-	wdiff += _parameters._weights[i] * (difftmp*difftmp.transpose());
-      }
-    wdiff *= 1.0/(_solutions._sigma*_solutions._sigma);
-    _solutions._cov = (1-_parameters._c1-_parameters._cmu+(1-_solutions._hsig)*_parameters._c1*_parameters._cc*(2.0-_parameters._cc))*_solutions._cov + _parameters._c1*spc + _parameters._cmu*wdiff;
-    
-    // sigma update, Eq. (6)
-    _solutions._sigma *= exp((_parameters._csigma / _parameters._dsigma) * (norm_ps / _parameters._chi - 1.0));
-    
-    // set mean.
-    _solutions._xmean = xmean;
-
     // other stuff.
     _solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
 			     _esolver._eigenSolver.eigenvectors());
