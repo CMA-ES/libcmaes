@@ -65,6 +65,35 @@ for help, do
 ./test_functions --help
 ```
 
+### Sample code
+
+```C++
+#include "cmaes.h"
+#include <iostream>
+
+using namespace libcmaes;
+
+FitFunc fsphere = [](const double *x, const int N)
+{
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += x[i]*x[i];
+  return val;
+};
+
+int main(int argc, char *argv[])
+{
+  int dim = 10; // problem dimensions.                                                                    
+  int lambda = 100; // offsprings at each generation.                                                     
+  CMAParameters cmaparams(dim,lambda);
+  //cmaparams._algo = BIPOP_CMAES;                                                                        
+  CMASolutions cmasols = cmaes(fsphere,cmaparams);
+  std::cout << "best solution: " << cmasols << std::endl;
+  std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+  return cmasols._run_status;
+}
+```
+
 ### References
 - (1) Hansen, N. and A. Ostermeier (2001). Completely Derandomized Self-Adaptation in Evolution Strategies. Evolutionary Computation, 9(2), pp. 159-195.
 - (2) Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395. http://hal.archives-ouvertes.fr/inria-00382093/en
