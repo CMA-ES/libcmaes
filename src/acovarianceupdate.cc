@@ -48,12 +48,15 @@ namespace libcmaes
     for (int i=0;i<parameters._mu;i++)
       {
 	dVec ytmp = solutions._candidates.at(parameters._lambda-i-1)._x-solutions._xmean;
-	dVec yl = parameters._weights[i] * (solutions._csqinv * (solutions._candidates.at(parameters._lambda-parameters._mu+i)._x-solutions._xmean)).norm() / (solutions._csqinv * ytmp).norm() * ytmp * 1.0/solutions._sigma;
-	cmuminus += yl*yl.transpose();
+	//dVec yl = (solutions._csqinv * (solutions._candidates.at(parameters._lambda-parameters._mu+i)._x-solutions._xmean)).norm() / (solutions._csqinv * ytmp).norm() * ytmp * 1.0/solutions._sigma;
+	dVec yl = ytmp * 1.0/solutions._sigma; // NH says this is a good enough value.
+	cmuminus += parameters._weights[i] * yl*yl.transpose();
       }
     
     // covariance update, Eq. (8)
-    double cminustmp = std::max(parameters._lambdamintarget,solutions._max_eigenv);// * (solutions._csqinv*cmuminus*solutions._csqinv);
+    dMat cminusdenom = solutions._csqinv*cmuminus*solutions._csqinv;
+    SelfAdjointEigenSolver<dMat> tmpesolve(cminusdenom); // XXX: computing eigenvalues, could be avoid with an upper bound.
+    double cminustmp = tmpesolve.eigenvalues().maxCoeff();
     double cminusmin = parameters._alphaminusmin * (1.0-parameters._cmu)*(1.0-parameters._lambdamintarget) / cminustmp;
     double cminus = std::min(cminusmin,(1-parameters._cmu)*parameters._alphacov/8.0*(parameters._muw/(pow(parameters._dim+2.0,1.5)+2.0*parameters._muw)));
     //std::cerr << "cminus=" << cminus << " / cminusmin=" << cminusmin << " / cminustmp=" << cminustmp << std::endl;

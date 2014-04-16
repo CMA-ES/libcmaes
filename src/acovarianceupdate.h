@@ -9,8 +9,12 @@
 namespace libcmaes
 {
 
-  //TODO: paper reference.
-  
+  /**
+   * \brief Active Covariance Matrix update.
+   *        This implementation closely follows
+   *        N. Hansen, R. Ros, "Benchmarking a Weighted Negative Covariance Matrix 
+   *                            Update on the BBOB-2010 Noiseless Testbed", GECCO'10, 2010.
+   */
   class ACovarianceUpdate
   {
   public:
