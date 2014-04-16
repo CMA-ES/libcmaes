@@ -84,5 +84,5 @@ else
 fi
 AC_SUBST(GLOG_LIBS)
 
-AC_OUTPUT(Makefile src/Makefile tests/Makefile)
+AC_OUTPUT(Makefile src/Makefile tests/Makefile examples/Makefile)
 
