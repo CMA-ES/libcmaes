@@ -6,10 +6,11 @@ Other implementations can be found in (5).
 
 Main functionalities:
 At the moment, the library implements a vanilla version of CMA-ES (1).
-Current functionalities include:
+Current features include:
 
-- high-level API for using in external applications;
-- a test exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
+- high-level API for simple use in external applications;
+- implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies;
+- a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
 
 Dependencies:
 
@@ -18,7 +19,7 @@ Dependencies:
 - [gflags](https://code.google.com/p/gflags/) for command line parsing.
 
 Implementation:
-The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithm described in (2).
+The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithms described in (2) and (6).
 
 ### Authors
 libcmaes is designed and implemented by Emmanuel Benazera on behalf of INRIA Saclay / Research group TAO / LAL Appstats.
@@ -55,6 +56,10 @@ to plot results, use a file output and then the included Gnuplot script
 ./test_functions --fname rastrigin --dim 10 --lambda 200 --max_iter 130 --fplot out.dat -sigma0 5 -x0 5 -seed 5489
 gnuplot -e "filename='out.dat'" cma_multiplt.dem
 ```
+to run a check across a range of classical single-objective optimization functions:
+```
+./test_functions --all
+```
 for help, do
 ```
 ./test_functions --help
@@ -66,3 +71,4 @@ for help, do
 - (3) N. Hansen, A. Auger, R. Ros, S. Finck, P. Posik: Comparing Results of 31 Algorithms from the Black-Box Optimization Benchmarking BBOB-2009. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM. http://www.lri.fr/~hansen/ws1p34.pdf
 - (4) https://www.lri.fr/~hansen/
 - (5) https://www.lri.fr/~hansen/cmaes_inmatlab.html
+- (6) Hansen, N., R. Ros (2010). Benchmarking a Weighted Negative Covariance Matrix Update on the BBOB-2010 Noiseless Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM, pp. 1673-1680, https://www.lri.fr/~hansen/ws1p32-hansen.pdf
