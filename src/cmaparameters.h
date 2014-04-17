@@ -32,7 +32,7 @@ namespace libcmaes
   {
   public:
     CMAParameters() {}; //TODO: var init even if this constructor is not supposed to be used for now.
-    CMAParameters(const int &dim, const int &lambda,
+    CMAParameters(const int &dim, const int &lambda=-1,
 		  const int &max_iter=-1, const int &max_fevals=-1,
 		  const std::string &fplot="",
 		  const double &sigma_init=-1.0,

@@ -25,6 +25,7 @@
 #include "eo_matrix.h"
 #include <string>
 #include <time.h>
+#include <math.h>
 #include <limits>
 
 namespace libcmaes
@@ -35,13 +36,15 @@ namespace libcmaes
   public:
   Parameters():_dim(0),_lambda(0),_max_iter(0)
       {}
-  Parameters(const int &dim, const int &lambda, const int &max_iter,
+  Parameters(const int &dim, const int &lambda=-1, const int &max_iter=-1,
 	     const int &max_fevals=-1,
 	     const double &x0=std::numeric_limits<double>::min(), const std::string &fplot="",
 	     const uint64_t &seed=0)
     :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
       _quiet(false),_fplot(fplot),_seed(seed),_algo(0)
-    {
+      {
+	if (_lambda == -1) // lambda is unspecified
+	  _lambda = 4 + floor(3.0*log(_dim));
       if (_seed == 0) // seed is not forced.
 	_seed = static_cast<uint64_t>(time(NULL));
       _x0min = _x0max = dVec::Constant(_dim,x0);

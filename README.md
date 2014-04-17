@@ -85,8 +85,9 @@ FitFunc fsphere = [](const double *x, const int N)
 int main(int argc, char *argv[])
 {
   int dim = 10; // problem dimensions.                                                                    
-  int lambda = 100; // offsprings at each generation.                                                     
-  CMAParameters cmaparams(dim,lambda);
+  //int lambda = 100; // offsprings at each generation.
+  //CMAParameters cmaparams(dim,lambda);
+  CMAParameters cmaparams(dim);
   //cmaparams._algo = BIPOP_CMAES;                                                                        
   CMASolutions cmasols = cmaes(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
