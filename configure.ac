@@ -12,7 +12,7 @@ libdir=$ac_default_prefix/lib/$host
 AC_PROG_INSTALL
 AC_CANONICAL_HOST
 
-AC_PROG_CC(gcc cc)
+AC_PROG_CC(g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
 AC_PROG_CXX(c++ g++ gcc)
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
@@ -83,6 +83,16 @@ else
   GLOG_LIBS=
 fi
 AC_SUBST(GLOG_LIBS)
+
+# Whether to compile with BBOB
+AC_ARG_ENABLE(bbob,
+AC_HELP_STRING([--enable-bbob],[Enable the linear programming optimization (default is NO)]),
+[case "${enableval}" in 
+	yes) bbob=true ;;
+	no) bbob=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-bbob) ;;
+esac],[bbob=false])
+AM_CONDITIONAL(HAVE_BBOB, test x$bbob = xtrue)
 
 AC_OUTPUT(Makefile src/Makefile tests/Makefile examples/Makefile)
 

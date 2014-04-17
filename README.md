@@ -96,6 +96,20 @@ int main(int argc, char *argv[])
 }
 ```
 
+### Run BBOB 2013 Black-Box Optimization Benchmark
+
+There's an install script in the repository. Do:
+```
+cd tests
+./bbobsetup.sh
+```
+you can now benchmark any of the implemented flavors of CMA-ES (beware, this make take a while, ~hours):
+```
+./bbobexperiment -alg bipop
+```
+for the command above, results will be in repository bipop_bbob
+See (7) for more information and details.
+
 ### References
 - (1) Hansen, N. and A. Ostermeier (2001). Completely Derandomized Self-Adaptation in Evolution Strategies. Evolutionary Computation, 9(2), pp. 159-195.
 - (2) Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395. http://hal.archives-ouvertes.fr/inria-00382093/en
@@ -103,3 +117,4 @@ int main(int argc, char *argv[])
 - (4) https://www.lri.fr/~hansen/
 - (5) https://www.lri.fr/~hansen/cmaes_inmatlab.html
 - (6) Hansen, N., R. Ros (2010). Benchmarking a Weighted Negative Covariance Matrix Update on the BBOB-2010 Noiseless Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM, pp. 1673-1680, https://www.lri.fr/~hansen/ws1p32-hansen.pdf
+- (7) http://coco.gforge.inria.fr/doku.php?id=bbob-2013

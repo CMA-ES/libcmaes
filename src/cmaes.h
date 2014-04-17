@@ -76,7 +76,7 @@ namespace libcmaes
 	return abipop._solutions;
       }
     return CMASolutions();
-  };
+  }
 }
 
 #endif

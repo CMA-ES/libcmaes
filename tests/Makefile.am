@@ -1,9 +1,24 @@
-
+AUTOMAKE_OPTIONS = subdir-objects
 bin_PROGRAMS=simple_test test_functions
 simple_test_SOURCES=simple-test.cc
 test_functions_SOURCES=test-functions.cc
+if HAVE_BBOB
+libbbobdir = $(libdir)
+libbbob_LIBRARIES=libbbob.a
+libbbob_a_SOURCES= bbob.v13.09/c/benchmarksdeclare.c bbob.v13.09/c/benchmarkshelper.c bbob.v13.09/c/benchmarks.c bbob.v13.09/c/benchmarksnoisy.c bbob.v13.09/c/fgeneric.c bbob.v13.09/c/dirOK.c 
+bin_PROGRAMS += bbobexperiment
+bbobexperiment_SOURCES=bbobexperiment.cc
+endif
 
 AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)
 AM_CXXFLAGS=-g -Wall -std=c++11 -fopenmp
 AM_LDFLAGS=-L../src
 LDADD=-lcmaes -lm $(GLOG_LIBS) $(GFLAGS_LIBS)
+if HAVE_BBOB
+AM_CPPFLAGS += -Ibbob.v13.09/c
+AM_LDFLAGS += -L.
+LDADD += -lbbob
+endif
+
+clean-local:
+	rm -rf bbobc.tar.gz bbob.v13* *_bbob
