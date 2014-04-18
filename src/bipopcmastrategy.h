@@ -27,16 +27,37 @@
 
 namespace libcmaes
 {
+  /**
+   * \brief Implementation of the BIPOP flavor of CMA-ES, with restarts that
+   *        control the population of offsprings used in the update of the 
+   *        distribution parameters in order to alternate between local and 
+   *        global searches for the objective.
+   */
   template <class TCovarianceUpdate>
   class BIPOPCMAStrategy : public IPOPCMAStrategy<TCovarianceUpdate>
   {
   public:
+    /**
+     * \brief constructor.
+     * @param func objective function to minimize
+     * @param parameters stochastic search parameters
+     */
     BIPOPCMAStrategy(FitFunc &func,
 		     CMAParameters &parameters);
     ~BIPOPCMAStrategy();
 
+    /**
+     * \brief Updates the covariance matrix and prepares for the next iteration.
+     */
     void tell();
 
+    /**
+     * \brief Finds the minimum of the objective function. It makes
+     *        alternative calls to ask(), tell() and stop() until 
+     *        one of the termination criteria triggers.
+     * @return success or error code, as defined in opti_err.h
+     * Note: the termination criteria code is held by _solutions._run_status
+     */
     int optimize();
 
   protected:

@@ -29,9 +29,20 @@
 namespace libcmaes
 {
 
+  /**
+   * \brief Covariance Matrix update.
+   *        This is an implementation closely follows:
+   * Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395
+   */
   class CovarianceUpdate
   {
   public:
+    /**
+     * \brief update the covariance matrix.
+     * @param parameters current set of parameters
+     * @param esolver Eigen eigenvalue solver
+     * @param solutions currrent set of solutions.
+     */
     static void update(const CMAParameters &parameters,
 		       EigenMultivariateNormal<double> &esolver,
 		       CMASolutions &solutions);

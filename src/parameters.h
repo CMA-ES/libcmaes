@@ -30,12 +30,27 @@
 
 namespace libcmaes
 {
-
+  /**
+   * \brief Generic class for Evolution Strategy parameters.
+   */
   class Parameters
   {
   public:
+    /**
+     * \brief empty constructor.
+     */
   Parameters():_dim(0),_lambda(0),_max_iter(0)
       {}
+
+    /**
+     * \brief constructor
+     * @param dim problem dimensions
+     * @param lambda number of offsprings sampled at each step
+     * @param max_iter maximum number of iterations
+     * @param max_fevals function evaluation budget as the max number of calls
+     * @param x0 initial value of the search in parameter space (if unspecified, sampled from within [-4,4] in all coordinates)
+     * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
+     */
   Parameters(const int &dim, const int &lambda=-1, const int &max_iter=-1,
 	     const int &max_fevals=-1,
 	     const double &x0=std::numeric_limits<double>::min(), const std::string &fplot="",

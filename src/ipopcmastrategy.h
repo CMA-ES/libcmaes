@@ -26,16 +26,36 @@
 
 namespace libcmaes
 {
+  /**
+   * \brief Implementation of the IPOP flavor of CMA-ES, with restarts
+   *        that linearly increase the population of offsprings used in the 
+   *        update of the distribution parameters.
+   */
   template <class TCovarianceUpdate>
   class IPOPCMAStrategy : public CMAStrategy<TCovarianceUpdate>
   {
   public:
+    /**
+     * \brief constructor.
+     * @param func objective function to minimize
+     * @param parameters stochastic search parameters
+     */
     IPOPCMAStrategy(FitFunc &func,
 		    CMAParameters &parameters);
     ~IPOPCMAStrategy();
 
+    /**
+     * \brief Updates the covariance matrix and prepares for the next iteration.
+     */
     void tell();
 
+    /**
+     * \brief Finds the minimum of the objective function. It makes
+     *        alternative calls to ask(), tell() and stop() until 
+     *        one of the termination criteria triggers.
+     * @return success or error code, as defined in opti_err.h
+     * Note: the termination criteria code is held by _solutions._run_status
+     */
     int optimize();
 
   protected:

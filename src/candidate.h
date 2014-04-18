@@ -26,12 +26,23 @@
 
 namespace libcmaes
 {
-  
+  /**
+   * \brief candidate solution point, in function parameter space.
+   */
   class Candidate
   {
   public:
+    /**
+     * \brief empty constructor.
+     */
   Candidate():
     _fvalue(0.0) {};
+
+    /**
+     * \brief constructor.
+     * @param fvalue function value
+     * @param x function parameter vector
+     */
   Candidate(const double &fvalue,
 	    const dVec &x)
     :_fvalue(fvalue),_x(x)
@@ -39,7 +50,7 @@ namespace libcmaes
   ~Candidate() {};
     
     double _fvalue; /**< function value. */
-    dVec _x;
+    dVec _x; /**< function parameter vector. */
   };
 
 }

@@ -44,6 +44,11 @@ namespace libcmaes
     class CMAStrategy : public ESOStrategy<CMAParameters,CMASolutions,CMAStopCriteria>
     {
     public:
+      /**
+       * \brief constructor.
+       * @param func objective function to minimize
+       * @param parameters stochastic search parameters
+       */
       CMAStrategy(FitFunc &func,
 		  CMAParameters &parameters);
       ~CMAStrategy();
