@@ -51,7 +51,7 @@ namespace libcmaes
 
     /**
      * \brief Finds the minimum of the objective function. It makes
-     *        alternative calls to ask(), tell() and stop() until 
+     *        alternate calls to ask(), tell() and stop() until 
      *        one of the termination criteria triggers.
      * @return success or error code, as defined in opti_err.h
      * Note: the termination criteria code is held by _solutions._run_status
