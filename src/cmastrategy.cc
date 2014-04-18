@@ -155,7 +155,7 @@ namespace libcmaes
     _fplotstream << fabs(_solutions._best_candidates_hist.back()._fvalue) << sep
 		 << _nevals << sep << _solutions._sigma << sep << sqrt(_solutions._max_eigenv/_solutions._min_eigenv) << sep;
     _fplotstream << _esolver._eigenSolver.eigenvalues().transpose() << sep; // eigenvalues
-    _fplotstream << _solutions._sigma * _solutions._cov.colwise().maxCoeff().array().sqrt() << sep; // max deviation in all main axes
+    _fplotstream << _solutions._cov.colwise().maxCoeff().array().sqrt() << sep; // max deviation in all main axes
     _fplotstream << _solutions._xmean.transpose();
     _fplotstream << std::endl;
   }
