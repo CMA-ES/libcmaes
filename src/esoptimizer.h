@@ -63,7 +63,7 @@ namespace libcmaes
 	{
 	}
       
-      ~ESOptimizer() {};
+      ~ESOptimizer() {}
 
       /**
        * \brief finds the minimum of a function, by calling on the underlying

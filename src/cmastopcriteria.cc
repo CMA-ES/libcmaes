@@ -41,10 +41,11 @@ namespace libcmaes
     return median;
   }
   
-  CMAStopCriteria::CMAStopCriteria()
+  template <class TBoundStrategy>
+  CMAStopCriteria<TBoundStrategy>::CMAStopCriteria()
     :_active(true)
   {
-    StopCriteriaFunc autoMaxIter = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    StopCriteriaFunc<TBoundStrategy> autoMaxIter = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
 	if (cmas._niter >= thresh)
@@ -54,8 +55,8 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(AUTOMAXITER,autoMaxIter));
-    StopCriteriaFunc tolHistFun = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(AUTOMAXITER,autoMaxIter));
+    StopCriteriaFunc<TBoundStrategy> tolHistFun = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	static double threshold = 1e-12;
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
@@ -78,8 +79,8 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(TOLHISTFUN,tolHistFun));
-    StopCriteriaFunc equalFunVals = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(TOLHISTFUN,tolHistFun));
+    StopCriteriaFunc<TBoundStrategy> equalFunVals = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
 	int histlength = std::min(cmap._dim,histsize);
@@ -100,8 +101,8 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(EQUALFUNVALS,equalFunVals));
-    StopCriteriaFunc tolX = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(EQUALFUNVALS,equalFunVals));
+    StopCriteriaFunc<TBoundStrategy> tolX = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	static double tolx = 1e-12;
 	double factor = cmas._sigma / cmap._sigma_init;
@@ -117,8 +118,8 @@ namespace libcmaes
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(TOLX,tolX));
-    StopCriteriaFunc tolUpSigma = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(TOLX,tolX));
+    StopCriteriaFunc<TBoundStrategy> tolUpSigma = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	static double tolupsigma = 1e20;
 	double factor = cmas._sigma / cmap._sigma_init;
@@ -130,8 +131,8 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(TOLUPSIGMA,tolUpSigma));
-    StopCriteriaFunc stagnation = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(TOLUPSIGMA,tolUpSigma));
+    StopCriteriaFunc<TBoundStrategy> stagnation = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	if (cmas._bfvalues.size() < 20 || cmas._median_fvalues.size() < 20)
 	  return CONT;
@@ -146,9 +147,9 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(STAGNATION,stagnation));
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(STAGNATION,stagnation));
 
-    StopCriteriaFunc conditionCov = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    StopCriteriaFunc<TBoundStrategy> conditionCov = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	static double bound = 1e14;
 	double kappa = cmas._max_eigenv / cmas._min_eigenv;
@@ -159,8 +160,8 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(CONDITIONCOV,conditionCov));
-    StopCriteriaFunc noEffectAxis = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(CONDITIONCOV,conditionCov));
+    StopCriteriaFunc<TBoundStrategy> noEffectAxis = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	double fact = 0.1*cmas._sigma;
 	for (int i=0;i<cmap._dim;i++)
@@ -173,8 +174,8 @@ namespace libcmaes
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectAxis\n";
 	return NOEFFECTAXIS;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(NOEFFECTAXIS,noEffectAxis));
-    StopCriteriaFunc noEffectCoor = [](const CMAParameters &cmap, const CMASolutions &cmas)
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(NOEFFECTAXIS,noEffectAxis));
+    StopCriteriaFunc<TBoundStrategy> noEffectCoor = [](const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)
       {
 	double fact = 0.2*cmas._sigma;
 	for (int i=0;i<cmap._dim;i++)
@@ -185,14 +186,16 @@ namespace libcmaes
 	    }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc>(NOEFFECTCOOR,noEffectCoor));
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TBoundStrategy>>(NOEFFECTCOOR,noEffectCoor));
   }
 
-  CMAStopCriteria::~CMAStopCriteria()
+  template <class TBoundStrategy>
+  CMAStopCriteria<TBoundStrategy>::~CMAStopCriteria()
   {
   }
 
-  int CMAStopCriteria::stop(const CMAParameters &cmap, const CMASolutions &cmas) const
+  template <class TBoundStrategy>
+  int CMAStopCriteria<TBoundStrategy>::stop(const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas) const
   {
     if (!_active)
       return 0;
@@ -204,5 +207,7 @@ namespace libcmaes
       }
     return 0;
   }
+
+  template class CMAStopCriteria<NoBoundStrategy>;
   
 }

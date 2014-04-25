@@ -43,7 +43,8 @@ namespace libcmaes
      * @param esolver Eigen eigenvalue solver
      * @param solutions currrent set of solutions.
      */
-    static void update(const CMAParameters &parameters,
+    template <class TBoundStrategy>
+    static void update(const CMAParameters<TBoundStrategy> &parameters,
 		       EigenMultivariateNormal<double> &esolver,
 		       CMASolutions &solutions);
   };

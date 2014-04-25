@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
   int dim = 5;
   int lambda = 10;
-  CMAParameters cmaparams(dim,lambda);
-  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes(cigtab,cmaparams);
+  CMAParameters<> cmaparams(dim,lambda);
+  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> cmaes(cigtab,cmaparams);
   cmaes.optimize();
 }

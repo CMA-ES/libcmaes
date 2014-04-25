@@ -19,31 +19,40 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ACOVARIANCEUPDATE_H
-#define ACOVARIANCEUPDATE_H
+#ifndef PWQ_BOUND_STRATEGY_H
+#define PWQ_BOUND_STRATEGY_H
 
-#include "cmaparameters.h"
-#include "cmasolutions.h"
-#include "eigenmvn.h"
+#include "eo_matrix.h"
+
+//TODO: NoBounds class.
+//TODO: make a lambda function typedef for the mapping functions (should be in genopheno...)
+//TODO: unit tests.
 
 namespace libcmaes
 {
-
-  /**
-   * \brief Active Covariance Matrix update.
-   *        This implementation closely follows
-   *        N. Hansen, R. Ros, "Benchmarking a Weighted Negative Covariance Matrix 
-   *                            Update on the BBOB-2010 Noiseless Testbed", GECCO'10, 2010.
-   */
-  class ACovarianceUpdate
+  class pwqBoundStrategy
   {
   public:
-    template <class TBoundStrategy>
-    static void update(const CMAParameters<TBoundStrategy> &parameters,
-		       EigenMultivariateNormal<double> &esolver,
-		       CMASolutions &solutions);
+    pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim);
+    ~pwqBoundStrategy();
+
+    void to_f_representation(const dVec &x,
+			     dVec &y);
+    
+    void to_internal_representation(dVec &x,
+				    const dVec &y);
+
+    void shift_into_feasible(const dVec &x, dVec &x_s);
+    
+  public:
+    dVec _lbounds;
+    dVec _ubounds;
+    dVec _al;
+    dVec _au;
+    dVec _xlow;
+    dVec _xup;
+    dVec _r;
   };
-  
 }
 
 #endif

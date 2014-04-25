@@ -25,7 +25,8 @@
 namespace libcmaes
 {
 
-  void ACovarianceUpdate::update(const CMAParameters &parameters,
+  template <class TBoundStrategy>
+  void ACovarianceUpdate::update(const CMAParameters<TBoundStrategy> &parameters,
 				 EigenMultivariateNormal<double> &esolver,
 				 CMASolutions &solutions)
   {
@@ -88,5 +89,6 @@ namespace libcmaes
     // set mean.
     solutions._xmean = xmean;
   }
-  
+
+  template void ACovarianceUpdate::update(const CMAParameters<NoBoundStrategy>&,EigenMultivariateNormal<double>&,CMASolutions&);
 }

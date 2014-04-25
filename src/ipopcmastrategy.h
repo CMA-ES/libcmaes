@@ -31,8 +31,8 @@ namespace libcmaes
    *        that linearly increase the population of offsprings used in the 
    *        update of the distribution parameters.
    */
-  template <class TCovarianceUpdate>
-  class IPOPCMAStrategy : public CMAStrategy<TCovarianceUpdate>
+  template <class TCovarianceUpdate, class TBoundStrategy>
+    class IPOPCMAStrategy : public CMAStrategy<TCovarianceUpdate, TBoundStrategy>
   {
   public:
     /**
@@ -41,7 +41,7 @@ namespace libcmaes
      * @param parameters stochastic search parameters
      */
     IPOPCMAStrategy(FitFunc &func,
-		    CMAParameters &parameters);
+		    CMAParameters<TBoundStrategy> &parameters);
     ~IPOPCMAStrategy();
 
     /**

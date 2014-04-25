@@ -30,47 +30,47 @@
 namespace libcmaes
 {
   CMASolutions cmaes(FitFunc &func,
-		     CMAParameters &parameters,
-		     ProgressFunc<CMAParameters,CMASolutions> &pfunc=CMAStrategy<CovarianceUpdate>::_defaultPFunc)
+		     CMAParameters<NoBoundStrategy> &parameters,
+		     ProgressFunc<CMAParameters<NoBoundStrategy>,CMASolutions> &pfunc=CMAStrategy<CovarianceUpdate>::_defaultPFunc)
   {
     if (parameters._algo == CMAES_DEFAULT)
       {
-	ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters> cmaes_vanilla(func,parameters);
+	ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<NoBoundStrategy>> cmaes_vanilla(func,parameters);
 	cmaes_vanilla.set_progress_func(pfunc);
 	cmaes_vanilla.optimize();
 	return cmaes_vanilla._solutions;
       }
     else if (parameters._algo == IPOP_CMAES)
       {
-	ESOptimizer<IPOPCMAStrategy<CovarianceUpdate>,CMAParameters> ipop(func,parameters);
+	ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,NoBoundStrategy>,CMAParameters<NoBoundStrategy>> ipop(func,parameters);
 	ipop.set_progress_func(pfunc);
 	ipop.optimize();
 	return ipop._solutions;
       }
     else if (parameters._algo == BIPOP_CMAES)
       {
-	ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate>,CMAParameters> bipop(func,parameters);
+	ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,NoBoundStrategy>,CMAParameters<NoBoundStrategy>> bipop(func,parameters);
 	bipop.set_progress_func(pfunc);
 	bipop.optimize();
 	return bipop._solutions;
       }
     else if (parameters._algo == aCMAES)
       {
-	ESOptimizer<CMAStrategy<ACovarianceUpdate>,CMAParameters> acmaes(func,parameters);
+	ESOptimizer<CMAStrategy<ACovarianceUpdate,NoBoundStrategy>,CMAParameters<NoBoundStrategy>> acmaes(func,parameters);
 	acmaes.set_progress_func(pfunc);
 	acmaes.optimize();
 	return acmaes._solutions;
       }
     else if (parameters._algo == aIPOP_CMAES)
       {
-	ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate>,CMAParameters> aipop(func,parameters);
+	ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,NoBoundStrategy>,CMAParameters<NoBoundStrategy>> aipop(func,parameters);
 	aipop.set_progress_func(pfunc);
 	aipop.optimize();
 	return aipop._solutions;
       }
     else if (parameters._algo == aBIPOP_CMAES)
       {
-	ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate>,CMAParameters> abipop(func,parameters);
+	ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,NoBoundStrategy>,CMAParameters<NoBoundStrategy>> abipop(func,parameters);
 	abipop.set_progress_func(pfunc);
 	abipop.optimize();
 	return abipop._solutions;

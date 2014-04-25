@@ -10,6 +10,12 @@ bin_PROGRAMS += bbobexperiment
 bbobexperiment_SOURCES=bbobexperiment.cc
 endif
 
+if HAVE_GTEST
+TESTS = $(check_PROGRAMS)
+check_PROGRAMS = ut_pwqbounds
+ut_pwqbounds_SOURCES=ut-pwqbounds.cc
+endif
+
 AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)
 AM_CXXFLAGS=-g -Wall -std=c++11 -fopenmp
 AM_LDFLAGS=-L../src
@@ -18,6 +24,9 @@ if HAVE_BBOB
 AM_CPPFLAGS += -Ibbob.v13.09/c
 AM_LDFLAGS += -L.
 LDADD += -lbbob
+endif
+if HAVE_GTEST
+AM_LDFLAGS += -lgtest -lgtest_main
 endif
 
 clean-local:

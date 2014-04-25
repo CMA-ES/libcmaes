@@ -47,7 +47,8 @@ namespace libcmaes
      * \brief initializes solutions from stochastic optimization parameters.
      * @param p parameters
      */
-    CMASolutions(Parameters &p);
+    template<class TBoundStrategy=NoBoundStrategy>
+    CMASolutions(Parameters<TBoundStrategy> &p);
     
     ~CMASolutions();
 

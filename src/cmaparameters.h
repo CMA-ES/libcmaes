@@ -31,7 +31,8 @@ namespace libcmaes
   /**
    * \brief Parameters for various flavors of the CMA-ES algorithm.
    */
-  class CMAParameters : public Parameters
+  template <class TBoundStrategy=NoBoundStrategy>
+  class CMAParameters : public Parameters<TBoundStrategy>
   {
   public:
     CMAParameters() {}; //TODO: var init even if this constructor is not supposed to be used for now.

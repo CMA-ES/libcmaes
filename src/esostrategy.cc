@@ -62,5 +62,6 @@ namespace libcmaes
     return _solutions.best_candidate();
   }
   
-  template class ESOStrategy<CMAParameters,CMASolutions,CMAStopCriteria>;
+  template class ESOStrategy<CMAParameters<NoBoundStrategy>,CMASolutions,CMAStopCriteria<NoBoundStrategy> >;
+  //TODO: pwq bound strategy.
 }

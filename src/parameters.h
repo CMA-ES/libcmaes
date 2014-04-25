@@ -23,6 +23,7 @@
 #define PARAMETERS_H
 
 #include "eo_matrix.h"
+#include "genopheno.h"
 #include <string>
 #include <time.h>
 #include <math.h>
@@ -33,6 +34,7 @@ namespace libcmaes
   /**
    * \brief Generic class for Evolution Strategy parameters.
    */
+  template <class TBoundStrategy=NoBoundStrategy>
   class Parameters
   {
   public:
@@ -92,6 +94,8 @@ namespace libcmaes
     
     uint64_t _seed; /**< seed for random generator. */
     int _algo; /**< selected algorithm. */
+
+    GenoPheno<TBoundStrategy> _gp;
   };
   
 }
