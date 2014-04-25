@@ -17,7 +17,8 @@ Dependencies:
 
 - [eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) for all matrix operations;
 - [glog](https://code.google.com/p/google-glog/) for logging events and debug;
-- [gflags](https://code.google.com/p/gflags/) for command line parsing.
+- [gflags](https://code.google.com/p/gflags/) for command line parsing;
+- [gtest](https://code.google.com/p/googletest/) for unit testing (optional).
 
 Implementation:
 The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithms described in (2) and (6).
