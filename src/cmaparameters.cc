@@ -28,11 +28,12 @@ namespace libcmaes
 {
   template<class TGenoPheno>
   CMAParameters<TGenoPheno>::CMAParameters(const int &dim, const int &lambda,
-					       const int &max_iter, const int &max_fevals,
-					       const std::string &fplot,
-					       const double &sigma_init, const double &x0,
-					       const uint64_t &seed)
-    :Parameters<TGenoPheno>(dim,lambda,max_iter,max_fevals,x0,fplot,seed),_sigma_init(sigma_init),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+					   const int &max_iter, const int &max_fevals,
+					   const std::string &fplot,
+					   const double &sigma_init, const double &x0,
+					   const uint64_t &seed,
+					   const double *lbounds, const double *ubounds)
+    :Parameters<TGenoPheno>(dim,lambda,max_iter,max_fevals,x0,fplot,seed,lbounds,ubounds),_sigma_init(sigma_init),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
   {
     _mu = floor(Parameters<TGenoPheno>::_lambda / 2.0);
     _weights = dVec::Zero(_mu);
@@ -76,5 +77,5 @@ namespace libcmaes
   }
 
   template class CMAParameters<GenoPheno<NoBoundStrategy>>;
-  
+  template class CMAParameters<GenoPheno<pwqBoundStrategy>>;
 }

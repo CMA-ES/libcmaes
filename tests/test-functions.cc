@@ -329,7 +329,7 @@ void printAvailFuncs()
     std::cout << imap.first << " ";
   std::cout << std::endl;
 }
-  
+
 // command line options.
 DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");
@@ -345,6 +345,38 @@ DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all compo
 DEFINE_uint64(seed,0,"seed for random generator");
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop & abipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
+DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
+DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
+DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
+
+template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+CMASolutions cmaes_opt()
+{
+  double lbounds[FLAGS_dim];
+  double ubounds[FLAGS_dim];
+  for (int i=0;i<FLAGS_dim;i++)
+    {
+      lbounds[i] = FLAGS_lbound;
+      ubounds[i] = FLAGS_ubound;
+    }
+  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,
+				      FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed,lbounds,ubounds);
+  cmaparams._lazy_update = FLAGS_lazy_update;
+  if (FLAGS_alg == "cmaes")
+    cmaparams._algo = CMAES_DEFAULT;
+  else if (FLAGS_alg == "ipop")
+    cmaparams._algo = IPOP_CMAES;
+  else if (FLAGS_alg == "bipop")
+    cmaparams._algo = BIPOP_CMAES;
+  else if (FLAGS_alg == "acmaes")
+    cmaparams._algo = aCMAES;
+  else if (FLAGS_alg == "aipop")
+    cmaparams._algo = aIPOP_CMAES;
+  else if (FLAGS_alg == "abipop")
+    cmaparams._algo = aBIPOP_CMAES;
+  CMASolutions cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  return cmasols;
+}
 
 int main(int argc, char *argv[])
 {
@@ -406,21 +438,11 @@ int main(int argc, char *argv[])
       printAvailFuncs();
       exit(1);
     }
-  CMAParameters<> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
-  cmaparams._lazy_update = FLAGS_lazy_update;
-  if (FLAGS_alg == "cmaes")
-    cmaparams._algo = CMAES_DEFAULT;
-  else if (FLAGS_alg == "ipop")
-    cmaparams._algo = IPOP_CMAES;
-  else if (FLAGS_alg == "bipop")
-    cmaparams._algo = BIPOP_CMAES;
-  else if (FLAGS_alg == "acmaes")
-    cmaparams._algo = aCMAES;
-  else if (FLAGS_alg == "aipop")
-    cmaparams._algo = aIPOP_CMAES;
-  else if (FLAGS_alg == "abipop")
-    cmaparams._algo = aBIPOP_CMAES;
-  CMASolutions cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  CMASolutions cmasols;
+  if (FLAGS_boundtype == "none")
+    cmasols = cmaes_opt<>();
+  else if (FLAGS_boundtype == "pwq")
+    cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
   if (cmasols._run_status < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";

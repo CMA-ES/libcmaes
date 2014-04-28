@@ -164,5 +164,6 @@ namespace libcmaes
   
   template class CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class CMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  //TODO: pwq bound strategy.
+  template class CMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class CMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
 }

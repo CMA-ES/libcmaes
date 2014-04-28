@@ -24,15 +24,12 @@
 
 #include "eo_matrix.h"
 
-//TODO: NoBounds class.
-//TODO: make a lambda function typedef for the mapping functions (should be in genopheno...)
-//TODO: unit tests.
-
 namespace libcmaes
 {
   class pwqBoundStrategy
   {
   public:
+    pwqBoundStrategy(); // dummy constructor, required for non-pointer default object in GenoPheno.
     pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim);
     ~pwqBoundStrategy();
 

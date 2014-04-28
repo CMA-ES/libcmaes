@@ -32,13 +32,13 @@
 
 namespace libcmaes
 {
-  pwqBoundStrategy::pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim)
-  //:_lbounds(dVec::Constant(dim,std::numeric_limits<double>::min())),_ubounds(dVec::Constant(dim,std::numeric_limits<double>::max()))
+  pwqBoundStrategy::pwqBoundStrategy()
   {
-    // init lbounds and ubounds from arrays.
-    _lbounds = Map<dVec>(const_cast<double*>(lbounds),dim); //XXX: beware...
-    _ubounds = Map<dVec>(const_cast<double*>(ubounds),dim);
-       
+  }
+  
+  pwqBoundStrategy::pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim)
+    :_lbounds(Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Map<dVec>(const_cast<double*>(ubounds),dim))
+  {
     // init al & ul.
     dVec tmpdiff1 = _ubounds - _lbounds;
     dVec tmpdiff2 = 0.5*tmpdiff1;
@@ -47,7 +47,7 @@ namespace libcmaes
     
     dVec tmpau = (1.0/20.0) * (dVec::Constant(dim,1.0) + _ubounds.cwiseAbs());
     _au = tmpdiff2.cwiseMin(tmpau);
-
+    
     // compute static variables.
     _xlow = _lbounds - 2.0 * _al - tmpdiff2;
     _xup = _ubounds + 2.0 * _au + tmpdiff2;
@@ -83,7 +83,7 @@ namespace libcmaes
 	  x_s[i] += 2.0 * (_lbounds[i] - _al[i] - x_s[i]);
 	if (x_s[i] > _ubounds[i] + _au[i])
 	  x_s[i] -= 2.0 * (x_s[i] - _ubounds[i] - _au[i]);
-	
+
 	if ((x_s[i] < _lbounds[i] - _al[i] - 1e-15) || (x_s[i] > _ubounds[i] + _au[i] + 1e-15))
 	  {
 	    LOG(FATAL) << "error in shifting pwq bounds in dimension " << i << ": lb=" << _lbounds[i] << " / ub=" << _ubounds[i] << " / al=" << _al[i] << " / au=" << _au[i] << " / x_s=" << x_s[i] << " / x=" << x[i] << " / xlow=" << _xlow[i] << " / xup=" << _xup[i] << " / r=" << _r[i] << std::endl;
