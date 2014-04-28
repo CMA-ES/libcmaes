@@ -53,6 +53,8 @@ namespace libcmaes
      * @param x0 initial value of the search in parameter space (if unspecified, sampled from within [-4,4] in all coordinates)
      * @param fplot output file name for later plotting of results
      * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
+     * @param lbounds lower bounds on variable values
+     * @param ubounds upper bounds on variable values
      */
   Parameters(const int &dim, const int &lambda=-1, const int &max_iter=-1,
 	     const int &max_fevals=-1,
@@ -78,6 +80,8 @@ namespace libcmaes
    * @param x0max upper bound of the initial value of the search in parameter space (initial x0 value is sampled from [x0min,xmax])
    * @param fplot output file name for later plotting of results
    * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
+   * @param lbounds lower bounds on variable values
+   * @param ubounds upper bounds on variable values
    */
   Parameters(const int &dim, const int &lambda, const int &max_iter,
 	     const int &max_fevals=-1,
@@ -91,6 +95,33 @@ namespace libcmaes
       if (_seed == 0) // seed is not forced.
 	_seed = static_cast<uint64_t>(time(NULL));
     }
+
+  /**
+   * \brief constructor
+   * @param dim problem dimensions
+   * @param lambda number of offsprings sampled at each step
+   * @param max_iter maximum number of iterations
+   * @param max_fevals function evaluation budget as the max number of calls
+   * @param x0min lower bound vector to the initial value of the search in parameter space (initial x0 value is sampled from [x0min,xmax])
+   * @param x0max upper bound vector to the initial value of the search in parameter space (initial x0 value is sampled from [x0min,xmax])
+   * @param fplot output file name for later plotting of results
+   * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
+   * @param lbounds lower bounds on variable values
+   * @param ubounds upper bounds on variable values
+   */
+  Parameters(const int &dim, const int &lambda, const int &max_iter,
+	     const dVec &x0min,
+	     const dVec &x0max,
+	     const int &max_fevals=-1,
+	     const std::string &fplot="",
+	     const uint64_t &seed=0, const double *lbounds=NULL, const double *ubounds=NULL)
+  :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
+  _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(TGenoPheno(lbounds,ubounds,dim))
+    {
+      if (_seed == 0) // seed is not forced.
+	_seed = static_cast<uint64_t>(time(NULL));
+    }
+  
   ~Parameters()
     {
     }

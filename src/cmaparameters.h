@@ -47,6 +47,8 @@ namespace libcmaes
      * @param sigma_init initial value of the step size sigma
      * @param x0 initial value of the search in parameter space (if unspecified, sampled from within [-4,4] in all coordinates)
      * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
+     * @param lbounds lower bounds on variable values
+     * @param ubounds upper bounds on variable values
      */
     CMAParameters(const int &dim, const int &lambda=-1,
 		  const int &max_iter=-1, const int &max_fevals=-1,
