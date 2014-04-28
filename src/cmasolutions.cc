@@ -104,7 +104,7 @@ namespace libcmaes
   std::ostream& CMASolutions::print(std::ostream &out,
 				    const int &verb_level) const
   {
-    out << "best solution => f-value=" << best_candidate()._fvalue << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms";
+    out << "best solution => f-value=" << best_candidate()._fvalue << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << best_candidate()._x.transpose(); //TODO: print pheno(x).
     if (verb_level)
       {
 	out << "\ncovdiag=" << _cov.diagonal().transpose() << std::endl;
