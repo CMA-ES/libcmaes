@@ -19,6 +19,12 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This is based on Nikolaus Hansen's code from the C version of CMA-ES,
+ * see boundary_transformation.c from the package available from
+ * https://www.lri.fr/~hansen/cmaes_inmatlab.html#C
+ */
+
 #include "pwq_bound_strategy.h"
 #include <glog/logging.h>
 #include <limits>
