@@ -33,8 +33,8 @@ namespace libcmaes
    *        distribution parameters in order to alternate between local and 
    *        global searches for the objective.
    */
-  template <class TCovarianceUpdate, class TBoundStrategy>
-    class BIPOPCMAStrategy : public IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>
+  template <class TCovarianceUpdate, class TGenoPheno>
+    class BIPOPCMAStrategy : public IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>
   {
   public:
     /**
@@ -43,7 +43,7 @@ namespace libcmaes
      * @param parameters stochastic search parameters
      */
     BIPOPCMAStrategy(FitFunc &func,
-		     CMAParameters<TBoundStrategy> &parameters);
+		     CMAParameters<TGenoPheno> &parameters);
     ~BIPOPCMAStrategy();
 
     /**

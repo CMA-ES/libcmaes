@@ -40,8 +40,8 @@ namespace libcmaes
    * Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395
    * See https://www.lri.fr/~hansen/publications.html for more information.
    */
-  template <class TCovarianceUpdate,class TBoundStrategy=NoBoundStrategy>
-    class CMAStrategy : public ESOStrategy<CMAParameters<TBoundStrategy>,CMASolutions,CMAStopCriteria<TBoundStrategy> >
+  template <class TCovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
+    class CMAStrategy : public ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >
     {
     public:
       /**
@@ -50,7 +50,7 @@ namespace libcmaes
        * @param parameters stochastic search parameters
        */
       CMAStrategy(FitFunc &func,
-		  CMAParameters<TBoundStrategy> &parameters);
+		  CMAParameters<TGenoPheno> &parameters);
       ~CMAStrategy();
 
       /**
@@ -93,15 +93,15 @@ namespace libcmaes
        *        to add custom termination criteria.
        * @param pfunc a progress function
        */
-      void set_progress_func(ProgressFunc<CMAParameters<TBoundStrategy>,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
+      void set_progress_func(ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
       
     private:
       EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
-      CMAStopCriteria<TBoundStrategy> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
+      CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
       std::ofstream _fplotstream; /**< plotting file stream, not in parameters because of copy-constructor hell. */
 
     public:
-      static ProgressFunc<CMAParameters<TBoundStrategy>,CMASolutions> _defaultPFunc; /**< the default progress function. */
+      static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
     };
   
 }

@@ -29,50 +29,50 @@
 namespace libcmaes
 {
 
-  template <class TBoundStrategy> using eostrat = ESOStrategy<CMAParameters<TBoundStrategy>,CMASolutions,CMAStopCriteria<TBoundStrategy> >;
+  template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
   
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  ProgressFunc<CMAParameters<TBoundStrategy>,CMASolutions> CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_defaultPFunc = [](const CMAParameters<TBoundStrategy> &cmaparams, const CMASolutions &cmasols)
+  template <class TCovarianceUpdate, class TGenoPheno>
+  ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
   {
     LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "");
     return 0;
   };
   
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  CMAStrategy<TCovarianceUpdate,TBoundStrategy>::CMAStrategy(FitFunc &func,
-					      CMAParameters<TBoundStrategy> &parameters)
-    :ESOStrategy<CMAParameters<TBoundStrategy>,CMASolutions,CMAStopCriteria<TBoundStrategy> >(func,parameters)
+  template <class TCovarianceUpdate, class TGenoPheno>
+  CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy(FitFunc &func,
+					      CMAParameters<TGenoPheno> &parameters)
+    :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >(func,parameters)
   {
-    eostrat<TBoundStrategy>::_pfunc = _defaultPFunc;
-    _esolver = EigenMultivariateNormal<double>(false,eostrat<TBoundStrategy>::_parameters._seed); // seeding the multivariate normal generator.
-    LOG_IF(INFO,!eostrat<TBoundStrategy>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TBoundStrategy>::_parameters._dim << " / lambda=" << eostrat<TBoundStrategy>::_parameters._lambda << " / mu=" << eostrat<TBoundStrategy>::_parameters._mu << " / mueff=" << eostrat<TBoundStrategy>::_parameters._muw << " / c1=" << eostrat<TBoundStrategy>::_parameters._c1 << " / cmu=" << eostrat<TBoundStrategy>::_parameters._cmu << " / lazy_update=" << eostrat<TBoundStrategy>::_parameters._lazy_update << std::endl;
-    if (!eostrat<TBoundStrategy>::_parameters._fplot.empty())
-      _fplotstream.open(eostrat<TBoundStrategy>::_parameters._fplot);
+    eostrat<TGenoPheno>::_pfunc = _defaultPFunc;
+    _esolver = EigenMultivariateNormal<double>(false,eostrat<TGenoPheno>::_parameters._seed); // seeding the multivariate normal generator.
+    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / lazy_update=" << eostrat<TGenoPheno>::_parameters._lazy_update << std::endl;
+    if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
+      _fplotstream.open(eostrat<TGenoPheno>::_parameters._fplot);
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  CMAStrategy<TCovarianceUpdate,TBoundStrategy>::~CMAStrategy()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  CMAStrategy<TCovarianceUpdate,TGenoPheno>::~CMAStrategy()
   {
-    if (!eostrat<TBoundStrategy>::_parameters._fplot.empty())
+    if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       _fplotstream.close();
   }
   
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  dMat CMAStrategy<TCovarianceUpdate,TBoundStrategy>::ask()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  dMat CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask()
   {
     // compute eigenvalues and eigenvectors.
-    eostrat<TBoundStrategy>::_solutions._updated_eigen = false;
-    if (eostrat<TBoundStrategy>::_niter == 0 || !eostrat<TBoundStrategy>::_parameters._lazy_update
-	|| eostrat<TBoundStrategy>::_niter - eostrat<TBoundStrategy>::_solutions._eigeniter > eostrat<TBoundStrategy>::_parameters._lazy_value)
+    eostrat<TGenoPheno>::_solutions._updated_eigen = false;
+    if (eostrat<TGenoPheno>::_niter == 0 || !eostrat<TGenoPheno>::_parameters._lazy_update
+	|| eostrat<TGenoPheno>::_niter - eostrat<TGenoPheno>::_solutions._eigeniter > eostrat<TGenoPheno>::_parameters._lazy_value)
       {
-	eostrat<TBoundStrategy>::_solutions._eigeniter = eostrat<TBoundStrategy>::_niter;
-	_esolver.setMean(eostrat<TBoundStrategy>::_solutions._xmean);
-	_esolver.setCovar(eostrat<TBoundStrategy>::_solutions._cov);
-	eostrat<TBoundStrategy>::_solutions._updated_eigen = true;
+	eostrat<TGenoPheno>::_solutions._eigeniter = eostrat<TGenoPheno>::_niter;
+	_esolver.setMean(eostrat<TGenoPheno>::_solutions._xmean);
+	_esolver.setCovar(eostrat<TGenoPheno>::_solutions._cov);
+	eostrat<TGenoPheno>::_solutions._updated_eigen = true;
       }
     
     // sample for multivariate normal distribution.
-    dMat pop = _esolver.samples(eostrat<TBoundStrategy>::_parameters._lambda,eostrat<TBoundStrategy>::_solutions._sigma); // Eq (1).
+    dMat pop = _esolver.samples(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma); // Eq (1).
     
     //TODO: rescale to function space as needed.
 
@@ -84,55 +84,55 @@ namespace libcmaes
     return pop;
   }
   
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  void CMAStrategy<TCovarianceUpdate,TBoundStrategy>::tell()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void CMAStrategy<TCovarianceUpdate,TGenoPheno>::tell()
   {
     //debug
     //DLOG(INFO) << "tell()\n";
     //debug
     
     // sort candidates.
-    eostrat<TBoundStrategy>::_solutions.sort_candidates();
+    eostrat<TGenoPheno>::_solutions.sort_candidates();
 
     //TODO: test for flat values (same value almost everywhere).
 
     //TODO: update function value history, as needed.
-    eostrat<TBoundStrategy>::_solutions.update_best_candidates();
+    eostrat<TGenoPheno>::_solutions.update_best_candidates();
 
     //TODO: update best value, as needed.
 
     // CMA-ES update, depends on the selected 'flavor'.
-    TCovarianceUpdate::update(eostrat<TBoundStrategy>::_parameters,_esolver,eostrat<TBoundStrategy>::_solutions);
+    TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,_esolver,eostrat<TGenoPheno>::_solutions);
     
     // other stuff.
-    eostrat<TBoundStrategy>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
+    eostrat<TGenoPheno>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
 			     _esolver._eigenSolver.eigenvectors());
-    eostrat<TBoundStrategy>::_solutions._niter = eostrat<TBoundStrategy>::_niter;
+    eostrat<TGenoPheno>::_solutions._niter = eostrat<TGenoPheno>::_niter;
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  bool CMAStrategy<TCovarianceUpdate,TBoundStrategy>::stop()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  bool CMAStrategy<TCovarianceUpdate,TGenoPheno>::stop()
   {
-    if (eostrat<TBoundStrategy>::_solutions._run_status < 0) // an error occured, most likely out of memory at cov matrix creation.
+    if (eostrat<TGenoPheno>::_solutions._run_status < 0) // an error occured, most likely out of memory at cov matrix creation.
       return true;
     
-    if (eostrat<TBoundStrategy>::_niter == 0)
+    if (eostrat<TGenoPheno>::_niter == 0)
       return false;
     
-    if (eostrat<TBoundStrategy>::_pfunc(eostrat<TBoundStrategy>::_parameters,eostrat<TBoundStrategy>::_solutions)) // progress function.
+    if (eostrat<TGenoPheno>::_pfunc(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) // progress function.
       return true; // end on progress function internal termination, possibly custom.
     
-    if (!eostrat<TBoundStrategy>::_parameters._fplot.empty())
+    if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       plot();
     
-    if ((eostrat<TBoundStrategy>::_parameters._max_iter > 0 && eostrat<TBoundStrategy>::_niter >= eostrat<TBoundStrategy>::_parameters._max_iter)
-	|| (eostrat<TBoundStrategy>::_solutions._run_status = _stopcriteria.stop(eostrat<TBoundStrategy>::_parameters,eostrat<TBoundStrategy>::_solutions)) != 0)
+    if ((eostrat<TGenoPheno>::_parameters._max_iter > 0 && eostrat<TGenoPheno>::_niter >= eostrat<TGenoPheno>::_parameters._max_iter)
+	|| (eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != 0)
       return true;
     else return false;
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  int CMAStrategy<TCovarianceUpdate,TBoundStrategy>::optimize()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  int CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
   {
     //debug
     //DLOG(INFO) << "optimize()\n";
@@ -141,28 +141,28 @@ namespace libcmaes
     while(!stop())
       {
 	dMat candidates = ask();
-	this->eval(eostrat<TBoundStrategy>::_parameters._gp.pheno(candidates));
+	this->eval(eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
 	tell();
-	eostrat<TBoundStrategy>::_niter++;
+	eostrat<TGenoPheno>::_niter++;
       }
-    if (eostrat<TBoundStrategy>::_solutions._run_status >= 0)
+    if (eostrat<TGenoPheno>::_solutions._run_status >= 0)
       return OPTI_SUCCESS;
-    else return OPTI_ERR_TERMINATION; // exact termination code is in eostrat<TBoundStrategy>::_solutions._run_status.
+    else return OPTI_ERR_TERMINATION; // exact termination code is in eostrat<TGenoPheno>::_solutions._run_status.
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  void CMAStrategy<TCovarianceUpdate,TBoundStrategy>::plot()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void CMAStrategy<TCovarianceUpdate,TGenoPheno>::plot()
   {
     static std::string sep = " ";
-    _fplotstream << fabs(eostrat<TBoundStrategy>::_solutions._best_candidates_hist.back()._fvalue) << sep
-		 << eostrat<TBoundStrategy>::_nevals << sep << eostrat<TBoundStrategy>::_solutions._sigma << sep << sqrt(eostrat<TBoundStrategy>::_solutions._max_eigenv/eostrat<TBoundStrategy>::_solutions._min_eigenv) << sep;
+    _fplotstream << fabs(eostrat<TGenoPheno>::_solutions._best_candidates_hist.back()._fvalue) << sep
+		 << eostrat<TGenoPheno>::_nevals << sep << eostrat<TGenoPheno>::_solutions._sigma << sep << sqrt(eostrat<TGenoPheno>::_solutions._max_eigenv/eostrat<TGenoPheno>::_solutions._min_eigenv) << sep;
     _fplotstream << _esolver._eigenSolver.eigenvalues().transpose() << sep; // eigenvalues
-    _fplotstream << eostrat<TBoundStrategy>::_solutions._cov.colwise().maxCoeff().array().sqrt() << sep; // max deviation in all main axes
-    _fplotstream << eostrat<TBoundStrategy>::_solutions._xmean.transpose();
+    _fplotstream << eostrat<TGenoPheno>::_solutions._cov.colwise().maxCoeff().array().sqrt() << sep; // max deviation in all main axes
+    _fplotstream << eostrat<TGenoPheno>::_solutions._xmean.transpose();
     _fplotstream << std::endl;
   }
   
-  template class CMAStrategy<CovarianceUpdate,NoBoundStrategy>;
-  template class CMAStrategy<ACovarianceUpdate,NoBoundStrategy>;
+  template class CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class CMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   //TODO: pwq bound strategy.
 }

@@ -26,8 +26,8 @@
 
 namespace libcmaes
 {
-  template <class TBoundStrategy>
-  CMASolutions::CMASolutions(Parameters<TBoundStrategy> &p)
+  template <class TGenoPheno>
+  CMASolutions::CMASolutions(Parameters<TGenoPheno> &p)
     :_hsig(1),_max_eigenv(0.0),_min_eigenv(0.0),_niter(0),_kcand(1),_eigeniter(0),_updated_eigen(true),_run_status(0),_elapsed_time(0)
   {
     try
@@ -50,9 +50,9 @@ namespace libcmaes
 	_xmean = 0.5*(dVec::Random(p._dim) + dVec::Constant(p._dim,1.0)); // scale to [0,1].
 	_xmean = (p._x0max - p._x0min)*_xmean + p._x0min; // scale to bounds.
       }
-    if (static_cast<CMAParameters<TBoundStrategy>&>(p)._sigma_init > 0.0)
-      _sigma = static_cast<CMAParameters<TBoundStrategy>&>(p)._sigma_init;
-    else static_cast<CMAParameters<TBoundStrategy>&>(p)._sigma_init = _sigma = 1.0/static_cast<double>(p._dim); // XXX: sqrt(trace(cov)/dim)
+    if (static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init > 0.0)
+      _sigma = static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init;
+    else static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init = _sigma = 1.0/static_cast<double>(p._dim); // XXX: sqrt(trace(cov)/dim)
     
     _psigma = dVec::Zero(p._dim);
     _pc = dVec::Zero(p._dim);
@@ -120,5 +120,5 @@ namespace libcmaes
     return out;
   }
 
-  template CMASolutions::CMASolutions(Parameters<NoBoundStrategy>&);
+  template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy>>&);
 }

@@ -38,8 +38,8 @@ namespace libcmaes
   class ACovarianceUpdate
   {
   public:
-    template <class TBoundStrategy>
-    static void update(const CMAParameters<TBoundStrategy> &parameters,
+    template <class TGenoPheno>
+    static void update(const CMAParameters<TGenoPheno> &parameters,
 		       EigenMultivariateNormal<double> &esolver,
 		       CMASolutions &solutions);
   };

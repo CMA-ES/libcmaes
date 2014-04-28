@@ -26,32 +26,32 @@
 
 namespace libcmaes
 {
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>::IPOPCMAStrategy(FitFunc &func,
-								     CMAParameters<TBoundStrategy> &parameters)
-    :CMAStrategy<TCovarianceUpdate,TBoundStrategy>(func,parameters)
+  template <class TCovarianceUpdate, class TGenoPheno>
+  IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::IPOPCMAStrategy(FitFunc &func,
+								     CMAParameters<TGenoPheno> &parameters)
+    :CMAStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
   {
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>::~IPOPCMAStrategy()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::~IPOPCMAStrategy()
   {
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  void IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>::tell()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::tell()
   {
-    CMAStrategy<TCovarianceUpdate,TBoundStrategy>::tell();
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::tell();
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  int IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>::optimize()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  int IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
   {
     CMASolutions best_run;
-    for (int r=0;r<CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._nrestarts;r++)
+    for (int r=0;r<CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._nrestarts;r++)
       {
-	LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._quiet)) << "r: " << r << " / lambda=" << CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._lambda << std::endl;
-	CMAStrategy<TCovarianceUpdate,TBoundStrategy>::optimize();
+	LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "r: " << r << " / lambda=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << std::endl;
+	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
 
 	// capture best solution.
 	capture_best_solution(best_run);
@@ -61,41 +61,41 @@ namespace libcmaes
 	reset_search_state();
 	
 	// do not restart if max budget function calls is reached (TODO: or fitness... i.e. if we know the function).
-	if (CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._max_fevals > 0
-	    && CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_nevals >= CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._max_fevals)
+	if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals > 0
+	    && CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals >= CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals)
 	  {
-	    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._quiet)) << "IPOP restarts ended on max fevals=" << CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_nevals << ">=" << CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._max_fevals << std::endl;
+	    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "IPOP restarts ended on max fevals=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals << ">=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals << std::endl;
 	    break;
 	  }
       }
-    CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_solutions = best_run;
-    if (CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_solutions._run_status >= 0)
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = best_run;
+    if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._run_status >= 0)
       return OPTI_SUCCESS;
     return OPTI_ERR_TERMINATION; // exact termination code is in CMAStrategy<TCovarianceUpdate>::_solutions._run_status.
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  void IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>::lambda_inc()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::lambda_inc()
   {
-    CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._lambda *= 2.0;
-    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._quiet)) << "Restart => lambda_l=" << CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._lambda << " / lambda_old=" << CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters._lambda / 2.0 << std::endl;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda *= 2.0;
+    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Restart => lambda_l=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / lambda_old=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda / 2.0 << std::endl;
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  void IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>::reset_search_state()
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state()
   {
-    CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_parameters);
-    CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_niter = 0;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_niter = 0;
   }
 
-  template <class TCovarianceUpdate, class TBoundStrategy>
-  void IPOPCMAStrategy<TCovarianceUpdate,TBoundStrategy>::capture_best_solution(CMASolutions &best_run)
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::capture_best_solution(CMASolutions &best_run)
   {
-    if (best_run._candidates.empty() || CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_solutions.best_candidate()._fvalue < best_run.best_candidate()._fvalue)
-      best_run = CMAStrategy<TCovarianceUpdate,TBoundStrategy>::_solutions;
+    if (best_run._candidates.empty() || CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions.best_candidate()._fvalue < best_run.best_candidate()._fvalue)
+      best_run = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions;
   }
 
-  template class IPOPCMAStrategy<CovarianceUpdate,NoBoundStrategy>;
-  template class IPOPCMAStrategy<ACovarianceUpdate,NoBoundStrategy>;
+  template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   //TODO: pwq bound strategy.
 }

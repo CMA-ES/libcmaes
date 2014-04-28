@@ -24,8 +24,8 @@
 namespace libcmaes
 {
 
-  template <class TBoundStrategy>
-  void CovarianceUpdate::update(const CMAParameters<TBoundStrategy> &parameters,
+  template <class TGenoPheno>
+  void CovarianceUpdate::update(const CMAParameters<TGenoPheno> &parameters,
 				EigenMultivariateNormal<double> &esolver,
 				CMASolutions &solutions)
   {
@@ -69,6 +69,6 @@ namespace libcmaes
     solutions._xmean = xmean;
   }
 
-  template void CovarianceUpdate::update(const CMAParameters<NoBoundStrategy>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
   
 }

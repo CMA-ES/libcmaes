@@ -29,8 +29,8 @@
 namespace libcmaes
 {
 
-  template <class TBoundStrategy>
-    using StopCriteriaFunc = std::function<int (const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas)>;
+  template <class TGenoPheno>
+    using StopCriteriaFunc = std::function<int (const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)>;
 
   enum CMAStopCritType
   {
@@ -49,7 +49,7 @@ namespace libcmaes
   /**
    * \brief CMA-ES termination criteria, see reference paper in cmastrategy.h
    */
-  template <class TBoundStrategy=NoBoundStrategy>
+  template <class TGenoPheno=NoBoundStrategy>
   class CMAStopCriteria
   {
   public:
@@ -66,9 +66,9 @@ namespace libcmaes
      * @return 0 if no termination criteria triggers, the termination code 
      *           otherwise (< 0 for an error, > 1 for a partial success).
      */
-    int stop(const CMAParameters<TBoundStrategy> &cmap, const CMASolutions &cmas) const;
+    int stop(const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas) const;
 
-    std::map<int,StopCriteriaFunc<TBoundStrategy> > _scriteria; /**< the set of predefined criteria, with priorities. */
+    std::map<int,StopCriteriaFunc<TGenoPheno> > _scriteria; /**< the set of predefined criteria, with priorities. */
     bool _active; /**< whether these termination criteria are active. */
   };
   

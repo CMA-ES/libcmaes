@@ -277,10 +277,10 @@ FitFunc diffpowrot = [](const double *x, const int N)
 
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,Candidate> msols;
-std::map<std::string,CMAParameters<NoBoundStrategy>> mparams;
+std::map<std::string,CMAParameters<>> mparams;
 std::map<std::string,FitFunc>::const_iterator mit;
 std::map<std::string,Candidate>::const_iterator fmit;
-std::map<std::string,CMAParameters<NoBoundStrategy>>::const_iterator pmit;
+std::map<std::string,CMAParameters<>>::const_iterator pmit;
 
 void fillupfuncs()
 {
@@ -309,7 +309,7 @@ void fillupfuncs()
   mfuncs["styblinski_tang"]=styblinski_tang;
   mfuncs["rastrigin"]=rastrigin;
   msols["rastrigin"]=Candidate(0.0,dVec::Constant(10,1));
-  mparams["rastrigin"]=CMAParameters<NoBoundStrategy>(10,200,-1,-1,"",4.0,5.0,1234); // 1234 is seed.
+  mparams["rastrigin"]=CMAParameters<>(10,200,-1,-1,"",4.0,5.0,1234); // 1234 is seed.
   mfuncs["elli"]=elli;
   msols["elli"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["tablet"]=tablet;
@@ -372,7 +372,7 @@ int main(int argc, char *argv[])
 	      continue;
 	    }
 	  int dim = msols[(*mit).first]._x.rows();
-	  CMAParameters<NoBoundStrategy> cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
+	  CMAParameters<> cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;
 	  cmaparams._quiet = true;
@@ -389,7 +389,7 @@ int main(int argc, char *argv[])
 	    cmaparams._algo = aIPOP_CMAES;
 	  else if (FLAGS_alg == "abipop")
 	    cmaparams._algo = aBIPOP_CMAES;
-	  CMASolutions cmasols = cmaes(mfuncs[(*mit).first],cmaparams);
+	  CMASolutions cmasols = cmaes<>(mfuncs[(*mit).first],cmaparams);
 	  Candidate c = cmasols.best_candidate();
 	  //TODO: check on solution in x space.
 	  if (compEp(c._fvalue,(*fmit).second._fvalue,FLAGS_epsilon))
@@ -406,7 +406,7 @@ int main(int argc, char *argv[])
       printAvailFuncs();
       exit(1);
     }
-  CMAParameters<NoBoundStrategy> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
+  CMAParameters<> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed);
   cmaparams._lazy_update = FLAGS_lazy_update;
   if (FLAGS_alg == "cmaes")
     cmaparams._algo = CMAES_DEFAULT;
@@ -420,7 +420,7 @@ int main(int argc, char *argv[])
     cmaparams._algo = aIPOP_CMAES;
   else if (FLAGS_alg == "abipop")
     cmaparams._algo = aBIPOP_CMAES;
-  CMASolutions cmasols = cmaes(mfuncs[FLAGS_fname],cmaparams);
+  CMASolutions cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
   if (cmasols._run_status < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";

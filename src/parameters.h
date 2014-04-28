@@ -34,7 +34,7 @@ namespace libcmaes
   /**
    * \brief Generic class for Evolution Strategy parameters.
    */
-  template <class TBoundStrategy=NoBoundStrategy>
+  template <class TGenoPheno=GenoPheno<NoBoundStrategy> >
   class Parameters
   {
   public:
@@ -95,7 +95,7 @@ namespace libcmaes
     uint64_t _seed; /**< seed for random generator. */
     int _algo; /**< selected algorithm. */
 
-    GenoPheno<TBoundStrategy> _gp;
+    TGenoPheno _gp;
   };
   
 }
