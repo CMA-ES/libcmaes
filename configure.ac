@@ -13,9 +13,12 @@ AC_PROG_INSTALL
 AC_CANONICAL_HOST
 
 AC_PROG_CC(g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
-AC_PROG_CXX(c++ g++ gcc)
+AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
+
+m4_include([m4/ax_cxx_compile_stdcxx_11.m4])
+AX_CXX_COMPILE_STDCXX_11()
 
 AC_LANG_PUSH([C++])
 AC_MSG_CHECKING([for eigen3])
