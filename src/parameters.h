@@ -59,9 +59,9 @@ namespace libcmaes
   Parameters(const int &dim, const int &lambda=-1, const int &max_iter=-1,
 	     const int &max_fevals=-1,
 	     const double &x0=std::numeric_limits<double>::min(), const std::string &fplot="",
-	     const uint64_t &seed=0, const double *lbounds=NULL, const double *ubounds=NULL)
+	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
   :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
-  _quiet(false),_fplot(fplot),_seed(seed),_algo(0),_gp(TGenoPheno(lbounds,ubounds,dim))
+  _quiet(false),_fplot(fplot),_seed(seed),_algo(0),_gp(gp)
       {
 	if (_lambda == -1) // lambda is unspecified
 	  _lambda = 4 + floor(3.0*log(_dim));
@@ -88,9 +88,9 @@ namespace libcmaes
 	     const double &x0min=std::numeric_limits<double>::min(),
 	     const double &x0max=std::numeric_limits<double>::max(),
 	     const std::string &fplot="",
-	     const uint64_t &seed=0, const double *lbounds=NULL, const double *ubounds=NULL)
+	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
   :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
-  _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(TGenoPheno(lbounds,ubounds,dim))
+  _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(gp)
     {
       if (_seed == 0) // seed is not forced.
 	_seed = static_cast<uint64_t>(time(NULL));
@@ -114,9 +114,9 @@ namespace libcmaes
 	     const dVec &x0max,
 	     const int &max_fevals=-1,
 	     const std::string &fplot="",
-	     const uint64_t &seed=0, const double *lbounds=NULL, const double *ubounds=NULL)
+	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
   :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
-  _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(TGenoPheno(lbounds,ubounds,dim))
+  _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(gp)
     {
       if (_seed == 0) // seed is not forced.
 	_seed = static_cast<uint64_t>(time(NULL));

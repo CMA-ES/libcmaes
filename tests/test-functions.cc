@@ -359,8 +359,9 @@ CMASolutions cmaes_opt()
       lbounds[i] = FLAGS_lbound;
       ubounds[i] = FLAGS_ubound;
     }
+  TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
   CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,
-				      FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed,lbounds,ubounds);
+				      FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed,gp);
   cmaparams._lazy_update = FLAGS_lazy_update;
   if (FLAGS_alg == "cmaes")
     cmaparams._algo = CMAES_DEFAULT;

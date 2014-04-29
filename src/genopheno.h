@@ -27,28 +27,74 @@
 
 namespace libcmaes
 {
-  typedef std::function<double (const double*, double*)> TransFunc;
+  typedef std::function<void (const double*, double*, const int&)> TransFunc;
+
+  /*TransFunc id_genof = [](const double *ext, const double *in)
+    {
+      in = ext;
+    };
+
+  TransFunc id_phenof = [](const double *in, const double *ext)
+    {
+      ext = in;
+      };*/
   
   template <class TBoundStrategy=NoBoundStrategy>
     class GenoPheno
     {
     public:
-    GenoPheno() {};
-    GenoPheno(const double *lbounds, const double *ubounds, const int &dim)
-    :_boundstrategy(lbounds,ubounds,dim)
+    GenoPheno()
+    :_id(true)
     {};
+
+    GenoPheno(TransFunc &genof, TransFunc &phenof)
+    :_genof(genof),_phenof(phenof),_id(false)
+    {};
+    
+    GenoPheno(const double *lbounds, const double *ubounds, const int &dim)
+    :_boundstrategy(lbounds,ubounds,dim),_id(true)
+    {};
+
+    GenoPheno(TransFunc &genof, TransFunc &phenof,
+	      const double *lbounds, const double *ubounds, const int &dim)
+    :_boundstrategy(lbounds,ubounds),_genof(genof),_phenof(phenof),_id(false)
+    {};
+    
     ~GenoPheno() {};
 
+    private:
+    dMat pheno_candidates(const dMat &candidates)
+    {
+      dMat ncandidates;
+      if (!_id)
+	{
+	  ncandidates = dMat(candidates.rows(),candidates.cols());
+#pragma omp parallel for if (candidates.cols() >= 100)
+	  for (int i=0;i<candidates.cols();i++)
+	    {
+	      dVec ext = dVec(candidates.rows());
+	      _phenof(candidates.col(i).data(),ext.data(),candidates.rows());
+	      ncandidates.col(i) = ext;
+	    }
+	}
+      return ncandidates;
+    }
+    
+    public:
     dMat pheno(const dMat &candidates)
     {
-      //TODO: apply custom pheno function.
-      
+      // apply custom pheno function.
+      dMat ncandidates = pheno_candidates(candidates);
+
+      // apply bounds.
       dMat ycandidates = dMat(candidates.rows(),candidates.cols());
 #pragma omp parallel for if (candidates.cols() >= 100)
       for (int i=0;i<candidates.cols();i++)
 	{
-	  // apply bounds.
-	  dVec xcoli = candidates.col(i);
+	  dVec xcoli;
+	  if (!_id)
+	    xcoli = ncandidates.col(i);
+	  else xcoli = candidates.col(i);
 	  dVec ycoli = ycandidates.col(i); // copy required as Eigen complains on function signature otherwise.
 	  _boundstrategy.to_f_representation(xcoli,ycoli);
 	  ycandidates.col(i) = ycoli;
@@ -58,10 +104,19 @@ namespace libcmaes
 
     dVec pheno(const dVec &candidate)
     {
-      //TODO: apply custom pheno function.
-      
+      // apply custom pheno function.
+      dVec ncandidate;
+      if (!_id)
+	{
+	  ncandidate = dVec(candidate.rows());
+	  _phenof(candidate.data(),ncandidate.data(),candidate.rows());
+	}
+
+      // apply bounds.
       dVec phen = dVec::Zero(candidate.rows());
-      _boundstrategy.to_f_representation(candidate,phen);
+      if (_id)
+	_boundstrategy.to_f_representation(candidate,phen);
+      else _boundstrategy.to_f_representation(ncandidate,phen);
       return phen;
     }
     
@@ -71,26 +126,50 @@ namespace libcmaes
       dVec gen = dVec::Zero(candidate.rows());
       _boundstrategy.to_internal_representation(gen,candidate);
 
-      //TODO: apply custom geno function.
-
-      return gen;
+      // apply custom geno function.
+      if (!_id)
+	{
+	  dVec ncandidate(gen.rows());
+	  _genof(gen.data(),ncandidate.data(),gen.rows());
+	  return ncandidate;
+	}
+      else return gen;
     }
     
     TBoundStrategy _boundstrategy;
-  };
+    TransFunc _genof;
+    TransFunc _phenof;
+    bool _id; /**< geno/pheno transform is identity. */
+    };
 
   // specialization when no bound strategy applies.
   template<> inline dMat GenoPheno<NoBoundStrategy>::pheno(const dMat &candidates)
     {
-      return candidates;
+      if (_id)
+	return candidates;
+      else return pheno_candidates(candidates);
     }
   template<> inline dVec GenoPheno<NoBoundStrategy>::pheno(const dVec &candidate)
     {
-      return candidate;
+      if (_id)
+	return candidate;
+      else
+	{
+	  dVec ncandidate(candidate.rows());
+	  _phenof(candidate.data(),ncandidate.data(),candidate.rows());
+	  return ncandidate;
+	}
     }
   template<> inline dVec GenoPheno<NoBoundStrategy>::geno(const dVec &candidate)
     {
-      return candidate;
+      if (_id)
+	return candidate;
+      else
+	{
+	  dVec ncandidate(candidate.rows());
+	  _genof(candidate.data(),ncandidate.data(),candidate.rows());
+	  return ncandidate;
+	}
     }
 }
 

@@ -56,7 +56,7 @@ namespace libcmaes
 		  const double &sigma_init=-1.0,
 		  const double &x0=std::numeric_limits<double>::min(),
 		  const uint64_t &seed=0,
-		  const double *lbounds=NULL, const double *ubounds=NULL);
+		  const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
     ~CMAParameters();
     
     int _mu; /**< number of candidate solutions used to update the distribution parameters. */
