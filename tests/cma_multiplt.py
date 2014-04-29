@@ -75,6 +75,7 @@ grid(True)
 subplot(223)
 semilogy(fevals,eigenv,'-b')
 pylab.xlabel(xlab)
+title('Eigenvalues')
 grid(True)
 
 # plot std deviations
