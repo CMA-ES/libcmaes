@@ -45,6 +45,8 @@ stdsc = []
 for c in range(single_values+dim,single_values+2*dim):
     stdsc.append(c)
 stds = dat[:,stdsc]
+minstds = np.amin(stds,axis=1)
+maxstds = np.amax(stds,axis=1)
 xmeanc = []
 for c in range(single_values+2*dim,single_values+3*dim):
     xmeanc.append(c)
@@ -58,6 +60,8 @@ subplot(221)
 semilogy(fevals,fvalue,'b')
 semilogy(fevals,sigma,'g')
 semilogy(fevals,kappa,'r')
+semilogy(fevals,sigma*minstds,'y')
+semilogy(fevals,sigma*maxstds,'y')
 title('f-value (blue), sigma (green), kappa (red)')
 grid(True)
 
