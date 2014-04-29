@@ -157,7 +157,7 @@ namespace libcmaes
     _fplotstream << fabs(eostrat<TGenoPheno>::_solutions._best_candidates_hist.back()._fvalue) << sep
 		 << eostrat<TGenoPheno>::_nevals << sep << eostrat<TGenoPheno>::_solutions._sigma << sep << sqrt(eostrat<TGenoPheno>::_solutions._max_eigenv/eostrat<TGenoPheno>::_solutions._min_eigenv) << sep;
     _fplotstream << _esolver._eigenSolver.eigenvalues().transpose() << sep; // eigenvalues
-    _fplotstream << eostrat<TGenoPheno>::_solutions._cov.colwise().maxCoeff().array().sqrt() << sep; // max deviation in all main axes
+    _fplotstream << eostrat<TGenoPheno>::_solutions._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
     _fplotstream << eostrat<TGenoPheno>::_solutions._xmean.transpose();
     _fplotstream << std::endl;
   }
