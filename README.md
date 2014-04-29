@@ -1,8 +1,9 @@
 ## libcmaes
-libcmaes is a multithreaded C++ implementation of the CMA-ES algorithm for stochastic optimization of nonlinear 'blackbox' functions.
-CMA-ES has proven very effective in optimizing functions when no gradient is available. Typically, it does find the minimum value of an objective function in a minimal number of function calls, compared to other methods. For a full report of recent results, see (3).
-CMA-ES is mostly the work of Nikolaus Hansen (4) and a few others.
-Other implementations can be found in (5).
+libcmaes is a multithreaded C++ implementation of the CMA-ES algorithm for stochastic optimization of nonlinear 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
+
+Over the past decade, both the original CMA-ES and its improved flavors have proven very effective in optimizing functions when no gradient is available. Typically, the algorithm does find the minimum value of an objective function in a minimal number of function calls, compared to other methods. For a full report of recent results, see (3).
+
+CMA-ES is mostly the work of Nikolaus Hansen (4) and a few others. Other implementations can be found in (5).
 
 Main functionalities:
 At the moment, the library implements a vanilla version of CMA-ES (1).
