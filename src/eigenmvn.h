@@ -86,7 +86,7 @@ namespace Eigen {
   public:
     EigenMultivariateNormal(const bool &use_cholesky=false,
 			    const uint64_t &seed=std::mt19937::default_seed)
-      :_use_cholesky(false)
+      :_use_cholesky(use_cholesky)
       {
 	randN.seed(seed);
       };
