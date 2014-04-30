@@ -25,8 +25,8 @@
 #include "eo_matrix.h"
 #include "genopheno.h"
 #include <string>
-#include <time.h>
-#include <math.h>
+#include <ctime>
+#include <cmath>
 #include <limits>
 
 namespace libcmaes

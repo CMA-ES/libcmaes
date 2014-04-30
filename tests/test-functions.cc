@@ -24,7 +24,7 @@
 #include <random>
 #include <limits>
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <glog/logging.h>
 
 //#define STRIP_FLAG_HELP 1

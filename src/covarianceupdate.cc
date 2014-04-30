@@ -38,7 +38,7 @@ namespace libcmaes
     dVec diffxmean = 1.0/solutions._sigma * (xmean-solutions._xmean); // (m^{t+1}-m^t)/sigma^t
     if (solutions._updated_eigen)
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
-
+    
     // update psigma, Eq. (3)
     solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
       + parameters._fact_ps * solutions._csqinv * diffxmean;

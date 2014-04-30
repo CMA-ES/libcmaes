@@ -20,7 +20,7 @@
  */
 
 #include "cmaparameters.h"
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <glog/logging.h>
 

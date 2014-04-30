@@ -20,7 +20,7 @@
  */
 
 #include "cmastopcriteria.h"
-#include <math.h>
+#include <cmath>
 #include <iterator>
 #include <glog/logging.h>
 #include <limits>

@@ -28,7 +28,7 @@
 #include "cmaes.h"
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
+#include <ctime>
 #include <stdlib.h>
 #include "bbobStructures.h" /* Include all declarations for BBOB calls */
 #include <vector>

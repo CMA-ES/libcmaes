@@ -23,7 +23,7 @@
 #include "opti_err.h"
 #include <random>
 #include <glog/logging.h>
-#include <time.h>
+#include <ctime>
 
 namespace libcmaes
 {
