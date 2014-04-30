@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
       strcpy(params.algName,(*mit).second.c_str());
       //strcpy(params.comments, "testrun");
       
-      /*seed = time(NULL);
+      /*seed = time(nullptr);
 	srand(seed);*/ /* used by MY_OPTIMIZER */
       //printf("random seed set to %d\n", seed);
       
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 		  /* call the BBOB closing function to wrap things up neatly */
 		  fgeneric_finalize();
 		}
-	      Tval = time(NULL);
+	      Tval = time(nullptr);
 	      printf("    date and time: %s", ctime(&Tval));
 	    }
 	  printf("---- dimension %d-D done ----\n", dim[idx_dim]);

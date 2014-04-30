@@ -66,7 +66,7 @@ namespace libcmaes
 	if (_lambda == -1) // lambda is unspecified
 	  _lambda = 4 + floor(3.0*log(_dim));
 	if (_seed == 0) // seed is not forced.
-	  _seed = static_cast<uint64_t>(time(NULL));
+	  _seed = static_cast<uint64_t>(time(nullptr));
 	_x0min = _x0max = dVec::Constant(_dim,x0);
     }
 
@@ -93,7 +93,7 @@ namespace libcmaes
   _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(gp)
     {
       if (_seed == 0) // seed is not forced.
-	_seed = static_cast<uint64_t>(time(NULL));
+	_seed = static_cast<uint64_t>(time(nullptr));
     }
 
   /**
@@ -119,7 +119,7 @@ namespace libcmaes
   _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(gp)
     {
       if (_seed == 0) // seed is not forced.
-	_seed = static_cast<uint64_t>(time(NULL));
+	_seed = static_cast<uint64_t>(time(nullptr));
     }
   
   ~Parameters()

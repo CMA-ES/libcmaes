@@ -29,7 +29,7 @@ namespace libcmaes
   class NoBoundStrategy
   {
   public:
-    NoBoundStrategy(const double *lbounds=NULL,const double *ubounds=NULL,const int dim=0) {}; // empty constructor with signature.
+    NoBoundStrategy(const double *lbounds=nullptr,const double *ubounds=nullptr,const int dim=0) {}; // empty constructor with signature.
     ~NoBoundStrategy() {};
 
     void to_f_representation(const dVec &x, dVec &y) {};
