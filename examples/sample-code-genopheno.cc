@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   //int lambda = 100; // offsprings at each generation.
   GenoPheno<> gp(genof,phenof);
   //CMAParameters cmaparams(dim,lambda);
-  CMAParameters<> cmaparams(dim,-1,-1,-1,"",-1.0,std::numeric_limits<double>::min(),0,gp);
+  CMAParameters<> cmaparams(dim,-1,-1.0,0,gp);
   //cmaparams._algo = BIPOP_CMAES;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;

@@ -48,98 +48,55 @@ namespace libcmaes
      * \brief constructor
      * @param dim problem dimensions
      * @param lambda number of offsprings sampled at each step
-     * @param max_iter maximum number of iterations
-     * @param max_fevals function evaluation budget as the max number of calls
-     * @param x0 initial value of the search in parameter space (if unspecified, sampled from within [-4,4] in all coordinates)
-     * @param fplot output file name for later plotting of results
      * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
-     * @param lbounds lower bounds on variable values
-     * @param ubounds upper bounds on variable values
+     * @param gp genotype / phenotype object
      */
-  Parameters(const int &dim, const int &lambda=-1, const int &max_iter=-1,
-	     const int &max_fevals=-1,
-	     const double &x0=std::numeric_limits<double>::min(), const std::string &fplot="",
+  Parameters(const int &dim, const int &lambda=-1,
 	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
-  :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
-  _quiet(false),_fplot(fplot),_seed(seed),_algo(0),_gp(gp)
+  :_dim(dim),_lambda(lambda),_x0min(dVec::Constant(dim,std::numeric_limits<double>::min())),
+  _x0max(dVec::Constant(dim,std::numeric_limits<double>::min())),_seed(seed),_gp(gp) // x0 initialized to min double value everywhere
       {
 	if (_lambda == -1) // lambda is unspecified
 	  _lambda = 4 + floor(3.0*log(_dim));
 	if (_seed == 0) // seed is not forced.
 	  _seed = static_cast<uint64_t>(time(nullptr));
-	_x0min = _x0max = dVec::Constant(_dim,x0);
-    }
-
-  /**
-   * \brief constructor
-   * @param dim problem dimensions
-   * @param lambda number of offsprings sampled at each step
-   * @param max_iter maximum number of iterations
-   * @param max_fevals function evaluation budget as the max number of calls
-   * @param x0min lower bound of the initial value of the search in parameter space (initial x0 value is sampled from [x0min,xmax])
-   * @param x0max upper bound of the initial value of the search in parameter space (initial x0 value is sampled from [x0min,xmax])
-   * @param fplot output file name for later plotting of results
-   * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
-   * @param lbounds lower bounds on variable values
-   * @param ubounds upper bounds on variable values
-   */
-  Parameters(const int &dim, const int &lambda, const int &max_iter,
-	     const int &max_fevals=-1,
-	     const double &x0min=std::numeric_limits<double>::min(),
-	     const double &x0max=std::numeric_limits<double>::max(),
-	     const std::string &fplot="",
-	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
-  :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
-  _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(gp)
-    {
-      if (_seed == 0) // seed is not forced.
-	_seed = static_cast<uint64_t>(time(nullptr));
-    }
-
-  /**
-   * \brief constructor
-   * @param dim problem dimensions
-   * @param lambda number of offsprings sampled at each step
-   * @param max_iter maximum number of iterations
-   * @param max_fevals function evaluation budget as the max number of calls
-   * @param x0min lower bound vector to the initial value of the search in parameter space (initial x0 value is sampled from [x0min,xmax])
-   * @param x0max upper bound vector to the initial value of the search in parameter space (initial x0 value is sampled from [x0min,xmax])
-   * @param fplot output file name for later plotting of results
-   * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
-   * @param lbounds lower bounds on variable values
-   * @param ubounds upper bounds on variable values
-   */
-  Parameters(const int &dim, const int &lambda, const int &max_iter,
-	     const dVec &x0min,
-	     const dVec &x0max,
-	     const int &max_fevals=-1,
-	     const std::string &fplot="",
-	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
-  :_dim(dim),_lambda(lambda),_max_iter(max_iter),_max_fevals(max_fevals),
-  _quiet(false),_fplot(fplot),_x0min(x0min),_x0max(x0max),_seed(seed),_algo(0),_gp(gp)
-    {
-      if (_seed == 0) // seed is not forced.
-	_seed = static_cast<uint64_t>(time(nullptr));
     }
   
   ~Parameters()
     {
     }
 
-    int _dim; /**< function space dimensions. */
-    int _lambda; /**< number of offsprings. */
-    int _max_iter; /**< max iterations. */
-    int _max_fevals; /**< max budget as number of function evaluations. */
-    
-    bool _quiet; /**< quiet all outputs. */
-    std::string _fplot; /**< plotting file, if specified. */
-    dVec _x0min; /**< initial mean vector min bound value for all components. */
-    dVec _x0max; /**< initial mean vector max bound value for all components. */
-    
-    uint64_t _seed; /**< seed for random generator. */
-    int _algo; /**< selected algorithm. */
+  void set_x0(const double &x0)
+  {
+    _x0min = _x0max = dVec::Constant(_dim,x0);
+  }
 
-    TGenoPheno _gp;
+  void set_x0(const double &x0min, const double &x0max)
+  {
+    _x0min = dVec::Constant(_dim,x0min);
+    _x0max = dVec::Constant(_dim,x0max);
+  }
+
+  void set_x0(const dVec &x0min, const dVec &x0max)
+  {
+    _x0min = x0min;
+    _x0max = x0max;
+  }
+  
+  int _dim; /**< function space dimensions. */
+  int _lambda = -1; /**< number of offsprings. */
+  int _max_iter = -1; /**< max iterations. */
+  int _max_fevals = -1; /**< max budget as number of function evaluations. */
+  
+  bool _quiet = false; /**< quiet all outputs. */
+  std::string _fplot = ""; /**< plotting file, if specified. */
+  dVec _x0min; /**< initial mean vector min bound value for all components. */
+  dVec _x0max; /**< initial mean vector max bound value for all components. */
+  
+  uint64_t _seed = 0; /**< seed for random generator. */
+  int _algo = 0; /**< selected algorithm. */
+  
+  TGenoPheno _gp;
   };
   
 }

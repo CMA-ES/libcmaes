@@ -48,7 +48,7 @@ namespace libcmaes
     else
       {
 	_xmean = 0.5*(dVec::Random(p._dim) + dVec::Constant(p._dim,1.0)); // scale to [0,1].
-	_xmean = (p._x0max - p._x0min)*_xmean + p._x0min; // scale to bounds.
+	_xmean = _xmean.cwiseProduct(p._x0max - p._x0min) + p._x0min; // scale to bounds.
       }
     if (static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init > 0.0)
       _sigma = static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init;

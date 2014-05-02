@@ -204,6 +204,7 @@ FitFunc rastrigin = [](const double *x, const int N)
     val += x[i]*x[i] - A*cos(2*M_PI*x[i]);
   return val;
 };
+CMAParameters<> rastrigin_params(10,400,5.0,1234); // 1234 is seed.
 
 FitFunc elli = [](const double *x, const int N)
 {
@@ -309,7 +310,8 @@ void fillupfuncs()
   mfuncs["styblinski_tang"]=styblinski_tang;
   mfuncs["rastrigin"]=rastrigin;
   msols["rastrigin"]=Candidate(0.0,dVec::Constant(10,1));
-  mparams["rastrigin"]=CMAParameters<>(10,200,-1,-1,"",4.0,5.0,1234); // 1234 is seed.
+  rastrigin_params.set_x0(5.0);
+  mparams["rastrigin"]=rastrigin_params;
   mfuncs["elli"]=elli;
   msols["elli"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["tablet"]=tablet;
@@ -360,8 +362,10 @@ CMASolutions cmaes_opt()
       ubounds[i] = FLAGS_ubound;
     }
   TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
-  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_max_iter,FLAGS_max_fevals,
-				      FLAGS_fplot,FLAGS_sigma0,FLAGS_x0,FLAGS_seed,gp);
+  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_sigma0,FLAGS_seed,gp);
+  cmaparams._max_iter = FLAGS_max_iter;
+  cmaparams._max_fevals = FLAGS_max_fevals;
+  cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
   if (FLAGS_alg == "cmaes")
     cmaparams._algo = CMAES_DEFAULT;
