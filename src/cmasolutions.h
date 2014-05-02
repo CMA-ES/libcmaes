@@ -39,7 +39,6 @@ namespace libcmaes
   public:
     /**
      * \brief dummy constructor.
-     * DO NOT USE.
      */
     CMASolutions() {};
 
@@ -109,27 +108,28 @@ namespace libcmaes
     dVec _xmean; /**< distribution mean. */
     dVec _psigma; /**< cummulation for sigma. */
     dVec _pc; /**< cumulation for covariance. */
-    short _hsig; /**< 0 or 1. */
+    short _hsig = 1; /**< 0 or 1. */
     double _sigma; /**< step size. */
     std::vector<Candidate> _candidates; /**< current set of candidate solutions. */
     std::vector<Candidate> _best_candidates_hist; /**< history of best candidate solutions. */
 
-    double _max_eigenv; /**< max eigenvalue, for termination criteria. */
-    double _min_eigenv; /**< min eigenvalue, for termination criteria. */
+    double _max_eigenv = 0.0; /**< max eigenvalue, for termination criteria. */
+    double _min_eigenv = 0.0; /**< min eigenvalue, for termination criteria. */
     dVec _leigenvalues; /**< last computed eigenvalues, for termination criteria. */
     dMat _leigenvectors; /**< last computed eigenvectors, for termination criteria. */
-    int _niter; /**< number of iterations to reach this solution, for termination criteria. */
-    int _kcand;
+    int _niter = 0; /**< number of iterations to reach this solution, for termination criteria. */
+    int _nevals = 0; /**< number of function calls to reach the current solution. */
+    int _kcand = 1;
     std::vector<Candidate> _k_best_candidates_hist; /**< k-th best candidate history, for termination criteria, k is kcand=1+floor(0.1+lambda/4). */
     std::vector<double> _bfvalues; /**< best function values over the past 20 steps, for termination criteria. */
     std::vector<double> _median_fvalues; /**< median function values of some steps, in the past, for termination criteria. */
     
-    int _eigeniter; /**< eigenvalues computation last step, lazy-update only. */
-    bool _updated_eigen; /**< last update is not lazy. */
+    int _eigeniter = 0; /**< eigenvalues computation last step, lazy-update only. */
+    bool _updated_eigen = true; /**< last update is not lazy. */
 
     // status of the run.
-    int _run_status; /**< current status of the stochastic optimization (e.g. running, or stopped under termination criteria). */
-    int _elapsed_time; /**< final elapsed time of stochastic optimization. */
+    int _run_status = 0; /**< current status of the stochastic optimization (e.g. running, or stopped under termination criteria). */
+    int _elapsed_time = 0; /**< final elapsed time of stochastic optimization. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

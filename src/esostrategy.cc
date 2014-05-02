@@ -54,6 +54,7 @@ namespace libcmaes
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
     _nevals += candidates.cols();
+    _solutions._nevals = _nevals;
   }
 
   template<class TParameters,class TSolutions,class TStopCriteria>
