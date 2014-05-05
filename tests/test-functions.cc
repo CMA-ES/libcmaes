@@ -212,7 +212,7 @@ FitFunc elli = [](const double *x, const int N)
     return x[0] * x[0];
   double val = 0.0;
   for (int i=0;i<N;i++)
-    val += exp(log(1000.0)*2.0*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+    val += exp(log(1e3)*2.0*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
   return val;
 };
 
@@ -245,7 +245,7 @@ FitFunc ellirot = [](const double *x, const int N)
       double y = 0.0;
       for (int k=0;k<N;k++)
 	y += b(i,k)*x[k];
-      val += exp(log(1e6)*2.0*static_cast<double>(i)/(N-1)) * y*y;
+      val += exp(log(1e3)*2.0*static_cast<double>(i)/(N-1)) * y*y;
     }
   return val;
 };
