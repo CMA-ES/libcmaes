@@ -45,7 +45,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
     };
 
   // call to cmaes().
-  CMAParameters cmaparams(dim,-1,maxfunevals);
+  CMAParameters<> cmaparams(dim,-1,maxfunevals);
   cmaparams._algo = alg;
   cmaparams._quiet = true;
   cmaes(ff,cmaparams);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     {
       unsigned int dim[6] = {2, 3, 5, 10, 20, 40};
       unsigned int instances[15] = {1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
-      unsigned int idx_dim, ifun, idx_instances, seed;
+      unsigned int idx_dim, ifun, idx_instances;// seed;
       int independent_restarts;
       double maxfunevals, minfunevals;
       
