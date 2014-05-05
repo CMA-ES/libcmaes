@@ -20,7 +20,7 @@
  */
 
 #ifndef CMAES_H
-#define CAMES_H
+#define CMAES_H
 
 #include "esoptimizer.h"
 #include "cmastrategy.h"
