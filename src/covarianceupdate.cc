@@ -1,5 +1,5 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
  * Copyright (c) 2014 INRIA
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
