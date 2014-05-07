@@ -130,6 +130,12 @@ namespace libcmaes
     // status of the run.
     int _run_status = 0; /**< current status of the stochastic optimization (e.g. running, or stopped under termination criteria). */
     int _elapsed_time = 0; /**< final elapsed time of stochastic optimization. */
+
+    dVec _xmeanold; /**< mean vector at previous step, used for KL computation only. */
+    dMat _covold; /**< covariance at previous step, used for KL computation only. */
+    double _kl = 0.0; /**< exact KL divergence. */
+    double _kl_approx_det = 0.0; /**< KL approx with det=0. */
+    //double _kl_approx_trace_diag = 0.0; /**< KL approx with trace computed on diag product. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

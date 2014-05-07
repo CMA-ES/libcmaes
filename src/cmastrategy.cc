@@ -34,7 +34,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
   {
-    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "");
+    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " / kl=" << cmasols._kl << std::endl;
     return 0;
   };
   
@@ -105,9 +105,13 @@ namespace libcmaes
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,_esolver,eostrat<TGenoPheno>::_solutions);
     
     // other stuff.
+    if (eostrat<TGenoPheno>::_niter > 0 && eostrat<TGenoPheno>::_parameters._kl)
+      compute_kl();
     eostrat<TGenoPheno>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
 			     _esolver._eigenSolver.eigenvectors());
     eostrat<TGenoPheno>::_solutions._niter = eostrat<TGenoPheno>::_niter;
+    eostrat<TGenoPheno>::_solutions._covold = eostrat<TGenoPheno>::_solutions._cov; //TODO: in solutions.
+    eostrat<TGenoPheno>::_solutions._xmeanold = eostrat<TGenoPheno>::_solutions._xmean;
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -158,8 +162,27 @@ namespace libcmaes
 		 << eostrat<TGenoPheno>::_nevals << sep << eostrat<TGenoPheno>::_solutions._sigma << sep << sqrt(eostrat<TGenoPheno>::_solutions._max_eigenv/eostrat<TGenoPheno>::_solutions._min_eigenv) << sep;
     _fplotstream << _esolver._eigenSolver.eigenvalues().transpose() << sep; // eigenvalues
     _fplotstream << eostrat<TGenoPheno>::_solutions._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-    _fplotstream << eostrat<TGenoPheno>::_solutions._xmean.transpose();
+    _fplotstream << eostrat<TGenoPheno>::_solutions._xmean.transpose() << sep;
+    _fplotstream << eostrat<TGenoPheno>::_solutions._kl << sep << eostrat<TGenoPheno>::_solutions._kl_approx_det;
     _fplotstream << std::endl;
+  }
+
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void CMAStrategy<TCovarianceUpdate,TGenoPheno>::compute_kl()
+  {
+    dMat covinv = eostrat<TGenoPheno>::_solutions._cov.inverse();
+    double trace = (covinv*eostrat<TGenoPheno>::_solutions._covold).trace();
+    dVec xmeandiff = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._xmeanold;
+    double maha = xmeandiff.transpose()*covinv*xmeandiff;
+    double det0 = 1.0, det1 = 1.0;
+    for (int i=0;i<eostrat<TGenoPheno>::_solutions._leigenvalues.size();i++)
+      {
+	det0 *= eostrat<TGenoPheno>::_solutions._leigenvalues[i];
+	det1 *= _esolver._eigenSolver.eigenvalues()[i];
+      }
+    double det = std::log(det0/det1);
+    eostrat<TGenoPheno>::_solutions._kl = 0.5 * (trace + maha - eostrat<TGenoPheno>::_parameters._dim - det);
+    eostrat<TGenoPheno>::_solutions._kl_approx_det = 0.5 * (trace + maha - eostrat<TGenoPheno>::_parameters._dim);
   }
   
   template class CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;

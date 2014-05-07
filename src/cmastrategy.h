@@ -94,7 +94,10 @@ namespace libcmaes
        * @param pfunc a progress function
        */
       void set_progress_func(ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
-      
+
+    private:
+    void compute_kl();
+    
     private:
       EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */

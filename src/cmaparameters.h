@@ -78,6 +78,9 @@ namespace libcmaes
     double _deltamaxsigma; /**< infinite (active CMA only) */
     double _lambdamintarget; /**< = 0.66 (active CMA only) */
     double _alphaminusmin; /**< = 1 (active CMA only) */
+
+    // kl.
+    bool _kl = false;
   };
   
 }
