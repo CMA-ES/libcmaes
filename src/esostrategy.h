@@ -30,7 +30,7 @@ namespace libcmaes
   typedef std::function<double (const double*, const int &n)> FitFunc;
 
   template<class TParameters,class TSolutions>
-    using ProgressFunc = std::function<int (const TParameters, const TSolutions)>; // template aliasing.
+    using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
 
   /**
    * \brief Main class describing an evolutionary optimization strategy.
@@ -88,6 +88,16 @@ namespace libcmaes
      */
     int optimize();
 
+    
+    /**
+     * \brief Sets the possibly custom progress function,
+     *        that is called in between every search step, and gives an outside
+     *        user a simple way to witness progress of the algorithm, as well as
+     *        to add custom termination criteria.
+     * @param pfunc a progress function
+     */
+    void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
+    
     // deprecated.
     Candidate best_solution() const;
     

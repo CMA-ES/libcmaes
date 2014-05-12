@@ -19,12 +19,17 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "cmastopcriteria.h"
 #include <cmath>
 #include <iterator>
 #include <glog/logging.h>
 #include <limits>
 #include <iostream>
+
+#ifdef HAVE_DEBUG
+#include <chrono>
+#endif
 
 namespace libcmaes
 {
@@ -196,14 +201,27 @@ namespace libcmaes
   template <class TGenoPheno>
   int CMAStopCriteria<TGenoPheno>::stop(const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas) const
   {
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+#endif
     if (!_active)
       return 0;
     int r = 0;
     for (auto imap : _scriteria)
       {
 	if ((r=imap.second(cmap,cmas))!=0)
-	  return r;
+	  {
+#ifdef HAVE_DEBUG
+	    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+	    const_cast<CMASolutions&>(cmas)._elapsed_stop = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+#endif
+	    return r;
+	  }
       }
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+    const_cast<CMASolutions&>(cmas)._elapsed_stop = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+#endif
     return 0;
   }
 

@@ -19,12 +19,17 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "esostrategy.h"
 #include "cmaparameters.h" // in order to pre-instanciate template into library.
 #include "cmasolutions.h"
 #include "cmastopcriteria.h"
 #include <iostream>
 #include <glog/logging.h>
+
+#ifdef HAVE_DEBUG
+#include <chrono>
+#endif
 
 namespace libcmaes
 {
@@ -44,6 +49,10 @@ namespace libcmaes
   template<class TParameters,class TSolutions,class TStopCriteria>
   void ESOStrategy<TParameters,TSolutions,TStopCriteria>::eval(const dMat &candidates)
   {
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+#endif
+    
     // one candidate per row.
 #pragma omp parallel for if (candidates.cols() >= 100)
     for (int r=0;r<candidates.cols();r++)
@@ -55,6 +64,11 @@ namespace libcmaes
       }
     _nevals += candidates.cols();
     _solutions._nevals = _nevals;
+
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+    _solutions._elapsed_eval = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+#endif
   }
 
   template<class TParameters,class TSolutions,class TStopCriteria>

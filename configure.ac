@@ -97,5 +97,18 @@ AC_HELP_STRING([--enable-bbob],[Enable the linear programming optimization (defa
 esac],[bbob=false])
 AM_CONDITIONAL(HAVE_BBOB, test x$bbob = xtrue)
 
+# Whether debug mode
+AC_ARG_ENABLE(debug,
+AC_HELP_STRING([--enable-debug],[Enable debug mode (default is NO)]),
+[case "${enableval}" in 
+	yes) debug=true ;;
+	no) debug=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-debug) ;;
+esac],[debug=false])
+if test x"$debug" = x"true"; then
+   AC_DEFINE(HAVE_DEBUG, 1, [debug])
+fi
+#AM_CONDITIONAL(HAVE_DEBUG, test x$debug = xtrue)
+
 AC_OUTPUT(Makefile src/Makefile tests/Makefile examples/Makefile)
 

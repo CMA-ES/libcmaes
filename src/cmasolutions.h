@@ -22,6 +22,7 @@
 #ifndef CMASOLUTIONS_H
 #define CMASOLUTIONS_H
 
+#include "config.h"
 #include "candidate.h"
 #include "eo_matrix.h"
 #include "cmaparameters.h"
@@ -130,6 +131,13 @@ namespace libcmaes
     // status of the run.
     int _run_status = 0; /**< current status of the stochastic optimization (e.g. running, or stopped under termination criteria). */
     int _elapsed_time = 0; /**< final elapsed time of stochastic optimization. */
+    int _elapsed_last_iter = 0; /**< time consumed during last iteration. */
+#ifdef HAVE_DEBUG
+    int _elapsed_eval = 0;
+    int _elapsed_ask = 0;
+    int _elapsed_tell = 0;
+    int _elapsed_stop = 0;
+#endif
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

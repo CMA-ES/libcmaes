@@ -21,10 +21,12 @@
 
 //#define NDEBUG 1
 
+#include "config.h"
 #include "cmastrategy.h"
 #include "opti_err.h"
 #include <glog/logging.h>
 #include <iostream>
+#include <chrono>
 
 namespace libcmaes
 {
@@ -34,7 +36,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
   {
-    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "");
+    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " " << cmasols._elapsed_last_iter;
     return 0;
   };
   
@@ -60,6 +62,10 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   dMat CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask()
   {
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+#endif
+    
     // compute eigenvalues and eigenvectors.
     eostrat<TGenoPheno>::_solutions._updated_eigen = false;
     if (eostrat<TGenoPheno>::_niter == 0 || !eostrat<TGenoPheno>::_parameters._lazy_update
@@ -80,6 +86,11 @@ namespace libcmaes
     /*DLOG(INFO) << "ask: produced " << pop.cols() << " candidates\n";
       std::cerr << pop << std::endl;*/
     //debug
+
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+    eostrat<TGenoPheno>::_solutions._elapsed_ask = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+#endif
     
     return pop;
   }
@@ -90,17 +101,17 @@ namespace libcmaes
     //debug
     //DLOG(INFO) << "tell()\n";
     //debug
+
+#ifdef DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+#endif
     
     // sort candidates.
     eostrat<TGenoPheno>::_solutions.sort_candidates();
 
-    //TODO: test for flat values (same value almost everywhere).
-
-    //TODO: update function value history, as needed.
+    // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
-
-    //TODO: update best value, as needed.
-
+    
     // CMA-ES update, depends on the selected 'flavor'.
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,_esolver,eostrat<TGenoPheno>::_solutions);
     
@@ -108,6 +119,11 @@ namespace libcmaes
     eostrat<TGenoPheno>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
 			     _esolver._eigenSolver.eigenvectors());
     eostrat<TGenoPheno>::_solutions._niter = eostrat<TGenoPheno>::_niter;
+
+#ifdef DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+    eostrat<TGenoPheno>::_solutions._elapsed_tell = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+#endif
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -137,13 +153,16 @@ namespace libcmaes
     //debug
     //DLOG(INFO) << "optimize()\n";
     //debug
-    
+    std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
     while(!stop())
       {
 	dMat candidates = ask();
 	this->eval(eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
 	tell();
 	eostrat<TGenoPheno>::_niter++;
+	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+	eostrat<TGenoPheno>::_solutions._elapsed_last_iter = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+	tstart = std::chrono::system_clock::now();
       }
     if (eostrat<TGenoPheno>::_solutions._run_status >= 0)
       return OPTI_SUCCESS;
@@ -159,6 +178,10 @@ namespace libcmaes
     _fplotstream << _esolver._eigenSolver.eigenvalues().transpose() << sep; // eigenvalues
     _fplotstream << eostrat<TGenoPheno>::_solutions._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
     _fplotstream << eostrat<TGenoPheno>::_solutions._xmean.transpose();
+    _fplotstream << sep << eostrat<TGenoPheno>::_solutions._elapsed_last_iter;
+#ifdef HAVE_DEBUG
+    _fplotstream << sep << eostrat<TGenoPheno>::_solutions._elapsed_eval << sep << eostrat<TGenoPheno>::_solutions._elapsed_ask << sep << eostrat<TGenoPheno>::_solutions._elapsed_tell << sep << eostrat<TGenoPheno>::_solutions._elapsed_stop;
+#endif
     _fplotstream << std::endl;
   }
   
