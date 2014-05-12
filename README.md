@@ -25,7 +25,7 @@ Implementation:
 The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithms described in (2) and (6).
 
 ### Authors
-libcmaes is designed and implemented by Emmanuel Benazera on behalf of INRIA Saclay / Research group TAO / LAL Appstats.
+libcmaes is designed and implemented by Emmanuel Benazera on behalf of Inria Saclay / Research group TAO / LAL Appstats.
 
 ### Build
 Beware of dependencies, typically on Debian/Ubuntu Linux, do:

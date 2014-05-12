@@ -1,6 +1,6 @@
 /**
  * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
