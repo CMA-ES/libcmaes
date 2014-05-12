@@ -350,6 +350,7 @@ DEFINE_bool(lazy_update,false,"covariance lazy update");
 DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
+DEFINE_bool(quiet,false,"no intermediate output");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 CMASolutions cmaes_opt()
@@ -367,6 +368,7 @@ CMASolutions cmaes_opt()
   cmaparams._max_fevals = FLAGS_max_fevals;
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
+  cmaparams._quiet = FLAGS_quiet;
   if (FLAGS_alg == "cmaes")
     cmaparams._algo = CMAES_DEFAULT;
   else if (FLAGS_alg == "ipop")
