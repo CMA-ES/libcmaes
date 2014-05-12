@@ -60,11 +60,11 @@ namespace libcmaes
       {
 	static double threshold = 1e-12;
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
-	int histthresh = static_cast<int>(10+floor(30*cmap._dim/cmap._lambda));
+	int histthresh = static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda));
 	int histlength = std::min(histthresh,histsize);
 	if (histlength < histthresh) // not enough data
 	  return CONT;
-	std::pair<double,double> frange(std::numeric_limits<double>::max(),std::numeric_limits<double>::min());
+	std::pair<double,double> frange(std::numeric_limits<double>::max(),-std::numeric_limits<double>::max());
 	for (int i=0;i<histlength;i++)
 	  {
 	    double val = cmas._best_candidates_hist.at(histsize-1-i)._fvalue;
@@ -148,7 +148,6 @@ namespace libcmaes
 	return CONT;
       };
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(STAGNATION,stagnation));
-
     StopCriteriaFunc<TGenoPheno> conditionCov = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	static double bound = 1e14;

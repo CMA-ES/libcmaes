@@ -57,7 +57,7 @@ namespace libcmaes
     _psigma = dVec::Zero(p._dim);
     _pc = dVec::Zero(p._dim);
     _candidates.resize(p._lambda);
-    _kcand = static_cast<int>(1.0+floor(0.1+p._lambda/4.0));
+    _kcand = static_cast<int>(1.0+ceil(0.1+p._lambda/4.0));
   }
 
   CMASolutions::~CMASolutions()
