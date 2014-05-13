@@ -50,7 +50,9 @@ namespace libcmaes
 		  const uint64_t &seed=0,
 		  const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
     ~CMAParameters();
-    
+  
+    void reset_as_fixed(const int &k);
+  
     int _mu; /**< number of candidate solutions used to update the distribution parameters. */
     dVec _weights; /**< offsprings weighting scheme. */
     double _csigma; /**< cumulation constant for step size. */

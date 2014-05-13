@@ -97,6 +97,12 @@ namespace libcmaes
     }
 
     /**
+     * \brief re-arrange solution object such that parameter 'k' is fixed (i.e. removed).
+     * @param k index of the parameter to remove.
+     */
+    void reset_as_fixed(const int &k);
+    
+    /**
      * \brief print the solution object out.
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
@@ -107,7 +113,7 @@ namespace libcmaes
     dMat _cov; /**< covariance matrix. */
     dMat _csqinv; /** inverse root square of covariance matrix. */
     dVec _xmean; /**< distribution mean. */
-    dVec _psigma; /**< cummulation for sigma. */
+    dVec _psigma; /**< cumulation for sigma. */
     dVec _pc; /**< cumulation for covariance. */
     short _hsig = 1; /**< 0 or 1. */
     double _sigma; /**< step size. */

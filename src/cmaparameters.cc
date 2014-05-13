@@ -74,6 +74,15 @@ namespace libcmaes
   {
   }
 
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::reset_as_fixed(const int &k)
+  {
+    Parameters<TGenoPheno>::_dim--;
+    removeElement(Parameters<TGenoPheno>::_x0min,k); // XXX: could go into parameters.cc
+    removeElement(Parameters<TGenoPheno>::_x0max,k);
+    removeElement(_weights,k);
+  }
+  
   template class CMAParameters<GenoPheno<NoBoundStrategy>>;
   template class CMAParameters<GenoPheno<pwqBoundStrategy>>;
 }
