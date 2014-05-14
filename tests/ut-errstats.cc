@@ -96,7 +96,7 @@ TEST(optimize,optimize_fixed_p)
   std::cout << "x: " << cmaksols.best_candidate()._x.transpose() << std::endl;
 }
 
-TEST(pl,profile_likelihood)
+TEST(pl,profile_likelihood_nocurve)
 {
    FitFunc fsphere = [](const double *x, const int N)
     {
@@ -108,11 +108,39 @@ TEST(pl,profile_likelihood)
   int dim = 10;
   CMAParameters<> cmaparams(dim);
   cmaparams._quiet = true;
+  cmaparams._seed = 1234;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   int k = 6;
   double fup = 0.1;
   int samplesize = 20;
-  pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,samplesize,fup);
+  pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,false,samplesize,fup);
   std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
   std::cout << "le xm: " << le._xm << std::endl;
+  EXPECT_FLOAT_EQ(-0.30061257,le._min);
+  EXPECT_FLOAT_EQ(0.30061254,le._max);
+}
+
+TEST(pl,profile_likelihood_curve)
+{
+   FitFunc fsphere = [](const double *x, const int N)
+    {
+      double val = 0.0;
+      for (int i=0;i<N;i++)
+	val += x[i]*x[i];
+      return val;
+    };
+  int dim = 10;
+  CMAParameters<> cmaparams(dim);
+  cmaparams._quiet = true;
+  cmaparams._seed = 4321;
+  CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
+  int k = 6;
+  double fup = 0.1;
+  int samplesize = 20;
+  pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,true,samplesize,fup);
+  std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
+  std::cout << "le xm: " << le._xm << std::endl;
+  std::pair<double,double> mm = le.getMinMax(0.1);
+  EXPECT_FLOAT_EQ(-0.30921084,mm.first);
+  EXPECT_FLOAT_EQ(0.30921084,mm.second);
 }

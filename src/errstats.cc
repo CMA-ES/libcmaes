@@ -30,6 +30,7 @@ namespace libcmaes
 					       CMAParameters<TGenoPheno> &parameters,
 					       const CMASolutions &cmasol,
 					       const int &k,
+					       const bool &curve,
 					       const int &samplesize,
 					       const double &fup,
 					       const double &delta)
@@ -41,11 +42,12 @@ namespace libcmaes
     //std::cout << "xk=" << x[k] << " / minfvalue=" << minfvalue << std::endl;
     //debug
 
-    pli le(samplesize,parameters._dim,x,minfvalue);
+    pli le(k,samplesize,parameters._dim,x,minfvalue);
     
-    errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta); // positive direction
-    errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta);  // negative direction
-    
+    errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta,curve); // positive direction
+    errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta,curve);  // negative direction
+
+    le.setMinMax();
     return le;
   }
 
@@ -58,7 +60,8 @@ namespace libcmaes
 						       const bool &neg,
 						       const int &samplesize,
 						       const double &fup,
-						       const double &delta)
+						       const double &delta,
+						       const bool &curve)
   {
     int sign = neg ? -1 : 1;
     dVec x = cmasol.best_candidate()._x;
@@ -69,7 +72,7 @@ namespace libcmaes
     for (int i=0;i<samplesize;i++)
       {
 	// get a new xk point.
-	errstats<TGenoPheno>::take_linear_step(func,k,minfvalue,fup,x,dxk);
+	errstats<TGenoPheno>::take_linear_step(func,k,minfvalue,fup,curve,x,dxk);
 
 	//debug
 	//std::cout << "new xk point: " << x.transpose() << std::endl;
@@ -91,6 +94,7 @@ namespace libcmaes
 					      const int &k,
 					      const double &minfvalue,
 					      const double &fup,
+					      const bool &curve,
 					      dVec &x,
 					      double &dxk)
   {
@@ -108,7 +112,7 @@ namespace libcmaes
     
     if (fdiff > threshold * fdiff_relative_increase) // decrease dxk
       {
-	while(fabs(fvalue-fup)>fdelta
+	while((curve || fabs(fvalue-fup)>fdelta)
 	      && fdiff > threshold * fdiff_relative_increase)
 	  {
 	    dxk /= 2.0;
@@ -119,7 +123,7 @@ namespace libcmaes
       }
     else // increase dxk
       {
-	while (fabs(fvalue-fup)>fdelta
+	while ((curve || fabs(fvalue-fup)>fdelta)
 	       && fdiff < threshold * fdiff_relative_increase)
 	  {
 	    dxk *= 2.0;
