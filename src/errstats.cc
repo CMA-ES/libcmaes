@@ -28,7 +28,7 @@ namespace libcmaes
   template <class TGenoPheno>
   pli errstats<TGenoPheno>::profile_likelihood(FitFunc &func,
 					       CMAParameters<TGenoPheno> &parameters,
-					       const CMASolutions &cmasol,
+					       CMASolutions &cmasol,
 					       const int &k,
 					       const bool &curve,
 					       const int &samplesize,
@@ -48,6 +48,7 @@ namespace libcmaes
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta,curve);  // negative direction
 
     le.setMinMax();
+    cmasol._pls.insert(std::pair<int,pli>(k,le));
     return le;
   }
 
@@ -72,7 +73,7 @@ namespace libcmaes
     for (int i=0;i<samplesize;i++)
       {
 	// get a new xk point.
-	errstats<TGenoPheno>::take_linear_step(func,k,minfvalue,fup,curve,x,dxk);
+	bool iterend = errstats<TGenoPheno>::take_linear_step(func,k,minfvalue,fup,curve,x,dxk);
 
 	//debug
 	//std::cout << "new xk point: " << x.transpose() << std::endl;
@@ -86,11 +87,22 @@ namespace libcmaes
 	// store points.
 	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
 	le._xm.row(samplesize+sign*(1+i)) = citsol.best_candidate()._x.transpose();
+
+	if (!curve && iterend)
+	  {
+	    // pad and return.
+	    for (int j=i+1;j<samplesize;j++)
+	      {
+		le._fvaluem[samplesize+sign*(1+j)] = citsol.best_candidate()._fvalue;
+		le._xm.row(samplesize+sign*(1+j)) = citsol.best_candidate()._x.transpose();
+	      }
+	    return;
+	  }
       }
   }
 						
   template <class TGenoPheno>
-  void errstats<TGenoPheno>::take_linear_step(FitFunc &func,
+  bool errstats<TGenoPheno>::take_linear_step(FitFunc &func,
 					      const int &k,
 					      const double &minfvalue,
 					      const double &fup,
@@ -128,11 +140,13 @@ namespace libcmaes
 	  {
 	    dxk *= 2.0;
 	    xtmp[k] = x[k] + dxk;
-	    fdiff = func(xtmp.data(),xtmp.size()) - minfvalue;
+	    fvalue = func(xtmp.data(),xtmp.size());
+	    fdiff = fvalue - minfvalue;
 	  }
 	dxk /= 2.0;
       }
     x[k] += dxk; // set value.
+    return (fabs(fvalue-fup) < fdelta);
   }
 
   template <class TGenoPheno>
@@ -144,6 +158,7 @@ namespace libcmaes
   {
     CMASolutions ncmasol = cmasol;
     CMAParameters<TGenoPheno> nparameters = parameters;
+    nparameters._quiet = true; //TODO: option.
     nparameters.set_fixed_p(k,vk);
     return cmaes(func,nparameters);
   }

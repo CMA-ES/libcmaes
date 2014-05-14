@@ -22,60 +22,19 @@
 #ifndef ERRSTATS_H
 #define ERRSTATS_H
 
+#include "pli.h"
 #include "cmaes.h"
 
 namespace libcmaes
 {
-  /**
-   * \brief profile likelihood as a set of points and values. 
-   */
-  class pli
-  {
-  public:
-  pli(const int &k, const int &samplesize, const int &dim,
-      const dVec &xm, const double &fvalue)
-    :_k(k),_samplesize(samplesize),_fvaluem(dVec::Zero(2*samplesize+1)),_xm(dMat::Zero(2*samplesize+1,dim)),_min(0.0),_max(0.0)
-      {
-	_fvaluem[samplesize] = fvalue;
-	_xm.row(samplesize) = xm.transpose();
-      }
-    ~pli() {};
-
-    void setMinMax()
-    {
-      _min = _xm(0,_k);
-      _max = _xm(2*_samplesize,_k);
-      if (_min > _max)
-	std::swap(_min,_max);
-    }
-
-    std::pair<double,double> getMinMax(const double &fvalue)
-    {
-      dMat::Index mindex[2];
-      (_fvaluem.head(_samplesize) - dVec::Constant(_samplesize,fvalue)).cwiseAbs().minCoeff(&mindex[0]);
-      (_fvaluem.tail(_samplesize) - dVec::Constant(_samplesize,fvalue)).cwiseAbs().minCoeff(&mindex[1]);
-      double min = _xm(mindex[0],_k);
-      double max = _xm(_samplesize + 1 + mindex[1],_k);
-      if (min > max)
-	std::swap(min,max);
-      return std::pair<double,double>(min,max);
-    }
-
-    int _k;
-    int _samplesize;
-    dVec _fvaluem;
-    dMat _xm;
-    double _min;
-    double _max;
-  };
-
+  
   template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   class errstats
     {
     public:
     static pli profile_likelihood(FitFunc &func,
 				  CMAParameters<TGenoPheno> &parameters,
-				  const CMASolutions &cmasol,
+				  CMASolutions &cmasol,
 				  const int &k,
 				  const bool &curve=false,
 				  const int &samplesize=1000,
@@ -93,7 +52,7 @@ namespace libcmaes
 					  const double &delta,
 					  const bool &curve);
     
-    static void take_linear_step(FitFunc &func,
+    static bool take_linear_step(FitFunc &func,
 				 const int &k,
 				 const double &minfvalue,
 				 const double &fup,

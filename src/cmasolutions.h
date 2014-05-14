@@ -26,11 +26,13 @@
 #include "candidate.h"
 #include "eo_matrix.h"
 #include "cmaparameters.h"
+#include "pli.h"
 #include <vector>
 #include <algorithm>
 
 namespace libcmaes
 {
+  
   /**
    * \brief Holder of the set of evolving solutions from running an instance
    *        of CMA-ES.
@@ -144,6 +146,8 @@ namespace libcmaes
     int _elapsed_tell = 0;
     int _elapsed_stop = 0;
 #endif
+
+    std::map<int,pli> _pls; /**< profile likelihood for parameters it has been computed for. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

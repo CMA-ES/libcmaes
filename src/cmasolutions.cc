@@ -138,6 +138,14 @@ namespace libcmaes
 	out << "psigma=" << _psigma.transpose() << std::endl;
 	out << "pc=" << _pc.transpose() << std::endl;
       }
+    if (!_pls.empty())
+      {
+	out << "\nconfidence intervals:\n";
+	for (auto it=_pls.begin();it!=_pls.end();++it)
+	  {
+	    out << "dim " << (*it).first << " in [" << (*it).second._min << "," << (*it).second._max << "]\n";
+	  }
+      }
     return out;
   }
 
