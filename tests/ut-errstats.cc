@@ -61,13 +61,58 @@ TEST(optimize,optimize_pk)
     };
   int dim = 10;
   CMAParameters<> cmaparams(dim);
-  cmaparams._quiet = false;
+  cmaparams._quiet = true;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
-  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,0.1);
+  CMASolutions cmaksols = errstats<>::optimize_reduced_pk(fsphere,cmaparams,cmasols,6,0.1);
   std::cout << "iter: " << cmaksols._niter << std::endl;
   std::cout << "run status: " << cmaksols._run_status << std::endl;
   ASSERT_EQ(TOLHISTFUN,cmaksols._run_status);
   ASSERT_EQ(9,cmaksols.best_candidate()._x.size());
   std::cout << "fvalue: " << cmaksols.best_candidate()._fvalue << std::endl;
   std::cout << "x: " << cmaksols.best_candidate()._x.transpose() << std::endl;
+}
+
+TEST(optimize,optimize_fixed_p)
+{
+  FitFunc fsphere = [](const double *x, const int N)
+    {
+      double val = 0.0;
+      for (int i=0;i<N;i++)
+	val += x[i]*x[i];
+      return val;
+    };
+  int dim = 10;
+  CMAParameters<> cmaparams(dim);
+  cmaparams._quiet = true;
+  CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
+  /*cmaparams.set_fixed_p(6,0.1);
+    CMASolutions cmaksols = cmaes<>(fsphere,cmaparams);*/
+  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,0.1);
+  std::cout << "iter: " << cmaksols._niter << std::endl;
+  std::cout << "run status: " << cmaksols._run_status << std::endl;
+  ASSERT_EQ(TOLHISTFUN,cmaksols._run_status);
+  ASSERT_EQ(10,cmaksols.best_candidate()._x.size());
+  std::cout << "fvalue: " << cmaksols.best_candidate()._fvalue << std::endl;
+  std::cout << "x: " << cmaksols.best_candidate()._x.transpose() << std::endl;
+}
+
+TEST(pl,profile_likelihood)
+{
+   FitFunc fsphere = [](const double *x, const int N)
+    {
+      double val = 0.0;
+      for (int i=0;i<N;i++)
+	val += x[i]*x[i];
+      return val;
+    };
+  int dim = 10;
+  CMAParameters<> cmaparams(dim);
+  cmaparams._quiet = true;
+  CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
+  int k = 6;
+  double fup = 0.1;
+  int samplesize = 20;
+  pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,samplesize,fup);
+  std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
+  std::cout << "le xm: " << le._xm << std::endl;
 }

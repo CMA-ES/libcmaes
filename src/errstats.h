@@ -26,18 +26,67 @@
 
 namespace libcmaes
 {
-  template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
-  class errstats
+  /**
+   * \brief profile likelihood as a set of points and values. 
+   */
+  class pli
   {
   public:
+  pli(const int &samplesize, const int &dim,
+      const dVec &xm, const double &fvalue)
+      :_fvaluem(dVec::Zero(2*samplesize+1)),_xm(dMat::Zero(2*samplesize+1,dim))
+      {
+	_fvaluem[samplesize] = fvalue;
+	_xm.row(samplesize) = xm.transpose();
+      }
+    ~pli() {};
 
-  public:
-      static CMASolutions optimize_pk(FitFunc &func,
-				      CMAParameters<TGenoPheno> &parameters,
-				      const CMASolutions &cmasol,
-				      const int &k,
-				      const double &vk);
-  };    
+    dVec _fvaluem;
+    dMat _xm;
+  };
+
+  template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+  class errstats
+    {
+    public:
+    static pli profile_likelihood(FitFunc &func,
+				  CMAParameters<TGenoPheno> &parameters,
+				  const CMASolutions &cmasol,
+				  const int &k,
+				  const int &samplesize,
+				  const double &fup=0.1,
+				  const double &delta=0.1);
+
+    static void profile_likelihood_search(FitFunc &func,
+					  CMAParameters<TGenoPheno> &parameters,
+					  pli &le,
+					  const CMASolutions &cmasol,
+					  const int &k,
+					  const bool &neg,
+					  const int &samplesize,
+					  const double &fup,
+					  const double &delta);
+    
+    static void take_linear_step(FitFunc &func,
+				 const int &k,
+				 const double &minfvalue,
+				 const double &fup,
+				 dVec &x,
+				 double &dxk);
+
+    static CMASolutions optimize_pk(FitFunc &func,
+				    CMAParameters<TGenoPheno> &parameters,
+				    const CMASolutions &cmasol,
+				    const int &k,
+				    const double &vk);
+    
+    // DEPRECATED
+    static CMASolutions optimize_reduced_pk(FitFunc &func,
+					    CMAParameters<TGenoPheno> &parameters,
+					    const CMASolutions &cmasol,
+					    const int &k,
+					    const double &vk);
+    };    
   
 }
 

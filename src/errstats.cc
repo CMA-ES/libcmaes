@@ -24,6 +24,113 @@
 
 namespace libcmaes
 {
+  
+  template <class TGenoPheno>
+  pli errstats<TGenoPheno>::profile_likelihood(FitFunc &func,
+					       CMAParameters<TGenoPheno> &parameters,
+					       const CMASolutions &cmasol,
+					       const int &k,
+					       const int &samplesize,
+					       const double &fup,
+					       const double &delta)
+  {
+    dVec x = cmasol.best_candidate()._x;
+    double minfvalue = cmasol.best_candidate()._fvalue;
+
+    //debug
+    //std::cout << "xk=" << x[k] << " / minfvalue=" << minfvalue << std::endl;
+    //debug
+
+    pli le(samplesize,parameters._dim,x,minfvalue);
+    
+    errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta); // positive direction
+    errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta);  // negative direction
+    
+    return le;
+  }
+
+  template <class TGenoPheno>
+  void errstats<TGenoPheno>::profile_likelihood_search(FitFunc &func,
+						       CMAParameters<TGenoPheno> &parameters,
+						       pli &le,
+						       const CMASolutions &cmasol,
+						       const int &k,
+						       const bool &neg,
+						       const int &samplesize,
+						       const double &fup,
+						       const double &delta)
+  {
+    int sign = neg ? -1 : 1;
+    dVec x = cmasol.best_candidate()._x;
+    double xk = x[k];
+    double minfvalue = cmasol.best_candidate()._fvalue;
+    CMASolutions citsol = cmasol;
+    double dxk = sign * xk * 0.1;
+    for (int i=0;i<samplesize;i++)
+      {
+	// get a new xk point.
+	errstats<TGenoPheno>::take_linear_step(func,k,minfvalue,fup,x,dxk);
+
+	//debug
+	//std::cout << "new xk point: " << x.transpose() << std::endl;
+	//debug
+	
+	// minimize.
+	citsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k]);
+	x = citsol.best_candidate()._x;
+	minfvalue = citsol.best_candidate()._fvalue;
+	
+	// store points.
+	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
+	le._xm.row(samplesize+sign*(1+i)) = citsol.best_candidate()._x.transpose();
+      }
+  }
+						
+  template <class TGenoPheno>
+  void errstats<TGenoPheno>::take_linear_step(FitFunc &func,
+					      const int &k,
+					      const double &minfvalue,
+					      const double &fup,
+					      dVec &x,
+					      double &dxk)
+  {
+    static double fdiff_relative_increase = 0.1;
+    double fdelta = 0.1 * fup;
+    double threshold = minfvalue + fup;
+    dVec xtmp = x;
+    xtmp[k] += dxk;
+    double fvalue = func(xtmp.data(),xtmp.size());
+    double fdiff = fvalue - minfvalue;
+
+    //debug
+    //std::cout << "threshold=" << threshold << " / fdiff=" << fdiff << std::endl;
+    //debug
+    
+    if (fdiff > threshold * fdiff_relative_increase) // decrease dxk
+      {
+	while(fabs(fvalue-fup)>fdelta
+	      && fdiff > threshold * fdiff_relative_increase)
+	  {
+	    dxk /= 2.0;
+	    xtmp[k] = x[k] + dxk;
+	    fvalue = func(xtmp.data(),xtmp.size());
+	    fdiff = fvalue - minfvalue;
+	  }
+      }
+    else // increase dxk
+      {
+	while (fabs(fvalue-fup)>fdelta
+	       && fdiff < threshold * fdiff_relative_increase)
+	  {
+	    dxk *= 2.0;
+	    xtmp[k] = x[k] + dxk;
+	    fdiff = func(xtmp.data(),xtmp.size()) - minfvalue;
+	  }
+	dxk /= 2.0;
+      }
+    x[k] += dxk; // set value.
+  }
+
   template <class TGenoPheno>
   CMASolutions errstats<TGenoPheno>::optimize_pk(FitFunc &func,
 						 CMAParameters<TGenoPheno> &parameters,
@@ -31,10 +138,21 @@ namespace libcmaes
 						 const int &k,
 						 const double &vk)
   {
-    // copy and re-arrange existing solution.
     CMASolutions ncmasol = cmasol;
+    CMAParameters<TGenoPheno> nparameters = parameters;
+    nparameters.set_fixed_p(k,vk);
+    return cmaes(func,nparameters);
+  }
     
+  template <class TGenoPheno>
+  CMASolutions errstats<TGenoPheno>::optimize_reduced_pk(FitFunc &func,
+							 CMAParameters<TGenoPheno> &parameters,
+							 const CMASolutions &cmasol,
+							 const int &k,
+							 const double &vk)
+  {
     // set re-arranged solution as starting point of the new optimization problem.
+    CMASolutions ncmasol = cmasol;
     ncmasol.reset_as_fixed(k);
 
     // re-arrange function
