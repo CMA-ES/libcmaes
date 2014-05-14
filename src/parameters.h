@@ -28,6 +28,7 @@
 #include <ctime>
 #include <cmath>
 #include <limits>
+#include <unordered_map>
 
 namespace libcmaes
 {
@@ -89,6 +90,11 @@ namespace libcmaes
     _x0min = x0min;
     _x0max = x0max;
   }
+
+  void set_fixed_p(const int &index, const double &value)
+  {
+    _fixed_p.insert(std::pair<int,double>(index,value));
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
@@ -102,6 +108,8 @@ namespace libcmaes
   
   uint64_t _seed = 0; /**< seed for random generator. */
   int _algo = 0; /**< selected algorithm. */
+
+  std::unordered_map<int,double> _fixed_p; /**< fixed parameters and values. */
   
   TGenoPheno _gp;
   };
