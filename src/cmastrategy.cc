@@ -79,9 +79,17 @@ namespace libcmaes
     
     // sample for multivariate normal distribution.
     dMat pop = _esolver.samples(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma); // Eq (1).
-    
-    //TODO: rescale to function space as needed.
 
+    // if some parameters are fixed, reset them.
+    if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
+      {
+	for (auto it=eostrat<TGenoPheno>::_parameters._fixed_p.begin();
+	     it!=eostrat<TGenoPheno>::_parameters._fixed_p.end();++it)
+	  {
+	    pop.block((*it).first,0,1,pop.cols()) = dVec::Constant(pop.cols(),(*it).second).transpose();
+	  }
+      }
+    
     //debug
     /*DLOG(INFO) << "ask: produced " << pop.cols() << " candidates\n";
       std::cerr << pop << std::endl;*/
