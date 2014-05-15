@@ -21,7 +21,7 @@
 
 //#define NDEBUG 1
 
-#include "config.h"
+#include "libcmaes_config.h"
 #include "cmastrategy.h"
 #include "opti_err.h"
 #include <glog/logging.h>

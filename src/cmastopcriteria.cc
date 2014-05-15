@@ -19,7 +19,7 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
+#include "libcmaes_config.h"
 #include "cmastopcriteria.h"
 #include <cmath>
 #include <iterator>

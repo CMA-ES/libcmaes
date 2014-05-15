@@ -22,7 +22,7 @@
 #ifndef CMASOLUTIONS_H
 #define CMASOLUTIONS_H
 
-#include "config.h"
+#include "libcmaes_config.h"
 #include "candidate.h"
 #include "eo_matrix.h"
 #include "cmaparameters.h"
