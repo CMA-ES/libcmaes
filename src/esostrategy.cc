@@ -38,6 +38,7 @@ namespace libcmaes
 						   TParameters &parameters)
     :_func(func),_nevals(0),_niter(0),_parameters(parameters)
   {
+    _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
   }
   

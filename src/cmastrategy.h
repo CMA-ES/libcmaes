@@ -53,8 +53,6 @@ namespace libcmaes
 		  CMAParameters<TGenoPheno> &parameters);
       ~CMAStrategy();
 
-      void set_progress_func(ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
-    
       /**
        * \brief generates nsols new candidate solutions, sampled from a 
        *        multivariate normal distribution.
@@ -94,7 +92,7 @@ namespace libcmaes
       std::ofstream _fplotstream; /**< plotting file stream, not in parameters because of copy-constructor hell. */
 
     public:
-      static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
+    static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
     };
   
 }

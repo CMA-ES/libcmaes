@@ -96,7 +96,7 @@ namespace libcmaes
      *        to add custom termination criteria.
      * @param pfunc a progress function
      */
-    //void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
+    void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
     
     // deprecated.
     Candidate best_solution() const;
