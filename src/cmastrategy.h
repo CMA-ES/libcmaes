@@ -53,6 +53,8 @@ namespace libcmaes
 		  CMAParameters<TGenoPheno> &parameters);
       ~CMAStrategy();
 
+      void set_progress_func(ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
+    
       /**
        * \brief generates nsols new candidate solutions, sampled from a 
        *        multivariate normal distribution.
