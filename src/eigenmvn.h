@@ -74,12 +74,14 @@ namespace Eigen {
   template<typename Scalar>
     class EigenMultivariateNormal
   {
-    Matrix<Scalar,Dynamic,Dynamic> _covar;
-    Matrix<Scalar,Dynamic,Dynamic> _transform;
     Matrix< Scalar, Dynamic, 1> _mean;
     internal::scalar_normal_dist_op<Scalar> randN; // Gaussian functor
     bool _use_cholesky;
 
+  public:
+    Matrix<Scalar,Dynamic,Dynamic> _covar;
+    Matrix<Scalar,Dynamic,Dynamic> _transform;
+    
   public:
     SelfAdjointEigenSolver<Matrix<Scalar,Dynamic,Dynamic> > _eigenSolver; // drawback: this creates a useless eigenSolver when using Cholesky decomposition, but it yields access to eigenvalues and vectors
     

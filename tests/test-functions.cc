@@ -381,6 +381,8 @@ CMASolutions cmaes_opt()
     cmaparams._algo = aIPOP_CMAES;
   else if (FLAGS_alg == "abipop")
     cmaparams._algo = aBIPOP_CMAES;
+  else if (FLAGS_alg == "sepcmaes")
+    cmaparams._algo = sepCMAES;
   CMASolutions cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
   return cmasols;
 }

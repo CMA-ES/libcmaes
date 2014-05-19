@@ -44,13 +44,16 @@ namespace libcmaes
      * @param sigma_init initial value of the step size sigma
      * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
      * @param gp genotype / phenotype object
+     * @param sep whether to use sep-CMA-ES, using diagonal covariance matrix (modifies covariance default learning rate)
      */
     CMAParameters(const int &dim, const int &lambda=-1,
 		  const double &sigma_init=-1.0,
 		  const uint64_t &seed=0,
 		  const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
     ~CMAParameters();
-    
+
+    void set_sep();
+  
     int _mu; /**< number of candidate solutions used to update the distribution parameters. */
     dVec _weights; /**< offsprings weighting scheme. */
     double _csigma; /**< cumulation constant for step size. */
@@ -78,6 +81,9 @@ namespace libcmaes
     double _deltamaxsigma; /**< infinite (active CMA only) */
     double _lambdamintarget; /**< = 0.66 (active CMA only) */
     double _alphaminusmin; /**< = 1 (active CMA only) */
+
+    // sep cma (diagonal cov).
+    bool _sep = false; /**< whether to use diagonal covariance matrix. */
   };
   
 }

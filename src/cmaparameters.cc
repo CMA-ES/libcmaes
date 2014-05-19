@@ -74,6 +74,15 @@ namespace libcmaes
   {
   }
 
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::set_sep()
+  {
+    _sep = true;
+    _c1 *= (Parameters<TGenoPheno>::_dim+2.0)/3.0;
+    _cmu = std::min(1.0-_c1,2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
+    _lazy_value = 1.0/(_c1+_cmu)/Parameters<TGenoPheno>::_dim/10.0;
+  }
+  
   template class CMAParameters<GenoPheno<NoBoundStrategy>>;
   template class CMAParameters<GenoPheno<pwqBoundStrategy>>;
 }

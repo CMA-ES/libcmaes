@@ -78,6 +78,14 @@ namespace libcmaes
 	  abipop.optimize();
 	  return abipop._solutions;
 	}
+	case sepCMAES:
+	{
+	  parameters.set_sep();
+	  ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> sepcmaes(func,parameters);
+	  sepcmaes.set_progress_func(pfunc);
+	  sepcmaes.optimize();
+	  return sepcmaes._solutions;
+	}
 	default:
 	return CMASolutions();
 	}
