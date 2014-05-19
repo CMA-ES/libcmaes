@@ -41,7 +41,6 @@ namespace libcmaes
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
     else if (parameters._sep)
       solutions._csqinv = solutions._cov.diagonal().cwiseInverse().asDiagonal();
-      //solutions._csqinv = solutions._cov.inverse(); // doesn't work well.
     
     // update psigma, Eq. (3)
     solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
