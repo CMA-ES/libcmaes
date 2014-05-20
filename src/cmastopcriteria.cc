@@ -118,7 +118,7 @@ namespace libcmaes
 	    return CONT;
 	//test 2: all square root components of cov . factor < tolx.
 	for (int i=0;i<cmas._cov.rows();i++)
-	  if (sqrt(cmas._cov(i,i))>tfactor)
+	  if (sqrt(cmas._cov(i,i))>=tfactor)
 	    return CONT;
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
