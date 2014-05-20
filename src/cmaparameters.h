@@ -52,6 +52,9 @@ namespace libcmaes
 		  const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
     ~CMAParameters();
 
+    /**
+     * \brief fix parameters for sep-CMA-ES, using only the diagonal of covariance matrix.
+     */
     void set_sep();
   
     int _mu; /**< number of candidate solutions used to update the distribution parameters. */
