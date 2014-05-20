@@ -19,7 +19,7 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
+#include "libcmaes_config.h"
 #include "esostrategy.h"
 #include "cmaparameters.h" // in order to pre-instanciate template into library.
 #include "cmasolutions.h"
@@ -38,6 +38,7 @@ namespace libcmaes
 						   TParameters &parameters)
     :_func(func),_nevals(0),_niter(0),_parameters(parameters)
   {
+    _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
   }
   
