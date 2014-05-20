@@ -97,6 +97,13 @@ namespace libcmaes
      * @param pfunc a progress function
      */
     void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
+
+    void start_from_solution(const TSolutions &sol)
+    {
+      _parameters.set_x0(sol.best_candidate()._x);
+      _solutions = sol;
+      _solutions.reset();
+    }
     
     // deprecated.
     Candidate best_solution() const;

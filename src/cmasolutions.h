@@ -98,6 +98,8 @@ namespace libcmaes
       return _candidates.size();
     }
 
+    void reset();
+    
     /**
      * \brief re-arrange solution object such that parameter 'k' is fixed (i.e. removed).
      * @param k index of the parameter to remove.

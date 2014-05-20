@@ -55,7 +55,7 @@ namespace libcmaes
 #endif
     
     // one candidate per row.
-#pragma omp parallel for if (candidates.cols() >= 100)
+    //#pragma omp parallel for if (candidates.cols() >= 100)
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r)._x = candidates.col(r);

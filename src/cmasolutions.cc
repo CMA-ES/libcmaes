@@ -101,6 +101,28 @@ namespace libcmaes
     _leigenvectors = eigenvectors;
   }
 
+  void CMASolutions::reset()
+  {
+    //_candidates.clear();
+    _best_candidates_hist.clear();
+    //_leigenvalues.setZero(); // beware.
+    //_leigenvectors.setZero();
+    //_cov /= 1e-3;//_sigma;
+    //_cov = dMat::Identity(_csqinv.rows(),_csqinv.cols());
+    std::cout << "cov: " << _cov << std::endl;
+    _niter = 0;
+    _nevals = 0;
+    _sigma = 1.0/static_cast<double>(_csqinv.rows());
+    _k_best_candidates_hist.clear();
+    _bfvalues.clear();
+    _median_fvalues.clear();
+    _run_status = 0;
+    _elapsed_time = _elapsed_last_iter = 0;
+#ifdef HAVE_DEBUG
+    _elapsed_eval = _elapsed_ask = _elapsed_tell = _elapsed_stop = 0;
+#endif
+  }
+  
   void CMASolutions::reset_as_fixed(const int &k)
   {
     removeRow(_cov,k);

@@ -27,7 +27,7 @@ namespace libcmaes
   
   template <class TGenoPheno>
   pli errstats<TGenoPheno>::profile_likelihood(FitFunc &func,
-					       CMAParameters<TGenoPheno> &parameters,
+					       const CMAParameters<TGenoPheno> &parameters,
 					       CMASolutions &cmasol,
 					       const int &k,
 					       const bool &curve,
@@ -54,7 +54,7 @@ namespace libcmaes
 
   template <class TGenoPheno>
   void errstats<TGenoPheno>::profile_likelihood_search(FitFunc &func,
-						       CMAParameters<TGenoPheno> &parameters,
+						       const CMAParameters<TGenoPheno> &parameters,
 						       pli &le,
 						       const CMASolutions &cmasol,
 						       const int &k,
@@ -159,9 +159,9 @@ namespace libcmaes
     CMASolutions ncmasol = cmasol;
     CMAParameters<TGenoPheno> nparameters = parameters;
     nparameters._quiet = true; //TODO: option.
-    nparameters.set_x0(cmasol.best_candidate()._x);
+    //nparameters.set_x0(cmasol.best_candidate()._x);
     nparameters.set_fixed_p(k,vk);
-    return cmaes(func,nparameters);
+    return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc/*,ncmasol*/); //TODO: explicitely set the initial covariance.
   }
     
   template <class TGenoPheno>

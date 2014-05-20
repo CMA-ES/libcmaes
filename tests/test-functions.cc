@@ -355,7 +355,7 @@ DEFINE_bool(quiet,false,"no intermediate output");
 DEFINE_bool(le,false,"whether to return profile likelihood error bounds around the minimum");
 DEFINE_double(le_fup,0.1,"deviation from the minimum as the size of the confidence interval for profile likelihood computation");
 DEFINE_double(le_delta,0.1,"tolerance factor around the fup confidence interval for profile likelihood computation");
-DEFINE_int32(le_samplesize,1000,"max number of steps of linesearch for computing the profile likelihood in every direction");
+DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing the profile likelihood in every direction");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 CMASolutions cmaes_opt()
@@ -401,7 +401,7 @@ CMASolutions cmaes_opt()
   std::cout << "Minimization completed in " << cmasols._elapsed_time / 1000.0 << " seconds\n";
   if (cmasols._run_status >= 0 && FLAGS_le)
     {
-      std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (" << cmasols.best_candidate()._fvalue + FLAGS_le_fup << ")\n";
+      std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate()._fvalue + FLAGS_le_fup << ")\n";
       for (int k=0;k<FLAGS_dim;k++)
 	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
 						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta);

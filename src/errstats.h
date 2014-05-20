@@ -33,7 +33,7 @@ namespace libcmaes
     {
     public:
     static pli profile_likelihood(FitFunc &func,
-				  CMAParameters<TGenoPheno> &parameters,
+				  const CMAParameters<TGenoPheno> &parameters,
 				  CMASolutions &cmasol,
 				  const int &k,
 				  const bool &curve=false,
@@ -42,7 +42,7 @@ namespace libcmaes
 				  const double &delta=0.1);
 
     static void profile_likelihood_search(FitFunc &func,
-					  CMAParameters<TGenoPheno> &parameters,
+					  const CMAParameters<TGenoPheno> &parameters,
 					  pli &le,
 					  const CMASolutions &cmasol,
 					  const int &k,
