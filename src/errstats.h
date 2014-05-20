@@ -61,7 +61,7 @@ namespace libcmaes
 				 double &dxk);
 
     static CMASolutions optimize_pk(FitFunc &func,
-				    CMAParameters<TGenoPheno> &parameters,
+				    const CMAParameters<TGenoPheno> &parameters,
 				    const CMASolutions &cmasol,
 				    const int &k,
 				    const double &vk);

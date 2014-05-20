@@ -151,7 +151,7 @@ namespace libcmaes
 
   template <class TGenoPheno>
   CMASolutions errstats<TGenoPheno>::optimize_pk(FitFunc &func,
-						 CMAParameters<TGenoPheno> &parameters,
+						 const CMAParameters<TGenoPheno> &parameters,
 						 const CMASolutions &cmasol,
 						 const int &k,
 						 const double &vk)
@@ -159,6 +159,7 @@ namespace libcmaes
     CMASolutions ncmasol = cmasol;
     CMAParameters<TGenoPheno> nparameters = parameters;
     nparameters._quiet = true; //TODO: option.
+    nparameters.set_x0(cmasol.best_candidate()._x);
     nparameters.set_fixed_p(k,vk);
     return cmaes(func,nparameters);
   }

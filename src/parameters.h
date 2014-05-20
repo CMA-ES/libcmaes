@@ -78,6 +78,12 @@ namespace libcmaes
     _x0max = dVec::Constant(_dim,x0max);
   }
 
+  void set_x0(const dVec &x0)
+  {
+    _x0min = x0;
+    _x0max = x0;
+  }
+  
   void set_x0(const dVec &x0min, const dVec &x0max)
   {
     _x0min = x0min;
