@@ -23,6 +23,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <gflags/gflags.h>
 
 using namespace libcmaes;
 
@@ -76,11 +77,19 @@ void loaddata(const std::string filename)
     }
 }
 
+DEFINE_int32(lambda,-1,"number of offsprings");
+DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
+DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_uint64(seed,0,"seed for random generator");
+
 int main(int argc, char *argv[])
 {
+  google::ParseCommandLineFlags(&argc, &argv, true);
   int dim = 6;
   loaddata("lorentzpeakbench.dat");
-  CMAParameters<> cmaparams(dim);
+  CMAParameters<> cmaparams(dim,FLAGS_lambda,FLAGS_sigma0,FLAGS_seed);
+  if (FLAGS_x0 != std::numeric_limits<double>::min())
+    cmaparams.set_x0(FLAGS_x0);
   CMASolutions cmasols = cmaes<>(ff,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
   std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
