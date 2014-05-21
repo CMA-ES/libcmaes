@@ -53,6 +53,16 @@ namespace libcmaes
     ~CMAParameters();
 
     /**
+     * \brief initialize required parameters based on dim, lambda, x0 and sigma.
+     */
+    void initialize_parameters();
+  
+    /**
+     * \brief adapt parameters for noisy objective function.
+     */
+    void set_noisy();
+  
+    /**
      * \brief fix parameters for sep-CMA-ES, using only the diagonal of covariance matrix.
      */
     void set_sep();

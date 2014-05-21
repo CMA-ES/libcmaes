@@ -351,6 +351,7 @@ DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecew
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_bool(quiet,false,"no intermediate output");
+DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 CMASolutions cmaes_opt()
@@ -369,6 +370,8 @@ CMASolutions cmaes_opt()
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
   cmaparams._quiet = FLAGS_quiet;
+  if (FLAGS_noisy)
+    cmaparams.set_noisy();
   if (FLAGS_alg == "cmaes")
     cmaparams._algo = CMAES_DEFAULT;
   else if (FLAGS_alg == "ipop")
