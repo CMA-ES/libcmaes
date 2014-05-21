@@ -23,6 +23,7 @@
 #define NOBOUNDSTRATEGY_H
 
 #include "eo_matrix.h"
+#include <limits>
 
 namespace libcmaes
 {
@@ -33,6 +34,9 @@ namespace libcmaes
     ~NoBoundStrategy() {};
 
     void to_f_representation(const dVec &x, dVec &y) {};
+
+    double getLBound(const int &k) const { return -std::numeric_limits<double>::max(); }
+    double getUBound(const int &k) const { return std::numeric_limits<double>::max(); }
   };
 }
 

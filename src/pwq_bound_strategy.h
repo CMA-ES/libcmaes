@@ -40,6 +40,9 @@ namespace libcmaes
 				    const dVec &y);
 
     void shift_into_feasible(const dVec &x, dVec &x_s);
+
+    double getLBound(const int &k) const { return _lbounds[k]; }
+    double getUBound(const int &k) const { return _ubounds[k]; }
     
   public:
     dVec _lbounds;
