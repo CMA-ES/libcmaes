@@ -159,7 +159,7 @@ namespace libcmaes
     CMASolutions ncmasol = cmasol;
     CMAParameters<TGenoPheno> nparameters = parameters;
     nparameters._quiet = true; //TODO: option.
-    //nparameters.set_x0(cmasol.best_candidate()._x);
+    nparameters.set_x0(cmasol.best_candidate()._x);
     nparameters.set_fixed_p(k,vk);
     return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc/*,ncmasol*/); //TODO: explicitely set the initial covariance.
   }
