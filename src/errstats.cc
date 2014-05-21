@@ -73,8 +73,8 @@ namespace libcmaes
     for (int i=0;i<samplesize;i++)
       {
 	// get a new xk point.
-	bool iterend = errstats<TGenoPheno>::take_linear_step(func,k,minfvalue,fup,curve,x,dxk);
-
+	bool iterend = errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,curve,x,dxk);
+	
 	//debug
 	//std::cout << "new xk point: " << x.transpose() << std::endl;
 	//debug
@@ -83,6 +83,12 @@ namespace libcmaes
 	citsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k]);
 	x = citsol.best_candidate()._x;
 	minfvalue = citsol.best_candidate()._fvalue;
+
+	//debug
+	//std::cerr << "cmaes status=" << citsol._run_status << " / new minfvalue=" << minfvalue << std::endl;
+	//debug
+
+	//TODO: test on minimization status.
 	
 	// store points.
 	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
@@ -103,6 +109,7 @@ namespace libcmaes
 						
   template <class TGenoPheno>
   bool errstats<TGenoPheno>::take_linear_step(FitFunc &func,
+					      const CMAParameters<TGenoPheno> &parameters,
 					      const int &k,
 					      const double &minfvalue,
 					      const double &fup,
@@ -119,14 +126,16 @@ namespace libcmaes
     double fdiff = fvalue - minfvalue;
 
     //debug
-    //std::cout << "threshold=" << threshold << " / fdiff=" << fdiff << std::endl;
+    //std::cout << "threshold=" << threshold << " / fdiff=" << fdiff << " / fabs=" << fabs(fvalue-fup) << " / fdelta=" << fdelta << std::endl;
     //debug
     
     if (fdiff > threshold * fdiff_relative_increase) // decrease dxk
       {
 	while((curve || fabs(fvalue-fup)>fdelta)
-	      && fdiff > threshold * fdiff_relative_increase)
+	      && fdiff > threshold * fdiff_relative_increase
+	      && xtmp[k] >= parameters._gp._boundstrategy.getLBound(k))
 	  {
+	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << xtmp[k] << " / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
 	    dxk /= 2.0;
 	    xtmp[k] = x[k] + dxk;
 	    fvalue = func(xtmp.data(),xtmp.size());
@@ -136,8 +145,10 @@ namespace libcmaes
     else // increase dxk
       {
 	while ((curve || fabs(fvalue-fup)>fdelta)
-	       && fdiff < threshold * fdiff_relative_increase)
+	       && fdiff < threshold * fdiff_relative_increase
+	       && xtmp[k] <= parameters._gp._boundstrategy.getUBound(k))
 	  {
+	    //std::cerr << "fvalue= " << fvalue << " / xtmpk=" << xtmp[k] << " / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
 	    dxk *= 2.0;
 	    xtmp[k] = x[k] + dxk;
 	    fvalue = func(xtmp.data(),xtmp.size());
@@ -146,7 +157,7 @@ namespace libcmaes
 	dxk /= 2.0;
       }
     x[k] += dxk; // set value.
-    return (fabs(fvalue-fup) < fdelta);
+    return (fabs(fvalue-fup) < fdelta || x[k] < parameters._gp._boundstrategy.getLBound(k) || x[k] > parameters._gp._boundstrategy.getUBound(k));
   }
 
   template <class TGenoPheno>
@@ -160,8 +171,9 @@ namespace libcmaes
     CMAParameters<TGenoPheno> nparameters = parameters;
     nparameters._quiet = true; //TODO: option.
     nparameters.set_x0(cmasol.best_candidate()._x);
+    nparameters._sigma_init = 1.0/parameters._dim;//ncmasol._sigma;
     nparameters.set_fixed_p(k,vk);
-    return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc/*,ncmasol*/); //TODO: explicitely set the initial covariance.
+    return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,ncmasol); //TODO: explicitely set the initial covariance.
   }
     
   template <class TGenoPheno>

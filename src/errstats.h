@@ -53,6 +53,7 @@ namespace libcmaes
 					  const bool &curve);
     
     static bool take_linear_step(FitFunc &func,
+				 const CMAParameters<TGenoPheno> &parameters,
 				 const int &k,
 				 const double &minfvalue,
 				 const double &fup,

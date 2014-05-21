@@ -108,11 +108,13 @@ namespace libcmaes
     //_leigenvalues.setZero(); // beware.
     //_leigenvectors.setZero();
     //_cov /= 1e-3;//_sigma;
-    //_cov = dMat::Identity(_csqinv.rows(),_csqinv.cols());
-    std::cout << "cov: " << _cov << std::endl;
+    _cov = dMat::Identity(_csqinv.rows(),_csqinv.cols());
+    //std::cout << "cov: " << _cov << std::endl;
     _niter = 0;
     _nevals = 0;
     _sigma = 1.0/static_cast<double>(_csqinv.rows());
+    _psigma = dVec::Zero(_cov.rows());
+    _pc = dVec::Zero(_cov.rows());
     _k_best_candidates_hist.clear();
     _bfvalues.clear();
     _median_fvalues.clear();

@@ -67,7 +67,7 @@ namespace libcmaes
 
     // sigma update, Eq. (6)
     solutions._sigma *= exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0));
-
+    
     // set mean.
     solutions._xmean = xmean;
   }
