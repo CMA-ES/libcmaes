@@ -48,20 +48,21 @@ namespace libcmaes
     /**
      * \brief constructor
      * @param dim problem dimensions
+     * @param x0 initial search point
      * @param lambda number of offsprings sampled at each step
      * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
      * @param gp genotype / phenotype object
      */
-  Parameters(const int &dim, const int &lambda=-1,
+  Parameters(const int &dim, const double *x0, const int &lambda=-1,
 	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
-  :_dim(dim),_lambda(lambda),_x0min(dVec::Constant(dim,std::numeric_limits<double>::min())),
-  _x0max(dVec::Constant(dim,std::numeric_limits<double>::min())),_seed(seed),_gp(gp) // x0 initialized to min double value everywhere
-      {
-	if (_lambda == -1) // lambda is unspecified
-	  _lambda = 4 + floor(3.0*log(_dim));
-	if (_seed == 0) // seed is not forced.
-	  _seed = static_cast<uint64_t>(time(nullptr));
-    }
+  :_dim(dim),_lambda(lambda),_seed(seed),_gp(gp) // x0 initialized to min double value everywhere
+  {
+    if (_lambda == -1) // lambda is unspecified
+      _lambda = 4 + floor(3.0*log(_dim));
+    if (_seed == 0) // seed is not forced.
+      _seed = static_cast<uint64_t>(time(nullptr));
+    set_x0(x0);
+  }
   
   ~Parameters()
     {
@@ -72,6 +73,13 @@ namespace libcmaes
     _x0min = _x0max = dVec::Constant(_dim,x0);
   }
 
+  void set_x0(const double *x0)
+  {
+    _x0min = _x0max = dVec(_dim);
+    for (int i=0;i<_dim;i++)
+      _x0min(i) = _x0max(i) = x0[i];
+  }
+  
   void set_x0(const double &x0min, const double &x0max)
   {
     _x0min = dVec::Constant(_dim,x0min);

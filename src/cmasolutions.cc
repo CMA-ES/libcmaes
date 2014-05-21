@@ -41,7 +41,7 @@ namespace libcmaes
       }
     if (p._x0min == p._x0max)
       {
-	if (p._x0min == dVec::Constant(p._dim,std::numeric_limits<double>::min()))
+	if (p._x0min == dVec::Constant(p._dim,-std::numeric_limits<double>::max()))
 	  _xmean = dVec::Random(p._dim) * 4.0; // initial mean randomly sampled from -4,4 in all dimensions.
 	else _xmean = p._x0min;
       }

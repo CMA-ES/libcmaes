@@ -27,11 +27,24 @@
 namespace libcmaes
 {
   template<class TGenoPheno>
-  CMAParameters<TGenoPheno>::CMAParameters(const int &dim, const int &lambda,
-					   const double &sigma_init,
+  CMAParameters<TGenoPheno>::CMAParameters(const int &dim,
+					   const double *x0,
+					   const double &sigma,
+					   const int &lambda,
 					   const uint64_t &seed,
 					   const TGenoPheno &gp)
-    :Parameters<TGenoPheno>(dim,lambda,seed,gp),_sigma_init(sigma_init),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+    :Parameters<TGenoPheno>(dim,x0,lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+  {
+    initialize_parameters();
+  }
+
+  template <class TGenoPheno>
+  CMAParameters<TGenoPheno>::~CMAParameters()
+  {
+  }
+
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::initialize_parameters()
   {
     _mu = floor(Parameters<TGenoPheno>::_lambda / 2.0);
     _weights = dVec::Zero(_mu);
@@ -66,14 +79,20 @@ namespace libcmaes
     _lazy_value = 1.0/(_c1+_cmu)/Parameters<TGenoPheno>::_dim/10.0;
 
     // active cma.
-    _deltamaxsigma = std::numeric_limits<double>::max(); 
+    _deltamaxsigma = std::numeric_limits<double>::max();
   }
-
+  
   template <class TGenoPheno>
-  CMAParameters<TGenoPheno>::~CMAParameters()
+  void CMAParameters<TGenoPheno>::set_noisy()
   {
+    static double factor = 0.2;
+    static double lfactor = 5.0; // lambda factor.
+    Parameters<TGenoPheno>::_lambda *= lfactor;
+    initialize_parameters(); // reinit parameters.
+    _c1 *= factor;
+    _cmu = std::min(1.0-_c1,2.0*factor*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
   }
-
+  
   template <class TGenoPheno>
   void CMAParameters<TGenoPheno>::reset_as_fixed(const int &k)
   {
