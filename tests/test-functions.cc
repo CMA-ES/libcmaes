@@ -35,6 +35,21 @@
 
 using namespace libcmaes;
 
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+  std::stringstream ss(s);
+  std::string item;
+  while (std::getline(ss, item, delim)) {
+    elems.push_back(item);
+  }
+  return elems;
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+  std::vector<std::string> elems;
+  split(s, delim, elems);
+  return elems;
+}
+
 bool compEp(const double &a, const double &b, const double &epsilon)
 {
   return fabs(a-b) <= epsilon;
@@ -358,6 +373,7 @@ DEFINE_double(le_fup,0.1,"deviation from the minimum as the size of the confiden
 DEFINE_double(le_delta,0.1,"tolerance factor around the fup confidence interval for profile likelihood computation");
 DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing the profile likelihood in every direction");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
+DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 CMASolutions cmaes_opt()
@@ -411,6 +427,17 @@ CMASolutions cmaes_opt()
 	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
 						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta);
     }
+  if (!FLAGS_contour.empty())
+    {
+      std::vector<std::string> contour_indexes_str = split(FLAGS_contour,',');
+      std::pair<int,int> contour_indexes;
+      contour_indexes.first = atoi(contour_indexes_str.at(0).c_str());
+      contour_indexes.second = atoi(contour_indexes_str.at(1).c_str());
+      std::cout << "Now computing contour passing through point (" << contour_indexes.first << "," << contour_indexes.second << ")\n";
+      contour ct = errstats<TGenoPheno>::contour_points(mfuncs[FLAGS_fname],contour_indexes.first,contour_indexes.second,
+							4,cmaparams,cmasols);
+      std::cout << ct << std::endl;
+    }
   std::cout << "Done!\n";
   return cmasols;
 }
@@ -424,7 +451,7 @@ int main(int argc, char *argv[])
   //FLAGS_log_prefix=false;
 
   fillupfuncs();
-
+  
   if (FLAGS_list)
     {
       printAvailFuncs();

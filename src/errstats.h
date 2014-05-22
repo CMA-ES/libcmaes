@@ -23,6 +23,7 @@
 #define ERRSTATS_H
 
 #include "pli.h"
+#include "contour.h"
 #include "cmaes.h"
 
 namespace libcmaes
@@ -32,6 +33,7 @@ namespace libcmaes
   class errstats
     {
     public:
+    /*- profile likelihood -*/
     static pli profile_likelihood(FitFunc &func,
 				  const CMAParameters<TGenoPheno> &parameters,
 				  CMASolutions &cmasol,
@@ -73,6 +75,13 @@ namespace libcmaes
 					    const CMASolutions &cmasol,
 					    const int &k,
 					    const double &vk);
+
+
+    /*- contour -*/
+    //TODO: contour output object
+    static contour contour_points(FitFunc & func, const int &px, const int &py, const int &npoints,
+				  const CMAParameters<TGenoPheno> &parameters,
+				  CMASolutions &cmasol);
     };    
   
 }

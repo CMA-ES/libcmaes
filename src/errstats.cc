@@ -48,7 +48,7 @@ namespace libcmaes
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta,curve); // positive direction
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta,curve);  // negative direction
 
-    le.setMinMax();
+    le.setErrMinMax();
     cmasol._pls.insert(std::pair<int,pli>(k,le));
     return le;
   }
@@ -206,6 +206,60 @@ namespace libcmaes
     return cmaes(nfunc,nparameters);
   }
 
+  template <class TGenoPheno>
+  contour errstats<TGenoPheno>::contour_points(FitFunc & func, const int &px, const int &py, const int &npoints,
+					       const CMAParameters<TGenoPheno> &parameters,
+					       CMASolutions &cmasol)
+  {
+    // find first two points.
+    pli plx,ply;
+    if (!cmasol.get_pli(px,plx))
+      {
+	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,px); // use default parameters.
+	cmasol.get_pli(px,plx);
+      }
+    
+    // find second two points.
+    if (!cmasol.get_pli(py,ply))
+      {
+	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,py); // use default parameters.
+	cmasol.get_pli(py,ply);
+      }
+
+    double valx = cmasol.best_candidate()._x[px];
+    double valy = cmasol.best_candidate()._x[py];
+    
+    // find upper y value for x parameter.
+    CMAParameters<TGenoPheno> nparameters = parameters;
+    nparameters.set_fixed_p(px,valx+plx._errmax);
+    CMASolutions exy_up = cmaes(func,nparameters);
+    
+    // find lower y value for x parameter.
+    nparameters = parameters;
+    nparameters.set_fixed_p(px,valx+plx._errmin);
+    CMASolutions exy_lo = cmaes(func,nparameters);
+    
+    // find upper x value for y parameter.
+    nparameters = parameters;
+    nparameters.set_fixed_p(py,valy+ply._errmax);
+    CMASolutions eyx_up = cmaes(func,nparameters);
+    
+    // find lower x value for y parameter.
+    nparameters = parameters;
+    nparameters.set_fixed_p(py,valy+ply._errmin);
+    CMASolutions eyx_lo = cmaes(func,nparameters);
+
+    contour c;
+    c.add_point(valx+plx._errmin,exy_lo.best_candidate()._x[py]);
+    c.add_point(eyx_lo.best_candidate()._x[px],valy+ply._errmin); 
+    c.add_point(valx+plx._errmax,exy_up.best_candidate()._x[py]);
+    c.add_point(eyx_up.best_candidate()._x[px],valy+ply._errmax);
+    
+    //TODO: more than 4 points.
+    
+    return c;
+  }
+  
   template class errstats<GenoPheno<NoBoundStrategy>>;
   template class errstats<GenoPheno<pwqBoundStrategy>>;
 }
