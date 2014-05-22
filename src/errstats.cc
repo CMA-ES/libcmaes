@@ -20,6 +20,7 @@
  */
 
 #include "errstats.h"
+#include <glog/logging.h>
 #include <iostream>
 
 namespace libcmaes
@@ -81,14 +82,10 @@ namespace libcmaes
 	
 	// minimize.
 	citsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k]);
+	if (citsol._run_status < 0)
+	  LOG(WARNING) << "profile likelihood linesearch: optimization error " << citsol._run_status << std::endl;
 	x = citsol.best_candidate()._x;
 	minfvalue = citsol.best_candidate()._fvalue;
-
-	//debug
-	//std::cerr << "cmaes status=" << citsol._run_status << " / new minfvalue=" << minfvalue << std::endl;
-	//debug
-
-	//TODO: test on minimization status.
 	
 	// store points.
 	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
