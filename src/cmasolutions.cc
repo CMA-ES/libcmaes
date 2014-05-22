@@ -167,7 +167,7 @@ namespace libcmaes
 	out << "\nconfidence intervals:\n";
 	for (auto it=_pls.begin();it!=_pls.end();++it)
 	  {
-	    out << "dim " << (*it).first << " in [" << (*it).second._min << "," << (*it).second._max << "]\n";
+	    out << "dim " << (*it).first << " in [" << (*it).second._min << "," << (*it).second._max << "] with error [" << (*it).second._errmin << "," << (*it).second._errmax << "]\n";
 	  }
       }
     return out;

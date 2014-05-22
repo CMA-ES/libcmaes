@@ -105,6 +105,20 @@ namespace libcmaes
      * @param k index of the parameter to remove.
      */
     void reset_as_fixed(const int &k);
+
+    /**
+     * \brief get profile likelihood if previously computed.
+     */
+    bool get_pli(const int &k, pli &p) const
+    {
+      std::map<int,pli>::const_iterator mit;
+      if ((mit=_pls.find(k))!=_pls.end())
+	{
+	  p = (*mit).second;
+	  return true;
+	}
+      return false;
+    }
     
     /**
      * \brief print the solution object out.

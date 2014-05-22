@@ -33,6 +33,7 @@ namespace libcmaes
   class pli
   {
   public:
+  pli() {}
   pli(const int &k, const int &samplesize, const int &dim,
       const dVec &xm, const double &fvalue)
     :_k(k),_samplesize(samplesize),_fvaluem(dVec::Zero(2*samplesize+1)),_xm(dMat::Zero(2*samplesize+1,dim)),_min(0.0),_max(0.0)
@@ -50,6 +51,13 @@ namespace libcmaes
 	std::swap(_min,_max);
     }
 
+    void setErrMinMax()
+    {
+      setMinMax();
+      _errmin = _min - _xm(_samplesize,_k);
+      _errmax = _max - _xm(_samplesize,_k);
+    }
+    
     std::pair<double,double> getMinMax(const double &fvalue)
     {
       dMat::Index mindex[2];
@@ -61,13 +69,15 @@ namespace libcmaes
 	std::swap(min,max);
       return std::pair<double,double>(min,max);
     }
-
-    int _k;
-    int _samplesize;
+    
+    int _k = -1;
+    int _samplesize = 0;
     dVec _fvaluem;
     dMat _xm;
-    double _min;
-    double _max;
+    double _min = 0.0;
+    double _max = 0.0;
+    double _errmin = 0.0;
+    double _errmax = 0.0;
   };
 
 }
