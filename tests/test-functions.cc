@@ -353,8 +353,9 @@ DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to par
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_bool(quiet,false,"no intermediate output");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
+DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 
-template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
 {
   double lbounds[FLAGS_dim];
@@ -465,9 +466,17 @@ int main(int argc, char *argv[])
     }
   CMASolutions cmasols;
   if (FLAGS_boundtype == "none")
-    cmasols = cmaes_opt<>();
+    {
+      if (!FLAGS_linscaling)
+	cmasols = cmaes_opt<>();
+      else cmasols = cmaes_opt<GenoPheno<NoBoundStrategy,linScalingStrategy>>();
+    }
   else if (FLAGS_boundtype == "pwq")
-    cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
+    {
+      if (!FLAGS_linscaling)
+	cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
+      else cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy,linScalingStrategy>>();
+    }
   if (cmasols._run_status < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";

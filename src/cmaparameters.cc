@@ -104,4 +104,6 @@ namespace libcmaes
   
   template class CMAParameters<GenoPheno<NoBoundStrategy>>;
   template class CMAParameters<GenoPheno<pwqBoundStrategy>>;
+  template class CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }
