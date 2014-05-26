@@ -71,6 +71,21 @@ namespace libcmaes
      * \brief fix parameters for sep-CMA-ES, using only the diagonal of covariance matrix.
      */
     void set_sep();
+
+    /**
+     * \brief turns stopping criteria MaxIter that automatically stops optimization after a 
+     *        number of steps on or off.
+     * @param b true or false for turning criteria on or off (on is default in constructor).
+     */
+    void set_automaxiter(const bool &b) { _has_max_iter = b; }
+
+    /**
+     * \brief sets function tolerance as stopping criteria for TolHistFun: monitors the
+     *        difference in function value over iterations and stops optimization when 
+     *        below tolerance.
+     * @param v value of the function tolerance.	    
+     */
+    void set_ftolerance(const double &v) { _ftolerance = v; }
   
     int _mu; /**< number of candidate solutions used to update the distribution parameters. */
     dVec _weights; /**< offsprings weighting scheme. */
@@ -102,6 +117,10 @@ namespace libcmaes
 
     // sep cma (diagonal cov).
     bool _sep = false; /**< whether to use diagonal covariance matrix. */
+
+    // stopping criteria.
+    double _ftolerance = 1e-12; /**< tolerance of the best function values during the last 10+(30*dim/lambda) steps (TolHistFun). */ 
+    bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
   };
   
 }
