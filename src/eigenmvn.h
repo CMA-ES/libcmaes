@@ -35,6 +35,7 @@
 
 #include <Eigen/Dense>
 #include <random>
+#include <stdexcept>
 
 /*
   We need a functor that can pretend it's const,
