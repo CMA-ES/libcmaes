@@ -99,4 +99,8 @@ namespace libcmaes
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

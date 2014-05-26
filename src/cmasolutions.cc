@@ -41,7 +41,7 @@ namespace libcmaes
       }
     if (p._x0min == p._x0max)
       {
-	if (p._x0min == dVec::Constant(p._dim,std::numeric_limits<double>::min()))
+	if (p._x0min == dVec::Constant(p._dim,-std::numeric_limits<double>::max()))
 	  _xmean = dVec::Random(p._dim) * 4.0; // initial mean randomly sampled from -4,4 in all dimensions.
 	else _xmean = p._x0min;
       }
@@ -57,7 +57,7 @@ namespace libcmaes
     _psigma = dVec::Zero(p._dim);
     _pc = dVec::Zero(p._dim);
     _candidates.resize(p._lambda);
-    _kcand = static_cast<int>(1.0+ceil(0.1+p._lambda/4.0));
+    _kcand = std::min(p._lambda-1,static_cast<int>(1.0+ceil(0.1+p._lambda/4.0)));
   }
 
   CMASolutions::~CMASolutions()
@@ -122,4 +122,6 @@ namespace libcmaes
 
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy>>&);
+  template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&);
+  template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&);
 }

@@ -102,6 +102,16 @@ int main(int argc, char *argv[])
 }
 ```
 
+### Practical hints
+
+CMA-ES requires two components from the user:
+- the initial start point x0;
+- the initial value for sigma, the so-called step-size or error guess.
+
+In short: the optimum that is looked after should better not be far away from the interval [x0 - sigma0, x0 + sigma0] in each dimension, where distance is defined by sigma0.
+
+See https://www.lri.fr/~hansen/cmaes_inmatlab.html#practical for more detailed useful advices using CMA-ES.
+
 ### Run BBOB 2013 Black-Box Optimization Benchmark
 
 There's an install script in the repository. Do:

@@ -204,7 +204,8 @@ FitFunc rastrigin = [](const double *x, const int N)
     val += x[i]*x[i] - A*cos(2*M_PI*x[i]);
   return val;
 };
-CMAParameters<> rastrigin_params(10,400,5.0,1234); // 1234 is seed.
+std::vector<double> rastx0(10,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
+CMAParameters<> rastrigin_params(10,&rastx0.front(),5.0,400,1234); // 1234 is seed.
 
 FitFunc elli = [](const double *x, const int N)
 {
@@ -343,7 +344,7 @@ DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
-DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
@@ -351,8 +352,10 @@ DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecew
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_bool(quiet,false,"no intermediate output");
+DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
+DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 
-template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
 {
   double lbounds[FLAGS_dim];
@@ -363,12 +366,15 @@ CMASolutions cmaes_opt()
       ubounds[i] = FLAGS_ubound;
     }
   TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
-  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_sigma0,FLAGS_seed,gp);
+  std::vector<double> x0(FLAGS_dim,FLAGS_x0);
+  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
   cmaparams._max_iter = FLAGS_max_iter;
   cmaparams._max_fevals = FLAGS_max_fevals;
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
   cmaparams._quiet = FLAGS_quiet;
+  if (FLAGS_noisy)
+    cmaparams.set_noisy();
   if (FLAGS_alg == "cmaes")
     cmaparams._algo = CMAES_DEFAULT;
   else if (FLAGS_alg == "ipop")
@@ -422,7 +428,9 @@ int main(int argc, char *argv[])
 	      continue;
 	    }
 	  int dim = msols[(*mit).first]._x.rows();
-	  CMAParameters<> cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
+	  std::vector<double> x0(dim,FLAGS_x0);
+	  CMAParameters<> cmaparams(dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+	  cmaparams._max_iter = FLAGS_max_iter;
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;
 	  cmaparams._quiet = true;
@@ -458,9 +466,17 @@ int main(int argc, char *argv[])
     }
   CMASolutions cmasols;
   if (FLAGS_boundtype == "none")
-    cmasols = cmaes_opt<>();
+    {
+      if (!FLAGS_linscaling)
+	cmasols = cmaes_opt<>();
+      else cmasols = cmaes_opt<GenoPheno<NoBoundStrategy,linScalingStrategy>>();
+    }
   else if (FLAGS_boundtype == "pwq")
-    cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
+    {
+      if (!FLAGS_linscaling)
+	cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
+      else cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy,linScalingStrategy>>();
+    }
   if (cmasols._run_status < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";

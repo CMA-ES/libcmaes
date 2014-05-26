@@ -96,9 +96,17 @@ namespace libcmaes
     
     // sample for multivariate normal distribution.
     dMat pop = _esolver.samples(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma); // Eq (1).
-    
-    //TODO: rescale to function space as needed.
 
+    // if some parameters are fixed, reset them.
+    if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
+      {
+	for (auto it=eostrat<TGenoPheno>::_parameters._fixed_p.begin();
+	     it!=eostrat<TGenoPheno>::_parameters._fixed_p.end();++it)
+	  {
+	    pop.block((*it).first,0,1,pop.cols()) = dVec::Constant(pop.cols(),(*it).second).transpose();
+	  }
+      }
+    
     //debug
     /*DLOG(INFO) << "ask: produced " << pop.cols() << " candidates\n";
       std::cerr << pop << std::endl;*/
@@ -178,7 +186,9 @@ namespace libcmaes
     while(!stop())
       {
 	dMat candidates = ask();
-	this->eval(eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
+	this->eval(candidates,eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
+	for (int r=0;r<candidates.cols();r++)
+	  eostrat<TGenoPheno>::_solutions._candidates.at(r)._x = candidates.col(r);
 	tell();
 	eostrat<TGenoPheno>::_niter++;
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
@@ -210,4 +220,8 @@ namespace libcmaes
   template class CMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class CMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class CMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class CMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

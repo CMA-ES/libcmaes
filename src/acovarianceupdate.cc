@@ -92,4 +92,6 @@ namespace libcmaes
 
   template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
   template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
 }

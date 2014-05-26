@@ -44,9 +44,10 @@ ProgressFunc<CMAParameters<>,CMASolutions> select_time = [](const CMAParameters<
 int main(int argc, char *argv[])
 {
   int dim = 100; // problem dimensions.
+  std::vector<double> x0(dim,10.0);
+  double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
-  //CMAParameters cmaparams(dim,lambda);
-  CMAParameters<> cmaparams(dim);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
   //cmaparams._algo = BIPOP_CMAES;
   CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,select_time);
   std::cout << "best solution: " << cmasols << std::endl;

@@ -48,10 +48,11 @@ TransFunc phenof = [](const double *in, double *ext, const int &dim)
 int main(int argc, char *argv[])
 {
   int dim = 10; // problem dimensions.
+  std::vector<double> x0(dim,1.0);
+  double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
   GenoPheno<> gp(genof,phenof);
-  //CMAParameters cmaparams(dim,lambda);
-  CMAParameters<> cmaparams(dim,-1,-1.0,0,gp);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma,-1,0,gp); // -1 for automatically decided lambda.
   //cmaparams._algo = BIPOP_CMAES;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;

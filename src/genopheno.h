@@ -24,6 +24,7 @@
 
 #include "noboundstrategy.h"
 #include "pwq_bound_strategy.h"
+#include "scaling.h"
 
 namespace libcmaes
 {
@@ -39,7 +40,7 @@ namespace libcmaes
       ext = in;
       };*/
   
-  template <class TBoundStrategy=NoBoundStrategy>
+  template <class TBoundStrategy=NoBoundStrategy,class TScalingStrategy=NoScalingStrategy>
     class GenoPheno
     {
     public:
@@ -52,13 +53,31 @@ namespace libcmaes
     {};
     
     GenoPheno(const double *lbounds, const double *ubounds, const int &dim)
-    :_boundstrategy(lbounds,ubounds,dim),_id(true)
-    {};
+    :_boundstrategy(lbounds,ubounds,dim),_id(true),_scalingstrategy(lbounds,ubounds,dim)
+    {
+      if (!_scalingstrategy._id)
+	_boundstrategy = TBoundStrategy(lbounds,ubounds,dim);
+      else
+	{
+	  std::vector<double> lb(dim,_scalingstrategy._intmin);
+	  std::vector<double> ub(dim,_scalingstrategy._intmax);
+	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),dim);
+	}
+    };
 
     GenoPheno(TransFunc &genof, TransFunc &phenof,
 	      const double *lbounds, const double *ubounds, const int &dim)
-    :_boundstrategy(lbounds,ubounds),_genof(genof),_phenof(phenof),_id(false)
-    {};
+    :_boundstrategy(lbounds,ubounds),_genof(genof),_phenof(phenof),_id(false),_scalingstrategy(lbounds,ubounds,dim)
+    {
+      if (!_scalingstrategy._id)
+	_boundstrategy = TBoundStrategy(lbounds,ubounds,dim);
+      else
+	{
+	  std::vector<double> lb(dim,_scalingstrategy._intmin);
+	  std::vector<double> ub(dim,_scalingstrategy._intmax);
+	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),dim);
+	}
+    };
     
     ~GenoPheno() {};
 
@@ -76,8 +95,9 @@ namespace libcmaes
 	      _phenof(candidates.col(i).data(),ext.data(),candidates.rows());
 	      ncandidates.col(i) = ext;
 	    }
+	  return ncandidates;
 	}
-      return ncandidates;
+      return candidates;
     }
     
     public:
@@ -85,17 +105,30 @@ namespace libcmaes
     {
       // apply custom pheno function.
       dMat ncandidates = pheno_candidates(candidates);
+      
+      // apply scaling.
+      dMat ycandidates = dMat(ncandidates.rows(),ncandidates.cols());
+      if (!_scalingstrategy._id)
+	{
+#pragma omp parallel for if (candidates.cols() >= 100)
+	  for (int i=0;i<ncandidates.cols();i++)
+	    {
+	      dVec xcoli = ncandidates.col(i);
+	      dVec ycoli;
+	      _scalingstrategy.scale_to_f(xcoli,ycoli);
+	      ycandidates.col(i) = ycoli;
+	    }
+	}
 
       // apply bounds.
-      dMat ycandidates = dMat(candidates.rows(),candidates.cols());
 #pragma omp parallel for if (candidates.cols() >= 100)
       for (int i=0;i<candidates.cols();i++)
 	{
 	  dVec xcoli;
-	  if (!_id)
+	  if (_scalingstrategy._id)
 	    xcoli = ncandidates.col(i);
-	  else xcoli = candidates.col(i);
-	  dVec ycoli = ycandidates.col(i); // copy required as Eigen complains on function signature otherwise.
+	  else xcoli = ycandidates.col(i);
+	  dVec ycoli;
 	  _boundstrategy.to_f_representation(xcoli,ycoli);
 	  ycandidates.col(i) = ycoli;
 	}
@@ -117,14 +150,32 @@ namespace libcmaes
       if (_id)
 	_boundstrategy.to_f_representation(candidate,phen);
       else _boundstrategy.to_f_representation(ncandidate,phen);
+
+      // apply scaling.
+      if (!_scalingstrategy._id)
+	{
+	  dVec sphen = dVec::Zero(phen.rows());
+	  _scalingstrategy.scale_to_f(phen,sphen);
+	  phen = sphen;
+	}
+      
       return phen;
     }
     
     dVec geno(const dVec &candidate)
     {
-      // reverse bounds.
+      dVec ccandidate = candidate;
       dVec gen = dVec::Zero(candidate.rows());
-      _boundstrategy.to_internal_representation(gen,candidate);
+      
+      // reverse scaling.
+      if (!_scalingstrategy._id)
+	{
+	  _scalingstrategy.scale_to_internal(gen,candidate);
+	  ccandidate = gen;
+	}
+      
+      // reverse bounds.
+      _boundstrategy.to_internal_representation(gen,ccandidate);
 
       // apply custom geno function.
       if (!_id)
@@ -140,16 +191,17 @@ namespace libcmaes
     TransFunc _genof;
     TransFunc _phenof;
     bool _id; /**< geno/pheno transform is identity. */
-    };
+    TScalingStrategy _scalingstrategy;
+  };
 
-  // specialization when no bound strategy applies.
-  template<> inline dMat GenoPheno<NoBoundStrategy>::pheno(const dMat &candidates)
+  // specialization when no bound strategy nor scaling applies.
+  template<> inline dMat GenoPheno<NoBoundStrategy,NoScalingStrategy>::pheno(const dMat &candidates)
     {
       if (_id)
 	return candidates;
       else return pheno_candidates(candidates);
     }
-  template<> inline dVec GenoPheno<NoBoundStrategy>::pheno(const dVec &candidate)
+  template<> inline dVec GenoPheno<NoBoundStrategy,NoScalingStrategy>::pheno(const dVec &candidate)
     {
       if (_id)
 	return candidate;
@@ -160,7 +212,7 @@ namespace libcmaes
 	  return ncandidate;
 	}
     }
-  template<> inline dVec GenoPheno<NoBoundStrategy>::geno(const dVec &candidate)
+  template<> inline dVec GenoPheno<NoBoundStrategy,NoScalingStrategy>::geno(const dVec &candidate)
     {
       if (_id)
 	return candidate;
@@ -170,6 +222,24 @@ namespace libcmaes
 	  _genof(candidate.data(),ncandidate.data(),candidate.rows());
 	  return ncandidate;
 	}
+    }
+
+  template<> inline dMat GenoPheno<NoBoundStrategy,linScalingStrategy>::pheno(const dMat &candidates)
+    {
+      dMat ncandidates;
+      if (_id)
+	ncandidates = candidates;
+      else ncandidates = pheno_candidates(candidates);
+      dMat ycandidates = dMat(ncandidates.rows(),ncandidates.cols());
+#pragma omp parallel for if (candidates.cols() >= 100)
+      for (int i=0;i<ncandidates.cols();i++)
+	{
+	  dVec xcoli = ncandidates.col(i);
+	  dVec ycoli;
+	  _scalingstrategy.scale_to_f(xcoli,ycoli);
+	  ycandidates.col(i) = ycoli;
+	}
+      return ycandidates;
     }
 }
 
