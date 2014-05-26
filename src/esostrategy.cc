@@ -48,7 +48,8 @@ namespace libcmaes
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
-  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::eval(const dMat &candidates)
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::eval(const dMat &candidates,
+							       const dMat &phenocandidates)
   {
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
@@ -59,7 +60,7 @@ namespace libcmaes
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r)._x = candidates.col(r);
-	_solutions._candidates.at(r)._fvalue = _func(_solutions._candidates.at(r)._x.data(),candidates.rows());
+	_solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
@@ -80,4 +81,6 @@ namespace libcmaes
   
   template class ESOStrategy<CMAParameters<GenoPheno<NoBoundStrategy>>,CMASolutions,CMAStopCriteria<GenoPheno<NoBoundStrategy>> >;
   template class ESOStrategy<CMAParameters<GenoPheno<pwqBoundStrategy>>,CMASolutions,CMAStopCriteria<GenoPheno<pwqBoundStrategy>> >;
+  template class ESOStrategy<CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,CMASolutions,CMAStopCriteria<GenoPheno<NoBoundStrategy,linScalingStrategy>> >;
+  template class ESOStrategy<CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,CMASolutions,CMAStopCriteria<GenoPheno<pwqBoundStrategy,linScalingStrategy>> >;
 }

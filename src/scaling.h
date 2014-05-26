@@ -1,0 +1,125 @@
+/**
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
+ * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
+ *
+ * This file is part of libcmaes.
+ *
+ * libcmaes is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * libcmaes is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * \brief linear scaling of the parameter space to achieve similar sensitivity
+ *        across all components.
+ */
+
+#ifndef LSCALING_H
+#define LSCALING_H
+
+#include "eo_matrix.h"
+#include <iostream>
+
+namespace libcmaes
+{
+
+  class NoScalingStrategy
+  {
+  public:
+    NoScalingStrategy() {}
+
+    NoScalingStrategy(const double *lbounds,
+		      const double *ubounds,
+		      const int &dim) {}
+
+    NoScalingStrategy(const dVec &scaling,
+		      const dVec &shift) {}
+
+    ~NoScalingStrategy() {}
+
+    void scale_to_internal(dVec &x,
+			   const dVec &y)
+    {
+      x = y;
+    }
+
+    void scale_to_f(const dVec &x,
+		    dVec &y)
+    {
+      y = x;
+    }
+
+    double _intmin = -std::numeric_limits<double>::max();  /**< default internal min bound. */
+    double _intmax = std::numeric_limits<double>::max();  /**< default internal max bound. */
+    bool _id = true;
+  };
+  
+  class linScalingStrategy
+  {
+  public:
+    linScalingStrategy() // identity scaling
+      :_scaling(dVec::Constant(1,1.0)),_shift(dVec::Zero(1)),_id(true)
+      {
+      }
+    
+    linScalingStrategy(const double *lbounds,
+		       const double *ubounds,
+		       const int &dim)
+      :_scaling(dVec::Constant(dim,1.0)),_shift(dVec::Zero(dim)),_id(false)
+      {
+	compute_scaling(lbounds,ubounds,dim);
+      }
+    
+    linScalingStrategy(const dVec &scaling,
+		       const dVec &shift)
+      :_scaling(scaling),_shift(shift),_id(false)
+      {}
+    
+    ~linScalingStrategy() {}
+
+    void compute_scaling(const double *lbounds,
+			 const double *ubounds,
+			 const int &dim)
+    {
+      dVec vlbounds = Map<dVec>(const_cast<double*>(lbounds),dim);
+      dVec vubounds = Map<dVec>(const_cast<double*>(ubounds),dim);
+      _scaling = (dVec::Constant(dim,_intmax)-dVec::Constant(dim,_intmin)).cwiseQuotient(vubounds-vlbounds);
+      _shift = dVec::Constant(dim,_intmax) - _scaling.cwiseProduct(vubounds);
+
+      std::cout << "scaling=" << _scaling.transpose() << std::endl;
+      std::cout << "shift=" << _shift.transpose() << std::endl;
+    }
+    
+    void scale_to_internal(dVec &x,
+			   const dVec &y)
+    {
+      x = y.cwiseProduct(_scaling) + _shift;
+    }
+
+    void scale_to_f(const dVec &x,
+		    dVec &y)
+    {
+      y = x - _shift;
+      y = y.cwiseQuotient(_scaling);
+    }
+
+    double _intmin = 0.0;  /**< default internal min bound. */
+    double _intmax = 10.0;  /**< default internal max bound. */
+    dVec _scaling;
+    dVec _shift;
+    bool _id = true;
+  };
+  
+}
+
+#endif

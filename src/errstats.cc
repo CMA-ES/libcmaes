@@ -262,4 +262,6 @@ namespace libcmaes
   
   template class errstats<GenoPheno<NoBoundStrategy>>;
   template class errstats<GenoPheno<pwqBoundStrategy>>;
+  template class errstats<GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class errstats<GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

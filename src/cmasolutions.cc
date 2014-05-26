@@ -181,4 +181,6 @@ namespace libcmaes
 
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy>>&);
+  template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&);
+  template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&);
 }

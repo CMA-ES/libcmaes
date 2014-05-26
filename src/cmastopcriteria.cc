@@ -227,4 +227,6 @@ namespace libcmaes
 
   template class CMAStopCriteria<GenoPheno<NoBoundStrategy>>;
   template class CMAStopCriteria<GenoPheno<pwqBoundStrategy>>;
+  template class CMAStopCriteria<GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAStopCriteria<GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

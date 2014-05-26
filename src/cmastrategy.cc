@@ -186,7 +186,9 @@ namespace libcmaes
     while(!stop())
       {
 	dMat candidates = ask();
-	this->eval(eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
+	this->eval(candidates,eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
+	for (int r=0;r<candidates.cols();r++)
+	  eostrat<TGenoPheno>::_solutions._candidates.at(r)._x = candidates.col(r);
 	tell();
 	eostrat<TGenoPheno>::_niter++;
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
@@ -218,4 +220,8 @@ namespace libcmaes
   template class CMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class CMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class CMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class CMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

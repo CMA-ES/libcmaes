@@ -12,9 +12,10 @@ endif
 
 if HAVE_GTEST
 TESTS = $(check_PROGRAMS)
-check_PROGRAMS = ut_pwqbounds ut_errstats
+check_PROGRAMS = ut_pwqbounds ut_errstats ut_scaling
 ut_pwqbounds_SOURCES=ut-pwqbounds.cc
 ut_errstats_SOURCES=ut-errstats.cc
+ut_scaling_SOURCES=ut-scaling.cc
 endif
 
 AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)

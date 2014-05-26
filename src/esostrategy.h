@@ -65,8 +65,11 @@ namespace libcmaes
      *        and their f-value into the _solutions object that bears the 
      *        current set of potential solutions to the optimization problem.
      * @param candidates A matrix whose rows contain the candidates.
+     * @param phenocandidates The candidates transformed into phenotype, 
+     *        leave empty if no pheno transform.
      */
-    void eval(const dMat &candidates);
+    void eval(const dMat &candidates,
+	      const dMat &phenocandidates=dMat(0,0));
 
     /**
      * \brief Updates the state of the stochastic search, and prepares
