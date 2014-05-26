@@ -24,6 +24,7 @@
 #include <random>
 #include <glog/logging.h>
 #include <ctime>
+#include <array>
 
 namespace libcmaes
 {
