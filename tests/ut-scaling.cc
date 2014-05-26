@@ -89,7 +89,7 @@ TEST(linScalingStrategy,bounds)
     }
   linScalingStrategy lsc(lbounds,ubounds,dim);
 
-  for (int i=0;10;i++)
+  for (int i=0;i<10;i++)
     {
       dVec y = dVec::Random(dim) * 10;
       dVec x,yr;
