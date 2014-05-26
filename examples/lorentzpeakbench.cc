@@ -43,7 +43,7 @@ double blfunc(const double *x, const double *par)
   return background(x,par) + lorentzianpeak(x,&par[3]);
 }
 
-//double par[6] = {1,1,1,6,.03,1};
+
 double points[201];
 double values[201];
 
@@ -79,17 +79,18 @@ void loaddata(const std::string filename)
 
 DEFINE_int32(lambda,-1,"number of offsprings");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
-DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+//DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
 
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
+  double x0[6] = {1,1,1,6,.03,1};
   int dim = 6;
   loaddata("lorentzpeakbench.dat");
-  CMAParameters<> cmaparams(dim,FLAGS_lambda,FLAGS_sigma0,FLAGS_seed);
-  if (FLAGS_x0 != std::numeric_limits<double>::min())
-    cmaparams.set_x0(FLAGS_x0);
+  CMAParameters<> cmaparams(dim,x0,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
+  /*if (FLAGS_x0 != std::numeric_limits<double>::min())
+    cmaparams.set_x0(FLAGS_x0);*/
   CMASolutions cmasols = cmaes<>(ff,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
   std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
