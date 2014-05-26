@@ -52,6 +52,8 @@ namespace libcmaes
   {
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
+	if (!cmap._has_max_iter) // this criteria is deactivated
+	  return CONT;
 	static int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
 	if (cmas._niter >= thresh)
 	  {
@@ -63,7 +65,7 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(AUTOMAXITER,autoMaxIter));
     StopCriteriaFunc<TGenoPheno> tolHistFun = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	static double threshold = 1e-12;
+	static double threshold = std::max(cmap._ftolerance,1e-12); // set it once
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
 	int histthresh = static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda));
 	int histlength = std::min(histthresh,histsize);
