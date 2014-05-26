@@ -78,7 +78,6 @@ namespace libcmaes
 
 
     /*- contour -*/
-    //TODO: contour output object
     static contour contour_points(FitFunc & func, const int &px, const int &py, const int &npoints,
 				  const CMAParameters<TGenoPheno> &parameters,
 				  CMASolutions &cmasol);
