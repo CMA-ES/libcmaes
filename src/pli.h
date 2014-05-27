@@ -35,20 +35,32 @@ namespace libcmaes
   public:
   pli() {}
   pli(const int &k, const int &samplesize, const int &dim,
-      const dVec &xm, const double &fvalue)
-    :_k(k),_samplesize(samplesize),_fvaluem(dVec::Zero(2*samplesize+1)),_xm(dMat::Zero(2*samplesize+1,dim)),_min(0.0),_max(0.0)
+      const dVec &xm, const double &fvalue, const double &fup, const double &delta)
+    :_k(k),_samplesize(samplesize),_fvaluem(dVec::Zero(2*samplesize+1)),_xm(dMat::Zero(2*samplesize+1,dim)),_min(0.0),_max(0.0),_err(2*samplesize+1),_fup(fup),_delta(delta)
       {
 	_fvaluem[samplesize] = fvalue;
 	_xm.row(samplesize) = xm.transpose();
+	_err[samplesize] = 0; // should be current sol status...
       }
     ~pli() {};
 
+    std::pair<double,double> getMinMax(const double &fvalue,
+				       int &minindex, int &maxindex)
+    {
+      (_fvaluem.head(_samplesize) - dVec::Constant(_samplesize,fvalue)).cwiseAbs().minCoeff(&minindex);
+      (_fvaluem.tail(_samplesize) - dVec::Constant(_samplesize,fvalue)).cwiseAbs().minCoeff(&maxindex);
+      double min = _xm(minindex,_k);
+      double max = _xm(_samplesize + 1 + maxindex,_k);
+      if (min > max)
+	std::swap(min,max);
+      return std::pair<double,double>(min,max);
+    }
+
     void setMinMax()
     {
-      _min = _xm(0,_k);
-      _max = _xm(2*_samplesize,_k);
-      if (_min > _max)
-	std::swap(_min,_max);
+      std::pair<double,double> mm = getMinMax(_fvaluem[_samplesize]+_fup,_minindex,_maxindex);
+      _min = mm.first;
+      _max = mm.second;
     }
 
     void setErrMinMax()
@@ -57,19 +69,7 @@ namespace libcmaes
       _errmin = _min - _xm(_samplesize,_k);
       _errmax = _max - _xm(_samplesize,_k);
     }
-    
-    std::pair<double,double> getMinMax(const double &fvalue)
-    {
-      dMat::Index mindex[2];
-      (_fvaluem.head(_samplesize) - dVec::Constant(_samplesize,fvalue)).cwiseAbs().minCoeff(&mindex[0]);
-      (_fvaluem.tail(_samplesize) - dVec::Constant(_samplesize,fvalue)).cwiseAbs().minCoeff(&mindex[1]);
-      double min = _xm(mindex[0],_k);
-      double max = _xm(_samplesize + 1 + mindex[1],_k);
-      if (min > max)
-	std::swap(min,max);
-      return std::pair<double,double>(min,max);
-    }
-    
+	
     int _k = -1;
     int _samplesize = 0;
     dVec _fvaluem;
@@ -78,6 +78,11 @@ namespace libcmaes
     double _max = 0.0;
     double _errmin = 0.0;
     double _errmax = 0.0;
+    int _minindex = -1;
+    int _maxindex = -1;
+    std::vector<int> _err; // errors from profile likelihood computations as run status codes.
+    double _fup; // the function deviation for which this profile likelihood was computed.
+    double _delta; // the tolerance around fvalue + fup for which this profile likelihood was computed.
   };
 
 }

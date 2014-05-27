@@ -43,7 +43,7 @@ namespace libcmaes
     //std::cout << "xk=" << x[k] << " / minfvalue=" << minfvalue << std::endl;
     //debug
 
-    pli le(k,samplesize,parameters._dim,x,minfvalue);
+    pli le(k,samplesize,parameters._dim,x,minfvalue,fup,delta);
     
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta,curve); // positive direction
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta,curve);  // negative direction
@@ -81,16 +81,30 @@ namespace libcmaes
 	//debug
 	
 	// minimize.
-	citsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k]);
-	if (citsol._run_status < 0)
-	  LOG(WARNING) << "profile likelihood linesearch: optimization error " << citsol._run_status << std::endl;
-	x = citsol.best_candidate()._x;
-	minfvalue = citsol.best_candidate()._fvalue;
-	
+	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k]);
+	if (ncitsol._run_status < 0)
+	  {
+	    LOG(WARNING) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << std::endl;
+	    // pad and return.
+	    /*for (int j=i+1;j<samplesize;j++)
+	      {
+		le._fvaluem[samplesize+sign*(1+j)] = le._fvaluem[samplesize+sign*i];
+		le._xm.row(samplesize+sign*(1+j)) = le._xm.row(samplesize+sign*i);
+	      }
+	      return;*/
+	  }
+	else // update current point and solution.
+	  {
+	    citsol = ncitsol;
+	    x = citsol.best_candidate()._x;
+	    minfvalue = citsol.best_candidate()._fvalue;
+	  }
+	    
 	// store points.
 	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
 	le._xm.row(samplesize+sign*(1+i)) = citsol.best_candidate()._x.transpose();
-
+	le._err[samplesize+sign*(1+i)] = ncitsol._run_status;
+	
 	if (!curve && iterend)
 	  {
 	    // pad and return.
@@ -167,9 +181,8 @@ namespace libcmaes
     CMASolutions ncmasol = cmasol;
     CMAParameters<TGenoPheno> nparameters = parameters;
     nparameters._quiet = true; //TODO: option.
-    nparameters.set_x0(cmasol.best_candidate()._x);
-    nparameters._sigma_init = 1.0/parameters._dim;//ncmasol._sigma;
     nparameters.set_fixed_p(k,vk);
+    nparameters._sigma_init = ncmasol._sigma = fabs(cmasol.best_candidate()._x[k]-vk);
     return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,ncmasol); //TODO: explicitely set the initial covariance.
   }
     

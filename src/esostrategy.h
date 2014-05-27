@@ -49,6 +49,16 @@ namespace libcmaes
     ESOStrategy(FitFunc &func,
 		TParameters &parameters);
 
+    /**
+     * \brief constructor for starting from an existing solution.
+     * @param func objective function to minimize
+     * @param parameters stochastic search parameters
+     * @param solution solution object to start from
+     */
+    ESOStrategy(FitFunc &func,
+		TParameters &parameters,
+		const TSolutions &solutions);
+    
   protected:
     ~ESOStrategy();
 

@@ -41,6 +41,16 @@ namespace libcmaes
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
   }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  ESOStrategy<TParameters,TSolutions,TStopCriteria>::ESOStrategy(FitFunc &func,
+								 TParameters &parameters,
+								 const TSolutions &solutions)
+    :_func(func),_nevals(0),_niter(0),_parameters(parameters)
+  {
+    _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
+    start_from_solution(solutions);
+  }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
   ESOStrategy<TParameters,TSolutions,TStopCriteria>::~ESOStrategy()
@@ -56,7 +66,7 @@ namespace libcmaes
 #endif
     
     // one candidate per row.
-    //#pragma omp parallel for if (candidates.cols() >= 100)
+#pragma omp parallel for if (candidates.cols() >= 100)
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r)._x = candidates.col(r);

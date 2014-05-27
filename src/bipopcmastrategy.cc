@@ -30,7 +30,7 @@ namespace libcmaes
 {
   template <class TCovarianceUpdate, class TGenoPheno>
   BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::BIPOPCMAStrategy(FitFunc &func,
-								       CMAParameters<TGenoPheno> &parameters)
+								   CMAParameters<TGenoPheno> &parameters)
     :IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters),_lambda_def(parameters._lambda),_lambda_l(parameters._lambda)
   {
     std::random_device rd;
@@ -40,6 +40,21 @@ namespace libcmaes
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda = _lambda_def;
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._mu = floor(_lambda_def / 2.0);
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
+  }
+
+  template <class TCovarianceUpdate, class TGenoPheno>
+  BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::BIPOPCMAStrategy(FitFunc &func,
+								   CMAParameters<TGenoPheno> &parameters,
+								   const CMASolutions &solutions)
+    :IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters,solutions),_lambda_def(parameters._lambda),_lambda_l(parameters._lambda)
+  {
+    std::random_device rd;
+    _gen = std::mt19937(rd());
+    _gen.seed(static_cast<uint64_t>(time(nullptr)));
+    _unif = std::uniform_real_distribution<>(0,1);
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda = _lambda_def;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._mu = floor(_lambda_def / 2.0);
+    //CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>

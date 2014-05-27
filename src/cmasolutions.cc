@@ -112,7 +112,7 @@ namespace libcmaes
     //std::cout << "cov: " << _cov << std::endl;
     _niter = 0;
     _nevals = 0;
-    _sigma = 1.0/static_cast<double>(_csqinv.rows());
+    //_sigma = 1.0/static_cast<double>(_csqinv.rows());
     _psigma = dVec::Zero(_cov.rows());
     _pc = dVec::Zero(_cov.rows());
     _k_best_candidates_hist.clear();
@@ -167,7 +167,10 @@ namespace libcmaes
 	out << "\nconfidence intervals:\n";
 	for (auto it=_pls.begin();it!=_pls.end();++it)
 	  {
-	    out << "dim " << (*it).first << " in [" << (*it).second._min << "," << (*it).second._max << "] with error [" << (*it).second._errmin << "," << (*it).second._errmax << "]\n";
+	    out << "dim " << (*it).first << " in [" << (*it).second._min << "," << (*it).second._max << "] with error [" << (*it).second._errmin << "," << (*it).second._errmax << "]";
+	    if ((*it).second._err[(*it).second._minindex] || (*it).second._err[(*it).second._maxindex])
+	      out << " / status=[" << (*it).second._err[(*it).second._minindex] << "," << (*it).second._err[(*it).second._maxindex] << "]";
+	    out << std::endl;
 	  }
       }
     return out;
