@@ -60,7 +60,7 @@ namespace libcmaes
 	lambda_inc();
 	reset_search_state();
 	
-	// do not restart if max budget function calls is reached (TODO: or fitness... i.e. if we know the function).
+	// do not restart if max budget function calls is reached.
 	if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals > 0
 	    && CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals >= CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals)
 	  {

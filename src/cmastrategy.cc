@@ -170,8 +170,7 @@ namespace libcmaes
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       plot();
     
-    if ((eostrat<TGenoPheno>::_parameters._max_iter > 0 && eostrat<TGenoPheno>::_niter >= eostrat<TGenoPheno>::_parameters._max_iter)
-	|| (eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != 0)
+    if ((eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != 0)
       return true;
     else return false;
   }

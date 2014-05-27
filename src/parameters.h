@@ -96,6 +96,16 @@ namespace libcmaes
   {
     _fixed_p.insert(std::pair<int,double>(index,value));
   }
+
+  void set_max_iter(const int &maxiter)
+  {
+    _max_iter = maxiter;
+  }
+
+  void set_max_fevals(const int &fevals)
+  {
+    _max_fevals = fevals;
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
