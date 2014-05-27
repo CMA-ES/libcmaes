@@ -50,11 +50,29 @@ namespace libcmaes
   CMAStopCriteria<TGenoPheno>::CMAStopCriteria()
     :_active(true)
   {
+    StopCriteriaFunc<TGenoPheno> maxFEvals = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._max_fevals == -1)
+	  return CONT;
+	if (cmas._nevals >= cmap._max_fevals)
+	  return MAXFEVALS;
+	else return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXFEVALS,maxFEvals));
+    StopCriteriaFunc<TGenoPheno> maxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._max_iter == -1)
+	  return CONT;
+	if (cmas._niter >= cmap._max_iter)
+	  return MAXITER;
+	else return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXITER,maxIter));
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
+	static int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
 	if (!cmap._has_max_iter) // this criteria is deactivated
 	  return CONT;
-	static int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
 	if (cmas._niter >= thresh)
 	  {
 	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria autoMaxIter => thresh=" << thresh << std::endl;
@@ -62,7 +80,7 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    //_scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(AUTOMAXITER,autoMaxIter));
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(AUTOMAXITER,autoMaxIter));
     StopCriteriaFunc<TGenoPheno> tolHistFun = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	static double threshold = std::max(cmap._ftolerance,1e-12); // set it once

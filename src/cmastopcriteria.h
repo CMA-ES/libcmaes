@@ -43,7 +43,9 @@ namespace libcmaes
     STAGNATION = 6, // partial success
     CONDITIONCOV = -15, // error, user action needed
     NOEFFECTAXIS = 3, // partial success
-    NOEFFECTCOOR = 4 // partial success
+    NOEFFECTCOOR = 4, // partial success
+    MAXFEVALS = 8,
+    MAXITER = 9
   };
 
   /**
