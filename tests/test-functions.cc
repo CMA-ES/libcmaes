@@ -493,7 +493,7 @@ int main(int argc, char *argv[])
 	  //TODO: check on solution in x space.
 	  if (compEp(c._fvalue,(*fmit).second._fvalue,FLAGS_epsilon))
 	    LOG(INFO) << (*mit).first << " -- OK\n";
-	  else LOG(INFO) << (*mit).first << " -- FAILED\n";
+	  else LOG(INFO) << (*mit).first << " -- FAILED - f-value=" << c._fvalue << " / expected f-value=" << (*fmit).second._fvalue << std::endl;
 	  ++mit;
 	}
       exit(1);
