@@ -35,15 +35,15 @@ namespace libcmaes
   enum CMAStopCritType
   {
     CONT = 0,
-    AUTOMAXITER = -10,
+    AUTOMAXITER = 7,
     TOLHISTFUN = 1, // convergence
-    EQUALFUNVALS = -11,
-    TOLX = -12,
+    EQUALFUNVALS = 5, // partial success, user error
+    TOLX = 2, // partial success
     TOLUPSIGMA = -13,
-    STAGNATION = -14,
-    CONDITIONCOV = -15,
-    NOEFFECTAXIS = -16,
-    NOEFFECTCOOR = -17
+    STAGNATION = 6, // partial success
+    CONDITIONCOV = -15, // error, user action needed
+    NOEFFECTAXIS = 3, // partial success
+    NOEFFECTCOOR = 4 // partial success
   };
 
   /**
