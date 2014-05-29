@@ -47,7 +47,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   // call to cmaes().
   std::vector<double> x0(dim,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
   CMAParameters<> cmaparams(dim,&x0.front(),-1.0,-1); // auto-sigma.
-  cmaparams._max_iter = maxfunevals;
+  cmaparams.set_max_fevals(maxfunevals);
   cmaparams._algo = alg;
   cmaparams._quiet = true;
   if (noisy)
