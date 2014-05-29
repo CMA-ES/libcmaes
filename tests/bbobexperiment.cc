@@ -54,7 +54,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   std::vector<double> x0(dim,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
   double lbounds[dim];
   double ubounds[dim];
-  for (int i=0;i<dim;i++)
+  for (size_t i=0;i<dim;i++)
     {
       lbounds[i] = -5.0;
       ubounds[i] = 5.0;
@@ -66,10 +66,10 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   cmaparams._quiet = true;
   if (noisy)
     cmaparams.set_noisy();
-  CMASolutions cmasols = cmaes(ff,cmaparams);
-  std::cerr << "solution: " << cmasols << std::endl;
+  cmaes(ff,cmaparams);
   /*CMASolutions cmasols = cmaes(ff,cmaparams);
-    Candidate bc = cmasols.best_candidate();*/
+    Candidate bc = cmasols.best_candidate();
+    std::cerr << "solution: " << cmasols << std::endl;*/
 }
 
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop & abipop");
