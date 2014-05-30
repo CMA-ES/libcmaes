@@ -23,7 +23,7 @@
 #include "cmastopcriteria.h"
 #include <cmath>
 #include <iterator>
-#include <glog/logging.h>
+#include "llogging.h"
 #include <limits>
 #include <iostream>
 

@@ -22,7 +22,7 @@
 #include "bipopcmastrategy.h"
 #include "opti_err.h"
 #include <random>
-#include <glog/logging.h>
+#include "llogging.h"
 #include <ctime>
 #include <array>
 
