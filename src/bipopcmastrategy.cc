@@ -63,6 +63,7 @@ namespace libcmaes
 	while(budgets[0]>budgets[1])
 	  {
 	    r2();
+	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(0.5*budgets[0]);
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
 	    budgets[1] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
