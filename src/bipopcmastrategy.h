@@ -69,6 +69,7 @@ namespace libcmaes
     std::uniform_real_distribution<> _unif;
     double _lambda_def;
     double _lambda_l;
+    double _sigma_init;
   };
 }
 
