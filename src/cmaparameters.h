@@ -101,7 +101,7 @@ namespace libcmaes
 
     double _sigma_init; /**< initial sigma value. */
 
-    int _nrestarts; /**< maximum number of restart, when applicable. */
+    int _nrestarts = 9; /**< maximum number of restart, when applicable. */
     bool _lazy_update; /**< covariance lazy update. */
     double _lazy_value; /**< reference trigger for lazy update. */
 
