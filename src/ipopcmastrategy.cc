@@ -78,6 +78,7 @@ namespace libcmaes
   void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::lambda_inc()
   {
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda *= 2.0;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.initialize_parameters();
     LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Restart => lambda_l=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / lambda_old=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda / 2.0 << std::endl;
   }
 
@@ -86,6 +87,7 @@ namespace libcmaes
   {
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_niter = 0;
+    std::cerr << "lambda=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / mu=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._mu << std::endl;
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
