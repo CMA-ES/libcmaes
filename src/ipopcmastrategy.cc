@@ -87,7 +87,6 @@ namespace libcmaes
   {
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_niter = 0;
-    std::cerr << "lambda=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / mu=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._mu << std::endl;
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
