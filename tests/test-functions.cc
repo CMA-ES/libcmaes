@@ -26,7 +26,7 @@
 #include <limits>
 #include <iostream>
 #include <cmath>
-#include <glog/logging.h>
+#include "llogging.h"
 
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
@@ -446,11 +446,13 @@ CMASolutions cmaes_opt()
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
+#ifdef HAVE_GLOG
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr=1;
   google::SetLogDestination(google::INFO,"");
   //FLAGS_log_prefix=false;
-
+#endif
+  
   fillupfuncs();
   
   if (FLAGS_list)

@@ -22,7 +22,6 @@
 #include "cmaparameters.h"
 #include <cmath>
 #include <iostream>
-#include <glog/logging.h>
 
 namespace libcmaes
 {

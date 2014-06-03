@@ -26,7 +26,7 @@
  */
 
 #include "pwq_bound_strategy.h"
-#include <glog/logging.h>
+#include "llogging.h"
 #include <limits>
 #include <iostream>
 

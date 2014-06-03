@@ -21,7 +21,7 @@
 
 #include "esoptimizer.h"
 #include "cmastrategy.h"
-#include <glog/logging.h>
+#include "llogging.h"
 
 using namespace libcmaes;
 
@@ -36,10 +36,12 @@ FitFunc cigtab = [](const double *x, const int N)
 
 int main(int argc, char *argv[])
 {
+#ifdef HAVE_GLOG
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr=1;
   google::SetLogDestination(google::INFO,"");
   //FLAGS_log_prefix=false;
+#endif
 
   int dim = 5;
   std::vector<double> x0 = {1.0,1.0,1.0,1.0,1.0};

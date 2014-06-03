@@ -23,7 +23,7 @@
 #include "cmastopcriteria.h"
 #include <cmath>
 #include <iterator>
-#include <glog/logging.h>
+#include "llogging.h"
 #include <limits>
 #include <iostream>
 
@@ -55,7 +55,10 @@ namespace libcmaes
 	if (cmap._max_fevals == -1)
 	  return CONT;
 	if (cmas._nevals >= cmap._max_fevals)
-	  return MAXFEVALS;
+	  {
+	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria maxFEvals => cmas._nevals=" << cmas._nevals << std::endl;
+	    return MAXFEVALS;
+	  }
 	else return CONT;
       };
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXFEVALS,maxFEvals));
@@ -64,7 +67,10 @@ namespace libcmaes
 	if (cmap._max_iter == -1)
 	  return CONT;
 	if (cmas._niter >= cmap._max_iter)
-	  return MAXITER;
+	  {
+	    LOG_IF(INFO,!cmap._max_iter) << "stopping criteria maxIter=" << cmas._niter << std::endl;
+	    return MAXITER;
+	  }
 	else return CONT;
       };
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXITER,maxIter));

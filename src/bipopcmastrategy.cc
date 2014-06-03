@@ -22,7 +22,7 @@
 #include "bipopcmastrategy.h"
 #include "opti_err.h"
 #include <random>
-#include <glog/logging.h>
+#include "llogging.h"
 #include <ctime>
 #include <array>
 
@@ -40,6 +40,7 @@ namespace libcmaes
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda = _lambda_def;
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._mu = floor(_lambda_def / 2.0);
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
+    _sigma_init = parameters._sigma_init;
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -78,6 +79,7 @@ namespace libcmaes
 	while(budgets[0]>budgets[1])
 	  {
 	    r2();
+	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(0.5*budgets[0]);
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
 	    budgets[1] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
@@ -104,16 +106,21 @@ namespace libcmaes
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda = _lambda_l;
     IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::lambda_inc();
     _lambda_l = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._sigma_init = _sigma_init;
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
   void BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::r2()
   {
     double u = _unif(_gen);
+    double us = _unif(_gen);
+    double nsigma = 2.0*pow(10,-2.0*us);
     double ltmp = pow(0.5*(_lambda_l/_lambda_def),u);
     double nlambda = ceil(_lambda_def * ltmp);
-    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Restart => lambda_s=" << nlambda << " / lambda_old=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / lambda_l=" << _lambda_l << " / lambda_def=" << _lambda_def << std::endl;
+    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Restart => lambda_s=" << nlambda << " / lambda_old=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / lambda_l=" << _lambda_l << " / lambda_def=" << _lambda_def << " / nsigma=" << nsigma << std::endl;
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda = nlambda;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._sigma_init = nsigma;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.initialize_parameters();
   }
 
   template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;

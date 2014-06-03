@@ -33,28 +33,45 @@
 #include "bbobStructures.h" /* Include all declarations for BBOB calls */
 #include <vector>
 #include <gflags/gflags.h>
+#include <mutex>
+#include <iostream>
 
 using namespace libcmaes;
+
+std::mutex fmtx; // WARNING: bbob function calls are NOT thread-safe (learnt the hard way...).
 
 void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy)
 {
   // map fct to libcmaes FitFunc.
   FitFunc ff = [&](const double *x, const int N)
     {
-      return (*fitnessfunction)(const_cast<double*>(x));
+      std::lock_guard<std::mutex> lck(fmtx);
+      double fval = (*fitnessfunction)(const_cast<double*>(x));
+      return fval;
     };
 
   // call to cmaes().
   std::vector<double> x0(dim,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
-  CMAParameters<> cmaparams(dim,&x0.front(),-1.0,-1); // auto-sigma.
-  cmaparams._max_iter = maxfunevals;
+  double lbounds[dim];
+  double ubounds[dim];
+  for (size_t i=0;i<dim;i++)
+    {
+      lbounds[i] = -5.0;
+      ubounds[i] = 5.0;
+    }
+  GenoPheno<pwqBoundStrategy> gp(lbounds,ubounds,dim);
+  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0.front(),2.0,-1,0,gp);
+  //CMAParameters<> cmaparams(dim,&x0.front(),2.0,-1,0);
+  //cmaparams.set_max_fevals(maxfunevals);
+  cmaparams.set_x0(-5.0,5.0);
   cmaparams._algo = alg;
   cmaparams._quiet = true;
   if (noisy)
     cmaparams.set_noisy();
   cmaes(ff,cmaparams);
   /*CMASolutions cmasols = cmaes(ff,cmaparams);
-    Candidate bc = cmasols.best_candidate();*/
+    Candidate bc = cmasols.best_candidate();
+    std::cerr << "solution: " << cmasols << std::endl;*/
 }
 
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop & abipop");
@@ -159,6 +176,7 @@ int main(int argc, char *argv[])
 		  
 		  printf("  f%d in %d-D, instance %d: FEs=%.0f with %d restarts,", ifun, dim[idx_dim],
 			 instances[idx_instances], fgeneric_evaluations(), independent_restarts);
+		  //std::cout << "\nfbest=" << fgeneric_best() << " / ftarget=" << fgeneric_ftarget() << std::endl;
 		  printf(" fbest-ftarget=%.4e, elapsed time [h]: %.2f\n", 
 			 fgeneric_best() - fgeneric_ftarget(), (double)(clock()-t0)/CLOCKS_PER_SEC/60./60.);
 		  /* call the BBOB closing function to wrap things up neatly */

@@ -155,6 +155,11 @@ namespace libcmaes
   std::ostream& CMASolutions::print(std::ostream &out,
 				    const int &verb_level) const
   {
+    if (_candidates.empty())
+      {
+	out << "empth solution set\n";
+	return out;
+      }
     out << "best solution => f-value=" << best_candidate()._fvalue << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << best_candidate()._x.transpose(); //TODO: print pheno(x).
     if (verb_level)
       {

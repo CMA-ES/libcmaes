@@ -21,7 +21,7 @@
 
 #include "ipopcmastrategy.h"
 #include "opti_err.h"
-#include <glog/logging.h>
+#include "llogging.h"
 #include <iostream>
 
 namespace libcmaes
@@ -86,6 +86,7 @@ namespace libcmaes
   void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::lambda_inc()
   {
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda *= 2.0;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.initialize_parameters();
     LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Restart => lambda_l=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / lambda_old=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda / 2.0 << std::endl;
   }
 
