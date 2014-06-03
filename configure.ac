@@ -1,6 +1,6 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.5)
+AC_INIT(libcmaes,0.6)
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([libcmaes_config.h])
@@ -65,6 +65,17 @@ fi
 AC_SUBST(GFLAGS_LIBS)
 
 # Check if there is google-glog library installed.
+AC_ARG_ENABLE(gglog,
+AC_HELP_STRING([--enable-gglog],[Enable google glog (default is NO)]),
+[case "${enableval}" in 
+	yes) gglog=true ;;
+	no) gglog=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-gglog) ;;
+esac],[gglog=false])
+if test x"$gglog" = x"true"; then
+   AC_DEFINE(HAVE_GLOG,1,[google glog requested])
+fi
+
 AC_ARG_WITH(glog, AS_HELP_STRING[--with-glog=GLOG_DIR],
   GLOG_CFLAGS="-I${with_glog}/include"
   GLOG_LIBS="-L${with_glog}/lib -lglog"
@@ -89,7 +100,7 @@ AM_CONDITIONAL(HAVE_GTEST, test x"$gtest_header_avail" = xyes)
 
 # Whether to compile with BBOB
 AC_ARG_ENABLE(bbob,
-AC_HELP_STRING([--enable-bbob],[Enable the linear programming optimization (default is NO)]),
+AC_HELP_STRING([--enable-bbob],[Enable support for BBOB'2013 benchmark (default is NO)]),
 [case "${enableval}" in 
 	yes) bbob=true ;;
 	no) bbob=false ;;

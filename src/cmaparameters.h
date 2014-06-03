@@ -40,17 +40,51 @@ namespace libcmaes
     /**
      * \brief Constructor.
      * @param dim problem dimensions
+     * @param x0 initial search point
+     * @param sigma initial distribution step size (positive, otherwise automatically set)
      * @param lambda number of offsprings sampled at each step
-     * @param sigma_init initial value of the step size sigma
      * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
      * @param gp genotype / phenotype object
+     * @param sep whether to use sep-CMA-ES, using diagonal covariance matrix (modifies covariance default learning rate)
      */
-    CMAParameters(const int &dim, const int &lambda=-1,
-		  const double &sigma_init=-1.0,
-		  const uint64_t &seed=0,
-		  const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
+  CMAParameters(const int &dim,
+		const double *x0,
+		const double &sigma,
+		const int &lambda=-1,
+		const uint64_t &seed=0,
+		const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
     ~CMAParameters();
-    
+
+    /**
+     * \brief initialize required parameters based on dim, lambda, x0 and sigma.
+     */
+    void initialize_parameters();
+  
+    /**
+     * \brief adapt parameters for noisy objective function.
+     */
+    void set_noisy();
+  
+    /**
+     * \brief fix parameters for sep-CMA-ES, using only the diagonal of covariance matrix.
+     */
+    void set_sep();
+
+    /**
+     * \brief turns stopping criteria MaxIter that automatically stops optimization after a 
+     *        number of steps on or off.
+     * @param b true or false for turning criteria on or off (on is default in constructor).
+     */
+    void set_automaxiter(const bool &b) { _has_max_iter = b; }
+
+    /**
+     * \brief sets function tolerance as stopping criteria for TolHistFun: monitors the
+     *        difference in function value over iterations and stops optimization when 
+     *        below tolerance.
+     * @param v value of the function tolerance.	    
+     */
+    void set_ftolerance(const double &v) { _ftolerance = v; }
+  
     int _mu; /**< number of candidate solutions used to update the distribution parameters. */
     dVec _weights; /**< offsprings weighting scheme. */
     double _csigma; /**< cumulation constant for step size. */
@@ -65,9 +99,9 @@ namespace libcmaes
     double _fact_pc;
     double _chi; /**< norm of N(0,I) */
 
-    double _sigma_init = -1.0; /**< initial sigma value. */
+    double _sigma_init; /**< initial sigma value. */
 
-    int _nrestarts; /**< maximum number of restart, when applicable. */
+    int _nrestarts = 9; /**< maximum number of restart, when applicable. */
     bool _lazy_update; /**< covariance lazy update. */
     double _lazy_value; /**< reference trigger for lazy update. */
 
@@ -78,6 +112,13 @@ namespace libcmaes
     double _deltamaxsigma; /**< infinite (active CMA only) */
     double _lambdamintarget; /**< = 0.66 (active CMA only) */
     double _alphaminusmin; /**< = 1 (active CMA only) */
+
+    // sep cma (diagonal cov).
+    bool _sep = false; /**< whether to use diagonal covariance matrix. */
+
+    // stopping criteria.
+    double _ftolerance = 1e-12; /**< tolerance of the best function values during the last 10+(30*dim/lambda) steps (TolHistFun). */ 
+    bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
   };
   
 }

@@ -23,7 +23,7 @@
 #include "cmastopcriteria.h"
 #include <cmath>
 #include <iterator>
-#include <glog/logging.h>
+#include "llogging.h"
 #include <limits>
 #include <iostream>
 
@@ -50,9 +50,35 @@ namespace libcmaes
   CMAStopCriteria<TGenoPheno>::CMAStopCriteria()
     :_active(true)
   {
+    StopCriteriaFunc<TGenoPheno> maxFEvals = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._max_fevals == -1)
+	  return CONT;
+	if (cmas._nevals >= cmap._max_fevals)
+	  {
+	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria maxFEvals => cmas._nevals=" << cmas._nevals << std::endl;
+	    return MAXFEVALS;
+	  }
+	else return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXFEVALS,maxFEvals));
+    StopCriteriaFunc<TGenoPheno> maxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._max_iter == -1)
+	  return CONT;
+	if (cmas._niter >= cmap._max_iter)
+	  {
+	    LOG_IF(INFO,!cmap._max_iter) << "stopping criteria maxIter=" << cmas._niter << std::endl;
+	    return MAXITER;
+	  }
+	else return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXITER,maxIter));
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
+	if (!cmap._has_max_iter) // this criteria is deactivated
+	  return CONT;
 	if (cmas._niter >= thresh)
 	  {
 	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria autoMaxIter => thresh=" << thresh << std::endl;
@@ -63,7 +89,7 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(AUTOMAXITER,autoMaxIter));
     StopCriteriaFunc<TGenoPheno> tolHistFun = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	static double threshold = 1e-12;
+	static double threshold = std::max(cmap._ftolerance,1e-12); // set it once
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
 	int histthresh = static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda));
 	int histlength = std::min(histthresh,histsize);
@@ -118,7 +144,7 @@ namespace libcmaes
 	    return CONT;
 	//test 2: all square root components of cov . factor < tolx.
 	for (int i=0;i<cmas._cov.rows();i++)
-	  if (sqrt(cmas._cov(i,i))>tfactor)
+	  if (sqrt(cmas._cov(i,i))>=tfactor)
 	    return CONT;
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
@@ -227,4 +253,6 @@ namespace libcmaes
 
   template class CMAStopCriteria<GenoPheno<NoBoundStrategy>>;
   template class CMAStopCriteria<GenoPheno<pwqBoundStrategy>>;
+  template class CMAStopCriteria<GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAStopCriteria<GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

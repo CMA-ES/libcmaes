@@ -21,7 +21,7 @@
 
 #include "ipopcmastrategy.h"
 #include "opti_err.h"
-#include <glog/logging.h>
+#include "llogging.h"
 #include <iostream>
 
 namespace libcmaes
@@ -60,7 +60,7 @@ namespace libcmaes
 	lambda_inc();
 	reset_search_state();
 	
-	// do not restart if max budget function calls is reached (TODO: or fitness... i.e. if we know the function).
+	// do not restart if max budget function calls is reached.
 	if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals > 0
 	    && CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals >= CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals)
 	  {
@@ -78,6 +78,7 @@ namespace libcmaes
   void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::lambda_inc()
   {
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda *= 2.0;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.initialize_parameters();
     LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Restart => lambda_l=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << " / lambda_old=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda / 2.0 << std::endl;
   }
 
@@ -99,4 +100,8 @@ namespace libcmaes
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

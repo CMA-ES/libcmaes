@@ -20,6 +20,7 @@
  */
 
 #include "covarianceupdate.h"
+#include <iostream>
 
 namespace libcmaes
 {
@@ -36,8 +37,10 @@ namespace libcmaes
     
     // reusable variables.
     dVec diffxmean = 1.0/solutions._sigma * (xmean-solutions._xmean); // (m^{t+1}-m^t)/sigma^t
-    if (solutions._updated_eigen)
+    if (solutions._updated_eigen && !parameters._sep)
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
+    else if (parameters._sep)
+      solutions._csqinv = solutions._cov.diagonal().cwiseInverse().asDiagonal();
     
     // update psigma, Eq. (3)
     solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
@@ -71,4 +74,6 @@ namespace libcmaes
 
   template void CovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
   template void CovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
 }
