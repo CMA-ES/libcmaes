@@ -87,4 +87,6 @@ title('Standard Deviation in all coordinates')
 grid(True)
 
 pylab.show()
-raw_input('  --- press any key --- ')
+
+msg = '  --- press any key --- '
+raw_input(msg) if sys.version < '3' else input(msg)
