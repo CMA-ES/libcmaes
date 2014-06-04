@@ -53,6 +53,7 @@ for c in range(single_values+2*dim,single_values+3*dim):
 xmean = dat[:,xmeanc]
 
 # plot data.
+pylab.rcParams['font.size'] = 10
 xlab = "function evaluations"
 
 # plot fvalue, sigma, kappa
@@ -86,3 +87,4 @@ title('Standard Deviation in all coordinates')
 grid(True)
 
 pylab.show()
+raw_input('  --- press any key --- ')
