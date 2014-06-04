@@ -88,5 +88,5 @@ grid(True)
 
 pylab.show()
 
-msg = '  --- press any key --- '
+msg = '  --- press return to continue --- '
 raw_input(msg) if sys.version < '3' else input(msg)
