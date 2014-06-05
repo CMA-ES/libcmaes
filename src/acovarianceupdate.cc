@@ -39,9 +39,11 @@ namespace libcmaes
   
      // reusable variables.
     dVec diffxmean = 1.0/(solutions._sigma*parameters._cm) * (xmean-solutions._xmean); // (m^{t+1}-m^t)/(c_m*sigma^t)
-    if (solutions._updated_eigen)
+    if (solutions._updated_eigen && !parameters._sep)
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
-
+    else if (parameters._sep)
+      solutions._csqinv = solutions._cov.diagonal().cwiseInverse().asDiagonal();
+    
     // update psigma, Eq. (3)
     solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
       + parameters._fact_ps * solutions._csqinv * diffxmean;
