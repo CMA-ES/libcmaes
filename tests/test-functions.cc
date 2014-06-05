@@ -375,6 +375,8 @@ DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing t
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
+DEFINE_double(ftarget,std::numeric_limits<double>::infinity(),"objective function target when known");
+DEFINE_double(ftargettol,1e-12,"objective function target tolerance, stops optimization when fabs(fvalue-ftarget)<ftargettol");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -394,6 +396,11 @@ CMASolutions cmaes_opt()
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
   cmaparams._quiet = FLAGS_quiet;
+  if (FLAGS_ftarget != std::numeric_limits<double>::infinity())
+    {
+      cmaparams.set_ftarget(FLAGS_ftarget);
+      cmaparams.set_ftarget_tolerance(FLAGS_ftargettol);
+    }
   if (FLAGS_noisy)
     cmaparams.set_noisy();
   if (FLAGS_alg == "cmaes")

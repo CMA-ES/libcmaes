@@ -55,7 +55,7 @@ namespace libcmaes
      */
   Parameters(const int &dim, const double *x0, const int &lambda=-1,
 	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
-  :_dim(dim),_lambda(lambda),_seed(seed),_gp(gp) // x0 initialized to min double value everywhere
+  :_dim(dim),_lambda(lambda),_seed(seed),_gp(gp)
   {
     if (_lambda == -1) // lambda is unspecified
       _lambda = 4 + floor(3.0*log(_dim));
@@ -65,21 +65,36 @@ namespace libcmaes
   }
   
   ~Parameters()
-    {
-    }
+  {
+  }
 
+  /**
+   * \brief sets initial objective function parameter values to x0 across all dimensions
+   * @param x0 initial value
+   */
   void set_x0(const double &x0)
   {
     _x0min = _x0max = dVec::Constant(_dim,x0);
   }
 
+  /**
+   * \brief sets initial objective function parameter values to array x0
+   * @param x0 array of initial parameter values
+   */
   void set_x0(const double *x0)
   {
     _x0min = _x0max = dVec(_dim);
     for (int i=0;i<_dim;i++)
       _x0min(i) = _x0max(i) = x0[i];
   }
-  
+
+  /**
+   * \brief sets bounds on initial objective function parameter values.
+   *        Bounds are the same across all dimensions, and initial value is
+   *        sampled uniformly within these bounds.
+   * @param x0min lower bound
+   * @param x0max upper bound
+   */
   void set_x0(const double &x0min, const double &x0max)
   {
     _x0min = dVec::Constant(_dim,x0min);
@@ -92,25 +107,88 @@ namespace libcmaes
     _x0max = x0;
   }
   
+  /**
+   * \brief sets bounds on initial objective function parameter values.
+   *        Initial value is sampled uniformly within these bounds.
+   * @param x0min vector of initial lower bounds.
+   * @param x0max vector of initial upper bounds.
+   */
+  void set_x0(const double *x0min, const double *x0max)
+  {
+    _x0min = x0max = dVec(_dim);
+    for (int i=0;i<_dim;i++)
+      {
+	_x0min(i) = x0min[i];
+	_x0max(i) = x0max[i];
+      }
+  }
+  
+  /**
+   * \brief sets bounds on initial objective function parameter values.
+   *        Initial value is sampled uniformly within these bounds.
+   * @param x0min vector of initial lower bounds.
+   * @param x0max vector of initial upper bounds.
+   */
   void set_x0(const dVec &x0min, const dVec &x0max)
   {
     _x0min = x0min;
     _x0max = x0max;
   }
 
+  /**
+   * \brief freezes a parameter to a given value during optimization.
+   * @param index dimension index of the parameter to be frozen
+   * @param value frozen value of the parameter
+   */
   void set_fixed_p(const int &index, const double &value)
   {
     _fixed_p.insert(std::pair<int,double>(index,value));
   }
 
+  /**
+   * \brief sets the maximum number of iterations allowed for the optimization.
+   * @param maxiter maximum number of allowed iterations
+   */
   void set_max_iter(const int &maxiter)
   {
     _max_iter = maxiter;
   }
 
+  /**
+   * \brief sets the maximum budget of function calls allowed for the optimization.
+   * @param fevals maximum number of function evaluations
+   */
   void set_max_fevals(const int &fevals)
   {
     _max_fevals = fevals;
+  }
+
+  /**
+   * \brief sets the objective function target value when known.
+   * @param val objective function target value
+   */
+  void set_ftarget(const double &val)
+  {
+    _ftarget = val;
+  }
+
+  /**
+   * \brief resets the objective function target value to its inactive state.
+   */
+  void reset_ftarget()
+  {
+    _ftarget = std::numeric_limits<double>::infinity();
+  }
+
+  /**
+   * \brief sets the objective function target tolerance value, i.e. the 
+   *        optimization will stops when abs(fvalue-ftarget)<=val
+   *        Default value is 1e-12.
+   * @param val objective function target tolerance value
+   */
+  void set_ftarget_tolerance(const double &val)
+  {
+    _ftargettol = val;
   }
   
   int _dim; /**< function space dimensions. */
@@ -122,13 +200,15 @@ namespace libcmaes
   std::string _fplot = ""; /**< plotting file, if specified. */
   dVec _x0min; /**< initial mean vector min bound value for all components. */
   dVec _x0max; /**< initial mean vector max bound value for all components. */
+  double _ftarget = std::numeric_limits<double>::infinity(); /**< optional objective function target value. */
+  double _ftargettol = 1e-12; /**< objective function target tolerance. */
   
   uint64_t _seed = 0; /**< seed for random generator. */
   int _algo = 0; /**< selected algorithm. */
 
   std::unordered_map<int,double> _fixed_p; /**< fixed parameters and values. */
   
-  TGenoPheno _gp;
+  TGenoPheno _gp; /**< genotype / phenotype object. */
   };
   
 }
