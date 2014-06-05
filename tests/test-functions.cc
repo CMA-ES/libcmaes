@@ -354,8 +354,7 @@ DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to para
 DEFINE_bool(quiet,false,"no intermediate output");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
-DEFINE_double(ftarget,std::numeric_limits<double>::infinity(),"objective function target when known");
-DEFINE_double(ftargettol,1e-12,"objective function target tolerance, stops optimization when fabs(fvalue-ftarget)<ftargettol");
+DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -375,11 +374,8 @@ CMASolutions cmaes_opt()
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
   cmaparams._quiet = FLAGS_quiet;
-  if (FLAGS_ftarget != std::numeric_limits<double>::infinity())
-    {
-      cmaparams.set_ftarget(FLAGS_ftarget);
-      cmaparams.set_ftarget_tolerance(FLAGS_ftargettol);
-    }
+  if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
+    cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
     cmaparams.set_noisy();
   if (FLAGS_alg == "cmaes")

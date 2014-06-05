@@ -91,10 +91,9 @@ namespace libcmaes
       {
 	if (cmap._ftarget != std::numeric_limits<double>::infinity())
 	  {
-	    double fdiff = fabs(cmap._ftarget-cmas.best_candidate()._fvalue);
-	    if (fdiff <= cmap._ftargettol)
+	    if (cmas.best_candidate()._fvalue <= cmap._ftarget)
 	      {
-		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fdiff=" << fdiff << std::endl;
+		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate()._fvalue << " / ftarget=" << cmap._ftarget << std::endl;
 		return FTARGET;
 	      }
 	  }

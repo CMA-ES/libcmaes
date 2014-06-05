@@ -171,18 +171,7 @@ namespace libcmaes
    */
   void reset_ftarget()
   {
-    _ftarget = std::numeric_limits<double>::infinity();
-  }
-
-  /**
-   * \brief sets the objective function target tolerance value, i.e. the 
-   *        optimization will stops when abs(fvalue-ftarget)<=val
-   *        Default value is 1e-12.
-   * @param val objective function target tolerance value
-   */
-  void set_ftarget_tolerance(const double &val)
-  {
-    _ftargettol = val;
+    _ftarget = -std::numeric_limits<double>::infinity();
   }
   
   int _dim; /**< function space dimensions. */
@@ -194,7 +183,7 @@ namespace libcmaes
   std::string _fplot = ""; /**< plotting file, if specified. */
   dVec _x0min; /**< initial mean vector min bound value for all components. */
   dVec _x0max; /**< initial mean vector max bound value for all components. */
-  double _ftarget = std::numeric_limits<double>::infinity(); /**< optional objective function target value. */
+  double _ftarget = -std::numeric_limits<double>::infinity(); /**< optional objective function target value. */
   double _ftargettol = 1e-12; /**< objective function target tolerance. */
   
   uint64_t _seed = 0; /**< seed for random generator. */
