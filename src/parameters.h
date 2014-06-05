@@ -55,7 +55,7 @@ namespace libcmaes
      */
   Parameters(const int &dim, const double *x0, const int &lambda=-1,
 	     const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
-  :_dim(dim),_lambda(lambda),_seed(seed),_gp(gp) // x0 initialized to min double value everywhere
+  :_dim(dim),_lambda(lambda),_seed(seed),_gp(gp)
   {
     if (_lambda == -1) // lambda is unspecified
       _lambda = 4 + floor(3.0*log(_dim));
@@ -65,8 +65,8 @@ namespace libcmaes
   }
   
   ~Parameters()
-    {
-    }
+  {
+  }
 
   void set_x0(const double &x0)
   {
@@ -106,6 +106,20 @@ namespace libcmaes
   {
     _max_fevals = fevals;
   }
+
+  void set_ftarget(const double &val)
+  {
+    _ftarget = val;
+  }
+  void reset_ftarget()
+  {
+    _ftarget = std::numeric_limits<double>::infinity();
+  }
+
+  void set_ftarget_tolerance(const double &val)
+  {
+    _ftargettol = val;
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
@@ -116,13 +130,15 @@ namespace libcmaes
   std::string _fplot = ""; /**< plotting file, if specified. */
   dVec _x0min; /**< initial mean vector min bound value for all components. */
   dVec _x0max; /**< initial mean vector max bound value for all components. */
+  double _ftarget = std::numeric_limits<double>::infinity(); /**< optional objective function target value. */
+  double _ftargettol = 1e-12; /**< objective function target tolerance. */
   
   uint64_t _seed = 0; /**< seed for random generator. */
   int _algo = 0; /**< selected algorithm. */
 
   std::unordered_map<int,double> _fixed_p; /**< fixed parameters and values. */
   
-  TGenoPheno _gp;
+  TGenoPheno _gp; /**< genotype / phenotype object. */
   };
   
 }

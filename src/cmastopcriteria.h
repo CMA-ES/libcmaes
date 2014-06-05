@@ -45,7 +45,8 @@ namespace libcmaes
     NOEFFECTAXIS = 3, // partial success
     NOEFFECTCOOR = 4, // partial success
     MAXFEVALS = 8,
-    MAXITER = 9
+    MAXITER = 9,
+    FTARGET = 10 // success
   };
 
   /**
