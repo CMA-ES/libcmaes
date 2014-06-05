@@ -32,6 +32,51 @@ FitFunc fsphere = [](const double *x, const int N)
   return val;
 };
 
+class customCMAStrategy : public CMAStrategy<CovarianceUpdate>
+{
+public:
+  customCMAStrategy(FitFunc &func,
+		    CMAParameters<> &parameters)
+    :CMAStrategy<CovarianceUpdate>(func,parameters)
+  {
+  }
+
+  ~customCMAStrategy() {}
+
+  dMat ask()
+  {
+    return CMAStrategy<CovarianceUpdate>::ask();
+  }
+
+  void eval(const dMat &candidates,
+	    const dMat &phenocandidates=dMat(0,0))
+  {
+    // custom eval.
+    for (int r=0;r<candidates.cols();r++)
+      {
+	_solutions._candidates.at(r)._x = candidates.col(r);
+	if (phenocandidates.size()) // if candidates in phenotype space are given
+	  _solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
+	else _solutions._candidates.at(r)._fvalue = _func(candidates.col(r).data(),candidates.rows());
+	
+	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
+      }
+    _nevals += candidates.cols();
+    _solutions._nevals += candidates.cols();
+  }
+  
+  void tell()
+  {
+    return CMAStrategy<CovarianceUpdate>::tell();
+  }
+
+  bool stop()
+  {
+    return CMAStrategy<CovarianceUpdate>::stop();
+  }
+  
+};
+
 int main(int argc, char *argv[])
 {
   int dim = 10; // problem dimensions.
@@ -39,8 +84,9 @@ int main(int argc, char *argv[])
   double sigma = 0.1;
 
   CMAParameters<> cmaparams(dim,&x0.front(),sigma);
-  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> optim(fsphere,cmaparams);
-
+  //ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> optim(fsphere,cmaparams);
+  ESOptimizer<customCMAStrategy,CMAParameters<>> optim(fsphere,cmaparams);
+  
   while(!optim.stop())
     {
       dMat candidates = optim.ask();
