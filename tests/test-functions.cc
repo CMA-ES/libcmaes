@@ -370,8 +370,8 @@ CMASolutions cmaes_opt()
   TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
   CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
-  cmaparams._max_iter = FLAGS_max_iter;
-  cmaparams._max_fevals = FLAGS_max_fevals;
+  cmaparams.set_max_iter(FLAGS_max_iter);
+  cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
