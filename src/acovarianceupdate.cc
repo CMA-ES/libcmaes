@@ -49,7 +49,7 @@ namespace libcmaes
 
     // update pc, Eq. (4-5)
     solutions._hsig = 0;
-    double val_for_hsig = sqrt(1.0-pow(1.0-parameters._csigma,2.0*(solutions._niter+1)))*(1.4+2.0/(parameters._dim+1))*parameters._chi;
+    double val_for_hsig = sqrt(1.0-pow(1.0-parameters._csigma,2.0*(solutions._niter+1)))*(1.4+2.0/(parameters._dim+1-parameters._fixed_p.size()))*parameters._chi;
     if (norm_ps < val_for_hsig)
       solutions._hsig = 1; //TODO: simplify equation instead.
     solutions._pc = (1.0-parameters._cc) * solutions._pc + solutions._hsig * parameters._fact_pc * diffxmean;

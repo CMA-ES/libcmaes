@@ -100,6 +100,15 @@ namespace libcmaes
     _cmu = std::min(1.0-_c1,2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
     _lazy_value = 1.0/(_c1+_cmu)/Parameters<TGenoPheno>::_dim/10.0;
   }
+
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::set_fixed_p(const int &index, const double &value)
+  {
+    Parameters<TGenoPheno>::set_fixed_p(index,value);
+    double ndim = Parameters<TGenoPheno>::_dim-Parameters<TGenoPheno>::_fixed_p.size();
+    _chi = sqrt(ndim)*(1.0-1.0/(4.0*ndim) + 1.0/(21.0*ndim*ndim));
+    _lazy_value = 1.0/(_c1+_cmu)/ndim/10.0;
+  }
   
   template class CMAParameters<GenoPheno<NoBoundStrategy>>;
   template class CMAParameters<GenoPheno<pwqBoundStrategy>>;
