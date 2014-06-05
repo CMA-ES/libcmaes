@@ -186,8 +186,6 @@ namespace libcmaes
       {
 	dMat candidates = ask();
 	this->eval(candidates,eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
-	for (int r=0;r<candidates.cols();r++)
-	  eostrat<TGenoPheno>::_solutions._candidates.at(r)._x = candidates.col(r);
 	tell();
 	eostrat<TGenoPheno>::_niter++;
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
