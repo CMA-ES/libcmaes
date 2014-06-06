@@ -152,8 +152,7 @@ namespace libcmaes
       eostrat<TGenoPheno>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
 						    _esolver._eigenSolver.eigenvectors());
     else eostrat<TGenoPheno>::_solutions.update_eigenv(eostrat<TGenoPheno>::_solutions._sepcov,
-						       dMat::Constant(eostrat<TGenoPheno>::_parameters._dim,
-								      eostrat<TGenoPheno>::_parameters._dim,1.0)); //TODO: useless identity matrix storage.
+						       dMat::Constant(eostrat<TGenoPheno>::_parameters._dim,1,1.0));
     eostrat<TGenoPheno>::_solutions._niter = eostrat<TGenoPheno>::_niter;
 
 #ifdef DEBUG
