@@ -41,6 +41,7 @@ namespace libcmaes
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._mu = floor(_lambda_def / 2.0);
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
     _sigma_init = parameters._sigma_init;
+    _max_fevals = parameters._max_fevals;
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -75,6 +76,7 @@ namespace libcmaes
 	    r1();
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	  }
+	CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(_max_fevals); // resets the budget
 	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
 	budgets[0] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
 	IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::capture_best_solution(best_run);
