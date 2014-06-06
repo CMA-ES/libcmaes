@@ -84,6 +84,23 @@ namespace libcmaes
      * @param v value of the function tolerance.	    
      */
     void set_ftolerance(const double &v) { _ftolerance = v; }
+
+    /**
+     * \brief freezes a parameter to a given value during optimization.
+     *        Adapts some generic parameters as well.
+     * @param index dimension index of the parameter to be frozen
+     * @param value frozen value of the parameter
+     */
+    void set_fixed_p(const int &index, const double &value);
+
+    /**
+     * \brief sets the maximum number of restarts (applies to IPOP and BIPOP).
+     * @param nrestarts maximum number of restarts
+     */
+    void set_restarts(const int &nrestarts)
+    {
+      _nrestarts = nrestarts;
+    }
   
     int _mu; /**< number of candidate solutions used to update the distribution parameters. */
     dVec _weights; /**< offsprings weighting scheme. */

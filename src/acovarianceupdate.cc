@@ -39,9 +39,11 @@ namespace libcmaes
   
      // reusable variables.
     dVec diffxmean = 1.0/(solutions._sigma*parameters._cm) * (xmean-solutions._xmean); // (m^{t+1}-m^t)/(c_m*sigma^t)
-    if (solutions._updated_eigen)
+    if (solutions._updated_eigen && !parameters._sep)
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
-
+    else if (parameters._sep)
+      solutions._csqinv = solutions._cov.diagonal().cwiseInverse().asDiagonal();
+    
     // update psigma, Eq. (3)
     solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
       + parameters._fact_ps * solutions._csqinv * diffxmean;
@@ -49,7 +51,7 @@ namespace libcmaes
 
     // update pc, Eq. (4-5)
     solutions._hsig = 0;
-    double val_for_hsig = sqrt(1.0-pow(1.0-parameters._csigma,2.0*(solutions._niter+1)))*(1.4+2.0/(parameters._dim+1))*parameters._chi;
+    double val_for_hsig = sqrt(1.0-pow(1.0-parameters._csigma,2.0*(solutions._niter+1)))*(1.4+2.0/(parameters._dim+1-parameters._fixed_p.size()))*parameters._chi;
     if (norm_ps < val_for_hsig)
       solutions._hsig = 1; //TODO: simplify equation instead.
     solutions._pc = (1.0-parameters._cc) * solutions._pc + solutions._hsig * parameters._fact_pc * diffxmean;

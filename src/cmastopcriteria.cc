@@ -87,6 +87,19 @@ namespace libcmaes
 	return CONT;
       };
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(AUTOMAXITER,autoMaxIter));
+    StopCriteriaFunc<TGenoPheno> fTarget = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._ftarget != std::numeric_limits<double>::infinity())
+	  {
+	    if (cmas.best_candidate()._fvalue <= cmap._ftarget)
+	      {
+		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate()._fvalue << " / ftarget=" << cmap._ftarget << std::endl;
+		return FTARGET;
+	      }
+	  }
+	return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(FTARGET,fTarget));
     StopCriteriaFunc<TGenoPheno> tolHistFun = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	static double threshold = std::max(cmap._ftolerance,1e-12); // set it once

@@ -60,7 +60,9 @@ namespace libcmaes
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r)._x = candidates.col(r);
-	_solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
+	if (phenocandidates.size())
+	  _solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
+	else _solutions._candidates.at(r)._fvalue = _func(candidates.col(r).data(),candidates.rows());
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
