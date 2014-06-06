@@ -157,7 +157,8 @@ namespace libcmaes
 	    return CONT;
 	//test 2: all square root components of cov . factor < tolx.
 	for (int i=0;i<cmas._cov.rows();i++)
-	  if (sqrt(cmas._cov(i,i))>=tfactor)
+	  if ((!cmap._sep && sqrt(cmas._cov(i,i))>=tfactor)
+	      || (cmap._sep && sqrt(cmas._sepcov(i))>=tfactor))
 	    return CONT;
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
@@ -222,7 +223,8 @@ namespace libcmaes
       {
 	double fact = 0.2*cmas._sigma;
 	for (int i=0;i<cmap._dim;i++)
-	  if (cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
+	  if ((!cmap._sep && cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
+	      || (cmap._sep && cmas._xmean[i] == fact * sqrt(cmas._sepcov(i))))
 	    {
 	      LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
 	      return NOEFFECTCOOR;
