@@ -150,22 +150,21 @@ public:
 		    const dMat &labels)
   {
     to_matrices();
-    dMat lfeatures;
     for (size_t i=0;i<_lweights.size();i++)
       {
 	dMat activation;
 	if (i == 0)
 	  activation = (_lweights.at(i).transpose() * features).colwise() + _lb.at(i);
-	else activation = (_lweights.at(i).transpose() * lfeatures).colwise() + _lb.at(i);
+	else activation = (_lweights.at(i).transpose() * _lfeatures).colwise() + _lb.at(i);
 	if (i != _lweights.size()-1)
-	  lfeatures = sigmoid(activation);
-	else lfeatures = softmax(activation);
+	  _lfeatures = sigmoid(activation);
+	else _lfeatures = softmax(activation);
       }
     
     // loss.
     if (labels.size() > 0) // training mode.
       {
-	dMat delta = lfeatures - labels;
+	dMat delta = _lfeatures - labels;
 	/*std::cout << "features:\n";
 	std::cout << lfeatures << std::endl;
 	std::cout << "labels:\n";
@@ -208,6 +207,7 @@ public:
   std::vector<dVec> _lb;
   unsigned int _allparams_dim = 0;
   std::vector<double> _allparams; /**< all parameters, flat representation. */
+  dMat _lfeatures;
   double _loss = std::numeric_limits<double>::max(); /**< current loss. */
 };
 
@@ -234,6 +234,8 @@ FitFunc nn_of = [](const double *x, const int N)
 
 DEFINE_string(fdata,"train.csv","name of the file that contains the training data for MNIST");
 DEFINE_int32(n,100,"max number of examples to train from");
+DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
+DEFINE_string(fplot,"","output file for optimization log");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -255,16 +257,45 @@ int main(int argc, char *argv[])
   //debug
   
   //double minloss = 1e-3; //TODO.
-  int maxsolveiter = 1e4;
   //int lambda = 1e3;
-  std::vector<int> lsizes = {784, 10, 10};
+  std::vector<int> lsizes = {784, 100, 10};
   gmnistnn = nn(lsizes);
 
+  // training.
   double sigma = 2.0;
   std::vector<double> x0(gmnistnn._allparams_dim,-std::numeric_limits<double>::max());
   CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front(),sigma);//,lambda);
-  cmaparams._max_iter = maxsolveiter;
+  cmaparams.set_max_iter(FLAGS_maxsolveiter);
+  cmaparams._fplot = FLAGS_fplot;
   cmaparams._algo = sepCMAES;
   CMASolutions cmasols = cmaes<>(nn_of,cmaparams);
   std::cout << "status: " << cmasols._run_status << std::endl;
+
+  // testing.
+  dMat cmat = dMat::Zero(10,10);
+  gmnistnn.forward_pass(gfeatures,glabels);
+  //std::cout << gmnistnn._lfeatures.cols() << " / " << gmnistnn._lfeatures.rows() << std::endl;
+  for (int i=0;i<gmnistnn._lfeatures.cols();i++)
+    {
+      dMat::Index maxv[2];
+      gmnistnn._lfeatures.col(i).maxCoeff(&maxv[0]);
+      glabels.col(i).maxCoeff(&maxv[1]);
+      //std::cout << "maxv=" << maxv << std::endl;
+      //if (glabels(maxv[0],i) == 1.0)
+      cmat(maxv[1],maxv[0])++;
+    }
+  //std::cerr << "cmat:" << std::endl << cmat << std::endl;
+  dMat diago = cmat.diagonal();
+  dMat col_sums = cmat.colwise().sum();
+  dMat row_sums = cmat.rowwise().sum();
+
+  dMat epsilon = dMat::Constant(10,1,1e-6);
+  double precision = diago.transpose().cwiseQuotient(col_sums+epsilon.transpose()).sum() / 10.0;
+  double recall = diago.cwiseQuotient(row_sums+epsilon).sum() / 10.0;
+  double accuracy = diago.sum() / cmat.sum();
+  double f1 = (2 * precision * recall) / (precision + recall);
+
+  std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
+  std::cout << "accuracy=" << accuracy << std::endl;
+  std::cout << "f1=" << f1 << std::endl;
 }
