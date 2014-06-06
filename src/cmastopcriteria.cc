@@ -76,7 +76,7 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXITER,maxIter));
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
+	double thresh = 100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda);
 	if (!cmap._has_max_iter) // this criteria is deactivated
 	  return CONT;
 	if (cmas._niter >= thresh)
@@ -212,7 +212,8 @@ namespace libcmaes
 	  {
 	    double ei = fact * sqrt(cmas._leigenvalues(i));
 	    for (int j=0;j<cmap._dim;j++)
-	      if (cmas._xmean[i] != cmas._xmean[i] + ei * cmas._leigenvectors(i,j))
+	      if ((!cmap._sep && cmas._xmean[i] != cmas._xmean[i] + ei * cmas._leigenvectors(i,j))
+		  || (cmap._sep && cmas._xmean[i] != cmas._xmean[i] + ei))
 		return CONT;
 	  }
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectAxis\n";
