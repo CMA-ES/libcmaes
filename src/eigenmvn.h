@@ -141,6 +141,16 @@ namespace Eigen {
       {
 	return ((_transform * Matrix<Scalar,Dynamic,-1>::NullaryExpr(_covar.rows(),nn,randN))*factor).colwise() + _mean;
       }
+
+    Matrix<Scalar,Dynamic,-1> samples_ind(int nn, double factor)
+      {
+	dMat pop = (Matrix<Scalar,Dynamic,-1>::NullaryExpr(_covar.rows(),nn,randN))*factor;
+	for (int i=0;i<pop.cols();i++)
+	  {
+	    pop.col(i) = pop.col(i).cwiseProduct(_transform) + _mean;
+	  }
+	return pop;
+      }
   }; // end class EigenMultivariateNormal
 } // end namespace Eigen
 #endif

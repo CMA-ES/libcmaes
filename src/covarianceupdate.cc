@@ -40,11 +40,22 @@ namespace libcmaes
     if (solutions._updated_eigen && !parameters._sep)
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
     else if (parameters._sep)
-      solutions._csqinv = solutions._cov.diagonal().cwiseInverse().asDiagonal();
+      {
+	//std::cerr << "sepcov: " << solutions._sepcov << std::endl;
+	solutions._sepcsqinv = solutions._sepcov.cwiseInverse().cwiseSqrt();
+      }
+      //solutions._csqinv = solutions._cov.diagonal().cwiseInverse().asDiagonal();
     
     // update psigma, Eq. (3)
-    solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
-      + parameters._fact_ps * solutions._csqinv * diffxmean;
+    solutions._psigma = (1.0-parameters._csigma)*solutions._psigma;
+    if (!parameters._sep)
+      solutions._psigma += parameters._fact_ps * solutions._csqinv * diffxmean;
+    else
+      {
+	//std::cerr << "sepcsqinv: " << solutions._sepcsqinv << std::endl;
+	solutions._psigma += parameters._fact_ps * solutions._sepcsqinv.cwiseProduct(diffxmean);
+	//std::cerr << "psigma=" << solutions._psigma.transpose() << std::endl;
+      }
     double norm_ps = solutions._psigma.norm();
 
     // update pc, Eq. (4)
@@ -52,20 +63,39 @@ namespace libcmaes
     double val_for_hsig = sqrt(1.0-pow(1.0-parameters._csigma,2.0*(solutions._niter+1)))*(1.4+2.0/(parameters._dim+1-parameters._fixed_p.size()))*parameters._chi;
     if (norm_ps < val_for_hsig)
       solutions._hsig = 1; //TODO: simplify equation instead.
+    //if (!parameters._sep)
     solutions._pc = (1.0-parameters._cc) * solutions._pc + solutions._hsig * parameters._fact_pc * diffxmean;
-    dMat spc = solutions._pc * solutions._pc.transpose();
+    //else solutions._pc = (1.0-parameters._cc) * solutions._pc + solutions._hsig * parameters._fact_pc * diffxmean;//solutions._sepcov.cwiseSqrt().cwiseProduct(diffxmean);
+    dMat spc;
+    if (!parameters._sep)
+      spc = solutions._pc * solutions._pc.transpose();
+    else spc = solutions._pc.cwiseProduct(solutions._pc);
     
     // covariance update, Eq (5).
-    dMat wdiff = dMat::Zero(parameters._dim,parameters._dim);
+    dMat wdiff;
+    if (!parameters._sep)
+      wdiff = dMat::Zero(parameters._dim,parameters._dim);
+    else wdiff = dMat::Zero(parameters._dim,1);
     for (int i=0;i<parameters._mu;i++)
       {
 	dVec difftmp = solutions._candidates.at(i)._x - solutions._xmean;
-	wdiff += parameters._weights[i] * (difftmp*difftmp.transpose());
+	if (!parameters._sep)
+	  wdiff += parameters._weights[i] * (difftmp*difftmp.transpose());
+	else wdiff += parameters._weights[i] * (difftmp.cwiseProduct(difftmp));
+	//else wdiff += parameters._weights[i] * (solutions._sepcov.cwiseSqrt().cwiseProduct(difftmp)*(solutions._sepcov.cwiseSqrt().cwiseProduct(difftmp)).transpose()).diagonal();
       }
     wdiff *= 1.0/(solutions._sigma*solutions._sigma);
-    solutions._cov = (1-parameters._c1-parameters._cmu+(1-solutions._hsig)*parameters._c1*parameters._cc*(2.0-parameters._cc))*solutions._cov + parameters._c1*spc + parameters._cmu*wdiff;
+    if (!parameters._sep)
+      solutions._cov = (1-parameters._c1-parameters._cmu+(1-solutions._hsig)*parameters._c1*parameters._cc*(2.0-parameters._cc))*solutions._cov + parameters._c1*spc + parameters._cmu*wdiff;
+    else
+      {
+	solutions._sepcov = (1-parameters._c1-parameters._cmu+(1-solutions._hsig)*parameters._c1*parameters._cc*(2.0-parameters._cc))*solutions._sepcov + parameters._c1*spc + parameters._cmu*wdiff;
+	/*std::cerr << "sepcov:\n";
+	  std::cerr << solutions._sepcov << std::endl;*/
+      }
     
     // sigma update, Eq. (6)
+    //std::cerr << "norm_ps=" << norm_ps << std::endl;
     solutions._sigma *= exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0));
 
     // set mean.
