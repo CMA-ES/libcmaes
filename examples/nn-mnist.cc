@@ -49,14 +49,17 @@ void tokenize(const std::string &str,
 }
 
 // load dataset into memory
-void load_mnist_dataset(const std::string &filename,
-			const int &n,
-			dMat &features, dMat &labels)
+int load_mnist_dataset(const std::string &filename,
+		       const int &n,
+		       dMat &features, dMat &labels)
 {
   // matrices for features and labels, examples in col 
   features.resize(784,n);
-  labels.resize(1,n);
+  labels.resize(10,n);
+  labels.setZero();
   std::ifstream fin(filename);
+  if (!fin.good())
+    return -1;
   std::string line;
   std::getline(fin,line); // bypass first line
   int ne = 0;
@@ -69,7 +72,7 @@ void load_mnist_dataset(const std::string &filename,
       std::vector<double> values;
       for (size_t i=0;i<strvalues.size();i++)
 	values.push_back(strtod(strvalues.at(i).c_str(),NULL));
-      labels(0,ne) = values.at(0);
+      labels(values.at(0),ne) = 1.0;
       for (size_t i=1;i<values.size();i++)
 	features(i-1,ne) = values.at(i);
       ++ne;
@@ -80,6 +83,7 @@ void load_mnist_dataset(const std::string &filename,
       features.resize(784,ne);
       labels.resize(1,ne);
     }
+  return 0;
 }
 
 // build the network
@@ -98,7 +102,7 @@ public:
     for (size_t i=0;i<_lsizes.size()-1;i++)
       {
 	_lweights.push_back(dMat::Random(_lsizes.at(i),_lsizes.at(i+1)));
-	_lb.push_back(dVec::Random(_lsizes.at(i)));
+	_lb.push_back(dVec::Zero(_lsizes.at(i+1)));
 	_allparams_dim += _lweights.at(i).size() + _lsizes.at(i);
       }
   }
@@ -151,18 +155,25 @@ public:
       {
 	dMat activation;
 	if (i == 0)
-	  activation = (_lweights.at(i) * features).colwise() + _lb.at(i);
-	else activation = (_lweights.at(i) * lfeatures).colwise() + _lb.at(i);
+	  activation = (_lweights.at(i).transpose() * features).colwise() + _lb.at(i);
+	else activation = (_lweights.at(i).transpose() * lfeatures).colwise() + _lb.at(i);
 	if (i != _lweights.size()-1)
-	  sigmoid(lfeatures);
-	else softmax(lfeatures);
+	  lfeatures = sigmoid(activation);
+	else lfeatures = softmax(activation);
       }
     
     // loss.
     if (labels.size() > 0) // training mode.
       {
 	dMat delta = lfeatures - labels;
+	/*std::cout << "features:\n";
+	std::cout << lfeatures << std::endl;
+	std::cout << "labels:\n";
+	std::cout << labels << std::endl;
+	std::cout << "delta:\n";
+	std::cout << delta << std::endl;*/
 	_loss = delta.sum();
+	//std::cerr << "loss=" << _loss << std::endl;
       }
   };
 
@@ -175,8 +186,8 @@ public:
       {
 	std::copy(_lweights.at(i).data(),_lweights.at(i).data()+_lweights.at(i).size(),vit);
 	vit += _lweights.at(i).size();
-	std::copy(_lb.at(i).data(),_lb.at(i).data()+_lsizes.at(i),vit);
-	vit += _lsizes.at(i);
+	std::copy(_lb.at(i).data(),_lb.at(i).data()+_lsizes.at(i+1),vit);
+	vit += _lsizes.at(i+1);
       }
   }
 
@@ -187,8 +198,8 @@ public:
       {
 	std::copy(vit,vit+_lweights.at(i).size(),_lweights.at(i).data());
         vit += _lweights.at(i).size();
-	std::copy(vit,vit+_lsizes.at(i),_lb.at(i).data());
-	vit += _lsizes.at(i);
+	std::copy(vit,vit+_lsizes.at(i+1),_lb.at(i).data());
+	vit += _lsizes.at(i+1);
       }
   }
   
@@ -201,18 +212,21 @@ public:
 };
 
 // global nn variables etc...
-dMat gfeatures(784,100);
-dMat glabels(1,100);
+dMat gfeatures = dMat::Zero(784,100);
+dMat glabels = dMat::Zero(10,100);
 nn gmnistnn;
 
 // objective function
 FitFunc nn_of = [](const double *x, const int N)
 {
-  std::copy(x,x+N,gmnistnn._allparams.begin()); // beware.
+  //std::copy(x,x+N,gmnistnn._allparams.begin()); // beware.
+  gmnistnn._allparams.clear();
+  for (int i=0;i<N;i++)
+    gmnistnn._allparams.push_back(x[i]);
   gmnistnn.forward_pass(gfeatures,glabels);
 
   //debug
-  std::cout << "net loss: " << gmnistnn._loss << std::endl;
+  //std::cout << "net loss= " << gmnistnn._loss << std::endl;
   //debug
   
   return gmnistnn._loss;
@@ -225,11 +239,16 @@ DEFINE_int32(n,100,"max number of examples to train from");
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
-  google::InitGoogleLogging(argv[0]);
-  FLAGS_logtostderr=1;
-  google::SetLogDestination(google::INFO,"");
-  load_mnist_dataset(FLAGS_fdata,FLAGS_n,gfeatures,glabels);
-
+  /*google::InitGoogleLogging(argv[0]);
+    FLAGS_logtostderr=1;
+    google::SetLogDestination(google::INFO,"");*/
+  int err = load_mnist_dataset(FLAGS_fdata,FLAGS_n,gfeatures,glabels);
+  if (err)
+    {
+      std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
+      exit(1);
+    }
+  
   //debug
   /*std::cout << "gfeatures: " << gfeatures << std::endl;
     std::cout << "glabels: " << glabels << std::endl;*/
@@ -238,11 +257,14 @@ int main(int argc, char *argv[])
   //double minloss = 1e-3; //TODO.
   int maxsolveiter = 1e4;
   //int lambda = 1e3;
-  std::vector<int> lsizes = {784, 10, 10};
+  std::vector<int> lsizes = {784, 2, 10};
   gmnistnn = nn(lsizes);
 
-  CMAParameters<> cmaparams(gmnistnn._allparams_dim);//,lambda);
+  double sigma = 2.0;
+  std::vector<double> x0(gmnistnn._allparams_dim,-std::numeric_limits<double>::max());
+  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front(),sigma);//,lambda);
   cmaparams._max_iter = maxsolveiter;
+  cmaparams._algo = sepCMAES;
   CMASolutions cmasols = cmaes<>(nn_of,cmaparams);
   std::cout << "status: " << cmasols._run_status << std::endl;
 }
