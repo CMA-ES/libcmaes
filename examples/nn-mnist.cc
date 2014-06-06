@@ -172,7 +172,7 @@ public:
 	std::cout << labels << std::endl;
 	std::cout << "delta:\n";
 	std::cout << delta << std::endl;*/
-	_loss = delta.sum();
+	_loss = delta.norm();
 	//std::cerr << "loss=" << _loss << std::endl;
       }
   };
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
   //double minloss = 1e-3; //TODO.
   int maxsolveiter = 1e4;
   //int lambda = 1e3;
-  std::vector<int> lsizes = {784, 2, 10};
+  std::vector<int> lsizes = {784, 10, 10};
   gmnistnn = nn(lsizes);
 
   double sigma = 2.0;
