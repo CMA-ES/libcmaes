@@ -56,7 +56,7 @@ namespace libcmaes
 	  return CONT;
 	if (cmas._nevals >= cmap._max_fevals)
 	  {
-	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria maxFEvals => cmas._nevals=" << cmas._nevals << std::endl;
+	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria maxFEvals => cmas._nevals=" << cmas._nevals << " / max_fevals=" << cmap._max_fevals << std::endl;
 	    return MAXFEVALS;
 	  }
 	else return CONT;
