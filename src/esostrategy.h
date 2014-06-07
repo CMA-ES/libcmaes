@@ -91,6 +91,10 @@ namespace libcmaes
      */
     int optimize();
 
+    /**
+     * \brief increment iteration count.
+     */
+    void inc_iter();
     
     /**
      * \brief Sets the possibly custom progress function,
