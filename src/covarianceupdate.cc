@@ -37,7 +37,7 @@ namespace libcmaes
     
     // reusable variables.
     dVec diffxmean = 1.0/solutions._sigma * (xmean-solutions._xmean); // (m^{t+1}-m^t)/sigma^t
-    if (solutions._updated_eigen && !parameters._sep)
+    if (solutions._updated_eigen && !parameters._sep) //TODO: shall not recompute when using gradient, as it is computed in ask.
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
     else if (parameters._sep)
       solutions._sepcsqinv = solutions._sepcov.cwiseInverse().cwiseSqrt();

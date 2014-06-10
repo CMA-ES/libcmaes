@@ -32,13 +32,16 @@ namespace libcmaes
   template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   CMASolutions cmaes(FitFunc &func,
 		     CMAParameters<TGenoPheno> &parameters,
-		     ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc=CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc)
+		     ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc=CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,
+		     GradFunc gfunc=nullptr)
     {
       switch(parameters._algo)
 	{
 	case CMAES_DEFAULT:
 	{
 	  ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> cmaes_vanilla(func,parameters);
+	  if (gfunc != nullptr)
+	    cmaes_vanilla.set_gradient_func(gfunc);
 	  cmaes_vanilla.set_progress_func(pfunc);
 	  cmaes_vanilla.optimize();
 	  return cmaes_vanilla._solutions;

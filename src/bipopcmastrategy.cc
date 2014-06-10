@@ -30,7 +30,7 @@ namespace libcmaes
 {
   template <class TCovarianceUpdate, class TGenoPheno>
   BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::BIPOPCMAStrategy(FitFunc &func,
-								       CMAParameters<TGenoPheno> &parameters)
+								   CMAParameters<TGenoPheno> &parameters)
     :IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters),_lambda_def(parameters._lambda),_lambda_l(parameters._lambda)
   {
     std::random_device rd;

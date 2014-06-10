@@ -99,6 +99,14 @@ FitFunc fsphere = [](const double *x, const int N)
   return val;
 };
 
+GradFunc grad_fsphere = [](const double *x, const int N)
+{
+  dVec grad(N);
+  for (int i=0;i<N;i++)
+    grad(i) = 2.0*x[i];
+  return grad;
+};
+
 FitFunc cigtab = [](const double *x, const int N)
 {
   int i;
@@ -116,6 +124,16 @@ FitFunc rosenbrock = [](const double *x, const int N)
       val += 100.0*pow((x[i+1]-x[i]*x[i]),2) + pow((x[i]-1.0),2);
     }
   return val;
+};
+
+GradFunc grad_rosenbrock = [](const double *x, const int N)
+{
+  dVec grad(N);
+  for (int i=0;i<N-1;i++)
+    {
+      grad(i) = 100.0*(2.0*x[i+1]+2.0*x[i]) + 2.0*x[i] + 2.0;
+    }
+  return grad;
 };
 
 FitFunc beale = [](const double *x, const int N)
@@ -278,6 +296,7 @@ FitFunc diffpowrot = [](const double *x, const int N)
 };
 
 std::map<std::string,FitFunc> mfuncs;
+std::map<std::string,GradFunc> mgfuncs;
 std::map<std::string,Candidate> msols;
 std::map<std::string,CMAParameters<>> mparams;
 std::map<std::string,FitFunc>::const_iterator mit;
@@ -290,9 +309,11 @@ void fillupfuncs()
   mfuncs["ackleys"]=ackleys;
   msols["ackleys"]=Candidate(0.0,dVec::Constant(2,0));
   mfuncs["fsphere"]=fsphere;
+  mgfuncs["fsphere"]=grad_fsphere;
   msols["fsphere"]=Candidate(0.0,dVec::Constant(20,0));
   mfuncs["cigtab"]=cigtab;
   mfuncs["rosenbrock"]=rosenbrock;
+  mgfuncs["rosenbrock"]=grad_rosenbrock;
   msols["rosenbrock"]=Candidate(0.0,dVec::Constant(20,1));
   mfuncs["beale"]=beale;
   mfuncs["goldstein_price"]=goldstein_price;
@@ -356,6 +377,7 @@ DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically 
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
+DEFINE_bool(with_gradient,false,"whether to use the function gradient when available in closed form");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -409,7 +431,10 @@ CMASolutions cmaes_opt()
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
       exit(-1);
     }
-  CMASolutions cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  CMASolutions cmasols;
+  if (!FLAGS_with_gradient)
+    cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  else cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
   return cmasols;
 }
 

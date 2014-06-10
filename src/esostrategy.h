@@ -28,7 +28,8 @@
 namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
-
+  typedef std::function<dVec (const double*, const int &n)> GradFunc;
+  
   template<class TParameters,class TSolutions>
     using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
 
@@ -101,6 +102,8 @@ namespace libcmaes
      * @param evals increment to the current consumed budget
      */
     void update_fevals(const int &evals);
+
+    void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
     
     /**
      * \brief Sets the possibly custom progress function,
@@ -120,6 +123,7 @@ namespace libcmaes
     TSolutions _solutions; /**< holder of the current set of solutions and the dynamic elemenst of the search state in general. */
     TParameters _parameters; /**< the optimizer's set of static parameters, from inputs or internal. */
     ProgressFunc<TParameters,TSolutions> _pfunc; /**< possibly custom progress function. */
+    GradFunc _gfunc = nullptr; /**< gradient function, when available. */
   };
   
 }
