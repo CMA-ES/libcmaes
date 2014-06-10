@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
       dMat candidates = optim.ask();
       optim.eval(candidates);
       optim.tell();
-      optim._niter++;
+      optim.inc_iter(); // important step: signals next iteration.
     }
   std::cout << optim._solutions << std::endl;
 }
