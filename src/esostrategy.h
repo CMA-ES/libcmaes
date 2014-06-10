@@ -95,6 +95,12 @@ namespace libcmaes
      * \brief increment iteration count.
      */
     void inc_iter();
+
+    /**
+     * \brief updates the consumed budget of objective function evaluations.
+     * @param evals increment to the current consumed budget
+     */
+    void update_fevals(const int &evals);
     
     /**
      * \brief Sets the possibly custom progress function,

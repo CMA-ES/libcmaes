@@ -66,9 +66,8 @@ namespace libcmaes
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
-    _nevals += candidates.cols();
-    _solutions._nevals += candidates.cols();
-
+    update_fevals(candidates.cols());
+    
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
     _solutions._elapsed_eval = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
@@ -80,6 +79,13 @@ namespace libcmaes
   {
     _niter++;
     _solutions._niter++;
+  }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::update_fevals(const int &evals)
+  {
+    _nevals += evals;
+    _solutions._nevals += evals;
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
