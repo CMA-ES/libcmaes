@@ -76,6 +76,13 @@ namespace libcmaes
   }
 
   template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::inc_iter()
+  {
+    _niter++;
+    _solutions._niter++;
+  }
+  
+  template<class TParameters,class TSolutions,class TStopCriteria>
   Candidate ESOStrategy<TParameters,TSolutions,TStopCriteria>::best_solution() const
   {
     return _solutions.best_candidate();
