@@ -346,7 +346,7 @@ DEFINE_string(fplot,"","file where to store data for later plotting of results a
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
-DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop");
+DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
 DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
@@ -398,6 +398,12 @@ CMASolutions cmaes_opt()
     cmaparams._algo = sepIPOP_CMAES;
   else if (FLAGS_alg == "sepbipop")
     cmaparams._algo = sepBIPOP_CMAES;
+  else if (FLAGS_alg == "sepacmaes")
+    cmaparams._algo = sepaCMAES;
+  else if (FLAGS_alg == "sepaipop")
+    cmaparams._algo = sepaIPOP_CMAES;
+  else if (FLAGS_alg == "sepabipop")
+    cmaparams._algo = sepaBIPOP_CMAES;
   else
     {
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;

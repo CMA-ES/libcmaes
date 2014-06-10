@@ -32,7 +32,9 @@ namespace libcmaes
   {
     try
       {
-	_cov = dMat::Identity(p._dim,p._dim);
+	if (!static_cast<CMAParameters<TGenoPheno>&>(p)._sep)
+	  _cov = dMat::Identity(p._dim,p._dim);
+	else _sepcov = dMat::Constant(p._dim,1,1.0);
       }
     catch (std::bad_alloc &e)
       {

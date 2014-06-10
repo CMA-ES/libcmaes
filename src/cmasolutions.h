@@ -106,6 +106,8 @@ namespace libcmaes
 
     dMat _cov; /**< covariance matrix. */
     dMat _csqinv; /** inverse root square of covariance matrix. */
+    dMat _sepcov;
+    dMat _sepcsqinv;
     dVec _xmean; /**< distribution mean. */
     dVec _psigma; /**< cummulation for sigma. */
     dVec _pc; /**< cumulation for covariance. */
