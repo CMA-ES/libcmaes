@@ -144,7 +144,23 @@ public:
       }
     return expM;
   }
-  
+
+  dMat get_loss(const dMat &prediction, const dMat &labels)
+  {
+    dMat M = labels.cwiseProduct(prediction);
+    dMat Mc = M.colwise().sum();
+
+    dMat logM(Mc.rows(),Mc.cols());
+    for (int i=0;i<Mc.rows();i++)
+      {
+	for (int j=0;j<Mc.cols();j++)
+	  {
+	    logM(i,j) = Mc(i,j) == 0 ? 0 : log(Mc(i,j));
+	  }
+      }
+    return (-1) * logM;
+  }
+    
   // forward pass over all features at once.
   void forward_pass(const dMat &features,
 		    const dMat &labels)
@@ -164,14 +180,15 @@ public:
     // loss.
     if (labels.size() > 0) // training mode.
       {
-	dMat delta = _lfeatures - labels;
+	//dMat delta = _lfeatures - labels;
 	/*std::cout << "features:\n";
 	std::cout << lfeatures << std::endl;
 	std::cout << "labels:\n";
 	std::cout << labels << std::endl;
 	std::cout << "delta:\n";
 	std::cout << delta << std::endl;*/
-	_loss = delta.norm();
+	//_loss = delta.norm();
+	_loss = get_loss(_lfeatures,labels).mean();
 	//std::cerr << "loss=" << _loss << std::endl;
       }
   };
@@ -289,9 +306,16 @@ int main(int argc, char *argv[])
   dMat col_sums = cmat.colwise().sum();
   dMat row_sums = cmat.rowwise().sum();
 
-  dMat epsilon = dMat::Constant(10,1,1e-6);
-  double precision = diago.transpose().cwiseQuotient(col_sums+epsilon.transpose()).sum() / 10.0;
-  double recall = diago.cwiseQuotient(row_sums+epsilon).sum() / 10.0;
+  /*std::cerr << "col_sums:" << col_sums << std::endl;
+    std::cerr << "row_sums:" << row_sums << std::endl;*/
+  
+  //dMat epsilon = dMat::Constant(10,1,1e-20);
+  double precision = diago.transpose().cwiseQuotient(col_sums).sum() / 10.0;
+  double recall = diago.cwiseQuotient(row_sums).sum() / 10.0;
+  /*if (std::isnan(precision))
+    precision = 1.0;
+  if (std::isnan(recall))
+  recall = 1.0;*/
   double accuracy = diago.sum() / cmat.sum();
   double f1 = (2 * precision * recall) / (precision + recall);
 
