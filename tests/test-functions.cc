@@ -128,10 +128,11 @@ FitFunc rosenbrock = [](const double *x, const int N)
 
 GradFunc grad_rosenbrock = [](const double *x, const int N)
 {
-  dVec grad(N);
+  dVec grad = dVec::Zero(N);
   for (int i=0;i<N-1;i++)
     {
-      grad(i) = 100.0*(2.0*x[i+1]+2.0*x[i]) + 2.0*x[i] + 2.0;
+      grad(i) = -400.0*x[i]*(x[i+1]-x[i]*x[i])-2.0*(1.0-x[i]);
+      grad(i+1) += 200.0*(x[i+1]-x[i]*x[i]);
     }
   return grad;
 };
@@ -235,12 +236,34 @@ FitFunc elli = [](const double *x, const int N)
   return val;
 };
 
+GradFunc grad_elli = [](const double *x, const int N)
+{
+  dVec grad(N);
+  if (N == 1)
+    {
+      grad(0) = 2.0*x[0];
+      return grad;
+    }
+  for (int i=0;i<N;i++)
+    grad(i) = exp(log(1e3)*2.0*static_cast<double>(i)/static_cast<double>((N-1)))*2.0*x[i];
+  return grad;
+};
+
 FitFunc tablet = [](const double *x, const int N)
 {
   double val = 1e6*x[0]*x[0];
   for (int i=1;i<N;i++)
     val += x[i]*x[i];
   return val;
+};
+
+GradFunc grad_tablet = [](const double *x, const int N)
+{
+  dVec grad(N);
+  grad(0) = 1e6*2.0*x[0];
+  for (int i=0;i<N;i++)
+    grad(i) = 2.0*x[i];
+  return grad;
 };
 
 FitFunc cigar = [](const double *x, const int N)
@@ -335,8 +358,10 @@ void fillupfuncs()
   rastrigin_params.set_x0(5.0);
   mparams["rastrigin"]=rastrigin_params;
   mfuncs["elli"]=elli;
+  mgfuncs["elli"]=grad_elli;
   msols["elli"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["tablet"]=tablet;
+  mgfuncs["tablet"]=grad_tablet;
   msols["tablet"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["cigar"]=cigar;
   msols["cigar"]=Candidate(0.0,dVec::Constant(10,0));
@@ -357,7 +382,7 @@ void printAvailFuncs()
 // command line options.
 DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");
-DEFINE_int32(lambda,10,"number of offsprings");
+DEFINE_int32(lambda,-1,"number of offsprings");
 DEFINE_int32(max_iter,-1,"maximum number of iteration (-1 for unlimited)");
 DEFINE_int32(max_fevals,-1,"maximum budget as number of function evaluations (-1 for unlimited)");
 DEFINE_bool(list,false,"returns a list of available functions");

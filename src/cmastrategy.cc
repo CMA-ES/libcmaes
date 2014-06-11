@@ -104,13 +104,16 @@ namespace libcmaes
     if (eostrat<TGenoPheno>::_gfunc)
       {
 	dVec grad_at_mean = eostrat<TGenoPheno>::_gfunc(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim);
+	//TODO: check that gradient is not 0.
+	//std::cerr << "grad_at_mean=" << grad_at_mean.transpose() << std::endl;
+
 	//TODO: if geno / pheno transform activated.
-	//TODO: compute csqinv now ?
-	eostrat<TGenoPheno>::_solutions._csqinv = _esolver._eigenSolver.operatorInverseSqrt();
-	dVec nx = eostrat<TGenoPheno>::_solutions._xmean + eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) * (eostrat<TGenoPheno>::_solutions._csqinv * grad_at_mean).norm()) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
-	/*dVec v = _esolver._eigenSolver.eigenvalues() * _esolver._eigenSolver.eigenvectors().transpose() * eostrat<TGenoPheno>::_solutions._sigma * grad_at_mean;
+	dVec nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._cov.sqrt() * grad_at_mean).norm())) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
+
+	/*dVec v = _esolver._eigenSolver.eigenvalues().asDiagonal() * _esolver._eigenSolver.eigenvectors().transpose() * eostrat<TGenoPheno>::_solutions._sigma * grad_at_mean;
 	double q = v.squaredNorm();
-	dVec nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * sqrt(eostrat<TGenoPheno>::_parameters._dim / q) * (eostrat<TGenoPheno>::_solutions._sigma * _esolver._eigenSolver.eigenvectors() * _esolver._eigenSolver.eigenvalues()*v);*/
+	dVec nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * sqrt(eostrat<TGenoPheno>::_parameters._dim / q) * (eostrat<TGenoPheno>::_solutions._sigma * _esolver._eigenSolver.eigenvectors() * (_esolver._eigenSolver.eigenvalues().asDiagonal()*v));*/
+	//std::cerr << "gradient, other x=" << pop.col(1).transpose() << " / new x=" << nx.transpose() << " / xmean=" << eostrat<TGenoPheno>::_solutions._xmean.transpose() << std::endl;
 	pop.col(0) = nx;
       }
     
