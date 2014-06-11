@@ -202,15 +202,19 @@ public:
   
   static dMat softmax(const dMat &M)
   {
+    dMat maxM = M.colwise().maxCoeff();
+    /*std::cerr << "M=" << M.transpose() << std::endl;
+      std::cerr << "maxM=" << maxM << std::endl;*/
     dMat expM(M.rows(),M.cols());
     for (int i=0;i<M.rows();i++)
       {
 	for (int j=0;j<M.cols();j++)
 	  {
-	    expM(i,j) = exp(M(i,j));
+	    expM(i,j) = exp(M(i,j)-maxM(j));
 	  }
       }
     dMat sums = expM.colwise().sum();
+    //std::cerr << "sums=" << sums << std::endl;
     // div by row vector.
     for (int i=0;i<expM.cols();i++)
       {
@@ -219,6 +223,7 @@ public:
 	    expM(j,i) /= sums(0,i);
 	  }
       }
+    //std::cerr << "expM=" << expM << std::endl;
     return expM;
   }
 
@@ -348,6 +353,7 @@ public:
   void clear_grad()
   {
     _grad = nn_gradient();
+    _grad.initialize_gradients(_lsizes);
     _activations.clear();
     _deltas.clear();
     _predicts.clear();
@@ -455,7 +461,7 @@ FitFunc nn_of = [](const double *x, const int N)
 // gradient function
 GradFunc gnn = [](const double *x, const int N)
 {
-  dVec grad(N);
+  dVec grad = dVec::Zero(N);
   if (gmnistnn._has_grad)
     {
       gmnistnn._allparams.clear();
@@ -466,6 +472,7 @@ GradFunc gnn = [](const double *x, const int N)
       gmnistnn.back_propagate(gfeatures);
       grad = gmnistnn.grad_to_vec(gfeatures.cols());
     }
+  //std::cerr << "grad=" << grad.transpose() << std::endl;
   return grad;
 };
 
@@ -474,6 +481,8 @@ DEFINE_int32(n,100,"max number of examples to train from");
 DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
 DEFINE_string(fplot,"","output file for optimization log");
 DEFINE_bool(check_grad,false,"checks on gradient correctness via back propagation");
+DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) along with black-box optimization");
+DEFINE_double(lambda,-1,"number of offsprings at each generation");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -500,7 +509,7 @@ int main(int argc, char *argv[])
   //double minloss = 1e-3; //TODO.
   //int lambda = 1e3;
   std::vector<int> lsizes = {784, hlayer, 10};
-  gmnistnn = nn(lsizes,FLAGS_check_grad);
+  gmnistnn = nn(lsizes,FLAGS_check_grad || FLAGS_with_gradient);
 
   if (FLAGS_check_grad)
     {
@@ -513,11 +522,14 @@ int main(int argc, char *argv[])
   // training.
   double sigma = 2.0;
   std::vector<double> x0(gmnistnn._allparams_dim,-std::numeric_limits<double>::max());
-  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front(),sigma);//,lambda);
+  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front(),sigma,FLAGS_lambda);
   cmaparams.set_max_iter(FLAGS_maxsolveiter);
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._algo = sepCMAES;
-  CMASolutions cmasols = cmaes<>(nn_of,cmaparams);
+  CMASolutions cmasols;
+  if (!FLAGS_with_gradient)
+    cmasols = cmaes<>(nn_of,cmaparams);
+  else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn);
   std::cout << "status: " << cmasols._run_status << std::endl;
 
   // testing.
