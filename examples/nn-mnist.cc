@@ -28,6 +28,16 @@
 
 using namespace libcmaes;
 
+double range = 1.0;
+struct gen_rand {
+  double factor;
+public:
+  gen_rand(double r=1.0) : factor(range/RAND_MAX) {}
+  double operator()() {
+    return rand() * factor;
+  }
+};
+
 void tokenize(const std::string &str,
 	      std::vector<std::string> &tokens,
 	      const std::string &delim)
@@ -90,21 +100,82 @@ int load_mnist_dataset(const std::string &filename,
 //- input layer
 //- hidden layer
 //- top layer + loss function.
+
+class nn_gradient
+{
+public:
+  nn_gradient() {};
+  ~nn_gradient() {};
+
+  void initialize_gradients(const std::vector<int> &lsizes)
+  {
+    for (size_t i=0;i<lsizes.size()-1;i++)
+      {
+	int size_in = lsizes.at(i);
+	int size_out = lsizes.at(i+1);
+	dMat Gw = dMat::Zero(size_in,size_out);
+	_GWs.push_back(Gw);
+	dMat b = dMat::Zero(size_out,1);
+	_Gbs.push_back(b);
+      }
+  }
+  
+  void accumulate(const std::vector<dMat> &GWupd,
+		  const std::vector<dMat> &deltas)
+  {
+    int j = 0;
+    for (int i=GWupd.size()-1;i>=0;i--)
+      {
+	_GWs.at(j) += GWupd.at(i).transpose();
+	j++;
+      }
+    j = 0;
+    for (int i=deltas.size()-1;i>=0;i--)
+      {
+	for (int k=0;k<deltas.at(i).cols();k++)
+	  _Gbs.at(j) += deltas.at(i).col(k);
+	j++;
+      }
+  }
+
+  void grad_to_vec(const double &n,
+		   const int &dim,
+		   std::vector<double> &allgradient)
+  {
+    allgradient.reserve(dim);
+    for (size_t i=0;i<_GWs.size();i++)
+      {
+	//std::cerr << "GW size=" << _GWs.at(i).size() << " / Gbs size=" << _Gbs.at(i).size() << std::endl;
+	std::copy(_GWs.at(i).data(),_GWs.at(i).data()+_GWs.at(i).size(),std::back_inserter(allgradient));
+	std::copy(_Gbs.at(i).data(),_Gbs.at(i).data()+_Gbs.at(i).size(),std::back_inserter(allgradient));
+      }
+    std::transform(allgradient.begin(),allgradient.end(),allgradient.begin(),
+		   std::bind1st(std::multiplies<double>(),1.0/n));
+    //std::cerr << "dim=" << dim << " / allgradient size=" << allgradient.size() << std::endl;
+  }
+  
+  std::vector<dMat> _GWs;
+  std::vector<dMat> _Gbs;
+};
+
 class nn
 {
 public:
   nn()
   {};
   
-  nn(const std::vector<int> &lsizes)
-    :_lsizes(lsizes)
+  nn(const std::vector<int> &lsizes,
+     const bool &has_grad=false)
+    :_lsizes(lsizes),_has_grad(has_grad)
   {
     for (size_t i=0;i<_lsizes.size()-1;i++)
       {
 	_lweights.push_back(dMat::Random(_lsizes.at(i),_lsizes.at(i+1)));
 	_lb.push_back(dVec::Zero(_lsizes.at(i+1)));
-	_allparams_dim += _lweights.at(i).size() + _lsizes.at(i);
+	_allparams_dim += _lweights.at(i).size() + _lsizes.at(i+1);
       }
+    if (_has_grad)
+      _grad.initialize_gradients(lsizes);
   }
   
   ~nn() {};
@@ -123,6 +194,12 @@ public:
     return denom.cwiseInverse();
   }
 
+  dMat sigmoid_derivative(const dMat &X)
+  {
+    dMat M = sigmoid(X);
+    return M.cwiseProduct((dMat::Constant(M.rows(),M.cols(),1)-M));
+  }
+  
   static dMat softmax(const dMat &M)
   {
     dMat expM(M.rows(),M.cols());
@@ -172,15 +249,26 @@ public:
 	if (i == 0)
 	  activation = (_lweights.at(i).transpose() * features).colwise() + _lb.at(i);
 	else activation = (_lweights.at(i).transpose() * _lfeatures).colwise() + _lb.at(i);
+	//std::cerr << "weights=" << _lweights.at(i).transpose() << std::endl;
+	//std::cerr << "activation=" << activation.transpose() << std::endl;
+	if (_has_grad)
+	  _activations.push_back(activation);
 	if (i != _lweights.size()-1)
 	  _lfeatures = sigmoid(activation);
 	else _lfeatures = softmax(activation);
+	//std::cerr << "lfeatures=" << lfeatures << std::endl;
+	if (_has_grad)
+	  _predicts.push_back(_lfeatures);
       }
     
     // loss.
     if (labels.size() > 0) // training mode.
       {
-	//dMat delta = _lfeatures - labels;
+	if (_has_grad)
+	  {
+	    dMat delta = _lfeatures - labels;
+	    _deltas.push_back(delta);
+	  }
 	/*std::cout << "features:\n";
 	std::cout << lfeatures << std::endl;
 	std::cout << "labels:\n";
@@ -191,8 +279,37 @@ public:
 	_loss = get_loss(_lfeatures,labels).mean();
 	//std::cerr << "loss=" << _loss << std::endl;
       }
-  };
+  }
 
+  void back_propagate(const dMat &features)
+  {
+    std::vector<dMat> GWupd;
+    int j = 0;
+    for (int i=(int)_lsizes.size()-2;i>=0;i--)
+      {
+	if (i > 0) // back propagate until hidden layer.
+	  {
+	    dMat delta = _lweights.at(i) * _deltas.back();
+	    dMat der = sigmoid_derivative(_activations.at(i-1));
+	    delta = der.cwiseProduct(delta);
+	    _deltas.push_back(delta);
+	  }
+
+	dMat GW;
+	if (i == 0)
+	  {
+	    GW = _deltas.at(j) * features.transpose();
+	  }
+	else
+	  {
+	    GW = _deltas.at(j) * _predicts.at(i-1).transpose();
+	  }  
+	j++;
+	GWupd.push_back(GW);
+      }
+    _grad.accumulate(GWupd,_deltas);
+  }
+  
   void to_array()
   {
     _allparams.clear();
@@ -200,7 +317,7 @@ public:
     auto vit = _allparams.begin();
     for (size_t i=0;i<_lweights.size();i++)
       {
-	std::copy(_lweights.at(i).data(),_lweights.at(i).data()+_lweights.at(i).size(),vit);
+	std::copy(_lweights.at(i).data(),_lweights.at(i).data()+_lweights.at(i).size(),vit); //TODO: use std::back_inserter instead.
 	vit += _lweights.at(i).size();
 	std::copy(_lb.at(i).data(),_lb.at(i).data()+_lsizes.at(i+1),vit);
 	vit += _lsizes.at(i+1);
@@ -218,6 +335,84 @@ public:
 	vit += _lsizes.at(i+1);
       }
   }
+
+  dVec grad_to_vec(const double &n)
+  {
+    _allgradient.clear();
+    _grad.grad_to_vec(n,_allparams.size(),_allgradient);
+    dVec grad(_allparams.size());
+    std::copy(_allgradient.begin(),_allgradient.end(),grad.data());
+    return grad;
+  }
+  
+  void clear_grad()
+  {
+    _grad = nn_gradient();
+    _activations.clear();
+    _deltas.clear();
+    _predicts.clear();
+  }
+
+  bool grad_check(const dMat &gfeatures, const dMat &glabels)
+  {
+    double epsilon = 1e-4;
+    int attempts = 1;
+    while (attempts > 0)
+      {
+	_allparams.reserve(_allparams_dim);
+	std::generate_n(std::back_inserter(_allparams), _allparams_dim, gen_rand());
+	forward_pass(gfeatures,glabels);
+	double cost = _loss;
+	back_propagate(gfeatures);
+	grad_to_vec(gfeatures.cols()); // in allgradient
+
+	//std::cout << "computing numerical gradient\n";
+	std::vector<double> allparams = _allparams;
+	_has_grad = false;
+	std::vector<double> numerical_gradient;
+	for (int i=0;i<(int)_allparams_dim;i++)
+	  {
+	    /*if (i < 784 && gfeatures(i,0) == 0)
+	      {
+		numerical_gradient.push_back(0.0);
+		continue;
+		}*/
+	    std::vector<double> e(_allparams_dim,0.0);
+	    e.at(i) = 2.0*epsilon;
+	    std::vector<double> y1;
+	    std::transform(allparams.begin(),allparams.end(),e.begin(),std::back_inserter(y1),std::plus<double>());
+	    _allparams = y1;
+	    //std::cerr << "old weight=" << allparams.at(i) << " / new weight=" << y1.at(i) << std::endl;
+	    forward_pass(gfeatures,glabels);
+	    double cost_epsilon = _loss;
+	    double res = (cost_epsilon - cost) / (2.0*epsilon);
+	    //std::cerr << "#i=" << i << " / cost=" << cost << " / cost_epsilon=" << cost_epsilon << " / res=" << res << std::endl;
+	    numerical_gradient.push_back(res);
+	  }
+
+	double diff=0,total_diff=0,max_diff=-1.0;
+	for (int i=0;i<(int)_allparams_dim;i++)
+	  {
+	    diff = fabs(numerical_gradient.at(i)-_allgradient.at(i));
+	    std::cout << "i: " << i << " -- diff: " << diff
+		      << " -- numerical gradient: " << numerical_gradient.at(i)
+		      << " -- returned gradient: " << _allgradient.at(i) << std::endl;
+	    max_diff = std::max(max_diff,diff);
+	    total_diff += diff;
+	  }
+	std::cout << "attempt #" << attempts << " -- total diff: " << total_diff
+		  << " -- max diff: " << max_diff << std::endl;
+	
+	if (max_diff > epsilon)
+	  {
+	    std::cout << "gradient cal failed: max diff too high\n";
+	    return false;
+	  }
+	
+	--attempts;
+      }
+    return true;
+  }
   
   std::vector<int> _lsizes; /**< layer sizes. */
   std::vector<dMat> _lweights; /**< weight matrice, per layer. */
@@ -226,6 +421,12 @@ public:
   std::vector<double> _allparams; /**< all parameters, flat representation. */
   dMat _lfeatures;
   double _loss = std::numeric_limits<double>::max(); /**< current loss. */
+  nn_gradient _grad;
+  bool _has_grad = false;
+  std::vector<double> _allgradient; /**< flat representation. */
+  std::vector<dMat> _activations; // only for bp.
+  std::vector<dMat> _deltas;
+  std::vector<dMat> _predicts;
 };
 
 // global nn variables etc...
@@ -238,6 +439,8 @@ FitFunc nn_of = [](const double *x, const int N)
 {
   //std::copy(x,x+N,gmnistnn._allparams.begin()); // beware.
   gmnistnn._allparams.clear();
+  if (gmnistnn._has_grad)
+    gmnistnn.clear_grad();
   for (int i=0;i<N;i++)
     gmnistnn._allparams.push_back(x[i]);
   gmnistnn.forward_pass(gfeatures,glabels);
@@ -249,18 +452,39 @@ FitFunc nn_of = [](const double *x, const int N)
   return gmnistnn._loss;
 };
 
+// gradient function
+GradFunc gnn = [](const double *x, const int N)
+{
+  dVec grad(N);
+  if (gmnistnn._has_grad)
+    {
+      gmnistnn._allparams.clear();
+      gmnistnn.clear_grad();
+      for (int i=0;i<N;i++)
+	gmnistnn._allparams.push_back(x[i]);
+      gmnistnn.forward_pass(gfeatures,glabels);
+      gmnistnn.back_propagate(gfeatures);
+      grad = gmnistnn.grad_to_vec(gfeatures.cols());
+    }
+  return grad;
+};
+
 DEFINE_string(fdata,"train.csv","name of the file that contains the training data for MNIST");
 DEFINE_int32(n,100,"max number of examples to train from");
 DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
 DEFINE_string(fplot,"","output file for optimization log");
+DEFINE_bool(check_grad,false,"checks on gradient correctness via back propagation");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
-  /*google::InitGoogleLogging(argv[0]);
-    FLAGS_logtostderr=1;
-    google::SetLogDestination(google::INFO,"");*/
+  int hlayer = 100;
+  if (FLAGS_check_grad)
+    {
+      FLAGS_n = 10;
+      hlayer = 10;
+    }
   int err = load_mnist_dataset(FLAGS_fdata,FLAGS_n,gfeatures,glabels);
   if (err)
     {
@@ -275,9 +499,17 @@ int main(int argc, char *argv[])
   
   //double minloss = 1e-3; //TODO.
   //int lambda = 1e3;
-  std::vector<int> lsizes = {784, 100, 10};
-  gmnistnn = nn(lsizes);
+  std::vector<int> lsizes = {784, hlayer, 10};
+  gmnistnn = nn(lsizes,FLAGS_check_grad);
 
+  if (FLAGS_check_grad)
+    {
+      if (gmnistnn.grad_check(gfeatures,glabels))
+	std::cout << "Gradient check: OK\n";
+      else std::cout << "Gradient check did fail\n";
+      exit(1);
+    }
+  
   // training.
   double sigma = 2.0;
   std::vector<double> x0(gmnistnn._allparams_dim,-std::numeric_limits<double>::max());
