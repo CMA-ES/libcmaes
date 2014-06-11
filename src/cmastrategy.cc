@@ -108,8 +108,11 @@ namespace libcmaes
 	//std::cerr << "grad_at_mean=" << grad_at_mean.transpose() << std::endl;
 
 	//TODO: if geno / pheno transform activated.
-	dVec nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._cov.sqrt() * grad_at_mean).norm())) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
-
+	dVec nx;
+	if (!eostrat<TGenoPheno>::_parameters._sep)
+	  nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._cov.sqrt() * grad_at_mean).norm())) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
+	else nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt().cwiseProduct(grad_at_mean)).norm())) * eostrat<TGenoPheno>::_solutions._sepcov.cwiseProduct(grad_at_mean);
+	
 	/*dVec v = _esolver._eigenSolver.eigenvalues().asDiagonal() * _esolver._eigenSolver.eigenvectors().transpose() * eostrat<TGenoPheno>::_solutions._sigma * grad_at_mean;
 	double q = v.squaredNorm();
 	dVec nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * sqrt(eostrat<TGenoPheno>::_parameters._dim / q) * (eostrat<TGenoPheno>::_solutions._sigma * _esolver._eigenSolver.eigenvectors() * (_esolver._eigenSolver.eigenvalues().asDiagonal()*v));*/

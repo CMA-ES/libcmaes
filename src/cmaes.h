@@ -49,6 +49,8 @@ namespace libcmaes
 	case IPOP_CMAES:
 	{
 	  ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
+	  if (gfunc != nullptr)
+	    ipop.set_gradient_func(gfunc);
 	  ipop.set_progress_func(pfunc);
 	  ipop.optimize();
 	  return ipop._solutions;
@@ -56,6 +58,8 @@ namespace libcmaes
 	case BIPOP_CMAES:
 	{
 	  ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
+	  if (gfunc != nullptr)
+	    bipop.set_gradient_func(gfunc);
 	  bipop.set_progress_func(pfunc);
 	  bipop.optimize();
 	  return bipop._solutions;
@@ -63,6 +67,8 @@ namespace libcmaes
 	case aCMAES:
 	{
 	  ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> acmaes(func,parameters);
+	  if (gfunc != nullptr)
+	    acmaes.set_gradient_func(gfunc);
 	  acmaes.set_progress_func(pfunc);
 	  acmaes.optimize();
 	  return acmaes._solutions;
@@ -70,6 +76,8 @@ namespace libcmaes
 	case aIPOP_CMAES:
 	{
 	  ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> aipop(func,parameters);
+	  if (gfunc != nullptr)
+	    aipop.set_gradient_func(gfunc);
 	  aipop.set_progress_func(pfunc);
 	  aipop.optimize();
 	  return aipop._solutions;
@@ -77,6 +85,8 @@ namespace libcmaes
 	case aBIPOP_CMAES:
 	{
 	  ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> abipop(func,parameters);
+	  if (gfunc != nullptr)
+	    abipop.set_gradient_func(gfunc);
 	  abipop.set_progress_func(pfunc);
 	  abipop.optimize();
 	  return abipop._solutions;
@@ -85,6 +95,8 @@ namespace libcmaes
 	{
 	  parameters.set_sep();
 	  ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> sepcmaes(func,parameters);
+	  if (gfunc != nullptr)
+	    sepcmaes.set_gradient_func(gfunc);
 	  sepcmaes.set_progress_func(pfunc);
 	  sepcmaes.optimize();
 	  return sepcmaes._solutions;
@@ -93,6 +105,8 @@ namespace libcmaes
 	{
 	  parameters.set_sep();
 	  ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
+	  if (gfunc != nullptr)
+	    ipop.set_gradient_func(gfunc);
 	  ipop.set_progress_func(pfunc);
 	  ipop.optimize();
 	  return ipop._solutions;
@@ -101,6 +115,8 @@ namespace libcmaes
 	{
 	  parameters.set_sep();
 	  ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
+	  if (gfunc != nullptr)
+	    bipop.set_gradient_func(gfunc);
 	  bipop.set_progress_func(pfunc);
 	  bipop.optimize();
 	  return bipop._solutions;
@@ -109,6 +125,8 @@ namespace libcmaes
 	{
 	  parameters.set_sep();
 	  ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> sepcmaes(func,parameters);
+	  if (gfunc != nullptr)
+	    sepcmaes.set_gradient_func(gfunc);
 	  sepcmaes.set_progress_func(pfunc);
 	  sepcmaes.optimize();
 	  return sepcmaes._solutions;
@@ -117,6 +135,8 @@ namespace libcmaes
 	{
 	  parameters.set_sep();
 	  ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
+	  if (gfunc != nullptr)
+	    ipop.set_gradient_func(gfunc);
 	  ipop.set_progress_func(pfunc);
 	  ipop.optimize();
 	  return ipop._solutions;
@@ -125,6 +145,8 @@ namespace libcmaes
 	{
 	  parameters.set_sep();
 	  ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
+	  if (gfunc != nullptr)
+	    bipop.set_gradient_func(gfunc);
 	  bipop.set_progress_func(pfunc);
 	  bipop.optimize();
 	  return bipop._solutions;
