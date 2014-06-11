@@ -35,7 +35,7 @@ namespace libcmaes
 {
   template<class TParameters,class TSolutions,class TStopCriteria>
   ESOStrategy<TParameters,TSolutions,TStopCriteria>::ESOStrategy(FitFunc &func,
-						   TParameters &parameters)
+								 TParameters &parameters)
     :_func(func),_nevals(0),_niter(0),_parameters(parameters)
   {
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
@@ -66,15 +66,28 @@ namespace libcmaes
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
-    _nevals += candidates.cols();
-    _solutions._nevals += candidates.cols();
-
+    update_fevals(candidates.cols());
+    
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
     _solutions._elapsed_eval = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 #endif
   }
 
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::inc_iter()
+  {
+    _niter++;
+    _solutions._niter++;
+  }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::update_fevals(const int &evals)
+  {
+    _nevals += evals;
+    _solutions._nevals += evals;
+  }
+  
   template<class TParameters,class TSolutions,class TStopCriteria>
   Candidate ESOStrategy<TParameters,TSolutions,TStopCriteria>::best_solution() const
   {

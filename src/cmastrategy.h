@@ -51,6 +51,7 @@ namespace libcmaes
        */
       CMAStrategy(FitFunc &func,
 		  CMAParameters<TGenoPheno> &parameters);
+    
       ~CMAStrategy();
 
       /**
