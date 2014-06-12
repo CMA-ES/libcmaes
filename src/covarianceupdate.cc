@@ -46,8 +46,8 @@ namespace libcmaes
     solutions._psigma = (1.0-parameters._csigma)*solutions._psigma;
     if (!parameters._sep)
       solutions._psigma += parameters._fact_ps * solutions._csqinv * diffxmean;
-    else solutions._psigma += parameters._fact_ps * solutions._sepcsqinv.cwiseProduct(diffxmean);
-
+    else
+      solutions._psigma += parameters._fact_ps * solutions._sepcsqinv.cwiseProduct(diffxmean);
     double norm_ps = solutions._psigma.norm();
 
     // update pc, Eq. (4)
@@ -82,7 +82,6 @@ namespace libcmaes
       }
     
     // sigma update, Eq. (6)
-    //std::cerr << "norm_ps=" << norm_ps << std::endl;
     solutions._sigma *= exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0));
 
     // set mean.

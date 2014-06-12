@@ -25,7 +25,7 @@
 #include <functional>
 #include <chrono>
 #include "parameters.h"
-#include "cmastrategy.h"
+#include "esostrategy.h"
 
 /* algorithms */
 enum {
