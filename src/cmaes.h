@@ -197,7 +197,7 @@ namespace libcmaes
 	case sepaCMAES:
 	{
 	  parameters.set_sep();
-	  ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> sepcmaes(func,parameters);
+	  ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
 	  sepcmaes.set_progress_func(pfunc);
 	  sepcmaes.optimize();
 	  return sepcmaes._solutions;
@@ -205,7 +205,7 @@ namespace libcmaes
 	case sepaIPOP_CMAES:
 	{
 	  parameters.set_sep();
-	  ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
+	  ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
 	  ipop.set_progress_func(pfunc);
 	  ipop.optimize();
 	  return ipop._solutions;
@@ -213,7 +213,7 @@ namespace libcmaes
 	case sepaBIPOP_CMAES:
 	{
 	  parameters.set_sep();
-	  ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
+	  ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
 	  bipop.set_progress_func(pfunc);
 	  bipop.optimize();
 	  return bipop._solutions;
