@@ -231,13 +231,13 @@ public:
   {
     dMat M = labels.cwiseProduct(prediction);
     dMat Mc = M.colwise().sum();
-
+    //std::cerr << "Mc=" << Mc << std::endl;
     dMat logM(Mc.rows(),Mc.cols());
     for (int i=0;i<Mc.rows();i++)
       {
 	for (int j=0;j<Mc.cols();j++)
 	  {
-	    logM(i,j) = Mc(i,j) == 0 ? 0 : log(Mc(i,j));
+	    logM(i,j) = Mc(i,j) == 0 ? -20.0 : log(Mc(i,j));
 	  }
       }
     return (-1) * logM;
@@ -261,7 +261,7 @@ public:
 	if (i != _lweights.size()-1)
 	  _lfeatures = sigmoid(activation);
 	else _lfeatures = softmax(activation);
-	//std::cerr << "lfeatures=" << lfeatures << std::endl;
+	//std::cerr << "lfeatures=" << _lfeatures << std::endl;
 	if (_has_grad)
 	  _predicts.push_back(_lfeatures);
       }
@@ -283,6 +283,12 @@ public:
 	//_loss = delta.norm();
 	_loss = get_loss(_lfeatures,labels).mean();
 	//std::cerr << "loss=" << _loss << std::endl;
+	/*if (_loss == 0.0)
+	  {
+	    std::cout << "prediction=" << _predicts.back() << std::endl;
+	    std::cout << "M=" << labels.cwiseProduct(_lfeatures) << std::endl;
+	    std::cout << "weights=" << _lweights.back() << std::endl;
+	    }*/
       }
   }
 
@@ -290,7 +296,7 @@ public:
   {
     std::vector<dMat> GWupd;
     int j = 0;
-    for (int i=(int)_lsizes.size()-2;i>=0;i--)
+    for (int i=(int)_lweights.size()-1;i>=0;i--)
       {
 	if (i > 0) // back propagate until hidden layer.
 	  {
@@ -494,13 +500,20 @@ int main(int argc, char *argv[])
       FLAGS_n = 10;
       hlayer = 10;
     }
+
   int err = load_mnist_dataset(FLAGS_fdata,FLAGS_n,gfeatures,glabels);
   if (err)
     {
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
       exit(1);
     }
-  
+  if (FLAGS_check_grad)
+    {
+      // we check on random features, but we keep the original labels.
+      gfeatures.resize(784,FLAGS_n);
+      gfeatures = dMat::Random(784,FLAGS_n);
+    }
+    
   //debug
   /*std::cout << "gfeatures: " << gfeatures << std::endl;
     std::cout << "glabels: " << glabels << std::endl;*/
@@ -525,7 +538,8 @@ int main(int argc, char *argv[])
   CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front(),sigma,FLAGS_lambda);
   cmaparams.set_max_iter(FLAGS_maxsolveiter);
   cmaparams._fplot = FLAGS_fplot;
-  cmaparams._algo = sepCMAES;
+  cmaparams._algo = sepaCMAES;
+  cmaparams.set_ftarget(1e-8);
   CMASolutions cmasols;
   if (!FLAGS_with_gradient)
     cmasols = cmaes<>(nn_of,cmaparams);
