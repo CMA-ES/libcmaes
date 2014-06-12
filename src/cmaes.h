@@ -194,6 +194,30 @@ namespace libcmaes
 	      return bipop._solutions;
 	    }
 	}
+	case sepaCMAES:
+	{
+	  parameters.set_sep();
+	  ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> sepcmaes(func,parameters);
+	  sepcmaes.set_progress_func(pfunc);
+	  sepcmaes.optimize();
+	  return sepcmaes._solutions;
+	}
+	case sepaIPOP_CMAES:
+	{
+	  parameters.set_sep();
+	  ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
+	  ipop.set_progress_func(pfunc);
+	  ipop.optimize();
+	  return ipop._solutions;
+	}
+	case sepaBIPOP_CMAES:
+	{
+	  parameters.set_sep();
+	  ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
+	  bipop.set_progress_func(pfunc);
+	  bipop.optimize();
+	  return bipop._solutions;
+	}
 	default:
 	return CMASolutions();
 	}

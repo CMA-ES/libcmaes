@@ -70,19 +70,34 @@ namespace libcmaes
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r)._x = candidates.col(r);
-	_solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
+	if (phenocandidates.size())
+	  _solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
+	else _solutions._candidates.at(r)._fvalue = _func(candidates.col(r).data(),candidates.rows());
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
-    _nevals += candidates.cols();
-    _solutions._nevals += candidates.cols();
-
+    update_fevals(candidates.cols());
+    
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
     _solutions._elapsed_eval = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 #endif
   }
 
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::inc_iter()
+  {
+    _niter++;
+    _solutions._niter++;
+  }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::update_fevals(const int &evals)
+  {
+    _nevals += evals;
+    _solutions._nevals += evals;
+  }
+  
   template<class TParameters,class TSolutions,class TStopCriteria>
   Candidate ESOStrategy<TParameters,TSolutions,TStopCriteria>::best_solution() const
   {

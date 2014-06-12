@@ -103,8 +103,8 @@ namespace libcmaes
     else
       {
 	_esolver.setMean(eostrat<TGenoPheno>::_solutions._xmean);
-	_esolver._covar = eostrat<TGenoPheno>::_solutions._cov.diagonal().asDiagonal();
-	_esolver._transform = eostrat<TGenoPheno>::_solutions._cov.diagonal().asDiagonal();
+	_esolver._covar = eostrat<TGenoPheno>::_solutions._sepcov;
+	_esolver._transform = eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt();
       }
 
     //debug
@@ -112,8 +112,11 @@ namespace libcmaes
     //debug
     
     // sample for multivariate normal distribution.
-    dMat pop = _esolver.samples(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma); // Eq (1).
-
+    dMat pop;
+    if (!eostrat<TGenoPheno>::_parameters._sep)
+      pop = _esolver.samples(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma); // Eq (1).
+    else pop = _esolver.samples_ind(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma);
+    
     // if some parameters are fixed, reset them.
     if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
       {
@@ -161,11 +164,8 @@ namespace libcmaes
     if (!eostrat<TGenoPheno>::_parameters._sep)
       eostrat<TGenoPheno>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),
 						    _esolver._eigenSolver.eigenvectors());
-    else eostrat<TGenoPheno>::_solutions.update_eigenv(eostrat<TGenoPheno>::_solutions._cov.diagonal(),
-						       dMat::Constant(eostrat<TGenoPheno>::_parameters._dim,
-								      eostrat<TGenoPheno>::_parameters._dim,1.0));
-    eostrat<TGenoPheno>::_solutions._niter = eostrat<TGenoPheno>::_niter;
-
+    else eostrat<TGenoPheno>::_solutions.update_eigenv(eostrat<TGenoPheno>::_solutions._sepcov,
+						       dMat::Constant(eostrat<TGenoPheno>::_parameters._dim,1,1.0));
 #ifdef DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
     eostrat<TGenoPheno>::_solutions._elapsed_tell = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
@@ -203,10 +203,8 @@ namespace libcmaes
       {
 	dMat candidates = ask();
 	this->eval(candidates,eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
-	for (int r=0;r<candidates.cols();r++)
-	  eostrat<TGenoPheno>::_solutions._candidates.at(r)._x = candidates.col(r);
 	tell();
-	eostrat<TGenoPheno>::_niter++;
+	eostrat<TGenoPheno>::inc_iter();
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
 	eostrat<TGenoPheno>::_solutions._elapsed_last_iter = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 	tstart = std::chrono::system_clock::now();

@@ -56,7 +56,7 @@ namespace libcmaes
 	  return CONT;
 	if (cmas._nevals >= cmap._max_fevals)
 	  {
-	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria maxFEvals => cmas._nevals=" << cmas._nevals << std::endl;
+	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria maxFEvals => cmas._nevals=" << cmas._nevals << " / max_fevals=" << cmap._max_fevals << std::endl;
 	    return MAXFEVALS;
 	  }
 	else return CONT;
@@ -76,7 +76,7 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXITER,maxIter));
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
+	double thresh = 100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda);
 	if (!cmap._has_max_iter) // this criteria is deactivated
 	  return CONT;
 	if (cmas._niter >= thresh)
@@ -91,10 +91,9 @@ namespace libcmaes
       {
 	if (cmap._ftarget != std::numeric_limits<double>::infinity())
 	  {
-	    double fdiff = fabs(cmap._ftarget-cmas.best_candidate()._fvalue);
-	    if (fdiff <= cmap._ftargettol)
+	    if (cmas.best_candidate()._fvalue <= cmap._ftarget)
 	      {
-		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fdiff=" << fdiff << std::endl;
+		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate()._fvalue << " / ftarget=" << cmap._ftarget << std::endl;
 		return FTARGET;
 	      }
 	  }
@@ -158,7 +157,8 @@ namespace libcmaes
 	    return CONT;
 	//test 2: all square root components of cov . factor < tolx.
 	for (int i=0;i<cmas._cov.rows();i++)
-	  if (sqrt(cmas._cov(i,i))>=tfactor)
+	  if ((!cmap._sep && sqrt(cmas._cov(i,i))>=tfactor)
+	      || (cmap._sep && sqrt(cmas._sepcov(i))>=tfactor))
 	    return CONT;
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
@@ -212,7 +212,8 @@ namespace libcmaes
 	  {
 	    double ei = fact * sqrt(cmas._leigenvalues(i));
 	    for (int j=0;j<cmap._dim;j++)
-	      if (cmas._xmean[i] != cmas._xmean[i] + ei * cmas._leigenvectors(i,j))
+	      if ((!cmap._sep && cmas._xmean[i] != cmas._xmean[i] + ei * cmas._leigenvectors(i,j))
+		  || (cmap._sep && cmas._xmean[i] != cmas._xmean[i] + ei))
 		return CONT;
 	  }
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectAxis\n";
@@ -223,7 +224,8 @@ namespace libcmaes
       {
 	double fact = 0.2*cmas._sigma;
 	for (int i=0;i<cmap._dim;i++)
-	  if (cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
+	  if ((!cmap._sep && cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
+	      || (cmap._sep && cmas._xmean[i] == fact * sqrt(cmas._sepcov(i))))
 	    {
 	      LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
 	      return NOEFFECTCOOR;

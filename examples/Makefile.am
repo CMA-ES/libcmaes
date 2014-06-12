@@ -1,7 +1,8 @@
-bin_PROGRAMS=sample_code sample_code_genopheno sample_code_pfunc lorentzpeakbench
+bin_PROGRAMS=sample_code sample_code_genopheno sample_code_pfunc sample_code_ask_tell lorentzpeakbench
 sample_code_SOURCES=sample-code.cc
 sample_code_genopheno_SOURCES=sample-code-genopheno.cc
 sample_code_pfunc_SOURCES=sample-code-pfunc.cc
+sample_code_ask_tell_SOURCES=sample-code-ask-tell.cc
 lorentzpeakbench_SOURCES=lorentzpeakbench.cc
 
 AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)

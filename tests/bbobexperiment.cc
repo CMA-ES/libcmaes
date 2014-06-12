@@ -83,6 +83,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0.front(),2.0,-1,0,gp);
   //CMAParameters<> cmaparams(dim,&x0.front(),2.0,-1,0);
   cmaparams.set_max_fevals(maxfunevals);
+  cmaparams.set_ftarget(ftarget);
   //cmaparams.set_x0(-5.0,5.0);
   cmaparams._algo = alg;
   cmaparams._quiet = true;
@@ -129,6 +130,12 @@ int main(int argc, char *argv[])
 	flavors.insert(std::pair<int,std::string>(sepIPOP_CMAES,algs.at(i)));
       else if (algs.at(i) == "sepbipop")
 	flavors.insert(std::pair<int,std::string>(sepBIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "sepacmaes")
+	flavors.insert(std::pair<int,std::string>(sepaCMAES,algs.at(i)));
+      else if (algs.at(i) == "sepaipop")
+	flavors.insert(std::pair<int,std::string>(sepaIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "sepabipop")
+	flavors.insert(std::pair<int,std::string>(sepaBIPOP_CMAES,algs.at(i)));
     }
   
   for (auto mit=flavors.begin();mit!=flavors.end();++mit)

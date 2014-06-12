@@ -362,7 +362,7 @@ DEFINE_string(fplot,"","file where to store data for later plotting of results a
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
-DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop");
+DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
 DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
@@ -375,8 +375,8 @@ DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing t
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
-DEFINE_double(ftarget,std::numeric_limits<double>::infinity(),"objective function target when known");
-DEFINE_double(ftargettol,1e-12,"objective function target tolerance, stops optimization when fabs(fvalue-ftarget)<ftargettol");
+DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
+DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -391,16 +391,14 @@ CMASolutions cmaes_opt()
   TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
   CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
-  cmaparams._max_iter = FLAGS_max_iter;
-  cmaparams._max_fevals = FLAGS_max_fevals;
+  cmaparams.set_max_iter(FLAGS_max_iter);
+  cmaparams.set_max_fevals(FLAGS_max_fevals);
+  cmaparams.set_restarts(FLAGS_restarts);
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
   cmaparams._quiet = FLAGS_quiet;
-  if (FLAGS_ftarget != std::numeric_limits<double>::infinity())
-    {
-      cmaparams.set_ftarget(FLAGS_ftarget);
-      cmaparams.set_ftarget_tolerance(FLAGS_ftargettol);
-    }
+  if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
+    cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
     cmaparams.set_noisy();
   if (FLAGS_alg == "cmaes")
@@ -421,6 +419,12 @@ CMASolutions cmaes_opt()
     cmaparams._algo = sepIPOP_CMAES;
   else if (FLAGS_alg == "sepbipop")
     cmaparams._algo = sepBIPOP_CMAES;
+  else if (FLAGS_alg == "sepacmaes")
+    cmaparams._algo = sepaCMAES;
+  else if (FLAGS_alg == "sepaipop")
+    cmaparams._algo = sepaIPOP_CMAES;
+  else if (FLAGS_alg == "sepabipop")
+    cmaparams._algo = sepaBIPOP_CMAES;
   else
     {
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
