@@ -86,12 +86,8 @@ namespace libcmaes
     else
       {
 	_esolver.setMean(eostrat<TGenoPheno>::_solutions._xmean);
-	/*_esolver._covar = eostrat<TGenoPheno>::_solutions._cov.diagonal().asDiagonal();
-	  _esolver._transform = eostrat<TGenoPheno>::_solutions._cov.diagonal().asDiagonal();*/
-
 	_esolver._covar = eostrat<TGenoPheno>::_solutions._sepcov;
 	_esolver._transform = eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt();
-	//_esolver._transform = dMat::Constant(_esolver._covar.rows(),1,1.0);
       }
 
     //debug
