@@ -102,12 +102,16 @@ public:
   {};
   
   nn(const std::vector<int> &lsizes,
+     const bool &sigmoid=false,
      const bool &has_grad=false)
-    :_lsizes(lsizes),_has_grad(has_grad)
+    :_lsizes(lsizes),_has_grad(has_grad),_sigmoid(sigmoid)
   {
     for (size_t i=0;i<_lsizes.size()-1;i++)
       {
-	_lweights.push_back(dMat::Random(_lsizes.at(i),_lsizes.at(i+1)));
+	dMat weights = dMat::Random(_lsizes.at(i),_lsizes.at(i+1)) * sqrt(6.0/(_lsizes.at(i)+_lsizes.at(i+1)));
+	if (_sigmoid)
+	  weights *= 4.0;
+	_lweights.push_back(weights);
 	_lb.push_back(dVec::Zero(_lsizes.at(i+1)));
 	_allparams_dim += _lweights.at(i).size() + _lsizes.at(i+1);
       }
@@ -149,8 +153,6 @@ public:
   static dMat softmax(const dMat &M)
   {
     dMat maxM = M.colwise().maxCoeff();
-    /*std::cerr << "M=" << M.transpose() << std::endl;
-      std::cerr << "maxM=" << maxM << std::endl;*/
     dMat expM(M.rows(),M.cols());
     for (int i=0;i<M.rows();i++)
       {
@@ -160,7 +162,6 @@ public:
 	  }
       }
     dMat sums = expM.colwise().sum();
-    //std::cerr << "sums=" << sums << std::endl;
     // div by row vector.
     for (int i=0;i<expM.cols();i++)
       {
@@ -169,7 +170,6 @@ public:
 	    expM(j,i) /= sums(0,i);
 	  }
       }
-    //std::cerr << "expM=" << expM << std::endl;
     return expM;
   }
 
@@ -177,7 +177,6 @@ public:
   {
     dMat M = labels.cwiseProduct(prediction);
     dMat Mc = M.colwise().sum();
-    //std::cerr << "Mc=" << Mc << std::endl;
     dMat logM(Mc.rows(),Mc.cols());
     for (int i=0;i<Mc.rows();i++)
       {
@@ -200,14 +199,15 @@ public:
 	if (i == 0)
 	  activation = (_lweights.at(i).transpose() * features).colwise() + _lb.at(i);
 	else activation = (_lweights.at(i).transpose() * _lfeatures).colwise() + _lb.at(i);
-	//std::cerr << "weights=" << _lweights.at(i).transpose() << std::endl;
-	//std::cerr << "activation=" << activation.transpose() << std::endl;
 	if (_has_grad)
 	  _activations.push_back(activation);
 	if (i != _lweights.size()-1)
-	  _lfeatures = mtanh(activation);
+	  {
+	    if (!_sigmoid)
+	      _lfeatures = mtanh(activation);
+	    else _lfeatures = sigmoid(activation);
+	  }
 	else _lfeatures = softmax(activation);
-	//std::cerr << "lfeatures=" << _lfeatures << std::endl;
 	if (_has_grad)
 	  _predicts.push_back(_lfeatures);
       }
@@ -220,21 +220,7 @@ public:
 	    dMat delta = _lfeatures - labels;
 	    _deltas.push_back(delta);
 	  }
-	/*std::cout << "features:\n";
-	std::cout << lfeatures << std::endl;
-	std::cout << "labels:\n";
-	std::cout << labels << std::endl;
-	std::cout << "delta:\n";
-	std::cout << delta << std::endl;*/
-	//_loss = delta.norm();
 	_loss = get_loss(_lfeatures,labels).mean();
-	//std::cerr << "loss=" << _loss << std::endl;
-	/*if (_loss == 0.0)
-	  {
-	    std::cout << "prediction=" << _predicts.back() << std::endl;
-	    std::cout << "M=" << labels.cwiseProduct(_lfeatures) << std::endl;
-	    std::cout << "weights=" << _lweights.back() << std::endl;
-	    }*/
       }
   }
 
@@ -324,17 +310,11 @@ public:
 	back_propagate(gfeatures);
 	grad_to_vec(gfeatures.cols()); // in allgradient
 
-	//std::cout << "computing numerical gradient\n";
 	std::vector<double> allparams = _allparams;
 	_has_grad = false;
 	std::vector<double> numerical_gradient;
 	for (int i=0;i<(int)_allparams_dim;i++)
 	  {
-	    /*if (i < 784 && gfeatures(i,0) == 0)
-	      {
-		numerical_gradient.push_back(0.0);
-		continue;
-		}*/
 	    std::vector<double> e(_allparams_dim,0.0);
 	    e.at(i) = 2.0*epsilon;
 	    std::vector<double> y1;
@@ -381,6 +361,7 @@ public:
   double _loss = std::numeric_limits<double>::max(); /**< current loss. */
   nn_gradient _grad;
   bool _has_grad = false;
+  bool _sigmoid = false; /**< whether to use sigmoid (default is tanh). */
   std::vector<double> _allgradient; /**< flat representation. */
   std::vector<dMat> _activations; // only for bp.
   std::vector<dMat> _deltas;

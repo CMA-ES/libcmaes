@@ -51,13 +51,21 @@ void tokenize(const std::string &str,
 // load dataset into memory
 int load_higgs_dataset(const std::string &filename,
 		       const int &n,
-		       dMat &features, dMat &labels, dMat &weights)
+		       const int &testp,
+		       dMat &features, dMat &labels, dMat &weights,
+		       dMat &tfeatures, dMat &tlabels, dMat &tweights)
 {
-  // matrices for features and labels, examples in col 
-  features.resize(30,n);
-  labels.resize(2,n);
-  weights.resize(1,n);
+  // matrices for features and labels, examples in col
+  int trn = ceil(((100.0-testp)/100.0)*n);
+  int ttn = n-trn;
+  features.resize(30,trn);
+  labels.resize(2,trn);
+  weights.resize(1,trn);
+  tfeatures.resize(30,ttn);
+  tlabels.resize(2,ttn);
+  tweights.resize(1,ttn);
   labels.setZero();
+  tlabels.setZero();
   std::ifstream fin(filename);
   if (!fin.good())
     return -1;
@@ -78,21 +86,28 @@ int load_higgs_dataset(const std::string &filename,
 	    val = 0.0; // XXX: not sure what to do with the out of bounds (by dataset definition) values.
 	  values.push_back(val);
 	}
-      for (size_t i=1;i<values.size()-1;i++) // skipping the event ID.
-	features(i-1,ne) = values.at(i);
       std::string label = strvalues.back();
-      if (label == "b")
-	labels(0,ne) = 1.0;
-      else labels(1,ne) = 1.0;
-      weights(0,ne) = values.back();
+      if (ne < trn)
+	{
+	  for (size_t i=1;i<values.size()-1;i++) // skipping the event ID.
+	    features(i-1,ne) = values.at(i);
+	  if (label == "b")
+	    labels(0,ne) = 1.0;
+	  else labels(1,ne) = 1.0;
+	  weights(0,ne) = values.back();
+	}
+      else
+	{
+	  for (size_t i=1;i<values.size()-1;i++) // skipping the event ID.
+	    tfeatures(i-1,ne-trn) = values.at(i);
+	  if (label == "b")
+	    tlabels(0,ne-trn) = 1.0;
+	  else tlabels(1,ne-trn) = 1.0;
+	  tweights(0,ne-trn) = values.back();
+	}
       ++ne;
     }
   fin.close();
-  if (n > ne)
-    {
-      features.resize(30,ne);
-      labels.resize(2,ne);
-    }
   return 0;
 }
 
@@ -101,23 +116,41 @@ std::vector<int> glsizes;
 dMat gfeatures = dMat::Zero(30,100);
 dMat glabels = dMat::Zero(2,100);
 dMat gweights = dMat::Zero(1,100);
+dMat gtfeatures = dMat::Zero(30,100);
+dMat gtlabels = dMat::Zero(2,100);
+dMat gtweights = dMat::Zero(1,100);
 nn ghiggsnn;
+bool gsigmoid = false;
+bool gtraining = true;
 
-double max_ams(const int &n)
+double max_ams(const int &n,
+	       const bool &training=true)
 {
   double br = 10.0;
   double s = 0.0;
-  for (int i=0;i<n;i++)
+  if (training)
     {
-      if (glabels(1,i) == 1.0) // s
-	s += gweights(0,i);
+      for (int i=0;i<glabels.cols();i++)
+	{
+	  if (glabels(1,i) == 1.0) // s
+	    s += gweights(0,i);
+	}
+    }
+  else
+    {
+      for (int i=0;i<gtlabels.cols();i++)
+	{
+	  if (gtlabels(1,i) == 1.0) // s
+	    s += gtweights(0,i);
+	}
     }
   double cams = sqrt(2.0*((s+br)*log(1.0+s/br)-s));
   //std::cout << "b=" << b << " / s=" << s << " / ams=" << cams << std::endl;
   return -cams;
 }
 
-double ams(const nn &hgn)
+double ams(const nn &hgn,
+	   const bool &training=true)
 {
   double br = 10.0;
   double b = 0.0;
@@ -128,9 +161,18 @@ double ams(const nn &hgn)
       hgn._lfeatures.col(i).maxCoeff(&ind);
       if (ind == 1)
 	{
-	  if (glabels(ind,i) == 1.0)
-	    s += gweights(0,i);
-	  else b += gweights(0,i);
+	  if (training)
+	    {
+	      if (glabels(ind,i) == 1.0)
+		s += gweights(0,i);
+	      else b += gweights(0,i);
+	    }
+	  else
+	    {
+	      if (gtlabels(ind,i) == 1.0)
+		s += gtweights(0,i);
+	      else b += gtweights(0,i);
+	    }
 	}
     }
   double cams = sqrt(2.0*((s+b+br)*log(1.0+s/(b+br))-s));
@@ -138,18 +180,47 @@ double ams(const nn &hgn)
   return -cams;
 }
 
+// testing
+void testing(const CMASolutions &cmasols,
+	     const bool &training=true)
+{
+  gtraining = training;
+  dMat cmat = dMat::Zero(2,2);
+  for (int i=0;i<cmasols.best_candidate()._x.size();i++)
+    ghiggsnn._allparams.push_back(cmasols.best_candidate()._x(i));
+  if (training)
+    ghiggsnn.forward_pass(gfeatures,glabels);
+  else ghiggsnn.forward_pass(gtfeatures,gtlabels);
+  //std::cout << ghiggsnn._lfeatures.cols() << " / " << ghiggsnn._lfeatures.rows() << std::endl;
+  for (int i=0;i<ghiggsnn._lfeatures.cols();i++)
+    {
+      dMat::Index maxv[2];
+      ghiggsnn._lfeatures.col(i).maxCoeff(&maxv[0]);
+      if (training)
+	glabels.col(i).maxCoeff(&maxv[1]);
+      else gtlabels.col(i).maxCoeff(&maxv[1]);
+      cmat(maxv[1],maxv[0])++;
+    }
+  //std::cerr << "cmat:" << std::endl << cmat << std::endl;
+  dMat diago = cmat.diagonal();
+  dMat col_sums = cmat.colwise().sum();
+  dMat row_sums = cmat.rowwise().sum();
+  double precision = diago.transpose().cwiseQuotient(col_sums).sum() / 2.0;
+  double recall = diago.cwiseQuotient(row_sums).sum() / 2.0;
+  double accuracy = diago.sum() / cmat.sum();
+  double f1 = (2 * precision * recall) / (precision + recall);
+
+  if (training)
+    std::cout << "\n**** training set:\n";
+  else std::cout << "\n**** testing set:\n";
+  std::cout << "precision=" << precision << " / recall=" << recall << " / accuracy=" << accuracy << " / f1=" << f1 << std::endl;
+  std::cout << "max ams=" << -max_ams(ghiggsnn._lfeatures.cols(),training) << " / ams=" << -ams(ghiggsnn,training) << std::endl;
+}
+
 // objective function
 FitFunc nn_of = [](const double *x, const int N)
 {
-  //std::copy(x,x+N,ghiggsnn._allparams.begin()); // beware.
-  /*ghiggsnn._allparams.clear();
-  if (ghiggsnn._has_grad)
-    ghiggsnn.clear_grad();
-  for (int i=0;i<N;i++)
-    ghiggsnn._allparams.push_back(x[i]);
-    ghiggsnn.forward_pass(gfeatures,glabels);*/
-
-  nn hgn = nn(glsizes);
+  nn hgn = nn(glsizes,gsigmoid);
   for (int i=0;i<N;i++)
     hgn._allparams.push_back(x[i]);
   hgn.forward_pass(gfeatures,glabels);
@@ -158,9 +229,7 @@ FitFunc nn_of = [](const double *x, const int N)
   //std::cout << "net loss= " << ghiggsnn._loss << std::endl;
   //debug
 
-  double cams = ams(hgn);
-  
-  //return ghiggsnn._loss;
+  double cams = ams(hgn,gtraining);  
   return cams;
 };
 
@@ -191,6 +260,8 @@ DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) a
 DEFINE_double(lambda,-1,"number of offsprings at each generation");
 DEFINE_double(sigma0,1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_int32(hlayer,100,"number of neurons in the hidden layer");
+DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
+DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -202,7 +273,7 @@ int main(int argc, char *argv[])
       FLAGS_hlayer = 10;
     }
 
-  int err = load_higgs_dataset(FLAGS_fdata,FLAGS_n,gfeatures,glabels,gweights);
+  int err = load_higgs_dataset(FLAGS_fdata,FLAGS_n,FLAGS_testp,gfeatures,glabels,gweights,gtfeatures,gtlabels,gtweights);
   if (err)
     {
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
@@ -214,16 +285,15 @@ int main(int argc, char *argv[])
       gfeatures.resize(30,FLAGS_n);
       gfeatures = dMat::Random(30,FLAGS_n);
     }
-    
+  gsigmoid = FLAGS_sigmoid;
+  
   //debug
   /*std::cout << "gfeatures: " << gfeatures << std::endl;
     std::cout << "glabels: " << glabels << std::endl;*/
   //debug
   
-  //double minloss = 1e-3; //TODO.
-  //int lambda = 1e3;
   glsizes = {30, FLAGS_hlayer, 2};
-  ghiggsnn = nn(glsizes,FLAGS_check_grad || FLAGS_with_gradient);
+  ghiggsnn = nn(glsizes,gsigmoid,FLAGS_check_grad || FLAGS_with_gradient);
 
   if (FLAGS_check_grad)
     {
@@ -236,52 +306,23 @@ int main(int argc, char *argv[])
   std::cout << "max ams=" << -max_ams(FLAGS_n) << std::endl;
   
   // training.
-  //double sigma = 2.0;
   std::vector<double> x0(ghiggsnn._allparams_dim,-std::numeric_limits<double>::max());
   CMAParameters<> cmaparams(ghiggsnn._allparams_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
   cmaparams.set_max_iter(FLAGS_maxsolveiter);
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._algo = sepaCMAES;
   //cmaparams.set_ftarget(1e-8);
+  cmaparams._mt_feval = true;
   CMASolutions cmasols;
   if (!FLAGS_with_gradient)
     cmasols = cmaes<>(nn_of,cmaparams);
   else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn);
   std::cout << "status: " << cmasols._run_status << std::endl;
 
-  // testing.
-  dMat cmat = dMat::Zero(2,2);
-  for (int i=0;i<cmasols.best_candidate()._x.size();i++)
-    ghiggsnn._allparams.push_back(cmasols.best_candidate()._x(i));
-  ghiggsnn.forward_pass(gfeatures,glabels);
-  ghiggsnn.forward_pass(gfeatures,glabels);
-  //std::cout << ghiggsnn._lfeatures.cols() << " / " << ghiggsnn._lfeatures.rows() << std::endl;
-  for (int i=0;i<ghiggsnn._lfeatures.cols();i++)
-    {
-      dMat::Index maxv[2];
-      ghiggsnn._lfeatures.col(i).maxCoeff(&maxv[0]);
-      glabels.col(i).maxCoeff(&maxv[1]);
-      //std::cout << "maxv=" << maxv << std::endl;
-      //if (glabels(maxv[0],i) == 1.0)
-      cmat(maxv[1],maxv[0])++;
-    }
-  //std::cerr << "cmat:" << std::endl << cmat << std::endl;
-  dMat diago = cmat.diagonal();
-  dMat col_sums = cmat.colwise().sum();
-  dMat row_sums = cmat.rowwise().sum();
+  // testing on training set
+  testing(cmasols,true);
 
-  /*std::cerr << "col_sums:" << col_sums << std::endl;
-    std::cerr << "row_sums:" << row_sums << std::endl;*/
-  
-  /*double precision = diago.transpose().cwiseQuotient(col_sums).sum() / 10.0;
-    double recall = diago.cwiseQuotient(row_sums).sum() / 10.0;*/
-
-  double accuracy = diago.sum() / cmat.sum();
-  //double f1 = (2 * precision * recall) / (precision + recall);
-
-  //std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
-  std::cout << "accuracy=" << accuracy << std::endl;
-  //std::cout << "f1=" << f1 << std::endl;
-  std::cout << "max ams=" << -max_ams(FLAGS_n) << std::endl;
-  std::cout << "ams=" << -cmasols.best_candidate()._fvalue << std::endl;
+  // testing on test set
+  if (FLAGS_testp)
+    testing(cmasols,false);
 }
