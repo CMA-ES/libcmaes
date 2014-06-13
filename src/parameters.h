@@ -431,7 +431,9 @@ namespace libcmaes
   std::unordered_map<int,double> _fixed_p; /**< fixed parameters and values. */
   
   TGenoPheno _gp; /**< genotype / phenotype object. */
-  };
+
+  bool _mt_feval = false; /**< whether to force multithreaded (i.e. parallel) function evaluations. */ 
+ };
   
 }
 
