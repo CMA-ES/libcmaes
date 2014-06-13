@@ -49,13 +49,14 @@ void tokenize(const std::string &str,
 }
 
 // load dataset into memory
-int load_mnist_dataset(const std::string &filename,
+int load_higgs_dataset(const std::string &filename,
 		       const int &n,
-		       dMat &features, dMat &labels)
+		       dMat &features, dMat &labels, dMat &weights)
 {
   // matrices for features and labels, examples in col 
-  features.resize(784,n);
-  labels.resize(10,n);
+  features.resize(30,n);
+  labels.resize(2,n);
+  weights.resize(1,n);
   labels.setZero();
   std::ifstream fin(filename);
   if (!fin.good())
@@ -70,70 +71,118 @@ int load_mnist_dataset(const std::string &filename,
       std::vector<std::string> strvalues;
       tokenize(line,strvalues,",");
       std::vector<double> values;
-      for (size_t i=0;i<strvalues.size();i++)
-	values.push_back(strtod(strvalues.at(i).c_str(),NULL));
-      labels(values.at(0),ne) = 1.0;
-      for (size_t i=1;i<values.size();i++)
+      for (size_t i=0;i<strvalues.size()-1;i++)
+	{
+	  double val = strtod(strvalues.at(i).c_str(),NULL);
+	  if (val == -999.0)
+	    val = 0.0; // XXX: not sure what to do with the out of bounds (by dataset definition) values.
+	  values.push_back(val);
+	}
+      for (size_t i=1;i<values.size()-1;i++) // skipping the event ID.
 	features(i-1,ne) = values.at(i);
+      std::string label = strvalues.back();
+      if (label == "b")
+	labels(0,ne) = 1.0;
+      else labels(1,ne) = 1.0;
+      weights(0,ne) = values.back();
       ++ne;
     }
   fin.close();
   if (n > ne)
     {
-      features.resize(784,ne);
-      labels.resize(10,ne);
+      features.resize(30,ne);
+      labels.resize(2,ne);
     }
   return 0;
 }
 
 // global nn variables etc...
 std::vector<int> glsizes;
-dMat gfeatures = dMat::Zero(784,100);
-dMat glabels = dMat::Zero(10,100);
-nn gmnistnn;
+dMat gfeatures = dMat::Zero(30,100);
+dMat glabels = dMat::Zero(2,100);
+dMat gweights = dMat::Zero(1,100);
+nn ghiggsnn;
+
+double max_ams(const int &n)
+{
+  double br = 10.0;
+  double s = 0.0;
+  for (int i=0;i<n;i++)
+    {
+      if (glabels(1,i) == 1.0) // s
+	s += gweights(0,i);
+    }
+  double cams = sqrt(2.0*((s+br)*log(1.0+s/br)-s));
+  //std::cout << "b=" << b << " / s=" << s << " / ams=" << cams << std::endl;
+  return -cams;
+}
+
+double ams(const nn &hgn)
+{
+  double br = 10.0;
+  double b = 0.0;
+  double s = 0.0;
+  for (int i=0;i<hgn._lfeatures.cols();i++)
+    {
+      dMat::Index ind;
+      hgn._lfeatures.col(i).maxCoeff(&ind);
+      if (ind == 1)
+	{
+	  if (glabels(ind,i) == 1.0)
+	    s += gweights(0,i);
+	  else b += gweights(0,i);
+	}
+    }
+  double cams = sqrt(2.0*((s+b+br)*log(1.0+s/(b+br))-s));
+  //std::cout << "b=" << b << " / s=" << s << " / ams=" << cams << std::endl;
+  return -cams;
+}
 
 // objective function
 FitFunc nn_of = [](const double *x, const int N)
 {
-  //std::copy(x,x+N,gmnistnn._allparams.begin()); // beware.
-  /*gmnistnn._allparams.clear();
-  if (gmnistnn._has_grad)
-    gmnistnn.clear_grad();
+  //std::copy(x,x+N,ghiggsnn._allparams.begin()); // beware.
+  /*ghiggsnn._allparams.clear();
+  if (ghiggsnn._has_grad)
+    ghiggsnn.clear_grad();
   for (int i=0;i<N;i++)
-    gmnistnn._allparams.push_back(x[i]);
-    gmnistnn.forward_pass(gfeatures,glabels);*/
+    ghiggsnn._allparams.push_back(x[i]);
+    ghiggsnn.forward_pass(gfeatures,glabels);*/
 
-  nn mgn = nn(glsizes);
+  nn hgn = nn(glsizes);
   for (int i=0;i<N;i++)
-    mgn._allparams.push_back(x[i]);
-  mgn.forward_pass(gfeatures,glabels);
+    hgn._allparams.push_back(x[i]);
+  hgn.forward_pass(gfeatures,glabels);
   
   //debug
-  //std::cout << "net loss= " << gmnistnn._loss << std::endl;
+  //std::cout << "net loss= " << ghiggsnn._loss << std::endl;
   //debug
+
+  double cams = ams(hgn);
   
-  return mgn._loss;
+  //return ghiggsnn._loss;
+  return cams;
 };
 
 // gradient function
 GradFunc gnn = [](const double *x, const int N)
 {
   dVec grad = dVec::Zero(N);
-  if (gmnistnn._has_grad)
+  if (ghiggsnn._has_grad)
     {
-      gmnistnn._allparams.clear();
-      gmnistnn.clear_grad();
+      ghiggsnn._allparams.clear();
+      ghiggsnn.clear_grad();
       for (int i=0;i<N;i++)
-	gmnistnn._allparams.push_back(x[i]);
-      gmnistnn.forward_pass(gfeatures,glabels);
-      gmnistnn.back_propagate(gfeatures);
-      grad = gmnistnn.grad_to_vec(gfeatures.cols());
+	ghiggsnn._allparams.push_back(x[i]);
+      ghiggsnn.forward_pass(gfeatures,glabels);
+      ghiggsnn.back_propagate(gfeatures);
+      grad = ghiggsnn.grad_to_vec(gfeatures.cols());
     }
   //std::cerr << "grad=" << grad.transpose() << std::endl;
   return grad;
 };
 
-DEFINE_string(fdata,"train.csv","name of the file that contains the training data for MNIST");
+DEFINE_string(fdata,"train.csv","name of the file that contains the training data for HIGGS");
 DEFINE_int32(n,100,"max number of examples to train from");
 DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
 DEFINE_string(fplot,"","output file for optimization log");
@@ -153,7 +202,7 @@ int main(int argc, char *argv[])
       FLAGS_hlayer = 10;
     }
 
-  int err = load_mnist_dataset(FLAGS_fdata,FLAGS_n,gfeatures,glabels);
+  int err = load_higgs_dataset(FLAGS_fdata,FLAGS_n,gfeatures,glabels,gweights);
   if (err)
     {
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
@@ -162,8 +211,8 @@ int main(int argc, char *argv[])
   if (FLAGS_check_grad)
     {
       // we check on random features, but we keep the original labels.
-      gfeatures.resize(784,FLAGS_n);
-      gfeatures = dMat::Random(784,FLAGS_n);
+      gfeatures.resize(30,FLAGS_n);
+      gfeatures = dMat::Random(30,FLAGS_n);
     }
     
   //debug
@@ -173,24 +222,27 @@ int main(int argc, char *argv[])
   
   //double minloss = 1e-3; //TODO.
   //int lambda = 1e3;
-  glsizes = {784, FLAGS_hlayer, 10};
-  gmnistnn = nn(glsizes,FLAGS_check_grad || FLAGS_with_gradient);
+  glsizes = {30, FLAGS_hlayer, 2};
+  ghiggsnn = nn(glsizes,FLAGS_check_grad || FLAGS_with_gradient);
 
   if (FLAGS_check_grad)
     {
-      if (gmnistnn.grad_check(gfeatures,glabels))
+      if (ghiggsnn.grad_check(gfeatures,glabels))
 	std::cout << "Gradient check: OK\n";
       else std::cout << "Gradient check did fail\n";
       exit(1);
     }
+
+  std::cout << "max ams=" << -max_ams(FLAGS_n) << std::endl;
   
   // training.
-  std::vector<double> x0(gmnistnn._allparams_dim,-std::numeric_limits<double>::max());
-  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+  //double sigma = 2.0;
+  std::vector<double> x0(ghiggsnn._allparams_dim,-std::numeric_limits<double>::max());
+  CMAParameters<> cmaparams(ghiggsnn._allparams_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
   cmaparams.set_max_iter(FLAGS_maxsolveiter);
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._algo = sepaCMAES;
-  cmaparams.set_ftarget(1e-8);
+  //cmaparams.set_ftarget(1e-8);
   CMASolutions cmasols;
   if (!FLAGS_with_gradient)
     cmasols = cmaes<>(nn_of,cmaparams);
@@ -198,15 +250,16 @@ int main(int argc, char *argv[])
   std::cout << "status: " << cmasols._run_status << std::endl;
 
   // testing.
-  dMat cmat = dMat::Zero(10,10);
+  dMat cmat = dMat::Zero(2,2);
   for (int i=0;i<cmasols.best_candidate()._x.size();i++)
-    gmnistnn._allparams.push_back(cmasols.best_candidate()._x(i));
-  gmnistnn.forward_pass(gfeatures,glabels);
-  //std::cout << gmnistnn._lfeatures.cols() << " / " << gmnistnn._lfeatures.rows() << std::endl;
-  for (int i=0;i<gmnistnn._lfeatures.cols();i++)
+    ghiggsnn._allparams.push_back(cmasols.best_candidate()._x(i));
+  ghiggsnn.forward_pass(gfeatures,glabels);
+  ghiggsnn.forward_pass(gfeatures,glabels);
+  //std::cout << ghiggsnn._lfeatures.cols() << " / " << ghiggsnn._lfeatures.rows() << std::endl;
+  for (int i=0;i<ghiggsnn._lfeatures.cols();i++)
     {
       dMat::Index maxv[2];
-      gmnistnn._lfeatures.col(i).maxCoeff(&maxv[0]);
+      ghiggsnn._lfeatures.col(i).maxCoeff(&maxv[0]);
       glabels.col(i).maxCoeff(&maxv[1]);
       //std::cout << "maxv=" << maxv << std::endl;
       //if (glabels(maxv[0],i) == 1.0)
@@ -220,17 +273,15 @@ int main(int argc, char *argv[])
   /*std::cerr << "col_sums:" << col_sums << std::endl;
     std::cerr << "row_sums:" << row_sums << std::endl;*/
   
-  //dMat epsilon = dMat::Constant(10,1,1e-20);
-  double precision = diago.transpose().cwiseQuotient(col_sums).sum() / 10.0;
-  double recall = diago.cwiseQuotient(row_sums).sum() / 10.0;
-  /*if (std::isnan(precision))
-    precision = 1.0;
-  if (std::isnan(recall))
-  recall = 1.0;*/
-  double accuracy = diago.sum() / cmat.sum();
-  double f1 = (2 * precision * recall) / (precision + recall);
+  /*double precision = diago.transpose().cwiseQuotient(col_sums).sum() / 10.0;
+    double recall = diago.cwiseQuotient(row_sums).sum() / 10.0;*/
 
-  std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
+  double accuracy = diago.sum() / cmat.sum();
+  //double f1 = (2 * precision * recall) / (precision + recall);
+
+  //std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
   std::cout << "accuracy=" << accuracy << std::endl;
-  std::cout << "f1=" << f1 << std::endl;
+  //std::cout << "f1=" << f1 << std::endl;
+  std::cout << "max ams=" << -max_ams(FLAGS_n) << std::endl;
+  std::cout << "ams=" << -cmasols.best_candidate()._fvalue << std::endl;
 }
