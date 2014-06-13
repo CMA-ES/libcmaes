@@ -42,11 +42,14 @@ namespace libcmaes
     if (solutions._updated_eigen && !parameters._sep)
       solutions._csqinv = esolver._eigenSolver.operatorInverseSqrt();
     else if (parameters._sep)
-      solutions._csqinv = solutions._cov.diagonal().cwiseInverse().asDiagonal();
+      solutions._sepcsqinv = solutions._sepcov.cwiseInverse().cwiseSqrt();
     
     // update psigma, Eq. (3)
-    solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
-      + parameters._fact_ps * solutions._csqinv * diffxmean;
+    if (!parameters._sep)
+      solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
+	+ parameters._fact_ps * solutions._csqinv * diffxmean;
+    else solutions._psigma = (1.0-parameters._csigma)*solutions._psigma
+	   + parameters._fact_ps * solutions._sepcsqinv.cwiseProduct(diffxmean);
     double norm_ps = solutions._psigma.norm();
 
     // update pc, Eq. (4-5)
@@ -55,35 +58,57 @@ namespace libcmaes
     if (norm_ps < val_for_hsig)
       solutions._hsig = 1; //TODO: simplify equation instead.
     solutions._pc = (1.0-parameters._cc) * solutions._pc + solutions._hsig * parameters._fact_pc * diffxmean;
-    dMat spc = solutions._pc * solutions._pc.transpose();
-
+    dMat spc;
+    if (!parameters._sep)
+      spc = solutions._pc * solutions._pc.transpose();
+    else spc = solutions._pc.cwiseProduct(solutions._pc);
+    
     // Cmu+, Eq. (6)
-    dMat cmuplus = dMat::Zero(parameters._dim,parameters._dim);
+    dMat cmuplus;
+    if (!parameters._sep)
+      cmuplus = dMat::Zero(parameters._dim,parameters._dim);
+    else cmuplus = dMat::Zero(parameters._dim,1);
     for (int i=0;i<parameters._mu;i++)
       {
 	dVec difftmp = solutions._candidates.at(i)._x - solutions._xmean;
-	cmuplus += parameters._weights[i] * (difftmp*difftmp.transpose());
+	if (!parameters._sep)
+	  cmuplus += parameters._weights[i] * (difftmp*difftmp.transpose());
+	else cmuplus += parameters._weights[i] * (difftmp.cwiseProduct(difftmp));
       }
     cmuplus *= 1.0/(solutions._sigma*solutions._sigma);
         
     // Cmu-, Eq. (7)
-    dMat cmuminus = dMat::Zero(parameters._dim,parameters._dim);
+    dMat cmuminus;
+    if (!parameters._sep)
+      cmuminus = dMat::Zero(parameters._dim,parameters._dim);
+    else cmuminus = dMat::Zero(parameters._dim,1);
     for (int i=0;i<parameters._mu;i++)
       {
 	dVec ytmp = solutions._candidates.at(parameters._lambda-i-1)._x-solutions._xmean;
 	//dVec yl = (solutions._csqinv * (solutions._candidates.at(parameters._lambda-parameters._mu+i)._x-solutions._xmean)).norm() / (solutions._csqinv * ytmp).norm() * ytmp * 1.0/solutions._sigma;
 	dVec yl = ytmp * 1.0/solutions._sigma; // NH says this is a good enough value.
-	cmuminus += parameters._weights[i] * yl*yl.transpose();
+	if (!parameters._sep)
+	  cmuminus += parameters._weights[i] * yl*yl.transpose();
+	else cmuminus += parameters._weights[i] * yl.cwiseProduct(yl);
       }
     
     // covariance update, Eq. (8)
-    dMat cminusdenom = solutions._csqinv*cmuminus*solutions._csqinv;
-    SelfAdjointEigenSolver<dMat> tmpesolve(cminusdenom); // XXX: computing eigenvalues, could be avoid with an upper bound.
-    double cminustmp = tmpesolve.eigenvalues().maxCoeff();
+    dMat cminusdenom;
+    if (!parameters._sep)
+      cminusdenom = solutions._csqinv*cmuminus*solutions._csqinv;
+    else cminusdenom = solutions._sepcsqinv.cwiseProduct(cmuminus.cwiseProduct(solutions._sepcsqinv));
+    double cminustmp = parameters._lambdamintarget;
+    if (!parameters._sep)
+      {
+	SelfAdjointEigenSolver<dMat> tmpesolve(cminusdenom); // XXX: computing eigenvalues, could be avoid with an upper bound.
+	cminustmp = tmpesolve.eigenvalues().maxCoeff();
+      }
+    else cminustmp = cminusdenom.maxCoeff();
     double cminusmin = parameters._alphaminusmin * (1.0-parameters._cmu)*(1.0-parameters._lambdamintarget) / cminustmp;
     double cminus = std::min(cminusmin,(1-parameters._cmu)*parameters._alphacov/8.0*(parameters._muw/(pow(parameters._dim+2.0,1.5)+2.0*parameters._muw)));
-    //std::cerr << "cminus=" << cminus << " / cminusmin=" << cminusmin << " / cminustmp=" << cminustmp << std::endl;
-    solutions._cov = (1-parameters._c1-parameters._cmu + cminus*parameters._alphaminusold)*solutions._cov + parameters._c1*spc + (parameters._cmu + cminus * (1.0-parameters._alphaminusold))*cmuplus - cminus * cmuminus;
+    if (!parameters._sep)
+      solutions._cov = (1-parameters._c1-parameters._cmu + cminus*parameters._alphaminusold)*solutions._cov + parameters._c1*spc + (parameters._cmu + cminus * (1.0-parameters._alphaminusold))*cmuplus - cminus * cmuminus;
+    else solutions._sepcov = (1-parameters._c1-parameters._cmu + cminus*parameters._alphaminusold)*solutions._sepcov + parameters._c1*spc + (parameters._cmu + cminus * (1.0-parameters._alphaminusold))*cmuplus - cminus * cmuminus;
     
     // sigma update, Eq. (9)
     solutions._sigma *= std::min(parameters._deltamaxsigma,exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0)));
