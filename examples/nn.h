@@ -130,6 +130,13 @@ public:
     return Mout;
   }
 
+  dMat mtanh_derivative(const dMat &X)
+  {
+    dMat M = mtanh(X);
+    M = M.cwiseProduct(M);
+    return dMat::Constant(M.rows(),M.cols(),1)-M;
+  }
+  
   static dMat sigmoid(const dMat &M)
   {
     dMat expM(M.rows(),M.cols());
@@ -233,7 +240,10 @@ public:
 	if (i > 0) // back propagate until hidden layer.
 	  {
 	    dMat delta = _lweights.at(i) * _deltas.back();
-	    dMat der = sigmoid_derivative(_activations.at(i-1));
+	    dMat der;
+	    if (_sigmoid)
+	      der = sigmoid_derivative(_activations.at(i-1));
+	    else der = mtanh_derivative(_activations.at(i-1));
 	    delta = der.cwiseProduct(delta);
 	    _deltas.push_back(delta);
 	  }
