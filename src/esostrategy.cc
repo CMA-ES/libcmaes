@@ -35,7 +35,7 @@ namespace libcmaes
 {
   template<class TParameters,class TSolutions,class TStopCriteria>
   ESOStrategy<TParameters,TSolutions,TStopCriteria>::ESOStrategy(FitFunc &func,
-						   TParameters &parameters)
+								 TParameters &parameters)
     :_func(func),_nevals(0),_niter(0),_parameters(parameters)
   {
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.

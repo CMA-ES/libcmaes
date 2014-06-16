@@ -183,7 +183,7 @@ namespace libcmaes
     nparameters._quiet = true; //TODO: option.
     nparameters.set_fixed_p(k,vk);
     nparameters._sigma_init = ncmasol._sigma = fabs(cmasol.best_candidate()._x[k]-vk);
-    return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,ncmasol); //TODO: explicitely set the initial covariance.
+    return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,nullptr,ncmasol); //TODO: explicitely set the initial covariance.
   }
     
   template <class TGenoPheno>

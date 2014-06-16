@@ -33,6 +33,7 @@ namespace libcmaes
   CMASolutions cmaes(FitFunc &func,
 		     CMAParameters<TGenoPheno> &parameters,
 		     ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc=CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,
+		     GradFunc gfunc=nullptr,
 		     const CMASolutions &solutions=CMASolutions())
     {
       switch(parameters._algo)
@@ -43,6 +44,8 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> cmaes_vanilla(func,parameters);
+	      if (gfunc != nullptr)
+		cmaes_vanilla.set_gradient_func(gfunc);
 	      cmaes_vanilla.set_progress_func(pfunc);
 	      cmaes_vanilla.optimize();
 	      return cmaes_vanilla._solutions;
@@ -50,6 +53,8 @@ namespace libcmaes
 	  else
 	    {
 	      ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> cmaes_vanilla(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		cmaes_vanilla.set_gradient_func(gfunc);
 	      cmaes_vanilla.set_progress_func(pfunc);
 	      cmaes_vanilla.optimize();
 	      return cmaes_vanilla._solutions;
@@ -60,6 +65,8 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
+	      if (gfunc != nullptr)
+		ipop.set_gradient_func(gfunc);
 	      ipop.set_progress_func(pfunc);
 	      ipop.optimize();
 	      return ipop._solutions;
@@ -67,6 +74,8 @@ namespace libcmaes
 	  else
 	    {
 	      ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		ipop.set_gradient_func(gfunc);
 	      ipop.set_progress_func(pfunc);
 	      ipop.optimize();
 	      return ipop._solutions;
@@ -77,6 +86,8 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
+	      if (gfunc != nullptr)
+		bipop.set_gradient_func(gfunc);
 	      bipop.set_progress_func(pfunc);
 	      bipop.optimize();
 	      return bipop._solutions;
@@ -84,6 +95,8 @@ namespace libcmaes
 	  else
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		bipop.set_gradient_func(gfunc);
 	      bipop.set_progress_func(pfunc);
 	      bipop.optimize();
 	      return bipop._solutions;
@@ -94,6 +107,8 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> acmaes(func,parameters);
+	      if (gfunc != nullptr)
+		acmaes.set_gradient_func(gfunc);
 	      acmaes.set_progress_func(pfunc);
 	      acmaes.optimize();
 	      return acmaes._solutions;
@@ -101,6 +116,8 @@ namespace libcmaes
 	  else
 	    {
 	      ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> acmaes(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		acmaes.set_gradient_func(gfunc);
 	      acmaes.set_progress_func(pfunc);
 	      acmaes.optimize();
 	      return acmaes._solutions;
@@ -111,6 +128,8 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> aipop(func,parameters);
+	      if (gfunc != nullptr)
+		aipop.set_gradient_func(gfunc);
 	      aipop.set_progress_func(pfunc);
 	      aipop.optimize();
 	      return aipop._solutions;
@@ -118,6 +137,8 @@ namespace libcmaes
 	  else
 	    {
 	      ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> aipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		aipop.set_gradient_func(gfunc);
 	      aipop.set_progress_func(pfunc);
 	      aipop.optimize();
 	      return aipop._solutions;
@@ -128,6 +149,8 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> abipop(func,parameters);
+	      if (gfunc != nullptr)
+		abipop.set_gradient_func(gfunc);
 	      abipop.set_progress_func(pfunc);
 	      abipop.optimize();
 	      return abipop._solutions;
@@ -135,6 +158,8 @@ namespace libcmaes
 	  else
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> abipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		abipop.set_gradient_func(gfunc);
 	      abipop.set_progress_func(pfunc);
 	      abipop.optimize();
 	      return abipop._solutions;
@@ -146,13 +171,17 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
+	      if (gfunc != nullptr)
+		sepcmaes.set_gradient_func(gfunc);
 	      sepcmaes.set_progress_func(pfunc);
 	      sepcmaes.optimize();
 	      return sepcmaes._solutions;
 	    }
 	  else
 	    {
-	      ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
+	      ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		sepcmaes.set_gradient_func(gfunc);
 	      sepcmaes.set_progress_func(pfunc);
 	      sepcmaes.optimize();
 	      return sepcmaes._solutions;
@@ -164,13 +193,17 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
+	      if (gfunc != nullptr)
+		ipop.set_gradient_func(gfunc);
 	      ipop.set_progress_func(pfunc);
 	      ipop.optimize();
 	      return ipop._solutions;
 	    }
 	  else
 	    {
-	      ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
+	      ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		ipop.set_gradient_func(gfunc);
 	      ipop.set_progress_func(pfunc);
 	      ipop.optimize();
 	      return ipop._solutions;
@@ -182,13 +215,17 @@ namespace libcmaes
 	  if (solutions._cov.size()==0)
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
+	      if (gfunc != nullptr)
+		bipop.set_gradient_func(gfunc);
 	      bipop.set_progress_func(pfunc);
 	      bipop.optimize();
 	      return bipop._solutions;
 	    }
 	  else
 	    {
-	      ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
+	      ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		bipop.set_gradient_func(gfunc);
 	      bipop.set_progress_func(pfunc);
 	      bipop.optimize();
 	      return bipop._solutions;
@@ -197,26 +234,68 @@ namespace libcmaes
 	case sepaCMAES:
 	{
 	  parameters.set_sep();
-	  ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
-	  sepcmaes.set_progress_func(pfunc);
-	  sepcmaes.optimize();
-	  return sepcmaes._solutions;
+	  if (solutions._cov.size()==0)
+	    {
+	      ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
+	      if (gfunc != nullptr)
+		sepcmaes.set_gradient_func(gfunc);
+	      sepcmaes.set_progress_func(pfunc);
+	      sepcmaes.optimize();
+	      return sepcmaes._solutions;
+	    }
+	  else
+	    {
+	      ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		sepcmaes.set_gradient_func(gfunc);
+	      sepcmaes.set_progress_func(pfunc);
+	      sepcmaes.optimize();
+	      return sepcmaes._solutions;
+	    }
 	}
 	case sepaIPOP_CMAES:
 	{
 	  parameters.set_sep();
-	  ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
-	  ipop.set_progress_func(pfunc);
-	  ipop.optimize();
-	  return ipop._solutions;
+	  if (solutions._cov.size() == 0)
+	    {
+	      ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
+	      if (gfunc != nullptr)
+		ipop.set_gradient_func(gfunc);
+	      ipop.set_progress_func(pfunc);
+	      ipop.optimize();
+	      return ipop._solutions;
+	    }
+	  else
+	    {
+	      ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		ipop.set_gradient_func(gfunc);
+	      ipop.set_progress_func(pfunc);
+	      ipop.optimize();
+	      return ipop._solutions;
+	    }
 	}
 	case sepaBIPOP_CMAES:
 	{
 	  parameters.set_sep();
-	  ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
-	  bipop.set_progress_func(pfunc);
-	  bipop.optimize();
-	  return bipop._solutions;
+	  if (solutions._cov.size() == 0)
+	    {
+	      ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
+	      if (gfunc != nullptr)
+		bipop.set_gradient_func(gfunc);
+	      bipop.set_progress_func(pfunc);
+	      bipop.optimize();
+	      return bipop._solutions;
+	    }
+	  else
+	    {
+	      ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters,solutions);
+	      if (gfunc != nullptr)
+		bipop.set_gradient_func(gfunc);
+	      bipop.set_progress_func(pfunc);
+	      bipop.optimize();
+	      return bipop._solutions;
+	    }
 	}
 	default:
 	return CMASolutions();

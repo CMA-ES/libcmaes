@@ -115,6 +115,14 @@ FitFunc fsphere = [](const double *x, const int N)
   return val;
 };
 
+GradFunc grad_fsphere = [](const double *x, const int N)
+{
+  dVec grad(N);
+  for (int i=0;i<N;i++)
+    grad(i) = 2.0*x[i];
+  return grad;
+};
+
 FitFunc cigtab = [](const double *x, const int N)
 {
   int i;
@@ -132,6 +140,17 @@ FitFunc rosenbrock = [](const double *x, const int N)
       val += 100.0*pow((x[i+1]-x[i]*x[i]),2) + pow((x[i]-1.0),2);
     }
   return val;
+};
+
+GradFunc grad_rosenbrock = [](const double *x, const int N)
+{
+  dVec grad = dVec::Zero(N);
+  for (int i=0;i<N-1;i++)
+    {
+      grad(i) = -400.0*x[i]*(x[i+1]-x[i]*x[i])-2.0*(1.0-x[i]);
+      grad(i+1) += 200.0*(x[i+1]-x[i]*x[i]);
+    }
+  return grad;
 };
 
 FitFunc beale = [](const double *x, const int N)
@@ -233,12 +252,34 @@ FitFunc elli = [](const double *x, const int N)
   return val;
 };
 
+GradFunc grad_elli = [](const double *x, const int N)
+{
+  dVec grad(N);
+  if (N == 1)
+    {
+      grad(0) = 2.0*x[0];
+      return grad;
+    }
+  for (int i=0;i<N;i++)
+    grad(i) = exp(log(1e3)*2.0*static_cast<double>(i)/static_cast<double>((N-1)))*2.0*x[i];
+  return grad;
+};
+
 FitFunc tablet = [](const double *x, const int N)
 {
   double val = 1e6*x[0]*x[0];
   for (int i=1;i<N;i++)
     val += x[i]*x[i];
   return val;
+};
+
+GradFunc grad_tablet = [](const double *x, const int N)
+{
+  dVec grad(N);
+  grad(0) = 1e6*2.0*x[0];
+  for (int i=0;i<N;i++)
+    grad(i) = 2.0*x[i];
+  return grad;
 };
 
 FitFunc cigar = [](const double *x, const int N)
@@ -294,6 +335,7 @@ FitFunc diffpowrot = [](const double *x, const int N)
 };
 
 std::map<std::string,FitFunc> mfuncs;
+std::map<std::string,GradFunc> mgfuncs;
 std::map<std::string,Candidate> msols;
 std::map<std::string,CMAParameters<>> mparams;
 std::map<std::string,FitFunc>::const_iterator mit;
@@ -306,9 +348,11 @@ void fillupfuncs()
   mfuncs["ackleys"]=ackleys;
   msols["ackleys"]=Candidate(0.0,dVec::Constant(2,0));
   mfuncs["fsphere"]=fsphere;
+  mgfuncs["fsphere"]=grad_fsphere;
   msols["fsphere"]=Candidate(0.0,dVec::Constant(20,0));
   mfuncs["cigtab"]=cigtab;
   mfuncs["rosenbrock"]=rosenbrock;
+  mgfuncs["rosenbrock"]=grad_rosenbrock;
   msols["rosenbrock"]=Candidate(0.0,dVec::Constant(20,1));
   mfuncs["beale"]=beale;
   mfuncs["goldstein_price"]=goldstein_price;
@@ -330,8 +374,10 @@ void fillupfuncs()
   rastrigin_params.set_x0(5.0);
   mparams["rastrigin"]=rastrigin_params;
   mfuncs["elli"]=elli;
+  mgfuncs["elli"]=grad_elli;
   msols["elli"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["tablet"]=tablet;
+  mgfuncs["tablet"]=grad_tablet;
   msols["tablet"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["cigar"]=cigar;
   msols["cigar"]=Candidate(0.0,dVec::Constant(10,0));
@@ -377,6 +423,7 @@ DEFINE_string(contour,"","two comma-separated variable indexes to which passes a
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
+DEFINE_bool(with_gradient,false,"whether to use the function gradient when available in closed form");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -430,7 +477,10 @@ CMASolutions cmaes_opt()
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
       exit(-1);
     }
-  CMASolutions cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  CMASolutions cmasols;
+  if (!FLAGS_with_gradient)
+    cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  else cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
   std::cout << "Minimization completed in " << cmasols._elapsed_time / 1000.0 << " seconds\n";
   if (cmasols._run_status >= 0 && FLAGS_le)
     {

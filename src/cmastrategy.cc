@@ -42,7 +42,7 @@ namespace libcmaes
   
   template <class TCovarianceUpdate, class TGenoPheno>
   CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy(FitFunc &func,
-					      CMAParameters<TGenoPheno> &parameters)
+							 CMAParameters<TGenoPheno> &parameters)
     :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >(func,parameters)
   {
     eostrat<TGenoPheno>::_pfunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
@@ -111,11 +111,35 @@ namespace libcmaes
     //std::cout << "transform: " << _esolver._transform << std::endl;
     //debug
     
-    // sample for multivariate normal distribution.
+    // sample for multivariate normal distribution, produces one candidate per column.
     dMat pop;
     if (!eostrat<TGenoPheno>::_parameters._sep)
       pop = _esolver.samples(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma); // Eq (1).
     else pop = _esolver.samples_ind(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma);
+
+    //TODO: gradient if available.
+    if (eostrat<TGenoPheno>::_gfunc)
+      {
+	dVec grad_at_mean = eostrat<TGenoPheno>::_gfunc(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim);
+	if (grad_at_mean != dVec::Zero(eostrat<TGenoPheno>::_parameters._dim))
+	  {
+	    //TODO: check that gradient is not 0.
+	    //std::cerr << "grad_at_mean=" << grad_at_mean.transpose() << std::endl;
+	    
+	    //TODO: if geno / pheno transform activated.
+	    dVec nx;
+	    if (!eostrat<TGenoPheno>::_parameters._sep)
+	      nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._cov.sqrt() * grad_at_mean).norm())) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
+	    else nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt().cwiseProduct(grad_at_mean)).norm())) * eostrat<TGenoPheno>::_solutions._sepcov.cwiseProduct(grad_at_mean);
+	    
+	    /*dVec v = _esolver._eigenSolver.eigenvalues().asDiagonal() * _esolver._eigenSolver.eigenvectors().transpose() * eostrat<TGenoPheno>::_solutions._sigma * grad_at_mean;
+	      double q = v.squaredNorm();
+	      dVec nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * sqrt(eostrat<TGenoPheno>::_parameters._dim / q) * (eostrat<TGenoPheno>::_solutions._sigma * _esolver._eigenSolver.eigenvectors() * (_esolver._eigenSolver.eigenvalues().asDiagonal()*v));*/
+	    //std::cerr << "gradient, other x=" << pop.col(1).transpose() << " / new x=" << nx.transpose() << " / xmean=" << eostrat<TGenoPheno>::_solutions._xmean.transpose() << std::endl;
+	    //std::cerr << "nx=" << nx.transpose() << std::endl;
+	    pop.col(0) = nx;
+	  }
+      }
     
     // if some parameters are fixed, reset them.
     if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
