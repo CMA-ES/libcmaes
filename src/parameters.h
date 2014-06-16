@@ -115,7 +115,8 @@ namespace libcmaes
    */
   void set_x0(const double *x0min, const double *x0max)
   {
-    _x0min = x0max = dVec(_dim);
+    _x0min = dVec(_dim);
+    _x0max = dVec(_dim);
     for (int i=0;i<_dim;i++)
       {
 	_x0min(i) = x0min[i];
