@@ -180,6 +180,20 @@ namespace libcmaes
   {
     _ftarget = -std::numeric_limits<double>::infinity();
   }
+
+  /**
+   * \brief sets function tolerance as stopping criteria for TolHistFun: monitors the
+   *        difference in function value over iterations and stops optimization when 
+   *        below tolerance.
+   * @param v value of the function tolerance.	    
+   */
+  void set_ftolerance(const double &v) { _ftolerance = v; }
+
+  /**
+   * \brief sets parameter tolerance as stopping criteria for TolX.
+   * @param v value of the parameter tolerance.
+   */
+  void set_xtolerance(const double &v) { _xtol = v; }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
@@ -192,6 +206,8 @@ namespace libcmaes
   dVec _x0max; /**< initial mean vector max bound value for all components. */
   double _ftarget = -std::numeric_limits<double>::infinity(); /**< optional objective function target value. */
   double _ftargettol = 1e-12; /**< objective function target tolerance. */
+  double _ftolerance = 1e-12; /**< tolerance of the best function values during the last 10+(30*dim/lambda) steps (TolHistFun). */ 
+  double _xtol = 1e-12; /**< tolerance on parameters error. */
   
   uint64_t _seed = 0; /**< seed for random generator. */
   int _algo = 0; /**< selected algorithm. */
