@@ -102,7 +102,7 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(FTARGET,fTarget));
     StopCriteriaFunc<TGenoPheno> tolHistFun = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	static double threshold = std::max(cmap._ftolerance,1e-12); // set it once
+	double threshold = std::max(cmap._ftolerance,1e-12);
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
 	int histthresh = static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda));
 	int histlength = std::min(histthresh,histsize);
@@ -148,7 +148,7 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(EQUALFUNVALS,equalFunVals));
     StopCriteriaFunc<TGenoPheno> tolX = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	static double tolx = 1e-12;
+	double tolx = std::max(cmap._xtol,1e-12);
 	double factor = cmas._sigma / cmap._sigma_init;
 	double tfactor = tolx * factor;
 	// test1: all components of pc . factor < tolx.
