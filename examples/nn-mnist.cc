@@ -24,6 +24,7 @@
 #include <fstream>
 #include <gflags/gflags.h>
 #include <cstdlib>
+#include <random>
 #include <iostream>
 
 using namespace libcmaes;
@@ -111,8 +112,8 @@ void testing(const CMASolutions &cmasols,
 	     const bool &training=true)
 {
   dMat cmat = dMat::Zero(10,10);
-  for (int i=0;i<cmasols.best_candidate()._x.size();i++)
-    gmnistnn._allparams.push_back(cmasols.best_candidate()._x(i));
+  Candidate bcand = cmasols.best_candidate();
+  std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(gmnistnn._allparams));
   if (training)
     gmnistnn.forward_pass(gfeatures,glabels);
   else gmnistnn.forward_pass(gtfeatures,gtlabels);
@@ -143,13 +144,31 @@ void testing(const CMASolutions &cmasols,
   std::cout << "f1=" << f1 << std::endl;
 }
 
+std::random_device rd;
+std::mt19937 ggen(rd());
+std::uniform_int_distribution<> gunif(0,41999);
+int gbatches = -1;
+
 // objective function
 FitFunc nn_of = [](const double *x, const int N)
 {
   nn mgn = nn(glsizes,gsigmoid);
   for (int i=0;i<N;i++)
     mgn._allparams.push_back(x[i]);
-  mgn.forward_pass(gfeatures,glabels);
+  if (gbatches <= 0)
+    mgn.forward_pass(gfeatures,glabels);
+  else
+    {
+      dMat lgfeatures(gfeatures.rows(),gbatches);
+      dMat lglabels(glabels.rows(),gbatches);
+      for (int j=0;j<gbatches;j++)
+	{
+	  double u = gunif(ggen);
+	  lgfeatures.col(j) = gfeatures.col(u);
+	  lglabels.col(j) = glabels.col(u);
+	}
+      mgn.forward_pass(lgfeatures,lglabels);
+    }
   
   //debug
   //std::cout << "net loss= " << gmnistnn._loss << std::endl;
@@ -183,27 +202,33 @@ DEFINE_string(fplot,"","output file for optimization log");
 DEFINE_bool(check_grad,false,"checks on gradient correctness via back propagation");
 DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) along with black-box optimization");
 DEFINE_double(lambda,-1,"number of offsprings at each generation");
-DEFINE_double(sigma0,0.1,"initial value for step-size sigma (-1.0 for automated value)");
+DEFINE_double(sigma0,0.01,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_int32(hlayer,100,"number of neurons in the hidden layer");
 DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
+DEFINE_int32(mbatch,-1,"size of minibatch");
+DEFINE_int32(seed,0,"seed for es");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
 {
+  ggen.seed(static_cast<uint64_t>(time(nullptr)));
   google::ParseCommandLineFlags(&argc, &argv, true);
   if (FLAGS_check_grad)
     {
       FLAGS_n = 10;
       FLAGS_hlayer = 10;
     }
-
+  if (FLAGS_mbatch > 0)
+    gbatches = FLAGS_mbatch;
+  
   int err = load_mnist_dataset(FLAGS_fdata,FLAGS_n,FLAGS_testp,gfeatures,glabels,gtfeatures,gtlabels);
   if (err)
     {
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
       exit(1);
     }
+  gunif = std::uniform_int_distribution<>(0,gfeatures.cols()-1);
   if (FLAGS_check_grad)
     {
       // we check on random features, but we keep the original labels.
@@ -230,12 +255,14 @@ int main(int argc, char *argv[])
   
   // training.
   gmnistnn.to_array();
-  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&gmnistnn._allparams.front(),FLAGS_sigma0,FLAGS_lambda);
+  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&gmnistnn._allparams.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
   cmaparams.set_max_iter(FLAGS_maxsolveiter);
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._algo = sepaCMAES;
-  cmaparams.set_ftarget(1e-8);
+  cmaparams.set_ftarget(1e-2);
   cmaparams._mt_feval = true;
+  /*if (gbatches > 0)
+    cmaparams.set_noisy();*/
   CMASolutions cmasols;
   if (!FLAGS_with_gradient)
     cmasols = cmaes<>(nn_of,cmaparams);
