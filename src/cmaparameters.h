@@ -78,14 +78,6 @@ namespace libcmaes
     void set_automaxiter(const bool &b) { _has_max_iter = b; }
 
     /**
-     * \brief sets function tolerance as stopping criteria for TolHistFun: monitors the
-     *        difference in function value over iterations and stops optimization when 
-     *        below tolerance.
-     * @param v value of the function tolerance.	    
-     */
-    void set_ftolerance(const double &v) { _ftolerance = v; }
-
-    /**
      * \brief freezes a parameter to a given value during optimization.
      *        Adapts some generic parameters as well.
      * @param index dimension index of the parameter to be frozen
@@ -134,7 +126,6 @@ namespace libcmaes
     bool _sep = false; /**< whether to use diagonal covariance matrix. */
 
     // stopping criteria.
-    double _ftolerance = 1e-12; /**< tolerance of the best function values during the last 10+(30*dim/lambda) steps (TolHistFun). */ 
     bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
   };
   
