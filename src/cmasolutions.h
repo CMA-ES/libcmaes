@@ -140,6 +140,7 @@ namespace libcmaes
     int _elapsed_tell = 0;
     int _elapsed_stop = 0;
 #endif
+    double _edm = 0.0; /**< expected vertical distance to the minimum. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

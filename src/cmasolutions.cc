@@ -102,7 +102,7 @@ namespace libcmaes
     _leigenvalues = eigenvalues;
     _leigenvectors = eigenvectors;
   }
-
+  
   std::ostream& CMASolutions::print(std::ostream &out,
 				    const int &verb_level) const
   {

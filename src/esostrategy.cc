@@ -87,6 +87,38 @@ namespace libcmaes
     _nevals += evals;
     _solutions._nevals += evals;
   }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  dVec ESOStrategy<TParameters,TSolutions,TStopCriteria>::gradf(const dVec &x) const
+  {
+    if (_gfunc != nullptr)
+      return _gfunc(x.data(),_parameters._dim);
+    dVec vgradf(_parameters._dim);
+    dVec epsilon = 1e-8 * (dVec::Constant(_parameters._dim,1.0) + x.cwiseAbs());
+    for (int i=0;i<_parameters._dim;i++)
+      {
+	dVec ei1 = x;
+	ei1(i,0) += epsilon(i);
+	dVec ei2 = x;
+	ei2(i,0) -= epsilon(i);
+	double gradi = (_func(ei1.data(),_parameters._dim) - _func(ei2.data(),_parameters._dim))/(2.0*epsilon(i));
+	vgradf(i,0) = gradi;
+      }
+    return vgradf;
+  }
+  
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  double ESOStrategy<TParameters,TSolutions,TStopCriteria>::edm()
+  {
+    int n = _parameters._dim;
+    double edm = n / (10.0*(sqrt(_parameters._lambda / 4.0 + 0.5)-1));
+    dVec gradff = gradf(_solutions._xmean);
+    dMat gradmn = _solutions._leigenvectors*_solutions._leigenvalues.cwiseSqrt().asDiagonal() * gradff;
+    double gradn = _solutions._sigma * gradmn.norm();
+    edm *= gradn;
+    _solutions._edm = edm;
+    return edm;
+  }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
   Candidate ESOStrategy<TParameters,TSolutions,TStopCriteria>::best_solution() const
