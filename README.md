@@ -12,6 +12,7 @@ Current features include:
 - high-level API for simple use in external applications;
 - implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES (linear time & space complexity) along with support for IPOP and BIPOP flavors as well;
 - some operations benefit from multicores;
+- support for objective function gradient, when available;
 - a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
 
 Dependencies:
