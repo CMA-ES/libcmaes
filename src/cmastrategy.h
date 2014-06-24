@@ -90,7 +90,7 @@ namespace libcmaes
        * Note: the termination criteria code is held by _solutions._run_status
        */
       int optimize();
-
+    
       /**
        * \brief Stream the internal state of the search into an output file, 
        *        as defined in the _parameters object.

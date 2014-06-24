@@ -585,5 +585,6 @@ int main(int argc, char *argv[])
       LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
   LOG(INFO) << cmasols << std::endl;
+  LOG(INFO) << "EDM=" << cmasols._edm << " / EDM/fm=" << cmasols._edm / cmasols.best_candidate()._fvalue << std::endl;
   //cmasols.print(std::cout,1);
 }

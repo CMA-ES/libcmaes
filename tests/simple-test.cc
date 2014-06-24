@@ -43,11 +43,13 @@ int main(int argc, char *argv[])
   //FLAGS_log_prefix=false;
 #endif
 
-  int dim = 5;
-  std::vector<double> x0 = {1.0,1.0,1.0,1.0,1.0};
+  int dim = 10;
+  std::vector<double> x0 = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
   double sigma = 0.2;
   int lambda = 10;
   CMAParameters<> cmaparams(dim,&x0.front(),sigma,lambda);
   ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> cmaes(cigtab,cmaparams);
   cmaes.optimize();
+  double edm = cmaes.edm();
+  std::cerr << "EDM=" << edm << " / EDM/fm=" << edm / cmaes._solutions.best_candidate()._fvalue << std::endl;
 }

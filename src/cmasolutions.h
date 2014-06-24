@@ -98,6 +98,11 @@ namespace libcmaes
       return _candidates.size();
     }
 
+    /**
+     * \brief resets the solution object in order to restart from
+     *        the current solution with fresh covariance matrix.
+     * Note: experimental.
+     */
     void reset();
     
     /**
@@ -166,6 +171,7 @@ namespace libcmaes
 #endif
 
     std::map<int,pli> _pls; /**< profile likelihood for parameters it has been computed for. */
+    double _edm = 0.0; /**< expected vertical distance to the minimum. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

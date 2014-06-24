@@ -124,12 +124,28 @@ namespace libcmaes
      */
     void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
 
+    /**
+     * \brief starts optimization from a given solution object.
+     * @param sol the solution object to start search from.
+     */
     void start_from_solution(const TSolutions &sol)
     {
       _parameters.set_x0(sol.best_candidate()._x);
       _solutions = sol;
       _solutions.reset();
     }
+
+    /**
+     * \brief returns numerical gradient of objective function at x.
+     * @return vector of numerical gradient of the objective function at x.
+     */
+    dVec gradf(const dVec &x) const;
+    
+    /**
+     * \brief computes expected distance to minimum (EDM).
+     * @return EDM
+     */
+    double edm();
     
     // deprecated.
     Candidate best_solution() const;
