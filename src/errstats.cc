@@ -20,7 +20,7 @@
  */
 
 #include "errstats.h"
-#include <glog/logging.h>
+#include <llogging.h>
 #include <iostream>
 
 namespace libcmaes
