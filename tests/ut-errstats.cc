@@ -35,7 +35,9 @@ TEST(rearrangecmasol,reset_as_fixed)
       return val;
     };
   int dim = 10;
-  CMAParameters<> cmaparams(dim);
+  double sigma = 0.1;
+  std::vector<double> x0(dim,1.0);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
   cmaparams._quiet = true;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   CMASolutions copsols = cmasols;
@@ -60,7 +62,9 @@ TEST(optimize,optimize_pk)
       return val;
     };
   int dim = 10;
-  CMAParameters<> cmaparams(dim);
+  double sigma = 0.1;
+  std::vector<double> x0(dim,1.0);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
   cmaparams._quiet = true;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   CMASolutions cmaksols = errstats<>::optimize_reduced_pk(fsphere,cmaparams,cmasols,6,0.1);
@@ -82,7 +86,9 @@ TEST(optimize,optimize_fixed_p)
       return val;
     };
   int dim = 10;
-  CMAParameters<> cmaparams(dim);
+  double sigma = 0.1;
+  std::vector<double> x0(dim,1.0);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
   cmaparams._quiet = true;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   /*cmaparams.set_fixed_p(6,0.1);
@@ -105,8 +111,10 @@ TEST(pl,profile_likelihood_nocurve)
 	val += x[i]*x[i];
       return val;
     };
-  int dim = 10;
-  CMAParameters<> cmaparams(dim);
+   int dim = 10;
+   double sigma = 0.1;
+   std::vector<double> x0(dim,1.0);
+   CMAParameters<> cmaparams(dim,&x0.front(),sigma);
   cmaparams._quiet = true;
   cmaparams._seed = 1234;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
@@ -116,8 +124,8 @@ TEST(pl,profile_likelihood_nocurve)
   pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,false,samplesize,fup);
   std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
   std::cout << "le xm: " << le._xm << std::endl;
-  EXPECT_FLOAT_EQ(-0.28294575,le._min);
-  EXPECT_FLOAT_EQ(0.28294569,le._max);
+  EXPECT_FLOAT_EQ(-0.29779738,le._min);
+  EXPECT_FLOAT_EQ(0.29779738,le._max);
 }
 
 TEST(pl,profile_likelihood_curve)
@@ -129,8 +137,10 @@ TEST(pl,profile_likelihood_curve)
 	val += x[i]*x[i];
       return val;
     };
-  int dim = 10;
-  CMAParameters<> cmaparams(dim);
+   int dim = 10;
+   double sigma = 0.1;
+  std::vector<double> x0(dim,1.0);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
   cmaparams._quiet = true;
   cmaparams._seed = 4321;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
@@ -140,7 +150,8 @@ TEST(pl,profile_likelihood_curve)
   pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,true,samplesize,fup);
   std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
   std::cout << "le xm: " << le._xm << std::endl;
-  std::pair<double,double> mm = le.getMinMax(0.1);
-  EXPECT_FLOAT_EQ(-0.30968472,mm.first);
-  EXPECT_FLOAT_EQ(0.30968472,mm.second);
+  int mini, maxi;
+  std::pair<double,double> mm = le.getMinMax(0.1,mini,maxi);
+  EXPECT_FLOAT_EQ(-0.311827,mm.first);
+  EXPECT_FLOAT_EQ(0.311827,mm.second);
 }
