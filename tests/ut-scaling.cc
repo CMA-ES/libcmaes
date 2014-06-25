@@ -103,3 +103,25 @@ TEST(linScalingStrategy,bounds)
 	ASSERT_FLOAT_EQ(y[i],yr[i]);
     }
 }
+
+TEST(linScalingStrategy,bounds_overflow)
+{
+  int dim = 3;
+  std::vector<double> lbounds = {-std::numeric_limits<double>::max(),-std::numeric_limits<double>::max(),0.0};
+  std::vector<double> ubounds = {std::numeric_limits<double>::max(),std::numeric_limits<double>::max(),10.3818};
+  linScalingStrategy lsc(&lbounds.front(),&ubounds.front(),dim);
+
+  for (int i=0;i<10;i++)
+    {
+      dVec y = dVec::Random(dim) * 10;
+      dVec x,yr;
+      lsc.scale_to_internal(x,y);
+      lsc.scale_to_f(x,yr);
+      
+      std::cerr << "y=" << y.transpose() << std::endl;
+      std::cerr << "yr=" << yr.transpose() << std::endl;
+	
+      for (int i=0;i<dim;i++)
+	ASSERT_FLOAT_EQ(y[i],yr[i]);
+    }
+}

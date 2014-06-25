@@ -29,16 +29,6 @@
 namespace libcmaes
 {
   typedef std::function<void (const double*, double*, const int&)> TransFunc;
-
-  /*TransFunc id_genof = [](const double *ext, const double *in)
-    {
-      in = ext;
-    };
-
-  TransFunc id_phenof = [](const double *in, const double *ext)
-    {
-      ext = in;
-      };*/
   
   template <class TBoundStrategy=NoBoundStrategy,class TScalingStrategy=NoScalingStrategy>
     class GenoPheno
