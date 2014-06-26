@@ -20,6 +20,8 @@
  */
 
 #include "scaling.h"
+#include "genopheno.h"
+#include "esoptimizer.h"
 #include <gtest/gtest.h>
 #include <iostream>
 
@@ -123,5 +125,37 @@ TEST(linScalingStrategy,bounds_overflow)
 	
       for (int i=0;i<dim;i++)
 	ASSERT_FLOAT_EQ(y[i],yr[i]);
+    }
+}
+
+TEST(linScalingStrategy,with_pwqbounds)
+{
+  // dummy genotype / phenotype transform functions.
+  TransFunc genof = [](const double *ext, double *in, const int &dim)
+    {
+      for (int i=0;i<dim;i++)
+	in[i] = 1.0*ext[i];
+    };
+  
+  TransFunc phenof = [](const double *in, double *ext, const int &dim)
+    {
+      for (int i=0;i<dim;i++)
+	ext[i] = 1.0*in[i];
+    };
+
+  for (int j=0;j<100;j++)
+    {
+      int dim = 3;
+      std::vector<double> lbounds = {-2.0,-3.0,-4.0};
+      std::vector<double> ubounds = {1.0,2.0,3.0};
+      GenoPheno<pwqBoundStrategy,linScalingStrategy> gp(genof,phenof,&lbounds.front(),&ubounds.front(),dim);
+      dVec candidates = dVec::Random(dim) + dVec::Constant(dim,1.0); // in [0,2]
+      //std::cout << "candidates=" << candidates.transpose() << std::endl;
+      dVec pcand = gp.pheno(candidates);
+      dVec gcand = gp.geno(pcand);
+      //std::cout << "pcand=" << pcand.transpose() << std::endl;
+      //std::cout << "gcand=" << gcand.transpose() << std::endl;
+      for (int i=0;i<dim;i++)
+	ASSERT_FLOAT_EQ(gcand[i],candidates[i]);
     }
 }
