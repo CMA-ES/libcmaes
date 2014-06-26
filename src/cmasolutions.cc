@@ -52,6 +52,9 @@ namespace libcmaes
 	_xmean = 0.5*(dVec::Random(p._dim) + dVec::Constant(p._dim,1.0)); // scale to [0,1].
 	_xmean = _xmean.cwiseProduct(p._x0max - p._x0min) + p._x0min; // scale to bounds.
       }
+    // if scaling, need to apply to xmean.
+    if (!p._gp._scalingstrategy._id)
+      p._gp._scalingstrategy.scale_to_internal(_xmean,_xmean);
     if (static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init > 0.0)
       _sigma = static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init;
     else static_cast<CMAParameters<TGenoPheno>&>(p)._sigma_init = _sigma = 1.0/static_cast<double>(p._dim); // XXX: sqrt(trace(cov)/dim)
