@@ -45,7 +45,7 @@ namespace libcmaes
     GenoPheno(const double *lbounds, const double *ubounds, const int &dim)
     :_boundstrategy(lbounds,ubounds,dim),_id(true),_scalingstrategy(lbounds,ubounds,dim)
     {
-      if (!_scalingstrategy._id)
+      if (_scalingstrategy._id)
 	_boundstrategy = TBoundStrategy(lbounds,ubounds,dim);
       else
 	{
@@ -57,9 +57,9 @@ namespace libcmaes
 
     GenoPheno(TransFunc &genof, TransFunc &phenof,
 	      const double *lbounds, const double *ubounds, const int &dim)
-    :_boundstrategy(lbounds,ubounds),_genof(genof),_phenof(phenof),_id(false),_scalingstrategy(lbounds,ubounds,dim)
+    :_boundstrategy(lbounds,ubounds,dim),_genof(genof),_phenof(phenof),_id(false),_scalingstrategy(lbounds,ubounds,dim)
     {
-      if (!_scalingstrategy._id)
+      if (_scalingstrategy._id)
 	_boundstrategy = TBoundStrategy(lbounds,ubounds,dim);
       else
 	{
@@ -140,7 +140,7 @@ namespace libcmaes
       if (_id)
 	_boundstrategy.to_f_representation(candidate,phen);
       else _boundstrategy.to_f_representation(ncandidate,phen);
-
+      
       // apply scaling.
       if (!_scalingstrategy._id)
 	{
@@ -148,7 +148,6 @@ namespace libcmaes
 	  _scalingstrategy.scale_to_f(phen,sphen);
 	  phen = sphen;
 	}
-      
       return phen;
     }
     
@@ -163,10 +162,10 @@ namespace libcmaes
 	  _scalingstrategy.scale_to_internal(gen,candidate);
 	  ccandidate = gen;
 	}
-      
+            
       // reverse bounds.
       _boundstrategy.to_internal_representation(gen,ccandidate);
-
+      
       // apply custom geno function.
       if (!_id)
 	{
