@@ -74,10 +74,9 @@ namespace libcmaes
     private:
     dMat pheno_candidates(const dMat &candidates)
     {
-      dMat ncandidates;
       if (!_id)
 	{
-	  ncandidates = dMat(candidates.rows(),candidates.cols());
+	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
 #pragma omp parallel for if (candidates.cols() >= 100)
 	  for (int i=0;i<candidates.cols();i++)
 	    {
@@ -89,42 +88,82 @@ namespace libcmaes
 	}
       return candidates;
     }
+
+    dMat geno_candidates(const dMat &candidates)
+    {
+      if (!_id)
+	{
+	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
+#pragma omp parallel for if (candidates.cols() >= 100)
+	  for (int i=0;i<candidates.cols();i++)
+	    {
+	      dVec in = dVec(candidates.rows());
+	      _genof(candidates.col(i).data(),in.data(),candidates.rows());
+	      ncandidates.col(i) = in;
+	    }
+	  return ncandidates;
+	}
+      return candidates;
+    }
     
     public:
     dMat pheno(const dMat &candidates)
     {
       // apply custom pheno function.
       dMat ncandidates = pheno_candidates(candidates);
-      
-      // apply scaling.
-      dMat ycandidates = dMat(ncandidates.rows(),ncandidates.cols());
-      if (!_scalingstrategy._id)
-	{
-#pragma omp parallel for if (candidates.cols() >= 100)
-	  for (int i=0;i<ncandidates.cols();i++)
-	    {
-	      dVec xcoli = ncandidates.col(i);
-	      dVec ycoli;
-	      _scalingstrategy.scale_to_f(xcoli,ycoli);
-	      ycandidates.col(i) = ycoli;
-	    }
-	}
 
       // apply bounds.
-#pragma omp parallel for if (candidates.cols() >= 100)
-      for (int i=0;i<candidates.cols();i++)
+#pragma omp parallel for if (ncandidates.cols() >= 100)
+      for (int i=0;i<ncandidates.cols();i++)
 	{
-	  dVec xcoli;
-	  if (_scalingstrategy._id)
-	    xcoli = ncandidates.col(i);
-	  else xcoli = ycandidates.col(i);
 	  dVec ycoli;
-	  _boundstrategy.to_f_representation(xcoli,ycoli);
-	  ycandidates.col(i) = ycoli;
+	  _boundstrategy.to_f_representation(ncandidates.col(i),ycoli);
+	  ncandidates.col(i) = ycoli;
 	}
-      return ycandidates;
+      
+      // apply scaling.
+      if (!_scalingstrategy._id)
+	{
+#pragma omp parallel for if (ncandidates.cols() >= 100)
+	  for (int i=0;i<ncandidates.cols();i++)
+	    {
+	      dVec ycoli;
+	      _scalingstrategy.scale_to_f(ncandidates.col(i),ycoli);
+	      ncandidates.col(i) = ycoli;
+	    }
+	}
+      return ncandidates;
     }
 
+    dMat geno(const dMat &candidates)
+    {
+      // reverse scaling.
+      dMat ncandidates = candidates;
+      if (!_scalingstrategy._id)
+	{
+#pragma omp parallel for if (ncandidates.cols() >= 100)
+	  for (int i=0;i<ncandidates.cols();i++)
+	    {
+	      dVec ycoli;
+	      _scalingstrategy.scale_to_internal(ycoli,ncandidates.col(i));
+	      ncandidates.col(i) = ycoli;
+	    }
+	}
+      
+      // reverse bounds.
+#pragma omp parallel for if (ncandidates.cols() >= 100)
+      for (int i=0;i<ncandidates.cols();i++)
+	{
+	  dVec ycoli;
+	  _boundstrategy.to_internal_representation(ycoli,ncandidates.col(i));
+	  ncandidates.col(i) = ycoli;
+	}
+      
+      // apply custom geno function.
+      ncandidates = geno_candidates(ncandidates);
+      return ncandidates;
+    }
+    
     dVec pheno(const dVec &candidate)
     {
       // apply custom pheno function.
@@ -162,7 +201,7 @@ namespace libcmaes
 	  _scalingstrategy.scale_to_internal(gen,candidate);
 	  ccandidate = gen;
 	}
-            
+      
       // reverse bounds.
       _boundstrategy.to_internal_representation(gen,ccandidate);
       
