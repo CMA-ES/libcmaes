@@ -208,7 +208,7 @@ namespace libcmaes
 	eostrat<TGenoPheno>::_solutions._elapsed_last_iter = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 	tstart = std::chrono::system_clock::now();
       }
-    eostrat<TGenoPheno>::edm();
+    //eostrat<TGenoPheno>::edm();
     if (eostrat<TGenoPheno>::_solutions._run_status >= 0)
       return OPTI_SUCCESS;
     else return OPTI_ERR_TERMINATION; // exact termination code is in eostrat<TGenoPheno>::_solutions._run_status.
