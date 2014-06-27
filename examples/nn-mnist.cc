@@ -94,6 +94,11 @@ int load_mnist_dataset(const std::string &filename,
 	}
       ++ne;
     }
+  if (ne < trn)
+    {
+      features.resize(784,ne);
+      labels.resize(10,ne);
+    }
   fin.close();
   return 0;
 }
@@ -208,6 +213,7 @@ DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 DEFINE_int32(mbatch,-1,"size of minibatch");
 DEFINE_int32(seed,0,"seed for es");
+DEFINE_string(testf,"","test file if different than training file");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -228,6 +234,17 @@ int main(int argc, char *argv[])
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
       exit(1);
     }
+  if (FLAGS_testf != "")
+    {
+      dMat ttfeatures, ttlabels; // dummy.
+      int errt = load_mnist_dataset(FLAGS_testf,FLAGS_n,false,gtfeatures,gtlabels,ttfeatures,ttlabels);
+      if (errt)
+	{
+	  std::cout << "error loading test dataset " << FLAGS_testf << std::endl;
+	  exit(1);
+	}
+    }
+  
   gunif = std::uniform_int_distribution<>(0,gfeatures.cols()-1);
   if (FLAGS_check_grad)
     {
@@ -273,6 +290,6 @@ int main(int argc, char *argv[])
   testing(cmasols,true);
 
   // testing on testing set, if any.
-  if (FLAGS_testp)
+  if (FLAGS_testp || FLAGS_testf != "")
     testing(cmasols,false);
 }
