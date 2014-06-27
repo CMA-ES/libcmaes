@@ -49,13 +49,13 @@ namespace libcmaes
     ~NoScalingStrategy() {}
 
     void scale_to_internal(dVec &x,
-			   const dVec &y)
+			   const dVec &y) const
     {
       x = y;
     }
 
     void scale_to_f(const dVec &x,
-		    dVec &y)
+		    dVec &y) const
     {
       y = x;
     }
@@ -104,13 +104,13 @@ namespace libcmaes
     }
     
     void scale_to_internal(dVec &x,
-			   const dVec &y)
+			   const dVec &y) const
     {
       x = y.cwiseProduct(_scaling) + _shift;
     }
 
     void scale_to_f(const dVec &x,
-		    dVec &y)
+		    dVec &y) const
     {
       y = x - _shift;
       y = y.cwiseQuotient(_scaling);
