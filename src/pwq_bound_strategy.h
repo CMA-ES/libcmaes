@@ -34,12 +34,12 @@ namespace libcmaes
     ~pwqBoundStrategy();
 
     void to_f_representation(const dVec &x,
-			     dVec &y);
+			     dVec &y) const;
     
     void to_internal_representation(dVec &x,
-				    const dVec &y);
+				    const dVec &y) const;
 
-    void shift_into_feasible(const dVec &x, dVec &x_s);
+    void shift_into_feasible(const dVec &x, dVec &x_s) const;
 
     double getLBound(const int &k) const { return _lbounds[k]; }
     double getUBound(const int &k) const { return _ubounds[k]; }
