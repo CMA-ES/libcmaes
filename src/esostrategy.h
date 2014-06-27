@@ -113,6 +113,18 @@ namespace libcmaes
      * @param pfunc a progress function
      */
     void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
+
+    /**
+     * \brief returns numerical gradient of objective function at x.
+     * @return vector of numerical gradient of the objective function at x.
+     */
+    dVec gradf(const dVec &x) const;
+    
+    /**
+     * \brief computes expected distance to minimum (EDM).
+     * @return EDM
+     */
+    double edm();
     
     // deprecated.
     Candidate best_solution() const;

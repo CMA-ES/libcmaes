@@ -20,6 +20,8 @@
  */
 
 #include "scaling.h"
+#include "genopheno.h"
+#include "esoptimizer.h"
 #include <gtest/gtest.h>
 #include <iostream>
 
@@ -101,5 +103,93 @@ TEST(linScalingStrategy,bounds)
       
       for (int i=0;i<dim;i++)
 	ASSERT_FLOAT_EQ(y[i],yr[i]);
+    }
+}
+
+TEST(linScalingStrategy,bounds_overflow)
+{
+  int dim = 3;
+  std::vector<double> lbounds = {-std::numeric_limits<double>::max(),-std::numeric_limits<double>::max(),0.0};
+  std::vector<double> ubounds = {std::numeric_limits<double>::max(),std::numeric_limits<double>::max(),10.3818};
+  linScalingStrategy lsc(&lbounds.front(),&ubounds.front(),dim);
+
+  for (int i=0;i<10;i++)
+    {
+      dVec y = dVec::Random(dim) * 10;
+      dVec x,yr;
+      lsc.scale_to_internal(x,y);
+      lsc.scale_to_f(x,yr);
+      
+      std::cerr << "y=" << y.transpose() << std::endl;
+      std::cerr << "yr=" << yr.transpose() << std::endl;
+	
+      for (int i=0;i<dim;i++)
+	ASSERT_FLOAT_EQ(y[i],yr[i]);
+    }
+}
+
+TEST(linScalingStrategy,with_pwqbounds)
+{
+  // dummy genotype / phenotype transform functions.
+  TransFunc genof = [](const double *ext, double *in, const int &dim)
+    {
+      for (int i=0;i<dim;i++)
+	in[i] = 2.0*ext[i];
+    };
+  
+  TransFunc phenof = [](const double *in, double *ext, const int &dim)
+    {
+      for (int i=0;i<dim;i++)
+	ext[i] = 0.5*in[i];
+    };
+
+  for (int j=0;j<100;j++)
+    {
+      int dim = 3;
+      std::vector<double> lbounds = {-2.0,-3.0,-4.0};
+      std::vector<double> ubounds = {1.0,2.0,3.0};
+      GenoPheno<pwqBoundStrategy,linScalingStrategy> gp(genof,phenof,&lbounds.front(),&ubounds.front(),dim);
+      dVec candidates = dVec::Random(dim) + dVec::Constant(dim,1.0); // in [0,2]
+      //std::cout << "candidates=" << candidates.transpose() << std::endl;
+      dVec pcand = gp.pheno(candidates);
+      dVec gcand = gp.geno(pcand);
+      //std::cout << "pcand=" << pcand.transpose() << std::endl;
+      //std::cout << "gcand=" << gcand.transpose() << std::endl;
+      for (int i=0;i<dim;i++)
+	ASSERT_FLOAT_EQ(gcand[i],candidates[i]);
+    }
+}
+
+TEST(linScalingStrategy,vectorized_with_pwqbounds)
+{
+   // dummy genotype / phenotype transform functions.
+  TransFunc genof = [](const double *ext, double *in, const int &dim)
+    {
+      for (int i=0;i<dim;i++)
+	in[i] = 2.0*ext[i];
+    };
+  
+  TransFunc phenof = [](const double *in, double *ext, const int &dim)
+    {
+      for (int i=0;i<dim;i++)
+	ext[i] = 0.5*in[i];
+    };
+
+  for (int j=0;j<100;j++)
+    {
+      int dim = 3;
+      int lambda = 10;
+      std::vector<double> lbounds = {-2.0,-3.0,-4.0};
+      std::vector<double> ubounds = {1.0,2.0,3.0};
+      GenoPheno<pwqBoundStrategy,linScalingStrategy> gp(genof,phenof,&lbounds.front(),&ubounds.front(),dim);
+      dMat candidates = dMat::Random(dim,lambda) + dMat::Constant(dim,lambda,1.0); // in [0,2]
+      //std::cout << "candidates=" << candidates << std::endl;
+      dMat pcand = gp.pheno(candidates);
+      dMat gcand = gp.geno(pcand);
+      //std::cout << "pcand=" << pcand << std::endl;
+      //std::cout << "gcand=" << gcand << std::endl;
+      for (int i=0;i<dim;i++)
+	for (int k=0;k<lambda;k++)
+	  ASSERT_FLOAT_EQ(gcand(i,k),candidates(i,k));
     }
 }

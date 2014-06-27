@@ -28,6 +28,7 @@
 #define LSCALING_H
 
 #include "eo_matrix.h"
+#include <limits>
 #include <iostream>
 
 namespace libcmaes
@@ -48,13 +49,13 @@ namespace libcmaes
     ~NoScalingStrategy() {}
 
     void scale_to_internal(dVec &x,
-			   const dVec &y)
+			   const dVec &y) const
     {
       x = y;
     }
 
     void scale_to_f(const dVec &x,
-		    dVec &y)
+		    dVec &y) const
     {
       y = x;
     }
@@ -75,7 +76,7 @@ namespace libcmaes
     linScalingStrategy(const double *lbounds,
 		       const double *ubounds,
 		       const int &dim)
-      :_scaling(dVec::Constant(dim,1.0)),_shift(dVec::Zero(dim)),_id(false)
+      :_id(false)
       {
 	compute_scaling(lbounds,ubounds,dim);
       }
@@ -93,21 +94,23 @@ namespace libcmaes
     {
       dVec vlbounds = Map<dVec>(const_cast<double*>(lbounds),dim);
       dVec vubounds = Map<dVec>(const_cast<double*>(ubounds),dim);
-      _scaling = (dVec::Constant(dim,_intmax)-dVec::Constant(dim,_intmin)).cwiseQuotient(vubounds-vlbounds);
+      dVec denom = vubounds-vlbounds;
+      denom = denom.cwiseMin(std::numeric_limits<double>::max()); // protects against overflow
+      _scaling = (dVec::Constant(dim,_intmax)-dVec::Constant(dim,_intmin)).cwiseQuotient(denom);
       _shift = dVec::Constant(dim,_intmax) - _scaling.cwiseProduct(vubounds);
 
-      std::cout << "scaling=" << _scaling.transpose() << std::endl;
-      std::cout << "shift=" << _shift.transpose() << std::endl;
+      /*std::cout << "scaling=" << _scaling.transpose() << std::endl;
+	std::cout << "shift=" << _shift.transpose() << std::endl;*/
     }
     
     void scale_to_internal(dVec &x,
-			   const dVec &y)
+			   const dVec &y) const
     {
       x = y.cwiseProduct(_scaling) + _shift;
     }
 
     void scale_to_f(const dVec &x,
-		    dVec &y)
+		    dVec &y) const
     {
       y = x - _shift;
       y = y.cwiseQuotient(_scaling);

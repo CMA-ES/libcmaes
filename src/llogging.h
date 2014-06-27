@@ -12,6 +12,7 @@
 namespace libcmaes
 {
 #define INFO "INFO"
+#define WARNING "WARNING"
 #define ERROR "ERROR"
 #define FATAL "FATAL"
 

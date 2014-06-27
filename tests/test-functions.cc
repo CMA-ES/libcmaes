@@ -540,9 +540,15 @@ int main(int argc, char *argv[])
 	cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
       else cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy,linScalingStrategy>>();
     }
+  else
+    {
+      LOG(ERROR) << "Unknown boundtype " << FLAGS_boundtype << std::endl;
+      exit(-1);
+    }
   if (cmasols._run_status < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
   LOG(INFO) << cmasols << std::endl;
+  LOG(INFO) << "EDM=" << cmasols._edm << " / EDM/fm=" << cmasols._edm / cmasols.best_candidate()._fvalue << std::endl;
   //cmasols.print(std::cout,1);
  }
