@@ -259,7 +259,7 @@ DEFINE_bool(check_grad,false,"checks on gradient correctness via back propagatio
 DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) along with black-box optimization");
 DEFINE_double(lambda,-1,"number of offsprings at each generation");
 DEFINE_double(sigma0,1.0,"initial value for step-size sigma (-1.0 for automated value)");
-DEFINE_int32(hlayer,100,"number of neurons in the hidden layer");
+DEFINE_string(hlayers,"100","comma separated list of number of neurons per hidden layer");
 DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 
@@ -267,18 +267,26 @@ DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
-  if (FLAGS_check_grad)
+
+    if (FLAGS_check_grad)
     {
       FLAGS_n = 10;
-      FLAGS_hlayer = 10;
+      FLAGS_hlayers = "10";
     }
-
+  
+  std::vector<std::string> hlayers_str;
+  std::vector<int> hlayers;
+  tokenize(FLAGS_hlayers,hlayers_str,",");
+  for (size_t i=0;i<hlayers_str.size();i++)
+    hlayers.push_back(atoi(hlayers_str.at(i).c_str()));
+  
   int err = load_higgs_dataset(FLAGS_fdata,FLAGS_n,FLAGS_testp,gfeatures,glabels,gweights,gtfeatures,gtlabels,gtweights);
   if (err)
     {
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
       exit(1);
     }
+  
   if (FLAGS_check_grad)
     {
       // we check on random features, but we keep the original labels.
@@ -292,7 +300,10 @@ int main(int argc, char *argv[])
     std::cout << "glabels: " << glabels << std::endl;*/
   //debug
   
-  glsizes = {30, FLAGS_hlayer, 2};
+  glsizes.push_back(30);
+  for (size_t i=0;i<hlayers.size();i++)
+    glsizes.push_back(hlayers.at(i));
+  glsizes.push_back(2);
   ghiggsnn = nn(glsizes,gsigmoid,FLAGS_check_grad || FLAGS_with_gradient);
 
   if (FLAGS_check_grad)
