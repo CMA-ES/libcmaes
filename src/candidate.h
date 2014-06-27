@@ -23,6 +23,7 @@
 #define CANDIDATE_H
 
 #include "eo_matrix.h"
+#include "cmaparameters.h"
 
 namespace libcmaes
 {
@@ -37,7 +38,7 @@ namespace libcmaes
      */
   Candidate():
     _fvalue(0.0) {};
-
+    
     /**
      * \brief constructor.
      * @param fvalue function value
@@ -47,10 +48,24 @@ namespace libcmaes
 	    const dVec &x)
     :_fvalue(fvalue),_x(x)
     {};
+
   ~Candidate() {};
-    
-    double _fvalue; /**< function value. */
-    dVec _x; /**< function parameter vector. */
+
+  double get_fvalue() const { return _fvalue; }
+
+  dVec get_x_dvec() const { return _x; }
+
+  const double* get_x() const { return _x.data(); }
+
+  template<class TGenoPheno>
+    dVec get_x_pheno(const CMAParameters<TGenoPheno> &p) const
+    {
+      dVec gx = p._gp.pheno(_x);
+      return gx;
+    }
+  
+  double _fvalue; /**< function value. */
+  dVec _x; /**< function parameter vector. */
   };
 
 }
