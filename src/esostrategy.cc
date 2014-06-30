@@ -112,7 +112,7 @@ namespace libcmaes
   {
     int n = _parameters._dim;
     double edm = n / (10.0*(sqrt(_parameters._lambda / 4.0 + 0.5)-1));
-    dVec gradff = gradf(_solutions._xmean);
+    dVec gradff = gradf(_parameters._gp.pheno(_solutions._xmean));
     dMat gradmn;
     if (!_parameters._sep)
       gradmn = _solutions._leigenvectors*_solutions._leigenvalues.cwiseSqrt().asDiagonal() * gradff;
