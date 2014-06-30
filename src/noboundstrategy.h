@@ -31,12 +31,16 @@ namespace libcmaes
   {
   public:
     NoBoundStrategy(const double *lbounds=nullptr,const double *ubounds=nullptr,const int dim=0) {}; // empty constructor with signature.
+    NoBoundStrategy(const double *lbounds,const double *ubounds,
+		    const double *plbounds,const double *pubounds,const int dim=0) {}; // empty constructor with signature.
     ~NoBoundStrategy() {};
 
     void to_f_representation(const dVec &x, dVec &y) const {};
 
     double getLBound(const int &k) const { return -std::numeric_limits<double>::max(); }
     double getUBound(const int &k) const { return std::numeric_limits<double>::max(); }
+    double getPhenoLBound(const int &k) const { return -std::numeric_limits<double>::max(); }
+    double getPhenoUBound(const int &k) const { return std::numeric_limits<double>::max(); }
   };
 }
 

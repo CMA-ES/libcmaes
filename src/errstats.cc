@@ -38,12 +38,14 @@ namespace libcmaes
   {
     dVec x = cmasol.best_candidate()._x;
     double minfvalue = cmasol.best_candidate()._fvalue;
-
+    dVec phenox = parameters._gp.pheno(x);
+    
     //debug
     //std::cout << "xk=" << x[k] << " / minfvalue=" << minfvalue << std::endl;
+    //std::cout << "phenox=" << phenox << std::endl;
     //debug
 
-    pli le(k,samplesize,parameters._dim,x,minfvalue,fup,delta);
+    pli le(k,samplesize,parameters._dim,parameters._gp.pheno(x),minfvalue,fup,delta);
     
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta,curve); // positive direction
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta,curve);  // negative direction
@@ -101,8 +103,9 @@ namespace libcmaes
 	  }
 	    
 	// store points.
+	dVec phenobx = parameters._gp.pheno(citsol.best_candidate()._x);
 	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
-	le._xm.row(samplesize+sign*(1+i)) = citsol.best_candidate()._x.transpose();
+	le._xm.row(samplesize+sign*(1+i)) = phenobx.transpose();
 	le._err[samplesize+sign*(1+i)] = ncitsol._run_status;
 	
 	if (!curve && iterend)
@@ -111,7 +114,7 @@ namespace libcmaes
 	    for (int j=i+1;j<samplesize;j++)
 	      {
 		le._fvaluem[samplesize+sign*(1+j)] = citsol.best_candidate()._fvalue;
-		le._xm.row(samplesize+sign*(1+j)) = citsol.best_candidate()._x.transpose();
+		le._xm.row(samplesize+sign*(1+j)) = phenobx.transpose();
 	      }
 	    return;
 	  }
@@ -133,23 +136,27 @@ namespace libcmaes
     double threshold = minfvalue + fup;
     dVec xtmp = x;
     xtmp[k] += dxk;
-    double fvalue = func(xtmp.data(),xtmp.size());
+    double fvalue = func(parameters._gp.pheno(xtmp).data(),xtmp.size());
     double fdiff = fvalue - minfvalue;
-
-    //debug
-    //std::cout << "threshold=" << threshold << " / fdiff=" << fdiff << " / fabs=" << fabs(fvalue-fup) << " / fdelta=" << fdelta << std::endl;
-    //debug
+    dVec phenoxtmp = parameters._gp.pheno(xtmp);
     
+    //debug
+    /*std::cout << "xtmp=" << xtmp.transpose() << std::endl;
+    std::cout << "phenoxtmp=" << phenoxtmp.transpose() << std::endl;
+    std::cout << "dxk=" << dxk << " / threshold=" << threshold << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / fabs=" << fabs(fvalue-fup) << " / fdelta=" << fdelta << std::endl;*/
+    //debug
+
     if (fdiff > threshold * fdiff_relative_increase) // decrease dxk
       {
 	while((curve || fabs(fvalue-fup)>fdelta)
 	      && fdiff > threshold * fdiff_relative_increase
-	      && xtmp[k] >= parameters._gp._boundstrategy.getLBound(k))
+	      && phenoxtmp[k] >= parameters._gp._boundstrategy.getPhenoLBound(k))
 	  {
-	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << xtmp[k] << " / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
+	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << phenoxtmp[k] << " / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
 	    dxk /= 2.0;
 	    xtmp[k] = x[k] + dxk;
-	    fvalue = func(xtmp.data(),xtmp.size());
+	    phenoxtmp = parameters._gp.pheno(xtmp);
+	    fvalue = func(phenoxtmp.data(),xtmp.size());
 	    fdiff = fvalue - minfvalue;
 	  }
       }
@@ -157,18 +164,20 @@ namespace libcmaes
       {
 	while ((curve || fabs(fvalue-fup)>fdelta)
 	       && fdiff < threshold * fdiff_relative_increase
-	       && xtmp[k] <= parameters._gp._boundstrategy.getUBound(k))
+	       && phenoxtmp[k] <= parameters._gp._boundstrategy.getPhenoUBound(k))
 	  {
-	    //std::cerr << "fvalue= " << fvalue << " / xtmpk=" << xtmp[k] << " / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
+	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << phenoxtmp[k] << " / ubound=" << parameters._gp._boundstrategy.getUBound(k) << std::endl;
 	    dxk *= 2.0;
 	    xtmp[k] = x[k] + dxk;
-	    fvalue = func(xtmp.data(),xtmp.size());
+	    phenoxtmp =parameters._gp.pheno(xtmp);
+	    fvalue = func(phenoxtmp.data(),xtmp.size());
 	    fdiff = fvalue - minfvalue;
 	  }
 	dxk /= 2.0;
       }
-    x[k] += dxk; // set value.
-    return (fabs(fvalue-fup) < fdelta || x[k] < parameters._gp._boundstrategy.getLBound(k) || x[k] > parameters._gp._boundstrategy.getUBound(k));
+    x[k] = xtmp[k]; // set value.
+    dVec phenox = parameters._gp.pheno(x);
+    return (fabs(fvalue-fup) < fdelta || phenox[k] < parameters._gp._boundstrategy.getPhenoLBound(k) || phenox[k] > parameters._gp._boundstrategy.getPhenoUBound(k));
   }
 
   template <class TGenoPheno>
