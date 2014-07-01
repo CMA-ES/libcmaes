@@ -40,7 +40,7 @@ namespace libcmaes
       {
 	_fvaluem[samplesize] = fvalue;
 	_xm.row(samplesize) = xm.transpose();
-	_err[samplesize] = 0; // should be current sol status...
+	_err[samplesize] = 1; // should be current sol status...
       }
     ~pli() {};
 

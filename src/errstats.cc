@@ -46,10 +46,10 @@ namespace libcmaes
     //debug
 
     pli le(k,samplesize,parameters._dim,parameters._gp.pheno(x),minfvalue,fup,delta);
-    
+
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta,curve); // positive direction
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta,curve);  // negative direction
-
+    
     le.setErrMinMax();
     cmasol._pls.insert(std::pair<int,pli>(k,le));
     return le;
@@ -77,7 +77,7 @@ namespace libcmaes
       {
 	// get a new xk point.
 	bool iterend = errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,curve,x,dxk);
-	
+		
 	//debug
 	//std::cout << "new xk point: " << x.transpose() << std::endl;
 	//debug
@@ -101,7 +101,7 @@ namespace libcmaes
 	    x = citsol.best_candidate()._x;
 	    minfvalue = citsol.best_candidate()._fvalue;
 	  }
-	    
+	
 	// store points.
 	dVec phenobx = parameters._gp.pheno(citsol.best_candidate()._x);
 	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
@@ -115,6 +115,7 @@ namespace libcmaes
 	      {
 		le._fvaluem[samplesize+sign*(1+j)] = citsol.best_candidate()._fvalue;
 		le._xm.row(samplesize+sign*(1+j)) = phenobx.transpose();
+		le._err[samplesize+sign*(1+j)] = ncitsol._run_status;
 	      }
 	    return;
 	  }
