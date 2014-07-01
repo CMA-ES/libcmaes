@@ -257,11 +257,15 @@ DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
 DEFINE_string(fplot,"","output file for optimization log");
 DEFINE_bool(check_grad,false,"checks on gradient correctness via back propagation");
 DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) along with black-box optimization");
-DEFINE_double(lambda,-1,"number of offsprings at each generation");
+DEFINE_int32(lambda,-1,"number of offsprings at each generation");
 DEFINE_double(sigma0,1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_string(hlayers,"100","comma separated list of number of neurons per hidden layer");
 DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
+DEFINE_string(alg,"sepacmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
+DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
+DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
+DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -314,20 +318,54 @@ int main(int argc, char *argv[])
       exit(1);
     }
 
-  std::cout << "max ams=" << -max_ams(FLAGS_n) << std::endl;
+  std::cout << "max ams=" << -max_ams(gfeatures.cols()) << std::endl;
   
   // training.
-  std::vector<double> x0(ghiggsnn._allparams_dim,-std::numeric_limits<double>::max());
-  CMAParameters<> cmaparams(ghiggsnn._allparams_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+  double lbounds[ghiggsnn._allparams_dim];
+  double ubounds[ghiggsnn._allparams_dim];
+  for (size_t i=0;i<ghiggsnn._allparams_dim;i++)
+    {
+      lbounds[i] = FLAGS_lbound;
+      ubounds[i] = FLAGS_ubound;
+    }
+  GenoPheno<pwqBoundStrategy,NoScalingStrategy> gp(lbounds,ubounds,ghiggsnn._allparams_dim);
+  std::vector<double> x0(ghiggsnn._allparams_dim,FLAGS_x0);
+  CMAParameters<GenoPheno<pwqBoundStrategy,NoScalingStrategy>> cmaparams(ghiggsnn._allparams_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,0,gp);
   cmaparams.set_max_iter(FLAGS_maxsolveiter);
   cmaparams._fplot = FLAGS_fplot;
-  cmaparams._algo = sepaCMAES;
+  if (FLAGS_alg == "cmaes")
+    cmaparams._algo = CMAES_DEFAULT;
+  else if (FLAGS_alg == "ipop")
+    cmaparams._algo = IPOP_CMAES;
+  else if (FLAGS_alg == "bipop")
+    cmaparams._algo = BIPOP_CMAES;
+  else if (FLAGS_alg == "acmaes")
+    cmaparams._algo = aCMAES;
+  else if (FLAGS_alg == "aipop")
+    cmaparams._algo = aIPOP_CMAES;
+  else if (FLAGS_alg == "abipop")
+    cmaparams._algo = aBIPOP_CMAES;
+  else if (FLAGS_alg == "sepcmaes")
+    cmaparams._algo = sepCMAES;
+  else if (FLAGS_alg == "sepipop")
+    cmaparams._algo = sepIPOP_CMAES;
+  else if (FLAGS_alg == "sepbipop")
+    cmaparams._algo = sepBIPOP_CMAES;
+  else if (FLAGS_alg == "sepacmaes")
+    cmaparams._algo = sepaCMAES;
+  else if (FLAGS_alg == "sepaipop")
+    cmaparams._algo = sepaIPOP_CMAES;
+  else if (FLAGS_alg == "sepabipop")
+    cmaparams._algo = sepaBIPOP_CMAES;
+  else
+    {
+      std::cout << "unknown algorithm flavor " << FLAGS_alg << std::endl;
+      exit(-1);
+    }
   //cmaparams.set_ftarget(1e-8);
   cmaparams._mt_feval = true;
   CMASolutions cmasols;
-  if (!FLAGS_with_gradient)
-    cmasols = cmaes<>(nn_of,cmaparams);
-  else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn);
+  cmasols = cmaes<GenoPheno<pwqBoundStrategy,NoScalingStrategy>>(nn_of,cmaparams);
   std::cout << "status: " << cmasols._run_status << std::endl;
 
   // testing on training set
