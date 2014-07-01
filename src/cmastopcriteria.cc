@@ -264,7 +264,7 @@ namespace libcmaes
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
     const_cast<CMASolutions&>(cmas)._elapsed_stop = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 #endif
-    return 0;
+    return CONT;
   }
 
   template class CMAStopCriteria<GenoPheno<NoBoundStrategy>>;

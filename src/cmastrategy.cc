@@ -202,7 +202,7 @@ namespace libcmaes
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       plot();
     
-    if ((eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != 0)
+    if ((eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != CONT)
       return true;
     else return false;
   }
