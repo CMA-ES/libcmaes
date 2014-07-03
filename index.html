@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Libcmaes by beniz</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Libcmaes</h1>
+        <h2>libcmaes is a multithreaded C++11 library for high performance blackbox stochastic optimization using the CMA-ES algorithm for Covariance Matrix Adaptation Evolution Strategy</h2>
+        <a href="https://github.com/beniz/libcmaes" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h2>
+<a name="libcmaes" class="anchor" href="#libcmaes"><span class="octicon octicon-link"></span></a>libcmaes</h2>
+
+<p>libcmaes is a multithreaded C++ implementation of the CMA-ES algorithm for stochastic optimization of nonlinear 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.</p>
+
+<p>Over the past decade, both the original CMA-ES and its improved flavors have proven very effective in optimizing functions when no gradient is available. Typically, the algorithm does find the minimum value of an objective function in a minimal number of function calls, compared to other methods. For a full report of recent results, see (3).</p>
+
+<p>CMA-ES is mostly the work of Nikolaus Hansen (4) and a few others. Other implementations can be found in (5).</p>
+
+<p>Main functionalities:
+At the moment, the library implements a vanilla version of CMA-ES (1).
+Current features include:</p>
+
+<ul>
+<li>high-level API for simple use in external applications;</li>
+<li>implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES (linear time &amp; space complexity) along with support for IPOP and BIPOP flavors as well;</li>
+<li>some operations benefit from multicores;</li>
+<li>support for objective function gradient, when available;</li>
+<li>a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.</li>
+</ul><p>Dependencies:</p>
+
+<ul>
+<li>
+<a href="http://eigen.tuxfamily.org/index.php?title=Main_Page">eigen</a> for all matrix operations;</li>
+<li>
+<a href="https://code.google.com/p/google-glog/">glog</a> for logging events and debug (optional);</li>
+<li>
+<a href="https://code.google.com/p/gflags/">gflags</a> for command line parsing (optional);</li>
+<li>
+<a href="https://code.google.com/p/googletest/">gtest</a> for unit testing (optional).</li>
+</ul><p>Implementation:
+The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithms described in (2) and (6).</p>
+
+<h3>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h3>
+
+<p>libcmaes is designed and implemented by Emmanuel Benazera on behalf of Inria Saclay / Research group TAO / LAL Appstats.</p>
+
+<h3>
+<a name="build" class="anchor" href="#build"><span class="octicon octicon-link"></span></a>Build</h3>
+
+<p>Beware of dependencies, typically on Debian/Ubuntu Linux, do:</p>
+
+<pre><code>sudo apt-get install libgoogle-glog-dev libgflags-dev libeigen3-dev
+</code></pre>
+
+<p>For compiling with basic options enabled:</p>
+
+<pre><code>./autogen.sh
+./configure
+make
+</code></pre>
+
+<h3>
+<a name="run-examples" class="anchor" href="#run-examples"><span class="octicon octicon-link"></span></a>Run examples</h3>
+
+<pre><code>cd tests
+./test_functions --dim 30 --lambda 100 --max_iter 120 --fname fsphere
+</code></pre>
+
+<p>to minimize the sphere function in 30D with 100 offsprings per generation,</p>
+
+<pre><code>./test_functions --dim 20 --lambda 100 --max_iter 1000 --fname rosenbrock
+</code></pre>
+
+<p>to minimize the Rosenbrock function in 20D with 100 offsprings. To see available function, do</p>
+
+<pre><code>./test_functions --list
+</code></pre>
+
+<p>to plot results, use a file output and then the included Gnuplot script</p>
+
+<pre><code>./test_functions --fname rastrigin --dim 10 --lambda 200 --max_iter 130 --fplot out.dat -sigma0 5 -x0 5 -seed 5489
+gnuplot -e "filename='out.dat'" cma_multiplt.dem
+</code></pre>
+
+<p>to plot results with matplotlib instead</p>
+
+<pre><code>python cma_multiplt.py out.dat
+</code></pre>
+
+<p>to run a check across a range of classical single-objective optimization functions:</p>
+
+<pre><code>./test_functions --all
+</code></pre>
+
+<p>for help, do</p>
+
+<pre><code>./test_functions --help
+</code></pre>
+
+<h3>
+<a name="sample-code" class="anchor" href="#sample-code"><span class="octicon octicon-link"></span></a>Sample code</h3>
+
+<div class="highlight highlight-C++"><pre><span class="cp">#include "cmaes.h"</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">libcmaes</span><span class="p">;</span>
+
+<span class="n">FitFunc</span> <span class="n">fsphere</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">double</span> <span class="n">val</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="k">return</span> <span class="n">val</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span>
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// problem dimensions.                                                                    </span>
+  <span class="c1">//int lambda = 100; // offsprings at each generation.</span>
+  <span class="c1">//CMAParameters cmaparams(dim,lambda);</span>
+  <span class="n">CMAParameters</span><span class="o">&lt;&gt;</span> <span class="n">cmaparams</span><span class="p">(</span><span class="n">dim</span><span class="p">);</span>
+  <span class="c1">//cmaparams._algo = BIPOP_CMAES;                                                                        </span>
+  <span class="n">CMASolutions</span> <span class="n">cmasols</span> <span class="o">=</span> <span class="n">cmaes</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">fsphere</span><span class="p">,</span><span class="n">cmaparams</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"best solution: "</span> <span class="o">&lt;&lt;</span> <span class="n">cmasols</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"optimization took "</span> <span class="o">&lt;&lt;</span> <span class="n">cmasols</span><span class="p">.</span><span class="n">_elapsed_time</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="o">&lt;&lt;</span> <span class="s">" seconds</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">cmasols</span><span class="p">.</span><span class="n">_run_status</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="practical-hints" class="anchor" href="#practical-hints"><span class="octicon octicon-link"></span></a>Practical hints</h3>
+
+<p>CMA-ES requires two components from the user:</p>
+
+<ul>
+<li>the initial start point x0;</li>
+<li>the initial value for sigma, the so-called step-size or error guess.</li>
+</ul><p>In short: the optimum that is looked after should better not be far away from the interval [x0 - sigma0, x0 + sigma0] in each dimension, where distance is defined by sigma0.</p>
+
+<p>See <a href="https://www.lri.fr/%7Ehansen/cmaes_inmatlab.html#practical">https://www.lri.fr/~hansen/cmaes_inmatlab.html#practical</a> for more detailed useful advices using CMA-ES.</p>
+
+<h3>
+<a name="run-bbob-2013-black-box-optimization-benchmark" class="anchor" href="#run-bbob-2013-black-box-optimization-benchmark"><span class="octicon octicon-link"></span></a>Run BBOB 2013 Black-Box Optimization Benchmark</h3>
+
+<p>There's an install script in the repository. Do:</p>
+
+<pre><code>cd tests
+./bbobsetup.sh
+</code></pre>
+
+<p>you can now benchmark any of the implemented flavors of CMA-ES (beware, this make take a while, ~hours):</p>
+
+<pre><code>./bbobexperiment -alg bipop
+</code></pre>
+
+<p>for the command above, results will be in repository bipop_bbob
+See (7) for more information and details.</p>
+
+<h3>
+<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References</h3>
+
+<ul>
+<li>(1) Hansen, N. and A. Ostermeier (2001). Completely Derandomized Self-Adaptation in Evolution Strategies. Evolutionary Computation, 9(2), pp. 159-195.</li>
+<li>(2) Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395. <a href="http://hal.archives-ouvertes.fr/inria-00382093/en">http://hal.archives-ouvertes.fr/inria-00382093/en</a>
+</li>
+<li>(3) N. Hansen, A. Auger, R. Ros, S. Finck, P. Posik: Comparing Results of 31 Algorithms from the Black-Box Optimization Benchmarking BBOB-2009. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM. <a href="http://www.lri.fr/%7Ehansen/ws1p34.pdf">http://www.lri.fr/~hansen/ws1p34.pdf</a>
+</li>
+<li>(4) <a href="https://www.lri.fr/%7Ehansen/">https://www.lri.fr/~hansen/</a>
+</li>
+<li>(5) <a href="https://www.lri.fr/%7Ehansen/cmaes_inmatlab.html">https://www.lri.fr/~hansen/cmaes_inmatlab.html</a>
+</li>
+<li>(6) Hansen, N., R. Ros (2010). Benchmarking a Weighted Negative Covariance Matrix Update on the BBOB-2010 Noiseless Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM, pp. 1673-1680, <a href="https://www.lri.fr/%7Ehansen/ws1p32-hansen.pdf">https://www.lri.fr/~hansen/ws1p32-hansen.pdf</a>
+</li>
+<li>(7) <a href="http://coco.gforge.inria.fr/doku.php?id=bbob-2013">http://coco.gforge.inria.fr/doku.php?id=bbob-2013</a>
+</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/beniz/libcmaes/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/beniz/libcmaes/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/beniz/libcmaes"></a> is maintained by <a href="https://github.com/beniz">beniz</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
