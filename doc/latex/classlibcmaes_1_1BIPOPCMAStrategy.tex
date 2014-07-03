@@ -1,0 +1,88 @@
+\hypertarget{classlibcmaes_1_1BIPOPCMAStrategy}{\section{libcmaes\-:\-:B\-I\-P\-O\-P\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$ Class Template Reference}
+\label{classlibcmaes_1_1BIPOPCMAStrategy}\index{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$@{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$}}
+}
+
+
+Implementation of the B\-I\-P\-O\-P flavor of C\-M\-A-\/\-E\-S, with restarts that control the population of offsprings used in the update of the distribution parameters in order to alternate between local and global searches for the objective.  
+
+
+
+
+{\ttfamily \#include $<$bipopcmastrategy.\-h$>$}
+
+Inheritance diagram for libcmaes\-:\-:B\-I\-P\-O\-P\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.430321cm]{classlibcmaes_1_1BIPOPCMAStrategy}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classlibcmaes_1_1BIPOPCMAStrategy_a4c693467ab661f639e2fe2120dabcc6e}{B\-I\-P\-O\-P\-C\-M\-A\-Strategy} (Fit\-Func \&func, \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&parameters)
+\begin{DoxyCompactList}\small\item\em constructor. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1BIPOPCMAStrategy_adc3f5ef544a151efeb96e4d4c83e1858}{void \hyperlink{classlibcmaes_1_1BIPOPCMAStrategy_adc3f5ef544a151efeb96e4d4c83e1858}{tell} ()}\label{classlibcmaes_1_1BIPOPCMAStrategy_adc3f5ef544a151efeb96e4d4c83e1858}
+
+\begin{DoxyCompactList}\small\item\em Updates the covariance matrix and prepares for the next iteration. \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1BIPOPCMAStrategy_a7117a7300899d1b3b734ffc6efd41054}{optimize} ()
+\begin{DoxyCompactList}\small\item\em Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1BIPOPCMAStrategy_adc3f5ef544a151efeb96e4d4c83e1858}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classlibcmaes_1_1BIPOPCMAStrategy_a7285772ab91aa5da1bbb20485ed6136d}{void {\bfseries r1} ()}\label{classlibcmaes_1_1BIPOPCMAStrategy_a7285772ab91aa5da1bbb20485ed6136d}
+
+\item 
+\hypertarget{classlibcmaes_1_1BIPOPCMAStrategy_a1bf830b35350a9c9d63dd717dfab7c73}{void {\bfseries r2} ()}\label{classlibcmaes_1_1BIPOPCMAStrategy_a1bf830b35350a9c9d63dd717dfab7c73}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T\-Covariance\-Update, class T\-Geno\-Pheno$>$class libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$}
+
+Implementation of the B\-I\-P\-O\-P flavor of C\-M\-A-\/\-E\-S, with restarts that control the population of offsprings used in the update of the distribution parameters in order to alternate between local and global searches for the objective. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classlibcmaes_1_1BIPOPCMAStrategy_a4c693467ab661f639e2fe2120dabcc6e}{\index{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy@{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy}!B\-I\-P\-O\-P\-C\-M\-A\-Strategy@{B\-I\-P\-O\-P\-C\-M\-A\-Strategy}}
+\index{B\-I\-P\-O\-P\-C\-M\-A\-Strategy@{B\-I\-P\-O\-P\-C\-M\-A\-Strategy}!libcmaes::BIPOPCMAStrategy@{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy}}
+\subsubsection[{B\-I\-P\-O\-P\-C\-M\-A\-Strategy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno $>$ {\bf libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::{\bf B\-I\-P\-O\-P\-C\-M\-A\-Strategy} (
+\begin{DoxyParamCaption}
+\item[{Fit\-Func \&}]{func, }
+\item[{{\bf C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&}]{parameters}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1BIPOPCMAStrategy_a4c693467ab661f639e2fe2120dabcc6e}
+
+
+constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & objective function to minimize \\
+\hline
+{\em parameters} & stochastic search parameters \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classlibcmaes_1_1BIPOPCMAStrategy_a7117a7300899d1b3b734ffc6efd41054}{\index{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy@{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy}!optimize@{optimize}}
+\index{optimize@{optimize}!libcmaes::BIPOPCMAStrategy@{libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy}}
+\subsubsection[{optimize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno $>$ int {\bf libcmaes\-::\-B\-I\-P\-O\-P\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::optimize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1BIPOPCMAStrategy_a7117a7300899d1b3b734ffc6efd41054}
+
+
+Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1BIPOPCMAStrategy_adc3f5ef544a151efeb96e4d4c83e1858}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. 
+
+\begin{DoxyReturn}{Returns}
+success or error code, as defined in \hyperlink{opti__err_8h_source}{opti\-\_\-err.\-h} Note\-: the termination criteria code is held by \-\_\-solutions.\-\_\-run\-\_\-status 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+src/bipopcmastrategy.\-h\item 
+src/bipopcmastrategy.\-cc\end{DoxyCompactItemize}

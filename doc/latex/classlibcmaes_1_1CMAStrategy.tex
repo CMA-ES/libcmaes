@@ -1,0 +1,125 @@
+\hypertarget{classlibcmaes_1_1CMAStrategy}{\section{libcmaes\-:\-:C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$ Class Template Reference}
+\label{classlibcmaes_1_1CMAStrategy}\index{libcmaes\-::\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$@{libcmaes\-::\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$}}
+}
+
+
+This is an implementation of C\-M\-A-\/\-E\-S. It uses the reference algorithm and termination criteria of the following paper\-: Hansen, N. (2009). Benchmarking a B\-I-\/\-Population C\-M\-A-\/\-E\-S on the B\-B\-O\-B-\/2009 Function Testbed. Workshop Proceedings of the G\-E\-C\-C\-O Genetic and Evolutionary Computation Conference, A\-C\-M, pp. 2389-\/2395 See \href{https://www.lri.fr/~hansen/publications.html}{\tt https\-://www.\-lri.\-fr/$\sim$hansen/publications.\-html} for more information.  
+
+
+
+
+{\ttfamily \#include $<$cmastrategy.\-h$>$}
+
+Inheritance diagram for libcmaes\-:\-:C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.430321cm]{classlibcmaes_1_1CMAStrategy}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classlibcmaes_1_1CMAStrategy_a5455e7245be35c169e4144eb666f94f3}{C\-M\-A\-Strategy} (Fit\-Func \&func, \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&parameters)
+\begin{DoxyCompactList}\small\item\em constructor. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{d\-Mat \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask} ()}\label{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}
+
+\begin{DoxyCompactList}\small\item\em generates nsols new candidate solutions, sampled from a multivariate normal distribution. return A matrix whose rows contain the candidate points. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMAStrategy_a03d9a4f9338ccd55141323ca309dbdfa}{void \hyperlink{classlibcmaes_1_1CMAStrategy_a03d9a4f9338ccd55141323ca309dbdfa}{tell} ()}\label{classlibcmaes_1_1CMAStrategy_a03d9a4f9338ccd55141323ca309dbdfa}
+
+\begin{DoxyCompactList}\small\item\em Updates the covariance matrix and prepares for the next iteration. \end{DoxyCompactList}\item 
+bool \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop} ()
+\begin{DoxyCompactList}\small\item\em Stops search on a set of termination criterias, see reference paper. \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMAStrategy_a68cb0023f51e2824758b1bd1c7512f39}{optimize} ()
+\begin{DoxyCompactList}\small\item\em Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1CMAStrategy_a03d9a4f9338ccd55141323ca309dbdfa}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMAStrategy_a5e56719b620697538d5abe52b5f59b67}{void \hyperlink{classlibcmaes_1_1CMAStrategy_a5e56719b620697538d5abe52b5f59b67}{plot} ()}\label{classlibcmaes_1_1CMAStrategy_a5e56719b620697538d5abe52b5f59b67}
+
+\begin{DoxyCompactList}\small\item\em Stream the internal state of the search into an output file, as defined in the \-\_\-parameters object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static Progress\-Func\\*
+$<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\\*
+, \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} $>$ \hyperlink{classlibcmaes_1_1CMAStrategy_af6d980c670eef47ee810645739999d5b}{\-\_\-default\-P\-Func}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T\-Covariance\-Update, class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$class libcmaes\-::\-C\-M\-A\-Strategy$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$}
+
+This is an implementation of C\-M\-A-\/\-E\-S. It uses the reference algorithm and termination criteria of the following paper\-: Hansen, N. (2009). Benchmarking a B\-I-\/\-Population C\-M\-A-\/\-E\-S on the B\-B\-O\-B-\/2009 Function Testbed. Workshop Proceedings of the G\-E\-C\-C\-O Genetic and Evolutionary Computation Conference, A\-C\-M, pp. 2389-\/2395 See \href{https://www.lri.fr/~hansen/publications.html}{\tt https\-://www.\-lri.\-fr/$\sim$hansen/publications.\-html} for more information. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classlibcmaes_1_1CMAStrategy_a5455e7245be35c169e4144eb666f94f3}{\index{libcmaes\-::\-C\-M\-A\-Strategy@{libcmaes\-::\-C\-M\-A\-Strategy}!C\-M\-A\-Strategy@{C\-M\-A\-Strategy}}
+\index{C\-M\-A\-Strategy@{C\-M\-A\-Strategy}!libcmaes::CMAStrategy@{libcmaes\-::\-C\-M\-A\-Strategy}}
+\subsubsection[{C\-M\-A\-Strategy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno$>$ {\bf libcmaes\-::\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::{\bf C\-M\-A\-Strategy} (
+\begin{DoxyParamCaption}
+\item[{Fit\-Func \&}]{func, }
+\item[{{\bf C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&}]{parameters}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1CMAStrategy_a5455e7245be35c169e4144eb666f94f3}
+
+
+constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & objective function to minimize \\
+\hline
+{\em parameters} & stochastic search parameters \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classlibcmaes_1_1CMAStrategy_a68cb0023f51e2824758b1bd1c7512f39}{\index{libcmaes\-::\-C\-M\-A\-Strategy@{libcmaes\-::\-C\-M\-A\-Strategy}!optimize@{optimize}}
+\index{optimize@{optimize}!libcmaes::CMAStrategy@{libcmaes\-::\-C\-M\-A\-Strategy}}
+\subsubsection[{optimize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno $>$ int {\bf libcmaes\-::\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::optimize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1CMAStrategy_a68cb0023f51e2824758b1bd1c7512f39}
+
+
+Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1CMAStrategy_a03d9a4f9338ccd55141323ca309dbdfa}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. 
+
+\begin{DoxyReturn}{Returns}
+success or error code, as defined in \hyperlink{opti__err_8h_source}{opti\-\_\-err.\-h} Note\-: the termination criteria code is held by \-\_\-solutions.\-\_\-run\-\_\-status 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{\index{libcmaes\-::\-C\-M\-A\-Strategy@{libcmaes\-::\-C\-M\-A\-Strategy}!stop@{stop}}
+\index{stop@{stop}!libcmaes::CMAStrategy@{libcmaes\-::\-C\-M\-A\-Strategy}}
+\subsubsection[{stop}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno $>$ bool {\bf libcmaes\-::\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::stop (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}
+
+
+Stops search on a set of termination criterias, see reference paper. 
+
+\begin{DoxyReturn}{Returns}
+true if search must stop, false otherwise. 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classlibcmaes_1_1CMAStrategy_af6d980c670eef47ee810645739999d5b}{\index{libcmaes\-::\-C\-M\-A\-Strategy@{libcmaes\-::\-C\-M\-A\-Strategy}!\-\_\-default\-P\-Func@{\-\_\-default\-P\-Func}}
+\index{\-\_\-default\-P\-Func@{\-\_\-default\-P\-Func}!libcmaes::CMAStrategy@{libcmaes\-::\-C\-M\-A\-Strategy}}
+\subsubsection[{\-\_\-default\-P\-Func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update, class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ Progress\-Func$<$ {\bf C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, {\bf C\-M\-A\-Solutions} $>$ {\bf libcmaes\-::\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::\-\_\-default\-P\-Func\hspace{0.3cm}{\ttfamily [static]}}}\label{classlibcmaes_1_1CMAStrategy_af6d980c670eef47ee810645739999d5b}
+{\bfseries Initial value\-:}
+\begin{DoxyCode}
+= [](\textcolor{keyword}{const} CMAParameters<TGenoPheno> &cmaparams, \textcolor{keyword}{const} CMASolutions &cmasols)
+  \{
+    LOG\_IF(INFO,!cmaparams.\_quiet) << \textcolor{stringliteral}{"iter="} << cmasols.\_niter << \textcolor{stringliteral}{" / evals="} << cmaparams.\_lambda * 
+      cmasols.\_niter << \textcolor{stringliteral}{" / f-value="} << cmasols.\_best\_candidates\_hist.back().\_fvalue <<  \textcolor{stringliteral}{" / sigma="} << cmasols.\_sigma
+       << (cmaparams.\_lazy\_update && cmasols.\_updated\_eigen ? \textcolor{stringliteral}{" / cupdate="}+std::to\_string(cmasols.\_updated\_eigen)
+       : \textcolor{stringliteral}{""}) << \textcolor{stringliteral}{" / last\_iter="} << cmasols.\_elapsed\_last\_iter << std::endl;
+    \textcolor{keywordflow}{return} 0;
+  \}
+\end{DoxyCode}
+the default progress function. 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+src/cmastrategy.\-h\item 
+src/cmastrategy.\-cc\end{DoxyCompactItemize}

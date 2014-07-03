@@ -1,0 +1,132 @@
+\hypertarget{namespacelibcmaes}{\section{libcmaes Namespace Reference}
+\label{namespacelibcmaes}\index{libcmaes@{libcmaes}}
+}
+
+
+linear scaling of the parameter space to achieve similar sensitivity across all components.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classlibcmaes_1_1ACovarianceUpdate}{A\-Covariance\-Update}
+\begin{DoxyCompactList}\small\item\em Active Covariance Matrix update. This implementation closely follows N. Hansen, R. Ros, \char`\"{}\-Benchmarking a Weighted Negative Covariance Matrix 
+                           Update on the B\-B\-O\-B-\/2010 Noiseless Testbed\char`\"{}, G\-E\-C\-C\-O'10, 2010. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1BIPOPCMAStrategy}{B\-I\-P\-O\-P\-C\-M\-A\-Strategy}
+\begin{DoxyCompactList}\small\item\em Implementation of the B\-I\-P\-O\-P flavor of C\-M\-A-\/\-E\-S, with restarts that control the population of offsprings used in the update of the distribution parameters in order to alternate between local and global searches for the objective. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1Candidate}{Candidate}
+\begin{DoxyCompactList}\small\item\em candidate solution point, in function parameter space. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}
+\begin{DoxyCompactList}\small\item\em \hyperlink{classlibcmaes_1_1Parameters}{Parameters} for various flavors of the C\-M\-A-\/\-E\-S algorithm. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions}
+\begin{DoxyCompactList}\small\item\em Holder of the set of evolving solutions from running an instance of C\-M\-A-\/\-E\-S. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1CMAStopCriteria}{C\-M\-A\-Stop\-Criteria}
+\begin{DoxyCompactList}\small\item\em C\-M\-A-\/\-E\-S termination criteria, see reference paper in \hyperlink{cmastrategy_8h_source}{cmastrategy.\-h}. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1CMAStrategy}{C\-M\-A\-Strategy}
+\begin{DoxyCompactList}\small\item\em This is an implementation of C\-M\-A-\/\-E\-S. It uses the reference algorithm and termination criteria of the following paper\-: Hansen, N. (2009). Benchmarking a B\-I-\/\-Population C\-M\-A-\/\-E\-S on the B\-B\-O\-B-\/2009 Function Testbed. Workshop Proceedings of the G\-E\-C\-C\-O Genetic and Evolutionary Computation Conference, A\-C\-M, pp. 2389-\/2395 See \href{https://www.lri.fr/~hansen/publications.html}{\tt https\-://www.\-lri.\-fr/$\sim$hansen/publications.\-html} for more information. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1CovarianceUpdate}{Covariance\-Update}
+\begin{DoxyCompactList}\small\item\em Covariance Matrix update. This is an implementation closely follows\-: Hansen, N. (2009). Benchmarking a B\-I-\/\-Population C\-M\-A-\/\-E\-S on the B\-B\-O\-B-\/2009 Function Testbed. Workshop Proceedings of the G\-E\-C\-C\-O Genetic and Evolutionary Computation Conference, A\-C\-M, pp. 2389-\/2395. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1ESOptimizer}{E\-S\-Optimizer}
+\begin{DoxyCompactList}\small\item\em an optimizer main class. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1ESOStrategy}{E\-S\-O\-Strategy}
+\begin{DoxyCompactList}\small\item\em Main class describing an evolutionary optimization strategy. Every algorithm in libcmaes descends from this class, and bring its functionalities to an \hyperlink{classlibcmaes_1_1ESOptimizer}{E\-S\-Optimizer} object. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1GenoPheno}{Geno\-Pheno}
+\item 
+class \hyperlink{classlibcmaes_1_1IPOPCMAStrategy}{I\-P\-O\-P\-C\-M\-A\-Strategy}
+\begin{DoxyCompactList}\small\item\em Implementation of the I\-P\-O\-P flavor of C\-M\-A-\/\-E\-S, with restarts that linearly increase the population of offsprings used in the update of the distribution parameters. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1NoBoundStrategy}{No\-Bound\-Strategy}
+\item 
+class \hyperlink{classlibcmaes_1_1Parameters}{Parameters}
+\begin{DoxyCompactList}\small\item\em Generic class for Evolution Strategy parameters. \end{DoxyCompactList}\item 
+class \hyperlink{classlibcmaes_1_1pwqBoundStrategy}{pwq\-Bound\-Strategy}
+\item 
+class \hyperlink{classlibcmaes_1_1NoScalingStrategy}{No\-Scaling\-Strategy}
+\item 
+class \hyperlink{classlibcmaes_1_1linScalingStrategy}{lin\-Scaling\-Strategy}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacelibcmaes_a0ea49cc676992a7089a563279ca35df0}{{\footnotesize template$<$class T\-Geno\-Pheno $>$ }\\using {\bfseries Stop\-Criteria\-Func} = std\-::function$<$ int(const \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&cmap, const \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} \&cmas)$>$}\label{namespacelibcmaes_a0ea49cc676992a7089a563279ca35df0}
+
+\item 
+\hypertarget{namespacelibcmaes_a5d26dcaad08b23bcacac2631ba9f0f2c}{{\footnotesize template$<$class T\-Geno\-Pheno $>$ }\\using {\bfseries eostrat} = \hyperlink{classlibcmaes_1_1ESOStrategy}{E\-S\-O\-Strategy}$<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions}, \hyperlink{classlibcmaes_1_1CMAStopCriteria}{C\-M\-A\-Stop\-Criteria}$<$ T\-Geno\-Pheno $>$ $>$}\label{namespacelibcmaes_a5d26dcaad08b23bcacac2631ba9f0f2c}
+
+\item 
+\hypertarget{namespacelibcmaes_aaa4766cb6addd3ad397456a779436854}{typedef std\-::function$<$ double(const \\*
+double $\ast$, const int \&n)$>$ {\bfseries Fit\-Func}}\label{namespacelibcmaes_aaa4766cb6addd3ad397456a779436854}
+
+\item 
+\hypertarget{namespacelibcmaes_ae29f09cdf8b5322ac32dc9ccddecd9dd}{typedef std\-::function$<$ d\-Vec(const \\*
+double $\ast$, const int \&n)$>$ {\bfseries Grad\-Func}}\label{namespacelibcmaes_ae29f09cdf8b5322ac32dc9ccddecd9dd}
+
+\item 
+\hypertarget{namespacelibcmaes_a8d4db4c2a1758fd5964499aba7cf8a9f}{{\footnotesize template$<$class T\-Parameters , class T\-Solutions $>$ }\\using {\bfseries Progress\-Func} = std\-::function$<$ int(const T\-Parameters \&, const T\-Solutions \&)$>$}\label{namespacelibcmaes_a8d4db4c2a1758fd5964499aba7cf8a9f}
+
+\item 
+\hypertarget{namespacelibcmaes_a05b1e5e516cec9483ccdb964284ef82c}{typedef std\-::function$<$ void(const \\*
+double $\ast$, double $\ast$, const int \&)$>$ {\bfseries Trans\-Func}}\label{namespacelibcmaes_a05b1e5e516cec9483ccdb964284ef82c}
+
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries C\-M\-A\-Stop\-Crit\-Type} \{ \\*
+{\bfseries C\-O\-N\-T} = 0, 
+{\bfseries A\-U\-T\-O\-M\-A\-X\-I\-T\-E\-R} = 7, 
+{\bfseries T\-O\-L\-H\-I\-S\-T\-F\-U\-N} = 1, 
+{\bfseries E\-Q\-U\-A\-L\-F\-U\-N\-V\-A\-L\-S} = 5, 
+\\*
+{\bfseries T\-O\-L\-X} = 2, 
+{\bfseries T\-O\-L\-U\-P\-S\-I\-G\-M\-A} = -\/13, 
+{\bfseries S\-T\-A\-G\-N\-A\-T\-I\-O\-N} = 6, 
+{\bfseries C\-O\-N\-D\-I\-T\-I\-O\-N\-C\-O\-V} = -\/15, 
+\\*
+{\bfseries N\-O\-E\-F\-F\-E\-C\-T\-A\-X\-I\-S} = 3, 
+{\bfseries N\-O\-E\-F\-F\-E\-C\-T\-C\-O\-O\-R} = 4, 
+{\bfseries M\-A\-X\-F\-E\-V\-A\-L\-S} = 8, 
+{\bfseries M\-A\-X\-I\-T\-E\-R} = 9, 
+\\*
+{\bfseries F\-T\-A\-R\-G\-E\-T} = 10
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacelibcmaes_ac6e46889cb95b4f1840c205406b1e4d7}{{\footnotesize template$<$class T\-Geno\-Pheno  = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ }\\\hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} {\bfseries cmaes} (Fit\-Func \&func, \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&parameters, Progress\-Func$<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} $>$ \&pfunc=\hyperlink{classlibcmaes_1_1CMAStrategy}{C\-M\-A\-Strategy}$<$ \hyperlink{classlibcmaes_1_1CovarianceUpdate}{Covariance\-Update}, T\-Geno\-Pheno $>$\-::\-\_\-default\-P\-Func, Grad\-Func gfunc=nullptr)}\label{namespacelibcmaes_ac6e46889cb95b4f1840c205406b1e4d7}
+
+\item 
+\hypertarget{namespacelibcmaes_a1922020e8d2259dd870ccd7893c3ea24}{std\-::ostream \& {\bfseries operator$<$$<$} (std\-::ostream \&out, const \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} \&cmas)}\label{namespacelibcmaes_a1922020e8d2259dd870ccd7893c3ea24}
+
+\item 
+\hypertarget{namespacelibcmaes_a5b344b982de59b91af2f0c317f234f17}{double {\bfseries median} (std\-::vector$<$ double $>$ scores)}\label{namespacelibcmaes_a5b344b982de59b91af2f0c317f234f17}
+
+\item 
+\hypertarget{namespacelibcmaes_a16d45e47c7b936252e380cfbe6809c99}{std\-::ostream \& {\bfseries L\-O\-G} (const std\-::string \&severity, std\-::ostream \&out=std\-::cout)}\label{namespacelibcmaes_a16d45e47c7b936252e380cfbe6809c99}
+
+\item 
+\hypertarget{namespacelibcmaes_a3209b3dbcdada9d81d357dedf066b975}{std\-::ostream \& {\bfseries L\-O\-G\-\_\-\-I\-F} (const std\-::string \&severity, const bool \&condition, std\-::ostream \&out=std\-::cout)}\label{namespacelibcmaes_a3209b3dbcdada9d81d357dedf066b975}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+linear scaling of the parameter space to achieve similar sensitivity across all components. C\-M\-A-\/\-E\-S, Covariance Matrix Adaptation Evolution Strategy Copyright (c) 2014 Inria Author\-: Emmanuel Benazera \href{mailto:emmanuel.benazera@lri.fr}{\tt emmanuel.\-benazera@lri.\-fr}
+
+This file is part of libcmaes.
+
+libcmaes is free software\-: you can redistribute it and/or modify it under the terms of the G\-N\-U Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+libcmaes is distributed in the hope that it will be useful, but W\-I\-T\-H\-O\-U\-T A\-N\-Y W\-A\-R\-R\-A\-N\-T\-Y; without even the implied warranty of M\-E\-R\-C\-H\-A\-N\-T\-A\-B\-I\-L\-I\-T\-Y or F\-I\-T\-N\-E\-S\-S F\-O\-R A P\-A\-R\-T\-I\-C\-U\-L\-A\-R P\-U\-R\-P\-O\-S\-E. See the G\-N\-U Lesser General Public License for more details.
+
+You should have received a copy of the G\-N\-U Lesser General Public License along with libcmaes. If not, see \href{http://www.gnu.org/licenses/}{\tt http\-://www.\-gnu.\-org/licenses/}.
+
+C\-M\-A-\/\-E\-S, Covariance Matrix Adaptation Evolution Strategy Copyright (c) 2014 Inria Author\-: Emmanuel Benazera \href{mailto:emmanuel.benazera@lri.fr}{\tt emmanuel.\-benazera@lri.\-fr}
+
+This file is part of libcmaes.
+
+libcmaes is free software\-: you can redistribute it and/or modify it under the terms of the G\-N\-U Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+libcmaes is distributed in the hope that it will be useful, but W\-I\-T\-H\-O\-U\-T A\-N\-Y W\-A\-R\-R\-A\-N\-T\-Y; without even the implied warranty of M\-E\-R\-C\-H\-A\-N\-T\-A\-B\-I\-L\-I\-T\-Y or F\-I\-T\-N\-E\-S\-S F\-O\-R A P\-A\-R\-T\-I\-C\-U\-L\-A\-R P\-U\-R\-P\-O\-S\-E. See the G\-N\-U Lesser General Public License for more details.
+
+You should have received a copy of the G\-N\-U Lesser General Public License along with libcmaes. If not, see \href{http://www.gnu.org/licenses/}{\tt http\-://www.\-gnu.\-org/licenses/}. This is based on Nikolaus Hansen's code from the C version of C\-M\-A-\/\-E\-S, see boundary\-\_\-transformation.\-c from the package available from \href{https://www.lri.fr/~hansen/cmaes_inmatlab.html#C}{\tt https\-://www.\-lri.\-fr/$\sim$hansen/cmaes\-\_\-inmatlab.\-html\#\-C} 
