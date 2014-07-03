@@ -36,6 +36,8 @@ void \hyperlink{classlibcmaes_1_1Parameters_acc94e18faebb18dcaa0712a296e76949}{s
 \begin{DoxyCompactList}\small\item\em sets bounds on initial objective function parameter values. Initial value is sampled uniformly within these bounds. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1Parameters_a30236ca44b7de58b160bf2b1170f69b2}{set\-\_\-fixed\-\_\-p} (const int \&index, const double \&value)
 \begin{DoxyCompactList}\small\item\em freezes a parameter to a given value during optimization. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1Parameters_a540a57691845698e79af120f16d27f2c}{unset\-\_\-fixed\-\_\-p} (const int \&index)
+\begin{DoxyCompactList}\small\item\em unfreezes a parameter. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1Parameters_acefab965b50d45c6609e4f3267785ace}{set\-\_\-max\-\_\-iter} (const int \&maxiter)
 \begin{DoxyCompactList}\small\item\em sets the maximum number of iterations allowed for the optimization. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1Parameters_aa924cb4c8ffee0d148b63f5c0b55b4ce}{set\-\_\-max\-\_\-fevals} (const int \&fevals)
@@ -309,6 +311,22 @@ sets parameter tolerance as stopping criteria for Tol\-X.
 
 \begin{DoxyParams}{Parameters}
 {\em v} & value of the parameter tolerance. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1Parameters_a540a57691845698e79af120f16d27f2c}{\index{libcmaes\-::\-Parameters@{libcmaes\-::\-Parameters}!unset\-\_\-fixed\-\_\-p@{unset\-\_\-fixed\-\_\-p}}
+\index{unset\-\_\-fixed\-\_\-p@{unset\-\_\-fixed\-\_\-p}!libcmaes::Parameters@{libcmaes\-::\-Parameters}}
+\subsubsection[{unset\-\_\-fixed\-\_\-p}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-Parameters}$<$ T\-Geno\-Pheno $>$\-::unset\-\_\-fixed\-\_\-p (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Parameters_a540a57691845698e79af120f16d27f2c}
+
+
+unfreezes a parameter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & dimenion index of the parameter to unfreeze \\
 \hline
 \end{DoxyParams}
 

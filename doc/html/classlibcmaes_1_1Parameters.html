@@ -137,6 +137,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a30236ca44b7de58b160bf2b1170f69b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a30236ca44b7de58b160bf2b1170f69b2">set_fixed_p</a> (const int &amp;index, const double &amp;value)</td></tr>
 <tr class="memdesc:a30236ca44b7de58b160bf2b1170f69b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">freezes a parameter to a given value during optimization.  <a href="#a30236ca44b7de58b160bf2b1170f69b2">More...</a><br/></td></tr>
 <tr class="separator:a30236ca44b7de58b160bf2b1170f69b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a540a57691845698e79af120f16d27f2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a540a57691845698e79af120f16d27f2c">unset_fixed_p</a> (const int &amp;index)</td></tr>
+<tr class="memdesc:a540a57691845698e79af120f16d27f2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">unfreezes a parameter.  <a href="#a540a57691845698e79af120f16d27f2c">More...</a><br/></td></tr>
+<tr class="separator:a540a57691845698e79af120f16d27f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acefab965b50d45c6609e4f3267785ace"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#acefab965b50d45c6609e4f3267785ace">set_max_iter</a> (const int &amp;maxiter)</td></tr>
 <tr class="memdesc:acefab965b50d45c6609e4f3267785ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the maximum number of iterations allowed for the optimization.  <a href="#acefab965b50d45c6609e4f3267785ace">More...</a><br/></td></tr>
 <tr class="separator:acefab965b50d45c6609e4f3267785ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -683,6 +686,40 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a540a57691845698e79af120f16d27f2c"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::unset_fixed_p </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>unfreezes a parameter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>dimenion index of the parameter to unfreeze </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a class="anchor" id="a7a5fc681b0c7294ef050ace344f923db"></a>
 <div class="memitem">
@@ -930,7 +967,7 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 3 2014 11:42:15 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 3 2014 18:18:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

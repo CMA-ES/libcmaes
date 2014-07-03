@@ -10,9 +10,10 @@ var searchData=
   ['cmastopcriteria',['CMAStopCriteria',['../classlibcmaes_1_1CMAStopCriteria.html',1,'libcmaes']]],
   ['cmastopcriteria',['CMAStopCriteria',['../classlibcmaes_1_1CMAStopCriteria.html#a8b7795af41cba9122799e221d3b95b7b',1,'libcmaes::CMAStopCriteria']]],
   ['cmastopcriteria_3c_20genopheno_3c_20noboundstrategy_20_3e_20_3e',['CMAStopCriteria&lt; GenoPheno&lt; NoBoundStrategy &gt; &gt;',['../classlibcmaes_1_1CMAStopCriteria.html',1,'libcmaes']]],
-  ['cmastrategy',['CMAStrategy',['../classlibcmaes_1_1CMAStrategy.html',1,'libcmaes']]],
   ['cmastrategy',['CMAStrategy',['../classlibcmaes_1_1CMAStrategy.html#a5455e7245be35c169e4144eb666f94f3',1,'libcmaes::CMAStrategy']]],
+  ['cmastrategy',['CMAStrategy',['../classlibcmaes_1_1CMAStrategy.html',1,'libcmaes']]],
   ['cmastrategy_3c_20covarianceupdate_20_3e',['CMAStrategy&lt; CovarianceUpdate &gt;',['../classlibcmaes_1_1CMAStrategy.html',1,'libcmaes']]],
+  ['cov',['cov',['../classlibcmaes_1_1CMASolutions.html#a8b3cd4f1b85c820190eedbf81f49a441',1,'libcmaes::CMASolutions']]],
   ['covarianceupdate',['CovarianceUpdate',['../classlibcmaes_1_1CovarianceUpdate.html',1,'libcmaes']]],
   ['customcmastrategy',['customCMAStrategy',['../classcustomCMAStrategy.html',1,'']]]
 ];

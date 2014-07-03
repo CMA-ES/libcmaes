@@ -29,6 +29,10 @@ void \hyperlink{classlibcmaes_1_1CMASolutions_a28a20c0a90712e4f28038af2a4bd320b}
 \begin{DoxyCompactList}\small\item\em returns current best solution candidate. N\-O\-T\-E\-: candidates M\-U\-S\-T be sorted \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1CMASolutions_a7a7e71c54967613717d2928a38715429}{size} () const 
 \begin{DoxyCompactList}\small\item\em number of candidate solutions. \end{DoxyCompactList}\item 
+double \hyperlink{classlibcmaes_1_1CMASolutions_a33a5f2f6bc03c9b459d58f079a1a2d38}{edm} () const 
+\begin{DoxyCompactList}\small\item\em returns expected distance to minimum. \end{DoxyCompactList}\item 
+d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_a8b3cd4f1b85c820190eedbf81f49a441}{cov} () const 
+\begin{DoxyCompactList}\small\item\em returns error covariance matrix \end{DoxyCompactList}\item 
 std\-::ostream \& \hyperlink{classlibcmaes_1_1CMASolutions_a6efb92b35de0ffa6cbe5918c82469db2}{print} (std\-::ostream \&out, const int \&verb\-\_\-level=0) const 
 \begin{DoxyCompactList}\small\item\em print the solution object out. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
@@ -133,6 +137,34 @@ currentbest candidate
 \begin{DoxySeeAlso}{See Also}
 \hyperlink{classlibcmaes_1_1CMASolutions_a48934296b4295080786cbc97302448f7}{C\-M\-A\-Solutions\-::sort\-\_\-candidates} 
 \end{DoxySeeAlso}
+\hypertarget{classlibcmaes_1_1CMASolutions_a8b3cd4f1b85c820190eedbf81f49a441}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!cov@{cov}}
+\index{cov@{cov}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{cov}]{\setlength{\rightskip}{0pt plus 5cm}d\-Mat libcmaes\-::\-C\-M\-A\-Solutions\-::cov (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a8b3cd4f1b85c820190eedbf81f49a441}
+
+
+returns error covariance matrix 
+
+\begin{DoxyReturn}{Returns}
+error covariance matrix 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a33a5f2f6bc03c9b459d58f079a1a2d38}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!edm@{edm}}
+\index{edm@{edm}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{edm}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::edm (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a33a5f2f6bc03c9b459d58f079a1a2d38}
+
+
+returns expected distance to minimum. 
+
+\begin{DoxyReturn}{Returns}
+edm 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_a6efb92b35de0ffa6cbe5918c82469db2}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!print@{print}}
 \index{print@{print}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
 \subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}std\-::ostream \& libcmaes\-::\-C\-M\-A\-Solutions\-::print (

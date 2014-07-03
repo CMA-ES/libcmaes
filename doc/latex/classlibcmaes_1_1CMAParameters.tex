@@ -34,6 +34,8 @@ void \hyperlink{classlibcmaes_1_1CMAParameters_a7fcd592c259dca6716fdbe735fd1b837
 \begin{DoxyCompactList}\small\item\em turns stopping criteria Max\-Iter that automatically stops optimization after a number of steps on or off. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1CMAParameters_a73af8cdc07dc3388c40a27ddbdea96b4}{set\-\_\-fixed\-\_\-p} (const int \&index, const double \&value)
 \begin{DoxyCompactList}\small\item\em freezes a parameter to a given value during optimization. Adapts some generic parameters as well. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1CMAParameters_adb4f043e62081a8910d54f87db3b6ef4}{unset\-\_\-fixed\-\_\-p} (const int \&index)
+\begin{DoxyCompactList}\small\item\em unfreezes a parameter. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1CMAParameters_a105789bdd00467411107db57302028f2}{set\-\_\-restarts} (const int \&nrestarts)
 \begin{DoxyCompactList}\small\item\em sets the maximum number of restarts (applies to I\-P\-O\-P and B\-I\-P\-O\-P). \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
@@ -180,6 +182,22 @@ sets the maximum number of restarts (applies to I\-P\-O\-P and B\-I\-P\-O\-P).
 
 \begin{DoxyParams}{Parameters}
 {\em nrestarts} & maximum number of restarts \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMAParameters_adb4f043e62081a8910d54f87db3b6ef4}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!unset\-\_\-fixed\-\_\-p@{unset\-\_\-fixed\-\_\-p}}
+\index{unset\-\_\-fixed\-\_\-p@{unset\-\_\-fixed\-\_\-p}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{unset\-\_\-fixed\-\_\-p}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno $>$ void {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::unset\-\_\-fixed\-\_\-p (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{index}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1CMAParameters_adb4f043e62081a8910d54f87db3b6ef4}
+
+
+unfreezes a parameter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & dimenion index of the parameter to unfreeze \\
 \hline
 \end{DoxyParams}
 

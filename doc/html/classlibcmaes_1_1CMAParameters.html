@@ -133,6 +133,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a73af8cdc07dc3388c40a27ddbdea96b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAParameters.html#a73af8cdc07dc3388c40a27ddbdea96b4">set_fixed_p</a> (const int &amp;index, const double &amp;value)</td></tr>
 <tr class="memdesc:a73af8cdc07dc3388c40a27ddbdea96b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">freezes a parameter to a given value during optimization. Adapts some generic parameters as well.  <a href="#a73af8cdc07dc3388c40a27ddbdea96b4">More...</a><br/></td></tr>
 <tr class="separator:a73af8cdc07dc3388c40a27ddbdea96b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb4f043e62081a8910d54f87db3b6ef4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAParameters.html#adb4f043e62081a8910d54f87db3b6ef4">unset_fixed_p</a> (const int &amp;index)</td></tr>
+<tr class="memdesc:adb4f043e62081a8910d54f87db3b6ef4"><td class="mdescLeft">&#160;</td><td class="mdescRight">unfreezes a parameter.  <a href="#adb4f043e62081a8910d54f87db3b6ef4">More...</a><br/></td></tr>
+<tr class="separator:adb4f043e62081a8910d54f87db3b6ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a105789bdd00467411107db57302028f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAParameters.html#a105789bdd00467411107db57302028f2">set_restarts</a> (const int &amp;nrestarts)</td></tr>
 <tr class="memdesc:a105789bdd00467411107db57302028f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the maximum number of restarts (applies to IPOP and BIPOP).  <a href="#a105789bdd00467411107db57302028f2">More...</a><br/></td></tr>
 <tr class="separator:a105789bdd00467411107db57302028f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,6 +165,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a30236ca44b7de58b160bf2b1170f69b2 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a30236ca44b7de58b160bf2b1170f69b2">set_fixed_p</a> (const int &amp;index, const double &amp;value)</td></tr>
 <tr class="memdesc:a30236ca44b7de58b160bf2b1170f69b2 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">freezes a parameter to a given value during optimization.  <a href="#a30236ca44b7de58b160bf2b1170f69b2">More...</a><br/></td></tr>
 <tr class="separator:a30236ca44b7de58b160bf2b1170f69b2 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a540a57691845698e79af120f16d27f2c inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a540a57691845698e79af120f16d27f2c">unset_fixed_p</a> (const int &amp;index)</td></tr>
+<tr class="memdesc:a540a57691845698e79af120f16d27f2c inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">unfreezes a parameter.  <a href="#a540a57691845698e79af120f16d27f2c">More...</a><br/></td></tr>
+<tr class="separator:a540a57691845698e79af120f16d27f2c inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acefab965b50d45c6609e4f3267785ace inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#acefab965b50d45c6609e4f3267785ace">set_max_iter</a> (const int &amp;maxiter)</td></tr>
 <tr class="memdesc:acefab965b50d45c6609e4f3267785ace inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the maximum number of iterations allowed for the optimization.  <a href="#acefab965b50d45c6609e4f3267785ace">More...</a><br/></td></tr>
 <tr class="separator:acefab965b50d45c6609e4f3267785ace inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -438,6 +444,32 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">nrestarts</td><td>maximum number of restarts </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="adb4f043e62081a8910d54f87db3b6ef4"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classlibcmaes_1_1CMAParameters.html">libcmaes::CMAParameters</a>&lt; TGenoPheno &gt;::unset_fixed_p </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>unfreezes a parameter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>dimenion index of the parameter to unfreeze </td></tr>
   </table>
   </dd>
 </dl>
@@ -767,7 +799,7 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 3 2014 11:42:14 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 3 2014 18:18:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

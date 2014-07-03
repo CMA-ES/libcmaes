@@ -127,6 +127,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a7a7e71c54967613717d2928a38715429"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMASolutions.html#a7a7e71c54967613717d2928a38715429">size</a> () const </td></tr>
 <tr class="memdesc:a7a7e71c54967613717d2928a38715429"><td class="mdescLeft">&#160;</td><td class="mdescRight">number of candidate solutions.  <a href="#a7a7e71c54967613717d2928a38715429">More...</a><br/></td></tr>
 <tr class="separator:a7a7e71c54967613717d2928a38715429"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33a5f2f6bc03c9b459d58f079a1a2d38"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMASolutions.html#a33a5f2f6bc03c9b459d58f079a1a2d38">edm</a> () const </td></tr>
+<tr class="memdesc:a33a5f2f6bc03c9b459d58f079a1a2d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns expected distance to minimum.  <a href="#a33a5f2f6bc03c9b459d58f079a1a2d38">More...</a><br/></td></tr>
+<tr class="separator:a33a5f2f6bc03c9b459d58f079a1a2d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b3cd4f1b85c820190eedbf81f49a441"><td class="memItemLeft" align="right" valign="top">dMat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMASolutions.html#a8b3cd4f1b85c820190eedbf81f49a441">cov</a> () const </td></tr>
+<tr class="memdesc:a8b3cd4f1b85c820190eedbf81f49a441"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns error covariance matrix  <a href="#a8b3cd4f1b85c820190eedbf81f49a441">More...</a><br/></td></tr>
+<tr class="separator:a8b3cd4f1b85c820190eedbf81f49a441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6efb92b35de0ffa6cbe5918c82469db2"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMASolutions.html#a6efb92b35de0ffa6cbe5918c82469db2">print</a> (std::ostream &amp;out, const int &amp;verb_level=0) const </td></tr>
 <tr class="memdesc:a6efb92b35de0ffa6cbe5918c82469db2"><td class="mdescLeft">&#160;</td><td class="mdescRight">print the solution object out.  <a href="#a6efb92b35de0ffa6cbe5918c82469db2">More...</a><br/></td></tr>
 <tr class="separator:a6efb92b35de0ffa6cbe5918c82469db2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -245,6 +251,58 @@ template&lt;class TGenoPheno &gt; </div>
 <p>returns current best solution candidate. NOTE: candidates MUST be sorted </p>
 <dl class="section return"><dt>Returns</dt><dd>currentbest candidate </dd></dl>
 <dl class="section see"><dt>See Also</dt><dd><a class="el" href="classlibcmaes_1_1CMASolutions.html#a48934296b4295080786cbc97302448f7" title="sorts the current internal set of solution candidates. ">CMASolutions::sort_candidates</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8b3cd4f1b85c820190eedbf81f49a441"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dMat libcmaes::CMASolutions::cov </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns error covariance matrix </p>
+<dl class="section return"><dt>Returns</dt><dd>error covariance matrix </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a33a5f2f6bc03c9b459d58f079a1a2d38"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double libcmaes::CMASolutions::edm </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns expected distance to minimum. </p>
+<dl class="section return"><dt>Returns</dt><dd>edm </dd></dl>
 
 </div>
 </div>
@@ -676,7 +734,7 @@ template&lt;class TGenoPheno &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 3 2014 11:42:14 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 3 2014 18:18:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['edm',['edm',['../classlibcmaes_1_1ESOStrategy.html#a6350c635353e7b54e78abb223a5d4029',1,'libcmaes::ESOStrategy']]],
+  ['edm',['edm',['../classlibcmaes_1_1CMASolutions.html#a33a5f2f6bc03c9b459d58f079a1a2d38',1,'libcmaes::CMASolutions::edm()'],['../classlibcmaes_1_1ESOStrategy.html#a6350c635353e7b54e78abb223a5d4029',1,'libcmaes::ESOStrategy::edm()']]],
   ['eigen',['Eigen',['../namespaceEigen.html',1,'']]],
   ['eigenmultivariatenormal',['EigenMultivariateNormal',['../classEigen_1_1EigenMultivariateNormal.html',1,'Eigen']]],
   ['eigenmultivariatenormal_3c_20double_20_3e',['EigenMultivariateNormal&lt; double &gt;',['../classEigen_1_1EigenMultivariateNormal.html',1,'Eigen']]],
