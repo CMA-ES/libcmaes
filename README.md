@@ -18,8 +18,8 @@ Current features include:
 Dependencies:
 
 - [eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) for all matrix operations;
-- [glog](https://code.google.com/p/google-glog/) for logging events and debug;
-- [gflags](https://code.google.com/p/gflags/) for command line parsing;
+- [glog](https://code.google.com/p/google-glog/) for logging events and debug (optional);
+- [gflags](https://code.google.com/p/gflags/) for command line parsing (optional);
 - [gtest](https://code.google.com/p/googletest/) for unit testing (optional).
 
 Implementation:
