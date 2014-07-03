@@ -97,6 +97,24 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns expected distance to minimum.
+     * @return edm
+     */
+    double edm() const
+    {
+      return _edm;
+    }
+
+    /**
+     * \brief returns error covariance matrix
+     * @return error covariance matrix
+     */
+    dMat cov() const
+    {
+      return _cov;
+    }
+    
+    /**
      * \brief print the solution object out.
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
