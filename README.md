@@ -15,9 +15,11 @@ Current features include:
 - support for objective function gradient, when available;
 - a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
 
+
 Documentation:
-Full documentation is available from https://github.com/beniz/libcmaes/wiki
-API documentation is available from http://beniz.github.io/libcmaes/doc/html/index.html
+
+- Full documentation is available from https://github.com/beniz/libcmaes/wiki
+- API documentation is available from http://beniz.github.io/libcmaes/doc/html/index.html
 
 Dependencies:
 
