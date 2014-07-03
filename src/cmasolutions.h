@@ -97,12 +97,21 @@ namespace libcmaes
     }
 
     /**
-     * \brief return expected distance to minimum.
+     * \brief returns expected distance to minimum.
      * @return edm
      */
     double edm() const
     {
       return _edm;
+    }
+
+    /**
+     * \brief returns error covariance matrix
+     * @return error covariance matrix
+     */
+    dMat cov() const
+    {
+      return _cov;
     }
     
     /**
