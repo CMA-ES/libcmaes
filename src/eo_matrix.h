@@ -19,9 +19,10 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IO_MATRIX_H
-#define IO_MATRIX_H
+#ifndef EO_MATRIX_H
+#define EO_MATRIX_H
 
+#include <algorithm>
 #include <Eigen/Sparse>
 #include <stdlib.h>
 
@@ -31,5 +32,35 @@ typedef Eigen::VectorXd dVec; // declares a vector of double.
 using namespace Eigen;
 
 #include <unsupported/Eigen/MatrixFunctions>
+
+inline void removeRow(dMat& matrix, unsigned int rowToRemove)
+{
+  unsigned int numRows = matrix.rows()-1;
+  unsigned int numCols = matrix.cols();
+
+  if( rowToRemove < numRows )
+    matrix.block(rowToRemove,0,numRows-rowToRemove,numCols) = matrix.block(rowToRemove+1,0,numRows-rowToRemove,numCols);
+
+  matrix.conservativeResize(numRows,numCols);
+}
+
+inline void removeColumn(dMat& matrix, unsigned int colToRemove)
+{
+  unsigned int numRows = matrix.rows();
+  unsigned int numCols = matrix.cols()-1;
+
+  if( colToRemove < numCols )
+    matrix.block(0,colToRemove,numRows,numCols-colToRemove) = matrix.block(0,colToRemove+1,numRows,numCols-colToRemove);
+
+  matrix.conservativeResize(numRows,numCols);
+}
+
+inline void removeElement(dVec &vec, unsigned int k)
+{
+  if (k >= vec.size())
+    return;
+  std::copy(vec.data()+k+1,vec.data()+vec.size(),vec.data()+k);
+  vec.conservativeResize(vec.size()-1);
+}
 
 #endif

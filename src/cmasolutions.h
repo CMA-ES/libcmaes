@@ -26,11 +26,13 @@
 #include "candidate.h"
 #include "eo_matrix.h"
 #include "cmaparameters.h"
+#include "pli.h"
 #include <vector>
 #include <algorithm>
 
 namespace libcmaes
 {
+  
   /**
    * \brief Holder of the set of evolving solutions from running an instance
    *        of CMA-ES.
@@ -114,6 +116,33 @@ namespace libcmaes
       return _cov;
     }
     
+    /*
+     * \brief resets the solution object in order to restart from
+     *        the current solution with fresh covariance matrix.
+     * Note: experimental.
+     */
+    void reset();
+    
+    /**
+     * \brief re-arrange solution object such that parameter 'k' is fixed (i.e. removed).
+     * @param k index of the parameter to remove.
+     */
+    void reset_as_fixed(const int &k);
+
+    /**
+     * \brief get profile likelihood if previously computed.
+     */
+    bool get_pli(const int &k, pli &p) const
+    {
+      std::map<int,pli>::const_iterator mit;
+      if ((mit=_pls.find(k))!=_pls.end())
+	{
+	  p = (*mit).second;
+	  return true;
+	}
+      return false;
+    }
+    
     /**
      * \brief print the solution object out.
      * @param out output stream
@@ -127,7 +156,7 @@ namespace libcmaes
     dMat _sepcov;
     dMat _sepcsqinv;
     dVec _xmean; /**< distribution mean. */
-    dVec _psigma; /**< cummulation for sigma. */
+    dVec _psigma; /**< cumulation for sigma. */
     dVec _pc; /**< cumulation for covariance. */
     short _hsig = 1; /**< 0 or 1. */
     double _sigma; /**< step size. */
@@ -158,6 +187,8 @@ namespace libcmaes
     int _elapsed_tell = 0;
     int _elapsed_stop = 0;
 #endif
+
+    std::map<int,pli> _pls; /**< profile likelihood for parameters it has been computed for. */
     double _edm = 0.0; /**< expected vertical distance to the minimum. */
   };
 

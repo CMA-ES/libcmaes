@@ -26,6 +26,7 @@
 #include <chrono>
 #include "parameters.h"
 #include "esostrategy.h"
+#include "cmasolutions.h"
 
 /* algorithms */
 enum {
@@ -60,7 +61,7 @@ namespace libcmaes
   /**
    * \brief an optimizer main class. 
    */
-  template <class TESOStrategy,class TParameters>
+  template <class TESOStrategy,class TParameters,class TSolutions=CMASolutions>
     class ESOptimizer : public TESOStrategy
     {
     public:
@@ -72,6 +73,19 @@ namespace libcmaes
       ESOptimizer(FitFunc &func,
 		  TParameters &parameters)
 	:TESOStrategy(func,parameters)
+	{
+	}
+      
+      /**
+       * \brief constructor for starting from an existing solution
+       * @param func function to minimize
+       * @param parameters optimization parameters
+       * @param solution solution to start from
+       */
+      ESOptimizer(FitFunc &func,
+		  TParameters &parameters,
+		  const TSolutions &solution)
+	:TESOStrategy(func,parameters,solution)
 	{
 	}
       

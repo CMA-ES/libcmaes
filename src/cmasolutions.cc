@@ -105,6 +105,57 @@ namespace libcmaes
     _leigenvalues = eigenvalues;
     _leigenvectors = eigenvectors;
   }
+
+  void CMASolutions::reset()
+  {
+    //_candidates.clear();
+    _best_candidates_hist.clear();
+    //_leigenvalues.setZero(); // beware.
+    //_leigenvectors.setZero();
+    //_cov /= 1e-3;//_sigma;
+    _cov = dMat::Identity(_csqinv.rows(),_csqinv.cols());
+    //std::cout << "cov: " << _cov << std::endl;
+    _niter = 0;
+    _nevals = 0;
+    //_sigma = 1.0/static_cast<double>(_csqinv.rows());
+    _psigma = dVec::Zero(_cov.rows());
+    _pc = dVec::Zero(_cov.rows());
+    _k_best_candidates_hist.clear();
+    _bfvalues.clear();
+    _median_fvalues.clear();
+    _run_status = 0;
+    _elapsed_time = _elapsed_last_iter = 0;
+#ifdef HAVE_DEBUG
+    _elapsed_eval = _elapsed_ask = _elapsed_tell = _elapsed_stop = 0;
+#endif
+  }
+  
+  void CMASolutions::reset_as_fixed(const int &k)
+  {
+    removeRow(_cov,k);
+    removeColumn(_cov,k);
+    removeRow(_csqinv,k);
+    removeColumn(_csqinv,k);
+    removeElement(_xmean,k);
+    removeElement(_psigma,k);
+    removeElement(_pc,k);
+    for (size_t i=0;i<_candidates.size();i++)
+      removeElement(_candidates.at(i)._x,k);
+    _best_candidates_hist.clear();
+    removeElement(_leigenvalues,k);
+    removeRow(_leigenvectors,k);
+    removeColumn(_leigenvectors,k);
+    _niter = 0;
+    _nevals = 0;
+    _k_best_candidates_hist.clear();
+    _bfvalues.clear();
+    _median_fvalues.clear();
+    _run_status = 0;
+    _elapsed_time = _elapsed_last_iter = 0;
+#ifdef HAVE_DEBUG
+    _elapsed_eval = _elapsed_ask = _elapsed_tell = _elapsed_stop = 0;
+#endif
+  }
   
   std::ostream& CMASolutions::print(std::ostream &out,
 				    const int &verb_level) const
@@ -120,6 +171,17 @@ namespace libcmaes
 	out << "\ncovdiag=" << _cov.diagonal().transpose() << std::endl;
 	out << "psigma=" << _psigma.transpose() << std::endl;
 	out << "pc=" << _pc.transpose() << std::endl;
+      }
+    if (!_pls.empty())
+      {
+	out << "\nconfidence intervals:\n";
+	for (auto it=_pls.begin();it!=_pls.end();++it)
+	  {
+	    out << "dim " << (*it).first << " in [" << (*it).second._min << "," << (*it).second._max << "] with error [" << (*it).second._errmin << "," << (*it).second._errmax << "]";
+	    if ((*it).second._err[(*it).second._minindex] || (*it).second._err[(*it).second._maxindex])
+	      out << " / status=[" << (*it).second._err[(*it).second._minindex] << "," << (*it).second._err[(*it).second._maxindex] << "]";
+	    out << std::endl;
+	  }
       }
     return out;
   }
