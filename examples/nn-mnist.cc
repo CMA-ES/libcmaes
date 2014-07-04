@@ -312,7 +312,8 @@ int main(int argc, char *argv[])
 	    {
 	      ggfeatures = gfeatures;
 	      gglabels = glabels;
-	      x0 = std::vector<double>(gmnistnn._allparams_dim,FLAGS_x0);
+	      gmnistnn.to_array();
+	      x0 = gmnistnn._allparams;
 	      init = true;
 	    }
 	  else
@@ -339,7 +340,6 @@ int main(int argc, char *argv[])
 	  gfeatures = ggfeatures.block(0,beg,ggfeatures.rows(),bsize);
 	  glabels = gglabels.block(0,beg,gglabels.rows(),bsize);
   
-	  gmnistnn.to_array();
 	  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front()/*gmnistnn._allparams.front()*/,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
 	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
 	  cmaparams._fplot = FLAGS_fplot;
