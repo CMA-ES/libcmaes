@@ -24,6 +24,7 @@
 #include <fstream>
 #include <gflags/gflags.h>
 #include <cstdlib>
+#include <chrono>
 #include <iostream>
 
 using namespace libcmaes;
@@ -278,6 +279,7 @@ DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all comp
 DEFINE_bool(mbatch,false,"whether to use minibatches");
 DEFINE_int32(mbatch_budget,-1,"max budget when using minibatches");
 DEFINE_double(mbatch_ftarget,3.0,"AMS target when using minibatches");
+DEFINE_bool(mbatch_sim,false,"simplified output for minibatches in order to pipe to file");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -357,11 +359,15 @@ int main(int argc, char *argv[])
   std::vector<double> sigma0(npasses,FLAGS_sigma0);
   double gams = 0.0;
   int nevals = 0;
+  int elapsed = 0;
+  int elapsed_total = 0;
   bool init = false;
   bool run = true;
 
   std::cout << "npasses=" << npasses << std::endl;
-  
+  std::cout << "dim=" << ghiggsnn._allparams_dim << std::endl;
+
+  std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
   while (run)
     {
       for (int i=0;i<npasses;i++)
@@ -396,7 +402,12 @@ int main(int argc, char *argv[])
 	      //gglabels = glabels;
 	      //ggweights = gweights; //TODO: avoid copy.
 	    }
-	  std::cout << "pass #" << i << " / ams=" << gams << " / nevals=" << nevals << std::endl;
+
+	  std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+	  elapsed_total = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+	  if (!FLAGS_mbatch_sim)
+	    std::cout << "pass #" << i << " / ams=" << gams << " / nevals=" << nevals << " / tim=" << elapsed/1000.0 << " / timt=" << elapsed_total/1000.0 << std::endl;
+	  else std::cout << gams << "," << nevals << "," << elapsed/1000.0 << "\t" << elapsed_total / 1000.0 << std::endl;
 	  
 	  int beg = i*FLAGS_n;
 	  int bsize = FLAGS_n;
@@ -445,6 +456,7 @@ int main(int argc, char *argv[])
 	  cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
 	  sigma0[i] = cmasols._sigma;
 	  nevals += cmasols._nevals;
+	  elapsed += cmasols._elapsed_time;
 	  //else cmasols = cmaes<>(nn_of,cmaparams,hpfunc,gnn);
 	  //std::cout << "status: " << cmasols._run_status << std::endl;
 	}
