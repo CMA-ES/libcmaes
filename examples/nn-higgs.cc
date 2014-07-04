@@ -384,7 +384,9 @@ int main(int argc, char *argv[])
 	      ggfeatures = gfeatures;
 	      gglabels = glabels;
 	      ggweights = gweights;
-	      x0 = std::vector<double>(ghiggsnn._allparams_dim,FLAGS_x0);
+	      ghiggsnn.to_array();
+	      x0 = ghiggsnn._allparams;
+	      //x0 = std::vector<double>(ghiggsnn._allparams_dim,FLAGS_x0);
 	      init = true;
 	    }
 	  else

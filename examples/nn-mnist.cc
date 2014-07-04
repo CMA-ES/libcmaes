@@ -113,8 +113,9 @@ nn gmnistnn;
 bool gsigmoid = false;
 
 // testing
-void testing(const CMASolutions &cmasols,
-	     const bool &training=true)
+double testing(const CMASolutions &cmasols,
+	       const bool &training=true,
+	       const bool &printout=true)
 {
   dMat cmat = dMat::Zero(10,10);
   Candidate bcand = cmasols.best_candidate();
@@ -132,7 +133,7 @@ void testing(const CMASolutions &cmasols,
       else gtlabels.col(i).maxCoeff(&maxv[1]);
       cmat(maxv[1],maxv[0])++;
     }
-  std::cerr << "cmat:" << std::endl << cmat << std::endl;
+  
   dMat diago = cmat.diagonal();
   dMat col_sums = cmat.colwise().sum();
   dMat row_sums = cmat.rowwise().sum();
@@ -141,12 +142,17 @@ void testing(const CMASolutions &cmasols,
   double accuracy = diago.sum() / cmat.sum();
   double f1 = (2 * precision * recall) / (precision + recall);
 
-  if (training)
-    std::cout << "training set:\n";
-  else std::cout << "testing set:\n";
-  std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
-  std::cout << "accuracy=" << accuracy << std::endl;
-  std::cout << "f1=" << f1 << std::endl;
+  if (printout)
+    {
+      std::cerr << "cmat:" << std::endl << cmat << std::endl;
+      if (training)
+	std::cout << "training set:\n";
+      else std::cout << "testing set:\n";
+      std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
+      std::cout << "accuracy=" << accuracy << std::endl;
+      std::cout << "f1=" << f1 << std::endl;
+    }
+  return accuracy;
 }
 
 std::random_device rd;
@@ -327,11 +333,14 @@ int main(int argc, char *argv[])
 	      fvalue = hgn._loss; // on ggfeatures and gglabels.
 	    }
 
+	  double acc = 0.0;
+	  if (cmasols._sepcov.size())
+	    acc = testing(cmasols,false,false);
 	  std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
 	  elapsed_total = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 	  if (!FLAGS_nmbatch_sim)
-	    std::cout << "pass #" << i << " / fvalue=" << fvalue << " / nevals=" << nevals << " / tim=" << elapsed/1000.0 << " / timt=" << elapsed_total/1000.0 << std::endl;
-	  else std::cout << fvalue << "," << nevals << "," << elapsed/1000.0 << "\t" << elapsed_total / 1000.0 << std::endl;
+	    std::cout << "pass #" << i << " / fvalue=" << fvalue << " / nevals=" << nevals << " / acc=" << acc << " / tim=" << elapsed/1000.0 << " / timt=" << elapsed_total/1000.0 << std::endl;
+	  else std::cout << fvalue << "," << nevals << "," << acc << "," << elapsed/1000.0 << "\t" << elapsed_total / 1000.0 << std::endl;
 	  
 	  int beg = i*FLAGS_n;
 	  int bsize = FLAGS_n;
