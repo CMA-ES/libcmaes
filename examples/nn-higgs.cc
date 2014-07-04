@@ -396,11 +396,7 @@ int main(int argc, char *argv[])
 	      for (int i=0;i<(int)x0.size();i++)
 		hgn._allparams.push_back(x0[i]);
 	      hgn.forward_pass(ggfeatures,gglabels);
-	      //gweights = ggweights;
-	      //glabels = gglabels;
 	      gams = -ams(hgn,ggweights,gglabels);
-	      //gglabels = glabels;
-	      //ggweights = gweights; //TODO: avoid copy.
 	    }
 
 	  std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
