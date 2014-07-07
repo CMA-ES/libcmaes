@@ -206,6 +206,14 @@ GradFunc gnn = [](const double *x, const int N)
   return grad;
 };
 
+ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
+{
+  double acc = testing(cmasols,false,false);
+  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / acc=" << acc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  return 0;
+};
+							
+
 DEFINE_string(fdata,"train.csv","name of the file that contains the training data for MNIST");
 DEFINE_int32(n,100,"max number of examples to train from");
 DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
@@ -214,7 +222,7 @@ DEFINE_bool(check_grad,false,"checks on gradient correctness via back propagatio
 DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) along with black-box optimization");
 DEFINE_double(lambda,-1,"number of offsprings at each generation");
 DEFINE_double(sigma0,0.01,"initial value for step-size sigma (-1.0 for automated value)");
-DEFINE_int32(hlayer,100,"number of neurons in the hidden layer");
+DEFINE_string(hlayers,"100","comma separated list of number of neurons per hidden layer");
 DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 DEFINE_int32(mbatch,-1,"size of minibatch");
@@ -225,6 +233,7 @@ DEFINE_bool(nmbatch,false,"whether to use minibatches");
 DEFINE_int32(nmbatch_budget,-1,"max budget when using minibatches");
 DEFINE_double(nmbatch_ftarget,1e-3,"loss target when using minibatches");
 DEFINE_bool(nmbatch_sim,false,"simplified output for minibatches in order to pipe to file");
+DEFINE_double(nmbatch_acc,0.97,"accuracy target when using minibatches");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -234,8 +243,14 @@ int main(int argc, char *argv[])
   if (FLAGS_check_grad)
     {
       FLAGS_n = 10;
-      FLAGS_hlayer = 10;
+      FLAGS_hlayers = "10";
     }
+  std::vector<std::string> hlayers_str;
+  std::vector<int> hlayers;
+  tokenize(FLAGS_hlayers,hlayers_str,",");
+  for (size_t i=0;i<hlayers_str.size();i++)
+    hlayers.push_back(atoi(hlayers_str.at(i).c_str()));
+  
   if (FLAGS_mbatch > 0)
     gbatches = FLAGS_mbatch;
 
@@ -251,7 +266,7 @@ int main(int argc, char *argv[])
   if (FLAGS_testf != "")
     {
       dMat ttfeatures, ttlabels; // dummy.
-      int errt = load_mnist_dataset(FLAGS_testf,FLAGS_n,false,gtfeatures,gtlabels,ttfeatures,ttlabels);
+      int errt = load_mnist_dataset(FLAGS_testf,10000,false,gtfeatures,gtlabels,ttfeatures,ttlabels);
       if (errt)
 	{
 	  std::cout << "error loading test dataset " << FLAGS_testf << std::endl;
@@ -273,7 +288,10 @@ int main(int argc, char *argv[])
     std::cout << "glabels: " << glabels << std::endl;*/
   //debug
   
-  glsizes = {784, FLAGS_hlayer, 10};
+  glsizes.push_back(784);
+  for (size_t i=0;i<hlayers.size();i++)
+    glsizes.push_back(hlayers.at(i));
+  glsizes.push_back(10);
   gmnistnn = nn(glsizes,FLAGS_sigmoid,FLAGS_check_grad || FLAGS_with_gradient);
 
   if (FLAGS_check_grad)
@@ -293,6 +311,7 @@ int main(int argc, char *argv[])
     npasses = ceil(gfeatures.cols()/static_cast<double>(FLAGS_n));
   std::vector<double> sigma0(npasses,FLAGS_sigma0);
   double fvalue = 100000.0;
+  double acc = 0.0;
   int nevals = 0;
   int elapsed = 0;
   int elapsed_total = 0;
@@ -308,6 +327,7 @@ int main(int argc, char *argv[])
       for (int i=0;i<npasses;i++)
 	{
 	  if (fvalue <= FLAGS_nmbatch_ftarget
+	      || acc >= FLAGS_nmbatch_acc
 	      || (FLAGS_nmbatch_budget != -1 && nevals >= FLAGS_nmbatch_budget))
 	    {
 	      run = false;
@@ -359,9 +379,22 @@ int main(int argc, char *argv[])
 	    cmaparams._quiet = true;
 	  /*if (gbatches > 0)
 	    cmaparams.set_noisy();*/
-	  if (!FLAGS_with_gradient)
+	  /*if (!FLAGS_with_gradient)
 	    cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
-	  else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols);
+	    else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols);*/
+	  if (FLAGS_nmbatch)
+	    {
+	      if (!FLAGS_with_gradient)
+		cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
+	      else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols);
+	    }
+	  else
+	    {
+	      if (!FLAGS_with_gradient)
+		cmasols = cmaes<>(nn_of,cmaparams,mpfunc,nullptr,cmasols);
+	      else cmasols = cmaes<>(nn_of,cmaparams,mpfunc,gnn,cmasols);
+	    }
+	  
 	  sigma0[i] = cmasols._sigma;
 	  nevals += cmasols._nevals;
 	  elapsed += cmasols._elapsed_time;
