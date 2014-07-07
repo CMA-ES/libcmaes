@@ -94,7 +94,7 @@ int load_higgs_dataset(const std::string &filename,
 	    features(i-1,ne) = values.at(i);
 	  if (label == "b")
 	    labels(0,ne) = 1.0;
-	  else labels(1,ne) = 1.0;
+	  else labels(1,ne) = -1.0;
 	  weights(0,ne) = values.back();
 	}
       else
@@ -103,7 +103,7 @@ int load_higgs_dataset(const std::string &filename,
 	    tfeatures(i-1,ne-trn) = values.at(i);
 	  if (label == "b")
 	    tlabels(0,ne-trn) = 1.0;
-	  else tlabels(1,ne-trn) = 1.0;
+	  else tlabels(1,ne-trn) = -1.0;
 	  tweights(0,ne-trn) = values.back();
 	}
       ++ne;
@@ -134,7 +134,7 @@ double max_ams(const int &n,
     {
       for (int i=0;i<glabels.cols();i++)
 	{
-	  if (glabels(1,i) == 1.0) // s
+	  if (glabels(1,i) == -1.0) // s
 	    s += gweights(0,i);
 	}
     }
@@ -142,7 +142,7 @@ double max_ams(const int &n,
     {
       for (int i=0;i<gtlabels.cols();i++)
 	{
-	  if (gtlabels(1,i) == 1.0) // s
+	  if (gtlabels(1,i) == -1.0) // s
 	    s += gtweights(0,i);
 	}
     }
@@ -158,13 +158,14 @@ double ams(const nn &hgn,
   double br = 10.0;
   double b = 0.0;
   double s = 0.0;
+  //std::cerr << "lfeatures:" << hgn._lfeatures << std::endl;
   for (int i=0;i<hgn._lfeatures.cols();i++)
     {
       dMat::Index ind;
-      hgn._lfeatures.col(i).maxCoeff(&ind);
+      hgn._lfeatures.col(i).cwiseAbs().maxCoeff(&ind);
       if (ind == 1)
 	{
-	  if (glabels(ind,i) == 1.0)
+	  if (glabels(ind,i) == -1.0)
 	    s += gweights(0,i);
 	  else b += gweights(0,i);
 	}
@@ -189,13 +190,13 @@ void testing(const CMASolutions &cmasols,
   for (int i=0;i<ghiggsnn._lfeatures.cols();i++)
     {
       dMat::Index maxv[2];
-      ghiggsnn._lfeatures.col(i).maxCoeff(&maxv[0]);
+      ghiggsnn._lfeatures.col(i).cwiseAbs().maxCoeff(&maxv[0]);
       if (training)
-	glabels.col(i).maxCoeff(&maxv[1]);
-      else gtlabels.col(i).maxCoeff(&maxv[1]);
+	glabels.col(i).cwiseAbs().maxCoeff(&maxv[1]);
+      else gtlabels.col(i).cwiseAbs().maxCoeff(&maxv[1]);
       cmat(maxv[1],maxv[0])++;
     }
-  //std::cerr << "cmat:" << std::endl << cmat << std::endl;
+  std::cerr << "cmat:" << std::endl << cmat << std::endl;
   dMat diago = cmat.diagonal();
   dMat col_sums = cmat.colwise().sum();
   dMat row_sums = cmat.rowwise().sum();
