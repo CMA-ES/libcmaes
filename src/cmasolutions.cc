@@ -52,6 +52,15 @@ namespace libcmaes
 	_xmean = 0.5*(dVec::Random(p._dim) + dVec::Constant(p._dim,1.0)); // scale to [0,1].
 	_xmean = _xmean.cwiseProduct(p._x0max - p._x0min) + p._x0min; // scale to bounds.
       }
+    if (!p._fixed_p.empty())
+      {
+	auto fpmit = p._fixed_p.begin();
+	while (fpmit!=p._fixed_p.end())
+	  {
+	    _xmean((*fpmit).first) = (*fpmit).second;
+	    ++fpmit;
+	  }
+      }
     // if scaling, need to apply to xmean.
     if (!p._gp._scalingstrategy._id)
       p._gp._scalingstrategy.scale_to_internal(_xmean,_xmean);
