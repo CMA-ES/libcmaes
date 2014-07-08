@@ -487,7 +487,7 @@ CMASolutions cmaes_opt()
   if (cmasols._run_status >= 0 && FLAGS_le)
     {
       std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate()._fvalue + FLAGS_le_fup << ")\n";
-      for (int k=0;k<1;k++)//FLAGS_dim;k++)
+      for (int k=0;k<FLAGS_dim;k++)
 	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
 						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta);
     }
