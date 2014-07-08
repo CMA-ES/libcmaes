@@ -63,6 +63,12 @@ namespace libcmaes
 				 dVec &x,
 				 double &dxk);
 
+    static CMASolutions optimize_vpk(FitFunc &func,
+				     const CMAParameters<TGenoPheno> &parameters,
+				     const CMASolutions &cmasol,
+				     const std::vector<int> &k,
+				     const std::vector<double> &vk);
+    
     static CMASolutions optimize_pk(FitFunc &func,
 				    const CMAParameters<TGenoPheno> &parameters,
 				    const CMASolutions &cmasol,
@@ -78,9 +84,16 @@ namespace libcmaes
 
 
     /*- contour -*/
-    static contour contour_points(FitFunc & func, const int &px, const int &py, const int &npoints,
+    static contour contour_points(FitFunc & func, const int &px, const int &py, const int &npoints, const double &fup,
 				  const CMAParameters<TGenoPheno> &parameters,
 				  CMASolutions &cmasol);
+
+    static fcross cross(FitFunc &func,
+			const CMAParameters<TGenoPheno> &parameters,
+			CMASolutions &cmasol,
+			const double &fup,
+			const std::vector<int> &par, const std::vector<double> &pmid,
+			const std::vector<double> &pdir, const double &ftol);
     };    
   
 }

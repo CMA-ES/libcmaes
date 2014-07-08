@@ -420,6 +420,8 @@ DEFINE_double(le_delta,0.1,"tolerance factor around the fup confidence interval 
 DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing the profile likelihood in every direction");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
+DEFINE_int32(contour_p,4,"number of contour points, must be >= 4");
+DEFINE_double(contour_fup,0.1,"value from the minimum at which to find contour points");
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
@@ -491,13 +493,14 @@ CMASolutions cmaes_opt()
     }
   if (!FLAGS_contour.empty())
     {
+      cmaparams._quiet = true;
       std::vector<std::string> contour_indexes_str = split(FLAGS_contour,',');
       std::pair<int,int> contour_indexes;
       contour_indexes.first = atoi(contour_indexes_str.at(0).c_str());
       contour_indexes.second = atoi(contour_indexes_str.at(1).c_str());
       std::cout << "Now computing contour passing through point (" << contour_indexes.first << "," << contour_indexes.second << ")\n";
       contour ct = errstats<TGenoPheno>::contour_points(mfuncs[FLAGS_fname],contour_indexes.first,contour_indexes.second,
-							4,cmaparams,cmasols);
+							FLAGS_contour_p,FLAGS_contour_fup,cmaparams,cmasols);
       std::cout << ct << std::endl;
     }
   std::cout << "Done!\n";

@@ -26,7 +26,25 @@
 
 namespace libcmaes
 {
+  /**
+   * \brief function crossing as point.
+   */
+  class fcross
+  {
+  public:
+    fcross() {}
+    fcross(const double &aopt, const double &fvalue,
+	   const int &nevals, const dVec &x)
+      :_aopt(aopt),_fvalue(fvalue),_nevals(nevals),_x(x)
+    {};
+    ~fcross() {};
 
+    double _aopt = 0.0;
+    double _fvalue = 0.0;
+    int _nevals = 0.0;
+    dVec _x;
+  };
+  
   /**
    * \brief function contour as a set of points and values.
    */
@@ -46,12 +64,20 @@ namespace libcmaes
       _points.push_back(std::pair<double,double>(x,y));
     }
 
+    void add_point(const std::vector<std::pair<double,double>>::iterator vit,
+		   const double &x, const double &y)
+    {
+      _points.insert(vit,std::pair<double,double>(x,y));
+    }
+    
     std::ostream& print(std::ostream &out) const
       {
 	out << "contour points: [";
 	for (size_t i=0;i<_points.size();i++)
 	  {
-	    out << "(" << _points.at(i).first << "," << _points.at(i).second << ") ";
+	    out << "[" << _points.at(i).first << "," << _points.at(i).second << "]";
+	    if (i!=_points.size()-1)
+	      out << ",";
 	  }
 	out << "]\n";
 	return out;

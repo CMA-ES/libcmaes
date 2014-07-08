@@ -113,6 +113,10 @@ namespace libcmaes
      */
     void update_fevals(const int &evals);
 
+    /**
+     * \brief sets the gradient function, if available.
+     * @param gfunc gradient function
+     */
     void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
     
     /**
