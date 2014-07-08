@@ -79,7 +79,8 @@ namespace libcmaes
 	bool iterend = errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,curve,x,dxk);
 		
 	//debug
-	//std::cout << "new xk point: " << x.transpose() << std::endl;
+	/*std::cout << "new xk point: " << x.transpose() << std::endl;
+	  std::cout << "iterend=" << iterend << std::endl;*/
 	//debug
 	
 	// minimize.
@@ -95,7 +96,7 @@ namespace libcmaes
 	      }
 	      return;*/
 	  }
-	else // update current point and solution.
+	//else // update current point and solution.
 	  {
 	    citsol = ncitsol;
 	    x = citsol.best_candidate()._x;
@@ -154,7 +155,7 @@ namespace libcmaes
 	      && fdiff > threshold * fdiff_relative_increase
 	      && phenoxtmp[k] >= parameters._gp._boundstrategy.getPhenoLBound(k))
 	  {
-	    //std::cerr << "fvalue=" << fvalue << " / fdelta=" << fdelta << " / fup= " << fup << " / xtmpk=" << phenoxtmp[k] << " / dxk=" << dxk << " / fdiff=" << fdiff << " / thresh=" << threshold * fdiff_relative_increase << std::endl;//" / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
+	    //std::cerr << "fvalue-fup=" << fabs(fvalue-fup) << " / fvalue=" << fvalue << " / fdelta=" << fdelta << " / fup= " << fup << " / xtmpk=" << phenoxtmp[k] << " / dxk=" << dxk << " / fdiff=" << fdiff << " / thresh=" << threshold * fdiff_relative_increase << std::endl;//" / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
 	    dxk /= 2.0;
 	    xtmp[k] = x[k] + dxk;
 	    phenoxtmp = parameters._gp.pheno(xtmp);
@@ -192,11 +193,11 @@ namespace libcmaes
     CMASolutions ncmasol = cmasol;
     CMAParameters<TGenoPheno> nparameters = parameters;
     nparameters._quiet = true; //TODO: option.
-    ncmasol._sigma = 0.0;
+    ncmasol._sigma = nparameters._sigma_init;
     for (size_t i=0;i<k.size();i++)
       {
 	nparameters.set_fixed_p(k[i],vk[i]);
-	nparameters._sigma_init = ncmasol._sigma = std::max(ncmasol._sigma,fabs(cmasol.best_candidate()._x[k[i]]-vk[i])); // XXX: possibly a better sigma selection ?
+	//nparameters._sigma_init = ncmasol._sigma = std::max(ncmasol._sigma,fabs(cmasol.best_candidate()._x[k[i]]-vk[i])); // XXX: possibly a better sigma selection ?
       }
     return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,nullptr,ncmasol); //TODO: explicitely set the initial covariance.
   }
@@ -275,31 +276,30 @@ namespace libcmaes
     nparameters.set_x0(cmasol.best_candidate()._x);
     nparameters.set_fixed_p(px,valx+plx._errmax);
     CMASolutions exy_up = cmaes(func,nparameters);
-    std::cout << "exy_up=" << exy_up.best_candidate()._x.transpose() << std::endl;
+    //std::cout << "exy_up=" << exy_up.best_candidate()._x.transpose() << std::endl;
     
     // find lower y value for x parameter.
     nparameters = parameters;
     nparameters.set_x0(cmasol.best_candidate()._x);
     nparameters.set_fixed_p(px,valx+plx._errmin);
     CMASolutions exy_lo = cmaes(func,nparameters);
-    std::cout << "exy_lo=" << exy_lo.best_candidate()._x.transpose() << std::endl;
+    //std::cout << "exy_lo=" << exy_lo.best_candidate()._x.transpose() << std::endl;
     
     // find upper x value for y parameter.
     //nparameters = parameters;
     TGenoPheno gp;
-    //nparameters = CMAParameters<TGenoPheno>(parameters._dim,cmasol.best_candidate()._x.data(),0.1,-1,0,gp);
     nparameters = parameters;
     nparameters.set_x0(cmasol.best_candidate()._x);
     nparameters.set_fixed_p(py,valy+ply._errmax);
     CMASolutions eyx_up = cmaes<TGenoPheno>(func,nparameters);
-    std::cout << "eyx_up=" << eyx_up.best_candidate()._x.transpose() << std::endl;
+    //std::cout << "eyx_up=" << eyx_up.best_candidate()._x.transpose() << std::endl;
     
     // find lower x value for y parameter.
     nparameters = parameters;
     nparameters.set_x0(cmasol.best_candidate()._x);
     nparameters.set_fixed_p(py,valy+ply._errmin);
     CMASolutions eyx_lo = cmaes(func,nparameters);
-    std::cout << "eyx_lo=" << eyx_lo.best_candidate()._x.transpose() << std::endl;
+    //std::cout << "eyx_lo=" << eyx_lo.best_candidate()._x.transpose() << std::endl;
     
     contour c;
     c.add_point(valx+plx._errmin,exy_lo.best_candidate()._x[py]);
@@ -310,16 +310,20 @@ namespace libcmaes
     double scalx = 1.0/(plx._errmax - plx._errmin);
     double scaly = 1.0/(ply._errmax - ply._errmin);
 
-    std::cout << "contour:" << c << std::endl;
+    //debug
+    //std::cout << "contour:" << c << std::endl;
+    //debug
     
-    //TODO: more than 4 points.
+    // more than 4 points.
     for (int i=4;i<npoints;i++)
       {
-	std::cout << "=> generating point #" << i << std::endl;
+	//debug
+	//std::cout << "=> generating point #" << i << std::endl;
+	//debug
 	
-	//TODO: - check on max budget, and return if exceeded.
+	//- check on max budget, and return if exceeded.
 	
-	//TODO:- get most distant points.
+	//- get most distant points.
 	std::vector<std::pair<double,double>>::iterator idist1 = c._points.end()-1;
 	std::vector<std::pair<double,double>>::iterator idist2 = c._points.begin();
 	double dx = idist1->first - idist2->first;
@@ -340,7 +344,7 @@ namespace libcmaes
 	    //std::cout << "idist10=" << idist1->first << " -- idist20=" << idist2->first << std::endl;
 	  }
 	
-	//TODO:- select mid-range point x and direction dir along the two axis of interest.
+	// - select mid-range point x and direction dir along the two axis of interest.
 	double a1 = 0.5;
 	double a2 = 0.5;
 	double sca = 1.0;
@@ -355,15 +359,18 @@ namespace libcmaes
 	std::vector<double> pdir = {xdircr, ydircr};
 	std::vector<int> par = {px,py};
 	
-	//TODO: printout of pmid / pdir.
-	std::cout << "idist10=" << idist1->first << " / idist11=" << idist1->second << " / idist20=" << idist2->first << " / idist21=" << idist2->second << std::endl;
-	std::cout << "pmid0=" << pmid[0] << " / pmid1=" << pmid[1] << " / pdir0=" << pdir[0] << " / pdir1=" << pdir[1] << std::endl;
-	
-	//TODO: find crossing point from x with direction dir where function is equal to min + fup.
-	fcross fc = errstats<TGenoPheno>::cross(func,parameters,cmasol,fup,par,pmid,pdir,parameters._ftolerance);
-
 	//debug
-	std::cout << "fcross point=" << fc._x.transpose() << std::endl;
+	/*std::cout << "idist10=" << idist1->first << " / idist11=" << idist1->second << " / idist20=" << idist2->first << " / idist21=" << idist2->second << std::endl;
+	  std::cout << "pmid0=" << pmid[0] << " / pmid1=" << pmid[1] << " / pdir0=" << pdir[0] << " / pdir1=" << pdir[1] << std::endl;*/
+	//debug
+	
+	// find crossing point from x with direction dir where function is equal to min + fup.
+	fcross fc = errstats<TGenoPheno>::cross(func,parameters,cmasol,fup,par,pmid,pdir,parameters._ftolerance);
+	if (fc._nevals == 0.0) // dummy
+	  continue;
+	
+	//debug
+	//std::cout << "fcross point=" << fc._x.transpose() << std::endl;
 	//debug
 
 	if (idist2 == c._points.begin())
@@ -377,7 +384,7 @@ namespace libcmaes
       }
 
     //debug
-    std::cout << "number of contour points=" << c._points.size() << std::endl;
+    //std::cout << "number of contour points=" << c._points.size() << std::endl;
     //debug
     
     return c;
@@ -402,7 +409,7 @@ namespace libcmaes
     unsigned int maxitr = 15, ipt = 0;
 
     //debug
-    std::cout << "aminsv=" << aminsv << " / aim=" << aim << " / tla=" << tla << " / tlf=" << tlf << std::endl;
+    //std::cout << "aminsv=" << aminsv << " / aim=" << aim << " / tla=" << tla << " / tlf=" << tlf << std::endl;
     //debug
     
     // get a first optimized point.
@@ -415,7 +422,7 @@ namespace libcmaes
     ipt++;
 
     //debug
-    std::cout << "contour / fvalue=" << cmasol1.best_candidate()._fvalue << " / optimized point1=" << cmasol1.best_candidate()._x.transpose() << std::endl;
+    //std::cout << "contour / fvalue=" << cmasol1.best_candidate()._fvalue << " / optimized point1=" << cmasol1.best_candidate()._x.transpose() << std::endl;
     //debug
     
     // update aopt and get a second optimized point.
@@ -434,15 +441,16 @@ namespace libcmaes
     ipt++;
 
     //debug
-    std::cout << "contour / fvalue=" << cmasol2.best_candidate()._fvalue << " / optimized point2=" << cmasol2.best_candidate()._x.transpose() << std::endl;
+    //std::cout << "contour / fvalue=" << cmasol2.best_candidate()._fvalue << " / optimized point2=" << cmasol2.best_candidate()._x.transpose() << std::endl;
     //debug
     
     // study slope between the two points.
+  slope:
     if (dfda < 0.0)
       {
 
 	//debug
-	std::cout << "negative slope\n";
+	//std::cout << "negative slope\n";
 	//debug
 	
 	// if negative slope, update until positive.
@@ -465,7 +473,11 @@ namespace libcmaes
       }
 
     // once positive slope, find a third point.
-    std::cout << "positive slope, dfda=" << dfda << std::endl;
+  point3:
+    //debug
+    //std::cout << "positive slope, dfda=" << dfda << std::endl;
+    //debug
+    
     aopt = alsb[1] + (aim-flsb[1])/dfda;
     double fdist = std::min(fabs(aim  - flsb[0]), fabs(aim  - flsb[1]));
     double adist = std::min(fabs(aopt - alsb[0]), fabs(aopt - alsb[1]));
@@ -474,8 +486,10 @@ namespace libcmaes
     if (adist < tla && fdist < tlf)
       {
 	// return second optimized point.
-	std::cout << "below tolerance, returning second optimized point\n";
-	return fcross(aopt,cmasol2.best_candidate()._fvalue,
+	//debug
+	//std::cout << "below tolerance, returning second optimized point\n";
+	//debug
+	return fcross(cmasol2.best_candidate()._fvalue,
 		      nfcn,cmasol2.best_candidate()._x); // XXX: returning the modified aopt, same as original code...
       }
     double bmin = std::min(alsb[0], alsb[1]) - 1.;
@@ -489,10 +503,12 @@ namespace libcmaes
     alsb[2] = aopt;
     flsb[2] = cmasol3.best_candidate()._fvalue;
     nfcn += cmasol3._nevals;
-    cmasols.push_back(cmasol3);
-
+    if (cmasols.size() < 3)
+      cmasols.push_back(cmasol3);
+    else cmasols.at(2) = cmasol3;
+    
     //debug
-    std::cout << "contour / fvalue=" << cmasol3.best_candidate()._fvalue << " / optimized point3=" << cmasol3.best_candidate()._x.transpose() << std::endl;
+    //std::cout << "contour / fvalue=" << cmasol3.best_candidate()._fvalue << " / optimized point3=" << cmasol3.best_candidate()._x.transpose() << std::endl;
     //debug
     
     // from three points < or > objective, decide what to do.
@@ -521,9 +537,7 @@ namespace libcmaes
     if(noless == 1 || noless == 2)
       {
 	// XXX: could do parabola instead.
-	//std::cout << "ecarmn=" << ecarmn << " / aim=" << aim << std::endl;
 	int srefp = -1;
-	//int sside = (ecarmn > 0.0) - (ecarmn < 0.0);
 	bool bestbelow = (flsb[ibest] < aim);
 	double srefecar = ecarmx;
 	for (int i=0;i<3;i++)
@@ -542,15 +556,8 @@ namespace libcmaes
 		  }
 	      }
 	  }
-	/*std::cout << "bestbelow=" << bestbelow << " / srefp=" << srefp << " / ibest=" << ibest << " / srefecar=" << srefecar << " / val=" << flsb[srefp]-aim << " / ecarmn=" << ecarmn << " / ecarmx=" << ecarmx << std::endl;
-
-	std::cout << "a point on each side, performing linesearch\n";
-	std::cout << "srefecar x=" << cmasols.at(srefp).best_candidate()._x.transpose() << std::endl;
-	std::cout << "ibest x=" << cmasols.at(ibest).best_candidate()._x.transpose() << std::endl;*/
 	int sdir0 = (cmasols.at(srefp).best_candidate()._x(par[0])-cmasols.at(ibest).best_candidate()._x(par[0]) > 0.0) ? 1 : -1;
 	int sdir1 = (cmasols.at(srefp).best_candidate()._x(par[1])-cmasols.at(ibest).best_candidate()._x(par[1]) > 0.0) ? 1 : -1;
-	/*std::cout << "ref sdir0=" << cmasols.at(srefp).best_candidate()._x(par[0])-cmasols.at(ibest).best_candidate()._x(par[0]) << " / sdir0=" << sdir0 << std::endl;
-	std::cout << "ref sdir1=" << cmasols.at(srefp).best_candidate()._x(par[1])-cmasols.at(ibest).best_candidate()._x(par[1]) << " / sdir1=" << sdir1 << std::endl;*/
 	dVec xstart;
 	double nminfvalue;
 	if (cmasols.at(ibest).best_candidate()._fvalue < aim)
@@ -565,12 +572,15 @@ namespace libcmaes
 	  }
 	double dxk0 = sdir0 * fabs(xstart(par[0])) * 0.1;
 	double dxk1 = sdir1 * fabs(xstart(par[1])) * 0.1;
-	
+
+	//debug
 	//std::cout << "sdir0=" << sdir0 << " / sdir1=" << sdir1 << " / dxk0=" << dxk0 << " / dxk1=" << dxk1 << std::endl;
+	//debug
+	
 	CMASolutions citsol = cmasols.at(ibest);
 	while (true)
 	  {
-	    // advance incrementally instead of more complicated linear_step procedure.
+	    // advance incrementally
 	    xstart(par[0]) += dxk0;
 	    xstart(par[1]) += dxk1;
 
@@ -580,7 +590,6 @@ namespace libcmaes
 	    
 	    std::vector<double> vxk = {xstart(par[0]),xstart(par[1])};
 	    CMASolutions ncitsol = errstats<TGenoPheno>::optimize_vpk(func,parameters,citsol,par,vxk);
-	    //std::cout << "optimization status=" << ncitsol._run_status << std::endl;
 	    if (ncitsol._run_status < 0)
 	      {
 		LOG(WARNING) << "contour linesearch: optimization error " << ncitsol._run_status << std::endl;
@@ -590,31 +599,48 @@ namespace libcmaes
 	      break;
 	    citsol = ncitsol;
 	  }
+
+	//debug
 	//std::cout << "contour linesearch best point=" << citsol.best_candidate()._x.transpose() << std::endl;
-	return fcross(0.0,citsol.best_candidate()._fvalue,nfcn,citsol.best_candidate()._x);
+	//debug
+	
+	return fcross(citsol.best_candidate()._fvalue,nfcn,citsol.best_candidate()._x);
       }
-    // if all three are above AIM, third point must be the closest to AIM, return it
+    // if all three points are above aim, third point must be the closest to AIM, return it
     if(noless == 0 && ibest != 2)
       {
-	std::cout << "all points above, returning third point as best\n";
-	return fcross(aopt,flsb[2],
-		      nfcn,cmasols[2].best_candidate()._x);
+	//debug
+	//std::cout << "all points above, returning closest point as best\n";
+	//debug
+	
+	return fcross(flsb[ibest],
+		      nfcn,cmasols[ibest].best_candidate()._x);
       }
     // if all three below and third is not best then the slope has again gone negative,
     // re-iterate and look for positive slope
     if(noless == 3 && ibest != 2)
       {
-	//TODO.
-	std::cout << "slope is again negative\n";
+	//debug
+	//std::cout << "slope is again negative\n";
+	//debug
+	
+	alsb[1] = alsb[2];
+	flsb[1] = flsb[2];
+	goto slope;
       }
 
     // in other case new straight line thru first two points
-    std::cout << "new straight line through first two points\n";
+    //debug
+    //std::cout << "new straight line through first two points\n";
+    //debug
+
+    // restart from point 3...
     flsb[iworst] = flsb[2];
     alsb[iworst] = alsb[2];
     dfda = (flsb[1] - flsb[0])/(alsb[1] - alsb[0]);
-    //TODO: restart from point 3...
-    
+    goto point3;
+
+    LOG(WARNING) << "returning empty cross point when drawing contour\n";
     return fcross();
   }
   

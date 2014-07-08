@@ -190,6 +190,11 @@ namespace libcmaes
 	    if ((*it).second._err[(*it).second._minindex] || (*it).second._err[(*it).second._maxindex])
 	      out << " / status=[" << (*it).second._err[(*it).second._minindex] << "," << (*it).second._err[(*it).second._maxindex] << "]";
 	    out << std::endl;
+	    if (verb_level)
+	      {
+		out << "x=" << "([" << (*it).second._xm.row((*it).second._minindex) << "],[" << (*it).second._xm.row((*it).second._samplesize + 1 + (*it).second._maxindex) << "])\n";
+	      }
+	    out << "fvalue=" << "(" << (*it).second._fvaluem((*it).second._minindex) << "," << (*it).second._fvaluem((*it).second._samplesize+1+(*it).second._maxindex) << ")\n";
 	  }
       }
     return out;

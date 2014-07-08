@@ -33,13 +33,12 @@ namespace libcmaes
   {
   public:
     fcross() {}
-    fcross(const double &aopt, const double &fvalue,
+    fcross(const double &fvalue,
 	   const int &nevals, const dVec &x)
-      :_aopt(aopt),_fvalue(fvalue),_nevals(nevals),_x(x)
+      :_fvalue(fvalue),_nevals(nevals),_x(x)
     {};
     ~fcross() {};
 
-    double _aopt = 0.0;
     double _fvalue = 0.0;
     int _nevals = 0.0;
     dVec _x;
