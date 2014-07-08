@@ -76,11 +76,10 @@ namespace libcmaes
     for (int i=0;i<samplesize;i++)
       {
 	// get a new xk point.
-	bool iterend = errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,curve,x,dxk);
+	errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,curve,x,dxk);
 		
 	//debug
-	/*std::cout << "new xk point: " << x.transpose() << std::endl;
-	  std::cout << "iterend=" << iterend << std::endl;*/
+	//std::cout << "new xk point: " << x.transpose() << std::endl;
 	//debug
 	
 	// minimize.
@@ -101,6 +100,7 @@ namespace libcmaes
 	    citsol = ncitsol;
 	    x = citsol.best_candidate()._x;
 	    minfvalue = citsol.best_candidate()._fvalue;
+	    //std::cout << "minfvalue=" << minfvalue << std::endl;
 	  }
 	
 	// store points.
@@ -108,7 +108,8 @@ namespace libcmaes
 	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
 	le._xm.row(samplesize+sign*(1+i)) = phenobx.transpose();
 	le._err[samplesize+sign*(1+i)] = ncitsol._run_status;
-	
+
+	bool iterend = (fabs(minfvalue-fup) <= 0.1*fup);
 	if (!curve && iterend)
 	  {
 	    // pad and return.
@@ -118,6 +119,7 @@ namespace libcmaes
 		le._xm.row(samplesize+sign*(1+j)) = phenobx.transpose();
 		le._err[samplesize+sign*(1+j)] = ncitsol._run_status;
 	      }
+	    //std::cout << "iterend=" << iterend << std::endl;
 	    return;
 	  }
       }
@@ -141,7 +143,6 @@ namespace libcmaes
     dVec phenoxtmp = parameters._gp.pheno(xtmp);
     double fvalue = func(phenoxtmp.data(),xtmp.size());
     double fdiff = fvalue - minfvalue;
-
     
     //debug
     /*std::cout << "xtmp=" << xtmp.transpose() << std::endl;
@@ -180,6 +181,7 @@ namespace libcmaes
       }
     x[k] = xtmp[k]; // set value.
     dVec phenox = parameters._gp.pheno(x);
+    //std::cout << "fvalue=" << fvalue << std::endl;
     return (fabs(fvalue-fup) < fdelta || phenox[k] < parameters._gp._boundstrategy.getPhenoLBound(k) || phenox[k] > parameters._gp._boundstrategy.getPhenoUBound(k));
   }
 
