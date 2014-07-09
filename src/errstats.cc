@@ -67,6 +67,7 @@ namespace libcmaes
 						       const double &delta,
 						       const bool &curve)
   {
+    static int maxiters = 1e5;
     int sign = neg ? -1 : 1;
     dVec x = cmasol.best_candidate()._x;
     double xk = x[k];
@@ -87,16 +88,17 @@ namespace libcmaes
 	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k]);
 	if (ncitsol._run_status < 0)
 	  {
-	    LOG(WARNING) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << std::endl;
+	    LOG(ERROR) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << std::endl;
 	    // pad and return.
-	    /*for (int j=i+1;j<samplesize;j++)
+	    for (int j=0;j<samplesize;j++)
 	      {
-		le._fvaluem[samplesize+sign*(1+j)] = le._fvaluem[samplesize+sign*i];
-		le._xm.row(samplesize+sign*(1+j)) = le._xm.row(samplesize+sign*i);
+		le._fvaluem[samplesize+sign*(1+j)] = le._fvaluem[samplesize];
+		le._xm.row(samplesize+sign*(1+j)) = le._xm.row(samplesize);
+		le._err[samplesize+sign*(1+j)] = ncitsol._run_status;
 	      }
-	      return;*/
+	      return;
 	  }
-	//else // update current point and solution.
+	else // update current point and solution.
 	  {
 	    citsol = ncitsol;
 	    x = citsol.best_candidate()._x;
@@ -128,6 +130,8 @@ namespace libcmaes
 	  }
 	++i;
 	if (curve && i == samplesize)
+	  break;
+	if (i == maxiters)
 	  break;
       }
   }
@@ -206,7 +210,7 @@ namespace libcmaes
     for (size_t i=0;i<k.size();i++)
       {
 	nparameters.set_fixed_p(k[i],vk[i]);
-	//nparameters._sigma_init = ncmasol._sigma = std::max(ncmasol._sigma,fabs(cmasol.best_candidate()._x[k[i]]-vk[i])); // XXX: possibly a better sigma selection ?
+	nparameters._sigma_init = ncmasol._sigma = std::max(ncmasol._sigma,fabs(cmasol.best_candidate()._x[k[i]]-vk[i])); // XXX: possibly a better sigma selection ?
       }
     return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,nullptr,ncmasol); //TODO: explicitely set the initial covariance.
   }
