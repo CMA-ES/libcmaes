@@ -372,6 +372,25 @@ namespace libcmaes
     return _fplot;
   }
   
+  /**
+   * \brief activates the gradient injection scheme. 
+   *        If no gradient function is defined, injects a numerical gradient solution instead
+   * @param gradient true/false
+   */
+  void set_gradient(const bool &gradient)
+  {
+    _with_gradient = gradient;
+  }
+
+  /**
+   * \brief returns whether the gradient injection scheme is activated.
+   * @return with gradient
+   */
+  bool get_gradient() const
+  {
+    return _with_gradient;
+  }
+  
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
   int _max_iter = -1; /**< max iterations. */
@@ -388,6 +407,8 @@ namespace libcmaes
   uint64_t _seed = 0; /**< seed for random generator. */
   int _algo = 0; /**< selected algorithm. */
 
+  bool _with_gradient=false; /**< whether to use injected gradient. */
+  
   std::unordered_map<int,double> _fixed_p; /**< fixed parameters and values. */
   
   TGenoPheno _gp; /**< genotype / phenotype object. */
