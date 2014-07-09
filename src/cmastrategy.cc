@@ -101,7 +101,7 @@ namespace libcmaes
     else pop = _esolver.samples_ind(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma);
 
     // gradient if available.
-    if (eostrat<TGenoPheno>::_gfunc && eostrat<TGenoPheno>::_solutions._niter > 0)
+    if (eostrat<TGenoPheno>::_gfunc)
       {
 	dVec grad_at_mean = eostrat<TGenoPheno>::_gfunc(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim);
 	dVec gradgp_at_mean = eostrat<TGenoPheno>::gradgp(eostrat<TGenoPheno>::_solutions._xmean); // for geno / pheno transform.
