@@ -353,6 +353,24 @@ namespace libcmaes
   {
     return _gp;
   }
+
+  /**
+   * \brief sets the output filename (activates the output to file).
+   * @param fplot filename
+   */
+  void set_fplot(const std::string &fplot)
+  {
+    _fplot = fplot;
+  }
+
+  /**
+   * \brief returns the current output filename.
+   * @return output filename
+   */
+  std::string get_fplot() const
+  {
+    return _fplot;
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
