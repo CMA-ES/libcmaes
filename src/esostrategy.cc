@@ -110,6 +110,8 @@ namespace libcmaes
   template<class TParameters,class TSolutions,class TStopCriteria>
   double ESOStrategy<TParameters,TSolutions,TStopCriteria>::edm()
   {
+    //TODO: gradient needs to be lifted into geno space,
+    //      not sure how to do this when geno/pheno applies a non-linear transform.
     int n = _parameters._dim;
     double edm = n / (10.0*(sqrt(_parameters._lambda / 4.0 + 0.5)-1));
     dVec gradff = gradf(_parameters._gp.pheno(_solutions._xmean));
