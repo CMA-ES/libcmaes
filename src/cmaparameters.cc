@@ -118,6 +118,15 @@ namespace libcmaes
     _chi = sqrt(ndim)*(1.0-1.0/(4.0*ndim) + 1.0/(21.0*ndim*ndim));
     _lazy_value = 1.0/(_c1+_cmu)/ndim/10.0;
   }
+
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::unset_fixed_p(const int &index)
+  {
+    Parameters<TGenoPheno>::unset_fixed_p(index);
+    double ndim = Parameters<TGenoPheno>::_dim-Parameters<TGenoPheno>::_fixed_p.size();
+    _chi = sqrt(ndim)*(1.0-1.0/(4.0*ndim) + 1.0/(21.0*ndim*ndim));
+    _lazy_value = 1.0/(_c1+_cmu)/ndim/10.0;
+  }
   
   template class CMAParameters<GenoPheno<NoBoundStrategy>>;
   template class CMAParameters<GenoPheno<pwqBoundStrategy>>;

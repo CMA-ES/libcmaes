@@ -147,6 +147,17 @@ namespace libcmaes
   }
 
   /**
+   * \brief unfreezes a parameter.
+   * @param index dimenion index of the parameter to unfreeze
+   */
+  void unset_fixed_p(const int &index)
+  {
+    std::unordered_map<int,double>::iterator mit;
+    if ((mit=_fixed_p.find(index))!=_fixed_p.end())
+      _fixed_p.erase(mit);
+  }
+  
+  /**
    * \brief sets the maximum number of iterations allowed for the optimization.
    * @param maxiter maximum number of allowed iterations
    */
