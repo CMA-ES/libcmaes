@@ -144,6 +144,8 @@ namespace libcmaes
      * @return vector of numerical gradient of the objective function at x.
      */
     dVec gradf(const dVec &x) const;
+
+    dVec gradgp(const dVec &x) const;
     
     /**
      * \brief computes expected distance to minimum (EDM).

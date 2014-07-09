@@ -426,6 +426,7 @@ DEFINE_bool(linscaling,false,"whether to automatically scale parameter space lin
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
 DEFINE_bool(with_gradient,false,"whether to use the function gradient when available in closed form");
+DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -446,6 +447,7 @@ CMASolutions cmaes_opt()
   cmaparams._fplot = FLAGS_fplot;
   cmaparams._lazy_update = FLAGS_lazy_update;
   cmaparams._quiet = FLAGS_quiet;
+  cmaparams._with_gradient = FLAGS_with_gradient || FLAGS_with_num_gradient;
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)

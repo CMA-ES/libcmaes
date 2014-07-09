@@ -118,15 +118,21 @@ namespace libcmaes
     else pop = _esolver.samples_ind(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma);
 
     // gradient if available.
-    if (eostrat<TGenoPheno>::_gfunc)
+    if (eostrat<TGenoPheno>::_parameters._with_gradient)
       {
-	dVec grad_at_mean = eostrat<TGenoPheno>::_gfunc(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim);
+	dVec grad_at_mean = eostrat<TGenoPheno>::gradf(eostrat<TGenoPheno>::_solutions._xmean);
+	dVec gradgp_at_mean = eostrat<TGenoPheno>::gradgp(eostrat<TGenoPheno>::_solutions._xmean); // for geno / pheno transform.
+	grad_at_mean = grad_at_mean.cwiseProduct(gradgp_at_mean);
 	if (grad_at_mean != dVec::Zero(eostrat<TGenoPheno>::_parameters._dim))
 	  {
-	    //TODO: if geno / pheno transform activated.
 	    dVec nx;
 	    if (!eostrat<TGenoPheno>::_parameters._sep)
-	      nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._cov.sqrt() * grad_at_mean).norm())) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
+	      {
+		dMat sqrtcov = _esolver._eigenSolver.operatorSqrt();
+		dVec q = sqrtcov * grad_at_mean;
+		double normq = q.squaredNorm();
+		nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim / normq)) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
+	      }
 	    else nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt().cwiseProduct(grad_at_mean)).norm())) * eostrat<TGenoPheno>::_solutions._sepcov.cwiseProduct(grad_at_mean);
 	    pop.col(0) = nx;
 	  }

@@ -116,6 +116,13 @@ namespace libcmaes
       }
     return vgradf;
   }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  dVec ESOStrategy<TParameters,TSolutions,TStopCriteria>::gradgp(const dVec &x) const
+  {
+    dVec epsilon = 1e-8 * (dVec::Constant(_parameters._dim,1.0) + x.cwiseAbs());
+    return (_parameters._gp.pheno(dVec(x+epsilon))-_parameters._gp.pheno(dVec(x-epsilon))).cwiseQuotient(2.0*epsilon);
+  }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
   double ESOStrategy<TParameters,TSolutions,TStopCriteria>::edm()
@@ -123,6 +130,8 @@ namespace libcmaes
     int n = _parameters._dim;
     double edm = n / (10.0*(sqrt(_parameters._lambda / 4.0 + 0.5)-1));
     dVec gradff = gradf(_parameters._gp.pheno(_solutions._xmean));
+    dVec gradgpf = gradgp(_solutions._xmean);
+    gradff = gradff.cwiseProduct(gradgpf);
     dMat gradmn;
     if (!_parameters._sep)
       gradmn = _solutions._leigenvectors*_solutions._leigenvalues.cwiseSqrt().asDiagonal() * gradff;
