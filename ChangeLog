@@ -1,0 +1,7 @@
+2014-06-23	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.7:
+	- Support for Estimated Distance to Minimum (EDM)
+	- Support for gradient injection
+	- Improved examples
+	- Support for sep-active-CMA-ES for high dimensional problems
+	
