@@ -104,9 +104,9 @@ namespace libcmaes
     if (eostrat<TGenoPheno>::_gfunc)
       {
 	dVec grad_at_mean = eostrat<TGenoPheno>::_gfunc(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim);
+	//TODO: if geno / pheno transform activated.
 	if (grad_at_mean != dVec::Zero(eostrat<TGenoPheno>::_parameters._dim))
 	  {
-	    //TODO: if geno / pheno transform activated.
 	    dVec nx;
 	    if (!eostrat<TGenoPheno>::_parameters._sep)
 	      nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._cov.sqrt() * grad_at_mean).norm())) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
