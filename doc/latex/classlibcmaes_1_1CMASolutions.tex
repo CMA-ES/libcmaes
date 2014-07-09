@@ -33,6 +33,18 @@ double \hyperlink{classlibcmaes_1_1CMASolutions_a33a5f2f6bc03c9b459d58f079a1a2d3
 \begin{DoxyCompactList}\small\item\em returns expected distance to minimum. \end{DoxyCompactList}\item 
 d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_a8b3cd4f1b85c820190eedbf81f49a441}{cov} () const 
 \begin{DoxyCompactList}\small\item\em returns error covariance matrix \end{DoxyCompactList}\item 
+d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_ab79973d3d76c8ffb810608252ba72df9}{sepcov} () const 
+\begin{DoxyCompactList}\small\item\em returns separable covariance diagonal vector, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. \end{DoxyCompactList}\item 
+double \hyperlink{classlibcmaes_1_1CMASolutions_a8790ac429e629856d2295e953cbe2324}{sigma} () const 
+\begin{DoxyCompactList}\small\item\em returns current value of step-\/size sigma \end{DoxyCompactList}\item 
+d\-Vec \hyperlink{classlibcmaes_1_1CMASolutions_ab8d63d0079eff716421f82a8ec874ca4}{xmean} () const 
+\begin{DoxyCompactList}\small\item\em returns current distribution's mean in parameter space \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMASolutions_a4215c5baf357d23ef893eb52b4766eea}{run\-\_\-status} () const 
+\begin{DoxyCompactList}\small\item\em returns current optimization status. \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMASolutions_add680b4437a6a2786b7a6228fa73023e}{elapsed\-\_\-time} () const 
+\begin{DoxyCompactList}\small\item\em returns currently elapsed time spent on optimization \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMASolutions_aceb58df5ee91f159e626b51ee788c381}{niter} () const 
+\begin{DoxyCompactList}\small\item\em returns current number of iterations \end{DoxyCompactList}\item 
 std\-::ostream \& \hyperlink{classlibcmaes_1_1CMASolutions_a6efb92b35de0ffa6cbe5918c82469db2}{print} (std\-::ostream \&out, const int \&verb\-\_\-level=0) const 
 \begin{DoxyCompactList}\small\item\em print the solution object out. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
@@ -165,6 +177,34 @@ returns expected distance to minimum.
 \begin{DoxyReturn}{Returns}
 edm 
 \end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_add680b4437a6a2786b7a6228fa73023e}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!elapsed\-\_\-time@{elapsed\-\_\-time}}
+\index{elapsed\-\_\-time@{elapsed\-\_\-time}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{elapsed\-\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::elapsed\-\_\-time (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_add680b4437a6a2786b7a6228fa73023e}
+
+
+returns currently elapsed time spent on optimization 
+
+\begin{DoxyReturn}{Returns}
+time spent on optimization 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_aceb58df5ee91f159e626b51ee788c381}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!niter@{niter}}
+\index{niter@{niter}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{niter}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::niter (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_aceb58df5ee91f159e626b51ee788c381}
+
+
+returns current number of iterations 
+
+\begin{DoxyReturn}{Returns}
+number of iterations 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_a6efb92b35de0ffa6cbe5918c82469db2}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!print@{print}}
 \index{print@{print}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
 \subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}std\-::ostream \& libcmaes\-::\-C\-M\-A\-Solutions\-::print (
@@ -184,6 +224,48 @@ print the solution object out.
 {\em verb\-\_\-level} & verbosity level\-: 0 for short, 1 for debug. \\
 \hline
 \end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMASolutions_a4215c5baf357d23ef893eb52b4766eea}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!run\-\_\-status@{run\-\_\-status}}
+\index{run\-\_\-status@{run\-\_\-status}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{run\-\_\-status}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::run\-\_\-status (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a4215c5baf357d23ef893eb52b4766eea}
+
+
+returns current optimization status. 
+
+\begin{DoxyReturn}{Returns}
+status 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_ab79973d3d76c8ffb810608252ba72df9}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!sepcov@{sepcov}}
+\index{sepcov@{sepcov}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{sepcov}]{\setlength{\rightskip}{0pt plus 5cm}d\-Mat libcmaes\-::\-C\-M\-A\-Solutions\-::sepcov (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_ab79973d3d76c8ffb810608252ba72df9}
+
+
+returns separable covariance diagonal vector, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. 
+
+\begin{DoxyReturn}{Returns}
+error covariance diagonal vector 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a8790ac429e629856d2295e953cbe2324}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!sigma@{sigma}}
+\index{sigma@{sigma}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{sigma}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::sigma (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a8790ac429e629856d2295e953cbe2324}
+
+
+returns current value of step-\/size sigma 
+
+\begin{DoxyReturn}{Returns}
+current step-\/size 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_a7a7e71c54967613717d2928a38715429}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!size@{size}}
 \index{size@{size}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
 \subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::size (
@@ -227,6 +309,20 @@ updates reference eigenvalue and eigenvectors, for use in termination criteria.
 \begin{DoxySeeAlso}{See Also}
 \hyperlink{classlibcmaes_1_1CMAStopCriteria}{C\-M\-A\-Stop\-Criteria} 
 \end{DoxySeeAlso}
+\hypertarget{classlibcmaes_1_1CMASolutions_ab8d63d0079eff716421f82a8ec874ca4}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!xmean@{xmean}}
+\index{xmean@{xmean}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{xmean}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-C\-M\-A\-Solutions\-::xmean (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_ab8d63d0079eff716421f82a8ec874ca4}
+
+
+returns current distribution's mean in parameter space 
+
+\begin{DoxyReturn}{Returns}
+mean 
+\end{DoxyReturn}
 
 
 \subsection{Member Data Documentation}

@@ -26,7 +26,6 @@ var searchData=
   ['_5ffixed_5fp',['_fixed_p',['../classlibcmaes_1_1Parameters.html#a83fdae9d4bb9b77c8ad955c6aac75086',1,'libcmaes::Parameters']]],
   ['_5ffplot',['_fplot',['../classlibcmaes_1_1Parameters.html#aa49511ea00199348ea94f1aa53fe5bc1',1,'libcmaes::Parameters']]],
   ['_5fftarget',['_ftarget',['../classlibcmaes_1_1Parameters.html#a837dbcfba351a043441076a11666f92c',1,'libcmaes::Parameters']]],
-  ['_5fftargettol',['_ftargettol',['../classlibcmaes_1_1Parameters.html#af9dde10c81d743c7f684d486f989d1a4',1,'libcmaes::Parameters']]],
   ['_5fftolerance',['_ftolerance',['../classlibcmaes_1_1Parameters.html#ab6c11cc112b5709e9039967e881c808e',1,'libcmaes::Parameters']]],
   ['_5ffunc',['_func',['../classlibcmaes_1_1ESOStrategy.html#a1a29d4c30bbdb6021920275e81fa4dc4',1,'libcmaes::ESOStrategy']]],
   ['_5ffvalue',['_fvalue',['../classlibcmaes_1_1Candidate.html#af8797627514ae7e137317337372fb67d',1,'libcmaes::Candidate']]],

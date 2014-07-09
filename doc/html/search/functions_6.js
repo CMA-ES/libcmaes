@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['optimize',['optimize',['../classlibcmaes_1_1BIPOPCMAStrategy.html#a7117a7300899d1b3b734ffc6efd41054',1,'libcmaes::BIPOPCMAStrategy::optimize()'],['../classlibcmaes_1_1CMAStrategy.html#a68cb0023f51e2824758b1bd1c7512f39',1,'libcmaes::CMAStrategy::optimize()'],['../classlibcmaes_1_1ESOptimizer.html#a175e487b798d7a748c28c784256b51c8',1,'libcmaes::ESOptimizer::optimize()'],['../classlibcmaes_1_1ESOStrategy.html#ab50528bdfb24df59a868aeaf7a5cc1c4',1,'libcmaes::ESOStrategy::optimize()'],['../classlibcmaes_1_1IPOPCMAStrategy.html#a9c4f8ae0a8cbf600ba8fe7270e63172a',1,'libcmaes::IPOPCMAStrategy::optimize()']]]
+  ['inc_5fiter',['inc_iter',['../classlibcmaes_1_1ESOStrategy.html#a8eda694f97058ca603f8f31e5bb1bc05',1,'libcmaes::ESOStrategy']]],
+  ['initialize_5fparameters',['initialize_parameters',['../classlibcmaes_1_1CMAParameters.html#a0d963d4719d9b6447cddeeca542167a1',1,'libcmaes::CMAParameters']]],
+  ['ipopcmastrategy',['IPOPCMAStrategy',['../classlibcmaes_1_1IPOPCMAStrategy.html#a0fad3e1160695878d2d8075a4cddf786',1,'libcmaes::IPOPCMAStrategy']]]
 ];
