@@ -331,7 +331,7 @@ namespace libcmaes
    * \brief returns which algorithm is set for the optimization at hand.
    * @return algorithm integer code
    */
-  int algo() const
+  int get_algo() const
   {
     return _algo;
   }
