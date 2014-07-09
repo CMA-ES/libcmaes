@@ -113,6 +113,60 @@ namespace libcmaes
     {
       return _cov;
     }
+
+    /**
+     * \brief returns separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
+     * @return error covariance diagonal vector
+     */
+    dMat sepcov() const
+    {
+      return _sepcov;
+    }
+
+    /**
+     * \brief returns current value of step-size sigma
+     * @return current step-size
+     */
+    double sigma() const
+    {
+      return _sigma;
+    }
+
+    /**
+     * \brief returns current distribution's mean in parameter space
+     * @return mean
+     */
+    dVec xmean() const
+    {
+      return _xmean;
+    }
+
+    /**
+     * \brief returns current optimization status.
+     * @return status
+     */
+    int run_status() const
+    {
+      return _run_status;
+    }
+
+    /**
+     * \brief returns currently elapsed time spent on optimization
+     * @return time spent on optimization
+     */
+    int elapsed_time() const
+    {
+      return _elapsed_time;
+    }
+
+    /**
+     * \brief returns current number of iterations
+     * @return number of iterations
+     */
+    int niter() const
+    {
+      return _niter;
+    }
     
     /**
      * \brief print the solution object out.

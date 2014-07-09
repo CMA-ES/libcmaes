@@ -130,6 +130,24 @@ namespace libcmaes
   }
 
   /**
+   * \brief returns lower bound on x0 vector
+   * @return lower bound on x0
+   */
+  dVec get_x0min() const
+  {
+    return _x0min;
+  }
+
+  /**
+   * \brief returns upper bound on x0 vector
+   * @return upper bound on x0
+   */
+  dVec get_x0max() const
+  {
+    return _x0max;
+  }
+  
+  /**
    * \brief freezes a parameter to a given value during optimization.
    * @param index dimension index of the parameter to be frozen
    * @param value frozen value of the parameter
@@ -160,14 +178,32 @@ namespace libcmaes
   }
 
   /**
-   * \brief sets the maximum budget of function calls allowed for the optimization.
-   * @param fevals maximum number of function evaluations
+   * \brief returns maximum number of iterations
+   * @return max number of iterations allowed
+   */
+  void get_max_iter() const
+  {
+    return _max_iter;
+  }
+  
+  /**
+   * \brief sets the maximum budget of objective function calls allowed for the optimization.
+   * @param fevals maximum number of objective function evaluations
    */
   void set_max_fevals(const int &fevals)
   {
     _max_fevals = fevals;
   }
 
+  /**
+   * \brief returns maximum budget of objective function calls
+   * @return max number of objective function evaluations
+   */
+  int get_max_fevals() const
+  {
+    return _max_fevals;
+  }
+  
   /**
    * \brief sets the objective function target value when known.
    * @param val objective function target value
@@ -186,6 +222,35 @@ namespace libcmaes
   }
 
   /**
+   * \brief returns objective function target value.
+   * @return objective function target value
+   */
+  double get_ftarget() const
+  {
+    return _ftarget;
+  }
+
+  /**
+   * \brief sets random generator's seed, 0 is special value to generate random seed.
+   * @param seed integer seed
+   */
+  void set_seed(const int &seed)
+  {
+    if (_seed == 0)
+      _seed = static_cast<uint64_t>(time(nullptr));
+    else _seed = seed;
+  }
+
+  /**
+   * \brief returns random generator's seed.
+   * @return integer seed
+   */
+  int get_seed() const
+  {
+    return _seed;
+  }
+  
+  /**
    * \brief sets function tolerance as stopping criteria for TolHistFun: monitors the
    *        difference in function value over iterations and stops optimization when 
    *        below tolerance.
@@ -194,10 +259,100 @@ namespace libcmaes
   void set_ftolerance(const double &v) { _ftolerance = v; }
 
   /**
+   * \brief returns function tolerance
+   * @return function tolerance
+   */
+  double get_ftolerance() const
+  {
+    return _ftolerance;
+  }
+  
+  /**
    * \brief sets parameter tolerance as stopping criteria for TolX.
    * @param v value of the parameter tolerance.
    */
   void set_xtolerance(const double &v) { _xtol = v; }
+
+  /**
+   * \brief returns parameter tolerance
+   * @return parameter tolerance
+   */
+  double get_xtolerance() const
+  {
+    return _xtol;
+  }
+  
+  /**
+   * \brief returns lambda, number of offsprings per generation
+   * @return lambda
+   */
+  int lambda() const
+  {
+    return _lambda;
+  }
+
+  /**
+   * \brief returns the problem's dimension
+   * @return dimensions
+   */
+  int dim() const
+  {
+    return _dim;
+  }
+
+  /**
+   * \brief sets the quiet mode (no output from the library) for the optimization at hand
+   * @param quiet true / false
+   */
+  void set_quiet(const bool &quiet)
+  {
+    _quiet = quiet;
+  }
+  
+  /**
+   * \brief returns whether the quiet mode is on.
+   * @return quiet mode
+   */
+  bool quiet() const
+  {
+    return _quiet;
+  }
+
+  /**
+   * \brief sets the optimization algorithm.
+   * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES 
+   */
+  void set_algo(const int &algo)
+  {
+    _algo = algo;
+  }
+  
+  /**
+   * \brief returns which algorithm is set for the optimization at hand.
+   * @return algorithm integer code
+   */
+  int algo() const
+  {
+    return _algo;
+  }
+
+  /**
+   * \brief sets the genotype/phenotype transform object.
+   * @param gp GenoPheno object
+   */
+  void set_gp(const TGenoPheno &gp)
+  {
+    _gp = gp;
+  }
+
+  /**
+   * \brief returns the current genotype/phenotype transform object.
+   * @return GenoPheno object
+   */
+  TGenoPheno get_gp() const
+  {
+    return _gp;
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
@@ -209,7 +364,6 @@ namespace libcmaes
   dVec _x0min; /**< initial mean vector min bound value for all components. */
   dVec _x0max; /**< initial mean vector max bound value for all components. */
   double _ftarget = -std::numeric_limits<double>::infinity(); /**< optional objective function target value. */
-  double _ftargettol = 1e-12; /**< objective function target tolerance. */
   double _ftolerance = 1e-12; /**< tolerance of the best function values during the last 10+(30*dim/lambda) steps (TolHistFun). */ 
   double _xtol = 1e-12; /**< tolerance on parameters error. */
   
