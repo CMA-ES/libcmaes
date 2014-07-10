@@ -89,7 +89,7 @@ namespace libcmaes
   }
 
   template<class TParameters,class TSolutions,class TStopCriteria>
-  dVec ESOStrategy<TParameters,TSolutions,TStopCriteria>::gradf(const dVec &x) const
+  dVec ESOStrategy<TParameters,TSolutions,TStopCriteria>::gradf(const dVec &x)
   {
     if (_gfunc != nullptr)
       return _gfunc(x.data(),_parameters._dim);
@@ -104,6 +104,8 @@ namespace libcmaes
 	double gradi = (_func(ei1.data(),_parameters._dim) - _func(ei2.data(),_parameters._dim))/(2.0*epsilon(i));
 	vgradf(i,0) = gradi;
       }
+    _solutions._nevals += 2*_parameters._dim; // numerical gradient increases the budget.
+    _nevals += 2*_parameters._dim;
     return vgradf;
   }
 

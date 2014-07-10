@@ -118,8 +118,8 @@ namespace libcmaes
      * \brief returns numerical gradient of objective function at x.
      * @return vector of numerical gradient of the objective function at x.
      */
-    dVec gradf(const dVec &x) const;
-
+    dVec gradf(const dVec &x);
+    
     dVec gradgp(const dVec &x) const;
     
     /**
