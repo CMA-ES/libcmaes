@@ -104,8 +104,7 @@ namespace libcmaes
 	double gradi = (_func(ei1.data(),_parameters._dim) - _func(ei2.data(),_parameters._dim))/(2.0*epsilon(i));
 	vgradf(i,0) = gradi;
       }
-    _solutions._nevals += 2*_parameters._dim; // numerical gradient increases the budget.
-    _nevals += 2*_parameters._dim;
+    update_fevals(2*_parameters._dim); // numerical gradient increases the budget.
     return vgradf;
   }
 
