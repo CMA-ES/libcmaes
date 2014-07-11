@@ -96,6 +96,7 @@ namespace libcmaes
     dVec vgradf(_parameters._dim);
     dVec epsilon = 1e-8 * (dVec::Constant(_parameters._dim,1.0) + x.cwiseAbs());
     double fx = _func(x.data(),_parameters._dim);
+#pragma omp parallel for if (_parameters._mt_feval)
     for (int i=0;i<_parameters._dim;i++)
       {
 	dVec ei1 = x;
