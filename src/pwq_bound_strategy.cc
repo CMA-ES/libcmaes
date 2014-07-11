@@ -37,7 +37,8 @@ namespace libcmaes
   }
   
   pwqBoundStrategy::pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim)
-    :_lbounds(Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Map<dVec>(const_cast<double*>(ubounds),dim))
+    :_lbounds(Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Map<dVec>(const_cast<double*>(ubounds),dim)),
+     _phenolbounds(_lbounds),_phenoubounds(_ubounds)
   {
     // init al & ul.
     dVec tmpdiff1 = _ubounds - _lbounds;
@@ -54,6 +55,26 @@ namespace libcmaes
     _r = 2.0 * (tmpdiff1 + _al + _au);
   }
 
+  pwqBoundStrategy::pwqBoundStrategy(const double *lbounds, const double *ubounds,
+				     const double *plbounds, const double *pubounds, const int &dim)
+    :_lbounds(Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Map<dVec>(const_cast<double*>(ubounds),dim)),
+     _phenolbounds(Map<dVec>(const_cast<double*>(plbounds),dim)),_phenoubounds(Map<dVec>(const_cast<double*>(pubounds),dim))
+  {
+    // init al & ul.
+    dVec tmpdiff1 = _ubounds - _lbounds;
+    dVec tmpdiff2 = 0.5*tmpdiff1;
+    dVec tmpal = (1.0/20.0) * (dVec::Constant(dim,1.0) + _lbounds.cwiseAbs());
+    _al = tmpdiff2.cwiseMin(tmpal);
+    
+    dVec tmpau = (1.0/20.0) * (dVec::Constant(dim,1.0) + _ubounds.cwiseAbs());
+    _au = tmpdiff2.cwiseMin(tmpau);
+    
+    // compute static variables.
+    _xlow = _lbounds - 2.0 * _al - tmpdiff2;
+    _xup = _ubounds + 2.0 * _au + tmpdiff2;
+    _r = 2.0 * (tmpdiff1 + _al + _au);
+  }
+  
   pwqBoundStrategy::~pwqBoundStrategy()
   {
   }

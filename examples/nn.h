@@ -267,13 +267,10 @@ public:
   {
     _allparams.clear();
     _allparams.reserve(_allparams_dim);
-    auto vit = _allparams.begin();
     for (size_t i=0;i<_lweights.size();i++)
       {
-	std::copy(_lweights.at(i).data(),_lweights.at(i).data()+_lweights.at(i).size(),vit); //TODO: use std::back_inserter instead.
-	vit += _lweights.at(i).size();
-	std::copy(_lb.at(i).data(),_lb.at(i).data()+_lsizes.at(i+1),vit);
-	vit += _lsizes.at(i+1);
+	std::copy(_lweights.at(i).data(),_lweights.at(i).data()+_lweights.at(i).size(),std::back_inserter(_allparams));
+	std::copy(_lb.at(i).data(),_lb.at(i).data()+_lsizes.at(i+1),std::back_inserter(_allparams));
       }
   }
 

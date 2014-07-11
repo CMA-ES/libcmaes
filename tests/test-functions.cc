@@ -20,6 +20,7 @@
  */
 
 #include "cmaes.h"
+#include "errstats.h"
 #include <map>
 #include <random>
 #include <limits>
@@ -33,6 +34,21 @@
 #include <assert.h>
 
 using namespace libcmaes;
+
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+  std::stringstream ss(s);
+  std::string item;
+  while (std::getline(ss, item, delim)) {
+    elems.push_back(item);
+  }
+  return elems;
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+  std::vector<std::string> elems;
+  split(s, delim, elems);
+  return elems;
+}
 
 bool compEp(const double &a, const double &b, const double &epsilon)
 {
@@ -398,7 +414,12 @@ DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecew
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_bool(quiet,false,"no intermediate output");
+DEFINE_bool(le,false,"whether to return profile likelihood error bounds around the minimum");
+DEFINE_double(le_fup,0.1,"deviation from the minimum as the size of the confidence interval for profile likelihood computation");
+DEFINE_double(le_delta,0.1,"tolerance factor around the fup confidence interval for profile likelihood computation");
+DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing the profile likelihood in every direction");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
+DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
@@ -463,10 +484,27 @@ CMASolutions cmaes_opt()
   CMASolutions cmasols;
   if (!FLAGS_with_gradient)
     cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
-  else
+  else cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
+  std::cout << "Minimization completed in " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+  if (cmasols._run_status >= 0 && FLAGS_le)
     {
-      cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
+      std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate()._fvalue + FLAGS_le_fup << ")\n";
+      for (int k=0;k<FLAGS_dim;k++)
+	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
+						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta);
     }
+  if (!FLAGS_contour.empty())
+    {
+      std::vector<std::string> contour_indexes_str = split(FLAGS_contour,',');
+      std::pair<int,int> contour_indexes;
+      contour_indexes.first = atoi(contour_indexes_str.at(0).c_str());
+      contour_indexes.second = atoi(contour_indexes_str.at(1).c_str());
+      std::cout << "Now computing contour passing through point (" << contour_indexes.first << "," << contour_indexes.second << ")\n";
+      contour ct = errstats<TGenoPheno>::contour_points(mfuncs[FLAGS_fname],contour_indexes.first,contour_indexes.second,
+							4,cmaparams,cmasols);
+      std::cout << ct << std::endl;
+    }
+  std::cout << "Done!\n";
   return cmasols;
 }
 
@@ -481,7 +519,7 @@ int main(int argc, char *argv[])
 #endif
   
   fillupfuncs();
-
+  
   if (FLAGS_list)
     {
       printAvailFuncs();
@@ -553,10 +591,10 @@ int main(int argc, char *argv[])
       exit(-1);
     }
   if (cmasols._run_status < 0)
-    LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
+      LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
   LOG(INFO) << cmasols << std::endl;
   if (FLAGS_with_edm)
     LOG(INFO) << "EDM=" << cmasols._edm << " / EDM/fm=" << cmasols._edm / cmasols.best_candidate()._fvalue << std::endl;
   //cmasols.print(std::cout,1);
- }
+}

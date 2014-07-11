@@ -113,8 +113,9 @@ nn gmnistnn;
 bool gsigmoid = false;
 
 // testing
-void testing(const CMASolutions &cmasols,
-	     const bool &training=true)
+double testing(const CMASolutions &cmasols,
+	       const bool &training=true,
+	       const bool &printout=true)
 {
   dMat cmat = dMat::Zero(10,10);
   Candidate bcand = cmasols.best_candidate();
@@ -132,7 +133,7 @@ void testing(const CMASolutions &cmasols,
       else gtlabels.col(i).maxCoeff(&maxv[1]);
       cmat(maxv[1],maxv[0])++;
     }
-  std::cerr << "cmat:" << std::endl << cmat << std::endl;
+  
   dMat diago = cmat.diagonal();
   dMat col_sums = cmat.colwise().sum();
   dMat row_sums = cmat.rowwise().sum();
@@ -141,12 +142,17 @@ void testing(const CMASolutions &cmasols,
   double accuracy = diago.sum() / cmat.sum();
   double f1 = (2 * precision * recall) / (precision + recall);
 
-  if (training)
-    std::cout << "training set:\n";
-  else std::cout << "testing set:\n";
-  std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
-  std::cout << "accuracy=" << accuracy << std::endl;
-  std::cout << "f1=" << f1 << std::endl;
+  if (printout)
+    {
+      std::cerr << "cmat:" << std::endl << cmat << std::endl;
+      if (training)
+	std::cout << "training set:\n";
+      else std::cout << "testing set:\n";
+      std::cout << "precision=" << precision << " / recall=" << recall << std::endl;
+      std::cout << "accuracy=" << accuracy << std::endl;
+      std::cout << "f1=" << f1 << std::endl;
+    }
+  return accuracy;
 }
 
 std::random_device rd;
@@ -200,6 +206,14 @@ GradFunc gnn = [](const double *x, const int N)
   return grad;
 };
 
+ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
+{
+  double acc = testing(cmasols,false,false);
+  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / acc=" << acc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  return 0;
+};
+							
+
 DEFINE_string(fdata,"train.csv","name of the file that contains the training data for MNIST");
 DEFINE_int32(n,100,"max number of examples to train from");
 DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
@@ -208,12 +222,18 @@ DEFINE_bool(check_grad,false,"checks on gradient correctness via back propagatio
 DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) along with black-box optimization");
 DEFINE_double(lambda,-1,"number of offsprings at each generation");
 DEFINE_double(sigma0,0.01,"initial value for step-size sigma (-1.0 for automated value)");
-DEFINE_int32(hlayer,100,"number of neurons in the hidden layer");
+DEFINE_string(hlayers,"100","comma separated list of number of neurons per hidden layer");
 DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 DEFINE_int32(mbatch,-1,"size of minibatch");
 DEFINE_int32(seed,0,"seed for es");
 DEFINE_string(testf,"","test file if different than training file");
+DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_bool(nmbatch,false,"whether to use minibatches");
+DEFINE_int32(nmbatch_budget,-1,"max budget when using minibatches");
+DEFINE_double(nmbatch_ftarget,1e-3,"loss target when using minibatches");
+DEFINE_bool(nmbatch_sim,false,"simplified output for minibatches in order to pipe to file");
+DEFINE_double(nmbatch_acc,0.97,"accuracy target when using minibatches");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -223,12 +243,21 @@ int main(int argc, char *argv[])
   if (FLAGS_check_grad)
     {
       FLAGS_n = 10;
-      FLAGS_hlayer = 10;
+      FLAGS_hlayers = "10";
     }
+  std::vector<std::string> hlayers_str;
+  std::vector<int> hlayers;
+  tokenize(FLAGS_hlayers,hlayers_str,",");
+  for (size_t i=0;i<hlayers_str.size();i++)
+    hlayers.push_back(atoi(hlayers_str.at(i).c_str()));
+  
   if (FLAGS_mbatch > 0)
     gbatches = FLAGS_mbatch;
-  
-  int err = load_mnist_dataset(FLAGS_fdata,FLAGS_n,FLAGS_testp,gfeatures,glabels,gtfeatures,gtlabels);
+
+  int load_size = FLAGS_n;
+  if (FLAGS_nmbatch)
+    load_size = 60000;
+  int err = load_mnist_dataset(FLAGS_fdata,load_size,FLAGS_testp,gfeatures,glabels,gtfeatures,gtlabels);
   if (err)
     {
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
@@ -237,7 +266,7 @@ int main(int argc, char *argv[])
   if (FLAGS_testf != "")
     {
       dMat ttfeatures, ttlabels; // dummy.
-      int errt = load_mnist_dataset(FLAGS_testf,FLAGS_n,false,gtfeatures,gtlabels,ttfeatures,ttlabels);
+      int errt = load_mnist_dataset(FLAGS_testf,10000,false,gtfeatures,gtlabels,ttfeatures,ttlabels);
       if (errt)
 	{
 	  std::cout << "error loading test dataset " << FLAGS_testf << std::endl;
@@ -259,7 +288,10 @@ int main(int argc, char *argv[])
     std::cout << "glabels: " << glabels << std::endl;*/
   //debug
   
-  glsizes = {784, FLAGS_hlayer, 10};
+  glsizes.push_back(784);
+  for (size_t i=0;i<hlayers.size();i++)
+    glsizes.push_back(hlayers.at(i));
+  glsizes.push_back(10);
   gmnistnn = nn(glsizes,FLAGS_sigmoid,FLAGS_check_grad || FLAGS_with_gradient);
 
   if (FLAGS_check_grad)
@@ -271,21 +303,110 @@ int main(int argc, char *argv[])
     }
   
   // training.
-  gmnistnn.to_array();
-  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&gmnistnn._allparams.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
-  cmaparams.set_max_iter(FLAGS_maxsolveiter);
-  cmaparams._fplot = FLAGS_fplot;
-  cmaparams._algo = sepaCMAES;
-  cmaparams.set_ftarget(1e-2);
-  cmaparams._mt_feval = true;
-  /*if (gbatches > 0)
-    cmaparams.set_noisy();*/
+  dMat ggfeatures;
+  dMat gglabels;
   CMASolutions cmasols;
-  if (!FLAGS_with_gradient)
-    cmasols = cmaes<>(nn_of,cmaparams);
-  else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn);
-  std::cout << "status: " << cmasols._run_status << std::endl;
+  int npasses = 1;
+  if (FLAGS_mbatch)
+    npasses = ceil(gfeatures.cols()/static_cast<double>(FLAGS_n));
+  std::vector<double> sigma0(npasses,FLAGS_sigma0);
+  double fvalue = 100000.0;
+  double acc = 0.0;
+  int nevals = 0;
+  int elapsed = 0;
+  int elapsed_total = 0;
+  bool init = false;
+  bool run = true;
 
+  std::cout << "npasses=" << npasses << std::endl;
+  std::cout << "dim=" << gmnistnn._allparams_dim << std::endl;
+
+  std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+  while (run)
+    {
+      for (int i=0;i<npasses;i++)
+	{
+	  if (fvalue <= FLAGS_nmbatch_ftarget
+	      || acc >= FLAGS_nmbatch_acc
+	      || (FLAGS_nmbatch_budget != -1 && nevals >= FLAGS_nmbatch_budget))
+	    {
+	      run = false;
+	      break;
+	    }
+	  std::vector<double> x0;
+	  if (i == 0 && !init)
+	    {
+	      ggfeatures = gfeatures;
+	      gglabels = glabels;
+	      gmnistnn.to_array();
+	      x0 = gmnistnn._allparams;
+	      init = true;
+	    }
+	  else
+	    {
+	      Candidate bcand = cmasols.best_candidate();
+	      std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(x0));
+	      nn hgn = nn(glsizes,gsigmoid);
+	      for (int i=0;i<(int)x0.size();i++)
+		hgn._allparams.push_back(x0[i]);
+	      hgn.forward_pass(ggfeatures,gglabels);
+	      fvalue = hgn._loss; // on ggfeatures and gglabels.
+	    }
+
+	  double acc = 0.0;
+	  if (cmasols._sepcov.size())
+	    acc = testing(cmasols,false,false);
+	  std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+	  elapsed_total = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+	  if (!FLAGS_nmbatch_sim)
+	    std::cout << "pass #" << i << " / fvalue=" << fvalue << " / nevals=" << nevals << " / acc=" << acc << " / tim=" << elapsed/1000.0 << " / timt=" << elapsed_total/1000.0 << std::endl;
+	  else std::cout << fvalue << "," << nevals << "," << acc << "," << elapsed/1000.0 << "\t" << elapsed_total / 1000.0 << std::endl;
+	  
+	  int beg = i*FLAGS_n;
+	  int bsize = FLAGS_n;
+	  if (i == npasses-1)
+	    bsize = ggfeatures.cols()-i*FLAGS_n;
+	  gfeatures = ggfeatures.block(0,beg,ggfeatures.rows(),bsize);
+	  glabels = gglabels.block(0,beg,gglabels.rows(),bsize);
+  
+	  CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front()/*gmnistnn._allparams.front()*/,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
+	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
+	  cmaparams._fplot = FLAGS_fplot;
+	  cmaparams._algo = sepaCMAES;
+	  cmaparams.set_ftarget(1e-2);
+	  cmaparams._mt_feval = true;
+	  if (FLAGS_nmbatch)
+	    cmaparams._quiet = true;
+	  /*if (gbatches > 0)
+	    cmaparams.set_noisy();*/
+	  /*if (!FLAGS_with_gradient)
+	    cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
+	    else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols);*/
+	  if (FLAGS_nmbatch)
+	    {
+	      if (!FLAGS_with_gradient)
+		cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
+	      else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols);
+	    }
+	  else
+	    {
+	      if (!FLAGS_with_gradient)
+		cmasols = cmaes<>(nn_of,cmaparams,mpfunc,nullptr,cmasols);
+	      else cmasols = cmaes<>(nn_of,cmaparams,mpfunc,gnn,cmasols);
+	    }
+	  
+	  sigma0[i] = cmasols._sigma;
+	  nevals += cmasols._nevals;
+	  elapsed += cmasols._elapsed_time;
+	  //std::cout << "status: " << cmasols._run_status << std::endl;
+	}
+      if (!FLAGS_nmbatch)
+	break;
+    }
+
+  gfeatures = ggfeatures;
+  glabels = gglabels;
+  
   // testing on training set.
   testing(cmasols,true);
 

@@ -54,6 +54,8 @@ namespace libcmaes
 		const uint64_t &seed=0,
 		const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
     ~CMAParameters();
+  
+    void reset_as_fixed(const int &k);
 
     /**
      * \brief initialize required parameters based on dim, lambda, x0 and sigma.

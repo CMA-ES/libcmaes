@@ -101,6 +101,12 @@ namespace libcmaes
     _x0max = dVec::Constant(_dim,x0max);
   }
 
+  void set_x0(const dVec &x0)
+  {
+    _x0min = x0;
+    _x0max = x0;
+  }
+  
   /**
    * \brief sets bounds on initial objective function parameter values.
    *        Initial value is sampled uniformly within these bounds.
@@ -109,7 +115,8 @@ namespace libcmaes
    */
   void set_x0(const double *x0min, const double *x0max)
   {
-    _x0min = x0max = dVec(_dim);
+    _x0min = dVec(_dim);
+    _x0max = dVec(_dim);
     for (int i=0;i<_dim;i++)
       {
 	_x0min(i) = x0min[i];

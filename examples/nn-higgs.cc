@@ -24,6 +24,7 @@
 #include <fstream>
 #include <gflags/gflags.h>
 #include <cstdlib>
+#include <chrono>
 #include <iostream>
 
 using namespace libcmaes;
@@ -93,7 +94,7 @@ int load_higgs_dataset(const std::string &filename,
 	    features(i-1,ne) = values.at(i);
 	  if (label == "b")
 	    labels(0,ne) = 1.0;
-	  else labels(1,ne) = 1.0;
+	  else labels(1,ne) = -1.0;
 	  weights(0,ne) = values.back();
 	}
       else
@@ -102,7 +103,7 @@ int load_higgs_dataset(const std::string &filename,
 	    tfeatures(i-1,ne-trn) = values.at(i);
 	  if (label == "b")
 	    tlabels(0,ne-trn) = 1.0;
-	  else tlabels(1,ne-trn) = 1.0;
+	  else tlabels(1,ne-trn) = -1.0;
 	  tweights(0,ne-trn) = values.back();
 	}
       ++ne;
@@ -122,6 +123,7 @@ dMat gtweights = dMat::Zero(1,100);
 nn ghiggsnn;
 bool gsigmoid = false;
 bool gtraining = true;
+bool ggradient = false;
 
 double max_ams(const int &n,
 	       const bool &training=true)
@@ -132,7 +134,7 @@ double max_ams(const int &n,
     {
       for (int i=0;i<glabels.cols();i++)
 	{
-	  if (glabels(1,i) == 1.0) // s
+	  if (glabels(1,i) == -1.0) // s
 	    s += gweights(0,i);
 	}
     }
@@ -140,7 +142,7 @@ double max_ams(const int &n,
     {
       for (int i=0;i<gtlabels.cols();i++)
 	{
-	  if (gtlabels(1,i) == 1.0) // s
+	  if (gtlabels(1,i) == -1.0) // s
 	    s += gtweights(0,i);
 	}
     }
@@ -150,29 +152,22 @@ double max_ams(const int &n,
 }
 
 double ams(const nn &hgn,
-	   const bool &training=true)
+	   const dMat &gweights,
+	   const dMat &glabels)
 {
   double br = 10.0;
   double b = 0.0;
   double s = 0.0;
+  //std::cerr << "lfeatures:" << hgn._lfeatures << std::endl;
   for (int i=0;i<hgn._lfeatures.cols();i++)
     {
       dMat::Index ind;
-      hgn._lfeatures.col(i).maxCoeff(&ind);
+      hgn._lfeatures.col(i).cwiseAbs().maxCoeff(&ind);
       if (ind == 1)
 	{
-	  if (training)
-	    {
-	      if (glabels(ind,i) == 1.0)
-		s += gweights(0,i);
-	      else b += gweights(0,i);
-	    }
-	  else
-	    {
-	      if (gtlabels(ind,i) == 1.0)
-		s += gtweights(0,i);
-	      else b += gtweights(0,i);
-	    }
+	  if (glabels(ind,i) == -1.0)
+	    s += gweights(0,i);
+	  else b += gweights(0,i);
 	}
     }
   double cams = sqrt(2.0*((s+b+br)*log(1.0+s/(b+br))-s));
@@ -195,13 +190,13 @@ void testing(const CMASolutions &cmasols,
   for (int i=0;i<ghiggsnn._lfeatures.cols();i++)
     {
       dMat::Index maxv[2];
-      ghiggsnn._lfeatures.col(i).maxCoeff(&maxv[0]);
+      ghiggsnn._lfeatures.col(i).cwiseAbs().maxCoeff(&maxv[0]);
       if (training)
-	glabels.col(i).maxCoeff(&maxv[1]);
-      else gtlabels.col(i).maxCoeff(&maxv[1]);
+	glabels.col(i).cwiseAbs().maxCoeff(&maxv[1]);
+      else gtlabels.col(i).cwiseAbs().maxCoeff(&maxv[1]);
       cmat(maxv[1],maxv[0])++;
     }
-  //std::cerr << "cmat:" << std::endl << cmat << std::endl;
+  std::cerr << "cmat:" << std::endl << cmat << std::endl;
   dMat diago = cmat.diagonal();
   dMat col_sums = cmat.colwise().sum();
   dMat row_sums = cmat.rowwise().sum();
@@ -211,10 +206,10 @@ void testing(const CMASolutions &cmasols,
   double f1 = (2 * precision * recall) / (precision + recall);
 
   if (training)
-    std::cout << "\n**** training set:\n";
-  else std::cout << "\n**** testing set:\n";
+    std::cout << "\n**** training set (" << gfeatures.cols() << "):\n";
+  else std::cout << "\n**** testing set (" << gtfeatures.cols() << "):\n";
   std::cout << "precision=" << precision << " / recall=" << recall << " / accuracy=" << accuracy << " / f1=" << f1 << std::endl;
-  std::cout << "max ams=" << -max_ams(ghiggsnn._lfeatures.cols(),training) << " / ams=" << -ams(ghiggsnn,training) << std::endl;
+  std::cout << "max ams=" << -max_ams(gfeatures.cols(),training) << " / ams=" << -ams(ghiggsnn,training ? gweights : gtweights, training ? glabels : gtlabels) << std::endl;
 }
 
 // objective function
@@ -226,11 +221,16 @@ FitFunc nn_of = [](const double *x, const int N)
   hgn.forward_pass(gfeatures,glabels);
   
   //debug
-  //std::cout << "net loss= " << ghiggsnn._loss << std::endl;
+  /*if (ggradient)
+    std::cout << "net loss= " << hgn._loss << std::endl;*/
   //debug
 
-  double cams = ams(hgn,gtraining);  
-  return cams;
+  if (!ggradient)
+    {
+      double cams = ams(hgn,gtraining ? gweights : gtweights, gtraining ? glabels : gtlabels);
+      return cams;
+    }
+  else return hgn._loss;
 };
 
 // gradient function
@@ -251,6 +251,17 @@ GradFunc gnn = [](const double *x, const int N)
   return grad;
 };
 
+ProgressFunc<CMAParameters<>,CMASolutions> hpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
+{
+  nn hgn = nn(glsizes,gsigmoid);
+  for (int i=0;i<cmaparams._dim;i++)
+    hgn._allparams.push_back(cmasols.best_candidate()._x(i));
+  hgn.forward_pass(gfeatures,glabels);
+  double cams = ams(hgn,gtraining ? gweights : gtweights, gtraining ? glabels : gtlabels);
+  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / ams=" << cams << " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " " << cmasols._elapsed_last_iter << std::endl;
+  return 0;
+};
+
 DEFINE_string(fdata,"train.csv","name of the file that contains the training data for HIGGS");
 DEFINE_int32(n,100,"max number of examples to train from");
 DEFINE_int32(maxsolveiter,-1,"max number of optimization iterations");
@@ -266,25 +277,33 @@ DEFINE_string(alg,"sepacmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipo
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_bool(mbatch,false,"whether to use minibatches");
+DEFINE_int32(mbatch_budget,-1,"max budget when using minibatches");
+DEFINE_double(mbatch_ftarget,3.0,"AMS target when using minibatches");
+DEFINE_bool(mbatch_sim,false,"simplified output for minibatches in order to pipe to file");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
-    if (FLAGS_check_grad)
+  if (FLAGS_check_grad)
     {
       FLAGS_n = 10;
       FLAGS_hlayers = "10";
     }
-  
+
+  //FLAGS_n = 10000;
   std::vector<std::string> hlayers_str;
   std::vector<int> hlayers;
   tokenize(FLAGS_hlayers,hlayers_str,",");
   for (size_t i=0;i<hlayers_str.size();i++)
     hlayers.push_back(atoi(hlayers_str.at(i).c_str()));
-  
-  int err = load_higgs_dataset(FLAGS_fdata,FLAGS_n,FLAGS_testp,gfeatures,glabels,gweights,gtfeatures,gtlabels,gtweights);
+
+  int load_size = FLAGS_n;
+  if (FLAGS_mbatch)
+    load_size = 250000;
+  int err = load_higgs_dataset(FLAGS_fdata,load_size,FLAGS_testp,gfeatures,glabels,gweights,gtfeatures,gtlabels,gtweights);
   if (err)
     {
       std::cout << "error loading dataset " << FLAGS_fdata << std::endl;
@@ -309,7 +328,8 @@ int main(int argc, char *argv[])
     glsizes.push_back(hlayers.at(i));
   glsizes.push_back(2);
   ghiggsnn = nn(glsizes,gsigmoid,FLAGS_check_grad || FLAGS_with_gradient);
-
+  ggradient = FLAGS_with_gradient;
+  
   if (FLAGS_check_grad)
     {
       if (ghiggsnn.grad_check(gfeatures,glabels))
@@ -321,57 +341,137 @@ int main(int argc, char *argv[])
   std::cout << "max ams=" << -max_ams(gfeatures.cols()) << std::endl;
   
   // training.
-  double lbounds[ghiggsnn._allparams_dim];
+  /*double lbounds[ghiggsnn._allparams_dim];
   double ubounds[ghiggsnn._allparams_dim];
   for (size_t i=0;i<ghiggsnn._allparams_dim;i++)
     {
       lbounds[i] = FLAGS_lbound;
       ubounds[i] = FLAGS_ubound;
     }
-  GenoPheno<pwqBoundStrategy,NoScalingStrategy> gp(lbounds,ubounds,ghiggsnn._allparams_dim);
-  std::vector<double> x0(ghiggsnn._allparams_dim,FLAGS_x0);
-  CMAParameters<GenoPheno<pwqBoundStrategy,NoScalingStrategy>> cmaparams(ghiggsnn._allparams_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,0,gp);
-  cmaparams.set_max_iter(FLAGS_maxsolveiter);
-  cmaparams._fplot = FLAGS_fplot;
-  if (FLAGS_alg == "cmaes")
-    cmaparams._algo = CMAES_DEFAULT;
-  else if (FLAGS_alg == "ipop")
-    cmaparams._algo = IPOP_CMAES;
-  else if (FLAGS_alg == "bipop")
-    cmaparams._algo = BIPOP_CMAES;
-  else if (FLAGS_alg == "acmaes")
-    cmaparams._algo = aCMAES;
-  else if (FLAGS_alg == "aipop")
-    cmaparams._algo = aIPOP_CMAES;
-  else if (FLAGS_alg == "abipop")
-    cmaparams._algo = aBIPOP_CMAES;
-  else if (FLAGS_alg == "sepcmaes")
-    cmaparams._algo = sepCMAES;
-  else if (FLAGS_alg == "sepipop")
-    cmaparams._algo = sepIPOP_CMAES;
-  else if (FLAGS_alg == "sepbipop")
-    cmaparams._algo = sepBIPOP_CMAES;
-  else if (FLAGS_alg == "sepacmaes")
-    cmaparams._algo = sepaCMAES;
-  else if (FLAGS_alg == "sepaipop")
-    cmaparams._algo = sepaIPOP_CMAES;
-  else if (FLAGS_alg == "sepabipop")
-    cmaparams._algo = sepaBIPOP_CMAES;
-  else
-    {
-      std::cout << "unknown algorithm flavor " << FLAGS_alg << std::endl;
-      exit(-1);
-    }
-  //cmaparams.set_ftarget(1e-8);
-  cmaparams._mt_feval = true;
-  CMASolutions cmasols;
-  cmasols = cmaes<GenoPheno<pwqBoundStrategy,NoScalingStrategy>>(nn_of,cmaparams);
-  std::cout << "status: " << cmasols._run_status << std::endl;
+    GenoPheno<pwqBoundStrategy,NoScalingStrategy> gp(lbounds,ubounds,ghiggsnn._allparams_dim);*/
 
+  dMat ggfeatures;
+  dMat gglabels;
+  dMat ggweights;
+  CMASolutions cmasols;
+  int npasses = 1;
+  if (FLAGS_mbatch)
+    npasses = ceil(gfeatures.cols()/static_cast<double>(FLAGS_n));
+  std::vector<double> sigma0(npasses,FLAGS_sigma0);
+  double gams = 0.0;
+  int nevals = 0;
+  int elapsed = 0;
+  int elapsed_total = 0;
+  bool init = false;
+  bool run = true;
+
+  std::cout << "npasses=" << npasses << std::endl;
+  std::cout << "dim=" << ghiggsnn._allparams_dim << std::endl;
+
+  std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+  while (run)
+    {
+      for (int i=0;i<npasses;i++)
+	{
+	  if (gams >= FLAGS_mbatch_ftarget
+	      || (FLAGS_mbatch_budget != -1 && nevals >= FLAGS_mbatch_budget))
+	    {
+	      run = false;
+	      break;
+	    }
+	  std::vector<double> x0;
+	  if (i == 0 && !init)
+	    {
+	      ggfeatures = gfeatures;
+	      gglabels = glabels;
+	      ggweights = gweights;
+	      ghiggsnn.to_array();
+	      x0 = ghiggsnn._allparams;
+	      //x0 = std::vector<double>(ghiggsnn._allparams_dim,FLAGS_x0);
+	      init = true;
+	    }
+	  else
+	    {
+	      
+	      Candidate bcand = cmasols.best_candidate();
+	      std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(x0));
+	      nn hgn = nn(glsizes,gsigmoid);
+	      for (int i=0;i<(int)x0.size();i++)
+		hgn._allparams.push_back(x0[i]);
+	      hgn.forward_pass(ggfeatures,gglabels);
+	      gams = -ams(hgn,ggweights,gglabels);
+	    }
+
+	  std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+	  elapsed_total = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+	  if (!FLAGS_mbatch_sim)
+	    std::cout << "pass #" << i << " / ams=" << gams << " / nevals=" << nevals << " / tim=" << elapsed/1000.0 << " / timt=" << elapsed_total/1000.0 << std::endl;
+	  else std::cout << gams << "," << nevals << "," << elapsed/1000.0 << "\t" << elapsed_total / 1000.0 << std::endl;
+	  
+	  int beg = i*FLAGS_n;
+	  int bsize = FLAGS_n;
+	  if (i == npasses-1)
+	    bsize = ggfeatures.cols()-i*FLAGS_n;
+	  gfeatures = ggfeatures.block(0,beg,ggfeatures.rows(),bsize);
+	  glabels = gglabels.block(0,beg,gglabels.rows(),bsize);
+	  gweights = ggweights.block(0,beg,ggweights.rows(),bsize);
+	  CMAParameters<> cmaparams(ghiggsnn._allparams_dim,&x0.front(),sigma0[i],FLAGS_lambda);//,0,gp);
+	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
+	  cmaparams._fplot = FLAGS_fplot;
+	  if (FLAGS_alg == "cmaes")
+	    cmaparams._algo = CMAES_DEFAULT;
+	  else if (FLAGS_alg == "ipop")
+	    cmaparams._algo = IPOP_CMAES;
+	  else if (FLAGS_alg == "bipop")
+	    cmaparams._algo = BIPOP_CMAES;
+	  else if (FLAGS_alg == "acmaes")
+	    cmaparams._algo = aCMAES;
+	  else if (FLAGS_alg == "aipop")
+	    cmaparams._algo = aIPOP_CMAES;
+	  else if (FLAGS_alg == "abipop")
+	    cmaparams._algo = aBIPOP_CMAES;
+	  else if (FLAGS_alg == "sepcmaes")
+	    cmaparams._algo = sepCMAES;
+	  else if (FLAGS_alg == "sepipop")
+	    cmaparams._algo = sepIPOP_CMAES;
+	  else if (FLAGS_alg == "sepbipop")
+	    cmaparams._algo = sepBIPOP_CMAES;
+	  else if (FLAGS_alg == "sepacmaes")
+	    cmaparams._algo = sepaCMAES;
+	  else if (FLAGS_alg == "sepaipop")
+	    cmaparams._algo = sepaIPOP_CMAES;
+	  else if (FLAGS_alg == "sepabipop")
+	    cmaparams._algo = sepaBIPOP_CMAES;
+	  else
+	    {
+	      std::cout << "unknown algorithm flavor " << FLAGS_alg << std::endl;
+	      exit(-1);
+	    }
+	  //cmaparams.set_ftarget(1e-8);
+	  cmaparams._mt_feval = true;
+	  if (FLAGS_mbatch)
+	    cmaparams._quiet = true;
+	  //if (!FLAGS_with_gradient)
+	  cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
+	  sigma0[i] = cmasols._sigma;
+	  nevals += cmasols._nevals;
+	  elapsed += cmasols._elapsed_time;
+	  //else cmasols = cmaes<>(nn_of,cmaparams,hpfunc,gnn);
+	  //std::cout << "status: " << cmasols._run_status << std::endl;
+	}
+      if (!FLAGS_mbatch)
+	break;
+    }
+  
+  gfeatures = ggfeatures;
+  glabels = gglabels;
+  gweights = ggweights;
+  
   // testing on training set
   testing(cmasols,true);
-
+  
   // testing on test set
   if (FLAGS_testp)
     testing(cmasols,false);
 }
+  
