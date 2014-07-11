@@ -390,6 +390,24 @@ namespace libcmaes
   {
     return _with_gradient;
   }
+
+  /**
+   * \brief activates computation of expected distance to minimum when optimization has completed
+   * @param edm true / false
+   */
+  void set_edm(const bool &edm)
+  {
+    _with_edm = edm;
+  }
+
+  /**
+   * \brief returns whether edm is activated.
+   * @return edm
+   */
+  bool get_edm() const
+  {
+    return _with_edm;
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
@@ -408,6 +426,7 @@ namespace libcmaes
   int _algo = 0; /**< selected algorithm. */
 
   bool _with_gradient=false; /**< whether to use injected gradient. */
+  bool _with_edm=false; /**< whether to compute expected distance to minimum when optimization has completed. */
   
   std::unordered_map<int,double> _fixed_p; /**< fixed parameters and values. */
   
