@@ -66,7 +66,7 @@ namespace libcmaes
 #endif
     
     // one candidate per row.
-#pragma omp parallel for if (candidates.cols() >= 100)
+#pragma omp parallel for if (_parameters._mt_feval || candidates.cols() >= 100)
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r)._x = candidates.col(r);
@@ -106,6 +106,7 @@ namespace libcmaes
     dVec vgradf(_parameters._dim);
     dVec epsilon = 1e-8 * (dVec::Constant(_parameters._dim,1.0) + x.cwiseAbs());
     double fx = _func(x.data(),_parameters._dim);
+#pragma omp parallel for if (_parameters._mt_feval)
     for (int i=0;i<_parameters._dim;i++)
       {
 	dVec ei1 = x;
