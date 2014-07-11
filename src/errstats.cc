@@ -281,19 +281,20 @@ namespace libcmaes
 	cmasol.get_pli(py,ply);
       }
 
-    double valx = cmasol.best_candidate()._x[px];
-    double valy = cmasol.best_candidate()._x[py];
+    dVec phenox = cmasol.best_candidate().get_x_pheno(parameters);
+    double valx = phenox(px);
+    double valy = phenox(py);
     
     // find upper y value for x parameter.
     CMAParameters<TGenoPheno> nparameters = parameters;
-    nparameters.set_x0(cmasol.best_candidate()._x);
+    nparameters.set_x0(phenox);
     nparameters.set_fixed_p(px,valx+plx._errmax);
     CMASolutions exy_up = cmaes(func,nparameters);
     //std::cout << "exy_up=" << exy_up.best_candidate()._x.transpose() << std::endl;
     
     // find lower y value for x parameter.
     nparameters = parameters;
-    nparameters.set_x0(cmasol.best_candidate()._x);
+    nparameters.set_x0(phenox);
     nparameters.set_fixed_p(px,valx+plx._errmin);
     CMASolutions exy_lo = cmaes(func,nparameters);
     //std::cout << "exy_lo=" << exy_lo.best_candidate()._x.transpose() << std::endl;
@@ -302,23 +303,23 @@ namespace libcmaes
     //nparameters = parameters;
     TGenoPheno gp;
     nparameters = parameters;
-    nparameters.set_x0(cmasol.best_candidate()._x);
+    nparameters.set_x0(phenox);
     nparameters.set_fixed_p(py,valy+ply._errmax);
     CMASolutions eyx_up = cmaes<TGenoPheno>(func,nparameters);
     //std::cout << "eyx_up=" << eyx_up.best_candidate()._x.transpose() << std::endl;
     
     // find lower x value for y parameter.
     nparameters = parameters;
-    nparameters.set_x0(cmasol.best_candidate()._x);
+    nparameters.set_x0(phenox);
     nparameters.set_fixed_p(py,valy+ply._errmin);
     CMASolutions eyx_lo = cmaes(func,nparameters);
     //std::cout << "eyx_lo=" << eyx_lo.best_candidate()._x.transpose() << std::endl;
     
     contour c;
-    c.add_point(valx+plx._errmin,exy_lo.best_candidate()._x[py]);
-    c.add_point(eyx_lo.best_candidate()._x[px],valy+ply._errmin); 
-    c.add_point(valx+plx._errmax,exy_up.best_candidate()._x[py]);
-    c.add_point(eyx_up.best_candidate()._x[px],valy+ply._errmax);
+    c.add_point(valx+plx._errmin,exy_lo.best_candidate().get_x_pheno(parameters)(py));
+    c.add_point(eyx_lo.best_candidate().get_x_pheno(parameters)(px),valy+ply._errmin); 
+    c.add_point(valx+plx._errmax,exy_up.best_candidate().get_x_pheno(parameters)(py));
+    c.add_point(eyx_up.best_candidate().get_x_pheno(parameters)(px),valy+ply._errmax);
 
     double scalx = 1.0/(plx._errmax - plx._errmin);
     double scaly = 1.0/(ply._errmax - ply._errmin);
@@ -503,7 +504,7 @@ namespace libcmaes
 	//std::cout << "below tolerance, returning second optimized point\n";
 	//debug
 	return fcross(cmasol2.best_candidate()._fvalue,
-		      nfcn,cmasol2.best_candidate()._x); // XXX: returning the modified aopt, same as original code...
+		      nfcn,cmasol2.best_candidate().get_x_pheno(parameters));
       }
     double bmin = std::min(alsb[0], alsb[1]) - 1.;
     if (aopt < bmin) aopt = bmin;
@@ -569,18 +570,20 @@ namespace libcmaes
 		  }
 	      }
 	  }
-	int sdir0 = (cmasols.at(srefp).best_candidate()._x(par[0])-cmasols.at(ibest).best_candidate()._x(par[0]) > 0.0) ? 1 : -1;
-	int sdir1 = (cmasols.at(srefp).best_candidate()._x(par[1])-cmasols.at(ibest).best_candidate()._x(par[1]) > 0.0) ? 1 : -1;
+	dVec srefp_phenox = cmasols.at(srefp).best_candidate().get_x_pheno(parameters);
+	dVec ibest_phenox = cmasols.at(ibest).best_candidate().get_x_pheno(parameters);
+	int sdir0 = (srefp_phenox(par[0])-ibest_phenox(par[0]) > 0.0) ? 1 : -1;
+	int sdir1 = (srefp_phenox(par[1])-ibest_phenox(par[1]) > 0.0) ? 1 : -1;
 	dVec xstart;
 	double nminfvalue;
 	if (cmasols.at(ibest).best_candidate()._fvalue < aim)
 	  {
-	    xstart = cmasols.at(ibest).best_candidate()._x;
+	    xstart = ibest_phenox;
 	    nminfvalue = cmasols.at(ibest).best_candidate()._fvalue;
 	  }
 	else
 	  {
-	    xstart = cmasols.at(srefp).best_candidate()._x;
+	    xstart = srefp_phenox;
 	    nminfvalue = cmasols.at(srefp).best_candidate()._fvalue;
 	  }
 	double dxk0 = sdir0 * fabs(xstart(par[0])) * 0.1;
@@ -617,7 +620,7 @@ namespace libcmaes
 	//std::cout << "contour linesearch best point=" << citsol.best_candidate()._x.transpose() << std::endl;
 	//debug
 	
-	return fcross(citsol.best_candidate()._fvalue,nfcn,citsol.best_candidate()._x);
+	return fcross(citsol.best_candidate()._fvalue,nfcn,citsol.best_candidate().get_x_pheno(parameters));
       }
     // if all three points are above aim, third point must be the closest to AIM, return it
     if(noless == 0 && ibest != 2)
@@ -627,7 +630,7 @@ namespace libcmaes
 	//debug
 	
 	return fcross(flsb[ibest],
-		      nfcn,cmasols[ibest].best_candidate()._x);
+		      nfcn,cmasols[ibest].best_candidate().get_x_pheno(parameters));
       }
     // if all three below and third is not best then the slope has again gone negative,
     // re-iterate and look for positive slope
