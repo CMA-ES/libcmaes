@@ -36,7 +36,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
   {
-    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " / last_iter=" << cmasols._elapsed_last_iter << std::endl;
+    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmasols._nevals << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " / last_iter=" << cmasols._elapsed_last_iter << std::endl;
     return 0;
   };
   
@@ -47,7 +47,7 @@ namespace libcmaes
   {
     eostrat<TGenoPheno>::_pfunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
       {
-	LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " " << cmasols._elapsed_last_iter << std::endl;
+	LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmasols._nevals << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " " << cmasols._elapsed_last_iter << std::endl;
 	return 0;
       };
     _esolver = EigenMultivariateNormal<double>(false,eostrat<TGenoPheno>::_parameters._seed); // seeding the multivariate normal generator.
@@ -101,15 +101,21 @@ namespace libcmaes
     else pop = _esolver.samples_ind(eostrat<TGenoPheno>::_parameters._lambda,eostrat<TGenoPheno>::_solutions._sigma);
 
     // gradient if available.
-    if (eostrat<TGenoPheno>::_gfunc)
+    if (eostrat<TGenoPheno>::_parameters._with_gradient)
       {
-	dVec grad_at_mean = eostrat<TGenoPheno>::_gfunc(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim);
+	dVec grad_at_mean = eostrat<TGenoPheno>::gradf(eostrat<TGenoPheno>::_solutions._xmean);
+	dVec gradgp_at_mean = eostrat<TGenoPheno>::gradgp(eostrat<TGenoPheno>::_solutions._xmean); // for geno / pheno transform.
+	grad_at_mean = grad_at_mean.cwiseProduct(gradgp_at_mean);
 	if (grad_at_mean != dVec::Zero(eostrat<TGenoPheno>::_parameters._dim))
 	  {
-	    //TODO: if geno / pheno transform activated.
 	    dVec nx;
 	    if (!eostrat<TGenoPheno>::_parameters._sep)
-	      nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._cov.sqrt() * grad_at_mean).norm())) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
+	      {
+		dMat sqrtcov = _esolver._eigenSolver.operatorSqrt();
+		dVec q = sqrtcov * grad_at_mean;
+		double normq = q.squaredNorm();
+		nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim / normq)) * eostrat<TGenoPheno>::_solutions._cov * grad_at_mean;
+	      }
 	    else nx = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * (sqrt(eostrat<TGenoPheno>::_parameters._dim) / ((eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt().cwiseProduct(grad_at_mean)).norm())) * eostrat<TGenoPheno>::_solutions._sepcov.cwiseProduct(grad_at_mean);
 	    pop.col(0) = nx;
 	  }
@@ -186,7 +192,7 @@ namespace libcmaes
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       plot();
     
-    if ((eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != 0)
+    if ((eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != CONT)
       return true;
     else return false;
   }
@@ -208,7 +214,8 @@ namespace libcmaes
 	eostrat<TGenoPheno>::_solutions._elapsed_last_iter = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 	tstart = std::chrono::system_clock::now();
       }
-    //eostrat<TGenoPheno>::edm();
+    if (eostrat<TGenoPheno>::_parameters._with_edm)
+      eostrat<TGenoPheno>::edm();
     if (eostrat<TGenoPheno>::_solutions._run_status >= 0)
       return OPTI_SUCCESS;
     else return OPTI_ERR_TERMINATION; // exact termination code is in eostrat<TGenoPheno>::_solutions._run_status.

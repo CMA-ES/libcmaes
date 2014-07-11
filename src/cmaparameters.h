@@ -86,6 +86,12 @@ namespace libcmaes
     void set_fixed_p(const int &index, const double &value);
 
     /**
+     * \brief unfreezes a parameter.
+     * @param index dimenion index of the parameter to unfreeze
+     */
+    void unset_fixed_p(const int &index);
+  
+    /**
      * \brief sets the maximum number of restarts (applies to IPOP and BIPOP).
      * @param nrestarts maximum number of restarts
      */
