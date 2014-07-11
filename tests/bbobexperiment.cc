@@ -60,7 +60,7 @@ void tokenize(const std::string &str,
 
 std::mutex fmtx; // WARNING: bbob function calls are NOT thread-safe (learnt the hard way...).
 
-void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy)
+void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient)
 {
   // map fct to libcmaes FitFunc.
   FitFunc ff = [&](const double *x, const int N)
@@ -87,6 +87,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   //cmaparams.set_x0(-5.0,5.0);
   cmaparams._algo = alg;
   cmaparams._quiet = true;
+  cmaparams._with_gradient = withnumgradient;
   if (noisy)
     cmaparams.set_noisy();
   cmaes(ff,cmaparams);
@@ -100,6 +101,7 @@ DEFINE_bool(noisy,false,"whether to benchmark noisy functions");
 DEFINE_string(comment,"","comment for the experiment. If using multiple algorithms, the comment will apply to all experiments");
 DEFINE_double(maxfunevals,1e6,"maximum number of function evaluations");
 DEFINE_double(minfunevals,-1,"minimum number of function evaluations, -1 for automatic definition based on dimension");
+DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 
 int main(int argc, char *argv[])
 {
@@ -215,7 +217,7 @@ int main(int argc, char *argv[])
 		      if (++independent_restarts > 0) 
                         fgeneric_restart("independent restart");  /* additional info */
 		      MY_OPTIMIZER(&fgeneric_evaluate, dim[idx_dim], fgeneric_ftarget(),
-				   maxfunevals - fgeneric_evaluations(), (*mit).first, FLAGS_noisy);
+				   maxfunevals - fgeneric_evaluations(), (*mit).first, FLAGS_noisy, FLAGS_with_num_gradient);
 		      if (fgeneric_best() < fgeneric_ftarget())
                         break;
 		    }

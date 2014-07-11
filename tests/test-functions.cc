@@ -427,6 +427,7 @@ DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective functi
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
 DEFINE_bool(with_gradient,false,"whether to use the function gradient when available in closed form");
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
+DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -448,6 +449,7 @@ CMASolutions cmaes_opt()
   cmaparams._lazy_update = FLAGS_lazy_update;
   cmaparams._quiet = FLAGS_quiet;
   cmaparams._with_gradient = FLAGS_with_gradient || FLAGS_with_num_gradient;
+  cmaparams._with_edm = FLAGS_with_edm;
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
@@ -595,6 +597,7 @@ int main(int argc, char *argv[])
       LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
   LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
   LOG(INFO) << cmasols << std::endl;
-  LOG(INFO) << "EDM=" << cmasols._edm << " / EDM/fm=" << cmasols._edm / cmasols.best_candidate()._fvalue << std::endl;
+  if (FLAGS_with_edm)
+    LOG(INFO) << "EDM=" << cmasols._edm << " / EDM/fm=" << cmasols._edm / cmasols.best_candidate()._fvalue << std::endl;
   //cmasols.print(std::cout,1);
 }
