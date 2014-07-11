@@ -281,6 +281,7 @@ DEFINE_bool(mbatch,false,"whether to use minibatches");
 DEFINE_int32(mbatch_budget,-1,"max budget when using minibatches");
 DEFINE_double(mbatch_ftarget,3.0,"AMS target when using minibatches");
 DEFINE_bool(mbatch_sim,false,"simplified output for minibatches in order to pipe to file");
+DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 
 //TODO: train with batches.
 int main(int argc, char *argv[])
@@ -418,6 +419,7 @@ int main(int argc, char *argv[])
 	  CMAParameters<> cmaparams(ghiggsnn._allparams_dim,&x0.front(),sigma0[i],FLAGS_lambda);//,0,gp);
 	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
 	  cmaparams._fplot = FLAGS_fplot;
+	  cmaparams._with_gradient = FLAGS_with_num_gradient;
 	  if (FLAGS_alg == "cmaes")
 	    cmaparams._algo = CMAES_DEFAULT;
 	  else if (FLAGS_alg == "ipop")
