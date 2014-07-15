@@ -1,3 +1,10 @@
+2014-07-15	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.8:
+	- Improved API of main userland objects
+	- Many fixes and improvements to genotype / phenotype transforms with gradient and EDM
+	- full documentation
+
+	
 2014-06-23	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v0.7:
 	- Support for Estimated Distance to Minimum (EDM)
