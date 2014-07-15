@@ -110,10 +110,10 @@ true if search must stop, false otherwise.
 \begin{DoxyCode}
 = [](\textcolor{keyword}{const} CMAParameters<TGenoPheno> &cmaparams, \textcolor{keyword}{const} CMASolutions &cmasols)
   \{
-    LOG\_IF(INFO,!cmaparams.\_quiet) << \textcolor{stringliteral}{"iter="} << cmasols.\_niter << \textcolor{stringliteral}{" / evals="} << cmaparams.\_lambda * 
-      cmasols.\_niter << \textcolor{stringliteral}{" / f-value="} << cmasols.\_best\_candidates\_hist.back().\_fvalue <<  \textcolor{stringliteral}{" / sigma="} << cmasols.\_sigma
-       << (cmaparams.\_lazy\_update && cmasols.\_updated\_eigen ? \textcolor{stringliteral}{" / cupdate="}+std::to\_string(cmasols.\_updated\_eigen)
-       : \textcolor{stringliteral}{""}) << \textcolor{stringliteral}{" / last\_iter="} << cmasols.\_elapsed\_last\_iter << std::endl;
+    LOG\_IF(INFO,!cmaparams.\_quiet) << \textcolor{stringliteral}{"iter="} << cmasols.\_niter << \textcolor{stringliteral}{" / evals="} << cmasols.\_nevals << \textcolor{stringliteral}{" /
+       f-value="} << cmasols.\_best\_candidates\_hist.back().\_fvalue <<  \textcolor{stringliteral}{" / sigma="} << cmasols.\_sigma << (cmaparams.
+      \_lazy\_update && cmasols.\_updated\_eigen ? \textcolor{stringliteral}{" / cupdate="}+std::to\_string(cmasols.\_updated\_eigen) : \textcolor{stringliteral}{""}) << \textcolor{stringliteral}{" /
+       last\_iter="} << cmasols.\_elapsed\_last\_iter << std::endl;
     \textcolor{keywordflow}{return} 0;
   \}
 \end{DoxyCode}

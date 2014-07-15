@@ -36,8 +36,11 @@ void \hyperlink{classlibcmaes_1_1ESOStrategy_a9cfe783dc0284fce441c8757cd5222c3}{
 \item 
 void \hyperlink{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}{set\-\_\-progress\-\_\-func} (Progress\-Func$<$ T\-Parameters, T\-Solutions $>$ \&pfunc)
 \begin{DoxyCompactList}\small\item\em Sets the possibly custom progress function, that is called in between every search step, and gives an outside user a simple way to witness progress of the algorithm, as well as to add custom termination criteria. \end{DoxyCompactList}\item 
-d\-Vec \hyperlink{classlibcmaes_1_1ESOStrategy_a32a4e450cd34f8161b3768e7c2c2c99a}{gradf} (const d\-Vec \&x) const 
+d\-Vec \hyperlink{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}{gradf} (const d\-Vec \&x)
 \begin{DoxyCompactList}\small\item\em returns numerical gradient of objective function at x. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}{d\-Vec {\bfseries gradgp} (const d\-Vec \&x) const }\label{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}
+
+\item 
 double \hyperlink{classlibcmaes_1_1ESOStrategy_a6350c635353e7b54e78abb223a5d4029}{edm} ()
 \begin{DoxyCompactList}\small\item\em computes expected distance to minimum (E\-D\-M). \end{DoxyCompactList}\item 
 \hypertarget{classlibcmaes_1_1ESOStrategy_a81441905608aba3daa6d60a78eb47763}{\hyperlink{classlibcmaes_1_1Candidate}{Candidate} {\bfseries best\-\_\-solution} () const }\label{classlibcmaes_1_1ESOStrategy_a81441905608aba3daa6d60a78eb47763}
@@ -138,13 +141,13 @@ Evaluates a set of candiates against the objective function. The procedure is mu
 {\em phenocandidates} & The candidates transformed into phenotype, leave empty if no pheno transform. \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a32a4e450cd34f8161b3768e7c2c2c99a}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!gradf@{gradf}}
+\hypertarget{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!gradf@{gradf}}
 \index{gradf@{gradf}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
 \subsubsection[{gradf}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters , class T\-Solutions , class T\-Stop\-Criteria $>$ d\-Vec {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::gradf (
 \begin{DoxyParamCaption}
 \item[{const d\-Vec \&}]{x}
 \end{DoxyParamCaption}
-) const}}\label{classlibcmaes_1_1ESOStrategy_a32a4e450cd34f8161b3768e7c2c2c99a}
+)}}\label{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}
 
 
 returns numerical gradient of objective function at x. 
