@@ -179,8 +179,10 @@ double ams(const nn &hgn,
 void testing(const CMASolutions &cmasols,
 	     const bool &training=true)
 {
+  std::cout << "testing / training=" << training << std::endl;
   gtraining = training;
   dMat cmat = dMat::Zero(2,2);
+  ghiggsnn._allparams.clear();
   for (int i=0;i<cmasols.best_candidate()._x.size();i++)
     ghiggsnn._allparams.push_back(cmasols.best_candidate()._x(i));
   if (training)
@@ -387,8 +389,9 @@ int main(int argc, char *argv[])
 	      gglabels = glabels;
 	      ggweights = gweights;
 	      ghiggsnn.to_array();
-	      x0 = ghiggsnn._allparams;
-	      //x0 = std::vector<double>(ghiggsnn._allparams_dim,FLAGS_x0);
+	      if (FLAGS_x0==-std::numeric_limits<double>::max())
+		x0 = ghiggsnn._allparams;
+	      else x0 = std::vector<double>(ghiggsnn._allparams_dim,FLAGS_x0);
 	      init = true;
 	    }
 	  else
@@ -420,6 +423,7 @@ int main(int argc, char *argv[])
 	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
 	  cmaparams._fplot = FLAGS_fplot;
 	  cmaparams._with_gradient = FLAGS_with_num_gradient;
+	  //cmaparams._lazy_update = true;
 	  if (FLAGS_alg == "cmaes")
 	    cmaparams._algo = CMAES_DEFAULT;
 	  else if (FLAGS_alg == "ipop")
