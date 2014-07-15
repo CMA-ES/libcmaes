@@ -415,6 +415,24 @@ namespace libcmaes
   {
     return _with_edm;
   }
+
+  /**
+   * \brief activate / deactivate the parallel evaluation of objective function
+   * @param mt true for activated, false otherwise
+   */
+  void set_mt_feval(const bool &mt)
+  {
+    _mt_feval;
+  }
+
+  /**
+   * \brief resturns whether the parallel evaluation of objective function is activated
+   * @return activation status
+   */
+  bool get_mt_feval() const
+  {
+    return _mt_feval;
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
