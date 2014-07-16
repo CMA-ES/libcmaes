@@ -1,6 +1,6 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.7)
+AC_INIT(libcmaes,0.8)
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([libcmaes_config.h])
@@ -107,6 +107,16 @@ AC_HELP_STRING([--enable-bbob],[Enable support for BBOB'2013 benchmark (default 
 	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-bbob) ;;
 esac],[bbob=false])
 AM_CONDITIONAL(HAVE_BBOB, test x$bbob = xtrue)
+
+# Whether to only compile the library, without exe (e.g. tests and examples).
+AC_ARG_ENABLE(onlylib,
+AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and examples (default is NO)]),
+[case "${enableval}" in 
+	yes) onlylib=true ;;
+	no) onlylib=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-onlylib) ;;
+esac],[onlylib=false])
+AM_CONDITIONAL(HAVE_ONLYLIB, test x$onlylib = xtrue)
 
 # Whether debug mode
 AC_ARG_ENABLE(debug,
