@@ -124,8 +124,8 @@ TEST(pl,profile_likelihood_nocurve)
   pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,false,samplesize,fup);
   std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
   std::cout << "le xm: " << le._xm << std::endl;
-  EXPECT_FLOAT_EQ(-0.31640971,le._min);
-  EXPECT_FLOAT_EQ(0.31640971,le._max);
+  EXPECT_FLOAT_EQ(-0.31699193,le._min);
+  EXPECT_FLOAT_EQ(0.31699193,le._max);
 }
 
 TEST(pl,profile_likelihood_curve)
@@ -152,6 +152,6 @@ TEST(pl,profile_likelihood_curve)
   std::cout << "le xm: " << le._xm << std::endl;
   int mini, maxi;
   std::pair<double,double> mm = le.getMinMax(0.1,mini,maxi);
-  EXPECT_FLOAT_EQ(-0.3313162,mm.first);
-  EXPECT_FLOAT_EQ(0.3313162,mm.second);
+  EXPECT_FLOAT_EQ(-0.31213182,mm.first);
+  EXPECT_FLOAT_EQ(0.31213182,mm.second);
 }
