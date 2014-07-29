@@ -108,6 +108,16 @@ AC_HELP_STRING([--enable-bbob],[Enable support for BBOB'2013 benchmark (default 
 esac],[bbob=false])
 AM_CONDITIONAL(HAVE_BBOB, test x$bbob = xtrue)
 
+# Whether to only compile the library, without exe (e.g. tests and examples).
+AC_ARG_ENABLE(onlylib,
+AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and examples (default is NO)]),
+[case "${enableval}" in 
+	yes) onlylib=true ;;
+	no) onlylib=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-onlylib) ;;
+esac],[onlylib=false])
+AM_CONDITIONAL(HAVE_ONLYLIB, test x$onlylib = xtrue)
+
 # Whether debug mode
 AC_ARG_ENABLE(debug,
 AC_HELP_STRING([--enable-debug],[Enable debug mode (default is NO)]),
