@@ -39,7 +39,7 @@ namespace libcmaes
 				  CMASolutions &cmasol,
 				  const int &k,
 				  const bool &curve=false,
-				  const int &samplesize=1000,
+				  const int &samplesize=10,
 				  const double &fup=0.1,
 				  const double &delta=0.1);
 
