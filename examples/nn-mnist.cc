@@ -119,6 +119,7 @@ double testing(const CMASolutions &cmasols,
 {
   dMat cmat = dMat::Zero(10,10);
   Candidate bcand = cmasols.best_candidate();
+  gmnistnn._allparams.clear();
   std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(gmnistnn._allparams));
   if (training)
     gmnistnn.forward_pass(gfeatures,glabels);
@@ -345,6 +346,7 @@ int main(int argc, char *argv[])
 	  else
 	    {
 	      Candidate bcand = cmasols.best_candidate();
+	      x0.clear();
 	      std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(x0));
 	      nn hgn = nn(glsizes,gsigmoid);
 	      for (int i=0;i<(int)x0.size();i++)
