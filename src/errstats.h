@@ -60,6 +60,7 @@ namespace libcmaes
 				 const double &minfvalue,
 				 const double &fup,
 				 const int &n,
+				 const bool &linit,
 				 double &d,
 				 dVec &x);
     

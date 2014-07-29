@@ -77,10 +77,12 @@ namespace libcmaes
     int i = 0;
     int n = 10;
     double d = sign * xk * 0.1; // adhoc.
+    bool linit = true;
     while(true)
       {
 	// get a new xk point.
-	errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,n,d,x);
+	errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,n,linit,d,x);
+	linit = false;
 	
 	//debug
 	//std::cout << "new xk point: " << x.transpose() << std::endl;
@@ -114,7 +116,7 @@ namespace libcmaes
 	  }
 	else // update current point and solution.
 	  {
-	    citsol = ncitsol;
+	    //citsol = ncitsol; // XXX: doesn't work well, restarting from min works better.
 	    x = ncitsol.best_candidate()._x;
 	    nminfvalue = ncitsol.best_candidate()._fvalue;
 	  }
@@ -129,6 +131,11 @@ namespace libcmaes
 	  }
 
 	bool iterend = (fabs(nminfvalue-minfvalue-fup) <= 0.1 * fup);
+
+	//debug
+	//std::cerr << "iterend=" << iterend << " / nminfvalue=" << nminfvalue << std::endl;
+	//debug
+	
 	if (!curve && iterend)
 	  {
 	    // pad and return.
@@ -155,6 +162,7 @@ namespace libcmaes
 					      const double &minfvalue,
 					      const double &fup,
 					      const int &n,
+					      const bool &linit,
 					      double &d,
 					      dVec &x)
   {
@@ -163,14 +171,16 @@ namespace libcmaes
     dVec phenoxtmp = parameters._gp.pheno(xtmp);
     double fvalue = func(phenoxtmp.data(),xtmp.size());
     double fdiff = fabs(fvalue - minfvalue);
-
+    double dinc = d;
+    
     //debug
-    //std::cerr << "d=" << d << " / fdiff=" << fdiff << std::endl;
+    //std::cerr << "d=" << d << " / fdiff=" << fdiff << " / xtmpk=" << xtmp[k] << std::endl;
     //debug
     
     int i = n;
     if (fdiff > fup + fdelta) // above
       {
+	//std::cerr << "above\n";
 	x[k] -= d;
 	while (fdiff > fup + fdelta
 	       && i > 0
@@ -184,14 +194,16 @@ namespace libcmaes
 	    fdiff = fabs(fvalue - minfvalue);
 
 	    //debug
-	    //std::cerr << "xtmpk=" << xtmp[k] << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / dxk=" << -d/i << std::endl;
+	    //std::cerr << "xtmpk=" << xtmp[k] << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / dxk=" << d << std::endl;
 	    //debug
 
-	    --i;
+	    if (!linit)
+	      --i;
 	  }
       }
     else // below
       {
+	//std::cerr << "below\n";
 	while (fdiff < fup - fdelta
 	       && i > 0
 	       && phenoxtmp[k] >= parameters._gp._boundstrategy.getPhenoLBound(k)
@@ -204,10 +216,11 @@ namespace libcmaes
 	    fdiff = fabs(fvalue - minfvalue);
 
 	    //debug
-	    //std::cerr << "xtmpk=" << xtmp[k] << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / dxk=" << d/i << std::endl;
+	    //std::cerr << "xtmpk=" << xtmp[k] << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / dxk=" << d << std::endl;
 	    //debug
-	    
-	    --i;
+
+	    if (!linit) // first pass must reach above threshold.
+	      --i;
 	  }
       }
     x[k] = xtmp[k];
