@@ -41,8 +41,8 @@ namespace libcmaes
     dVec phenox = parameters._gp.pheno(x);
     
     //debug
-    //std::cout << "xk=" << x[k] << " / minfvalue=" << minfvalue << std::endl;
-    //std::cout << "phenox=" << phenox << std::endl;
+    /*std::cout << "xk=" << x[k] << " / minfvalue=" << minfvalue << std::endl;
+      std::cout << "phenox=" << phenox.transpose() << std::endl;*/
     //debug
 
     pli le(k,samplesize,parameters._dim,parameters._gp.pheno(x),minfvalue,fup,delta);
@@ -72,14 +72,16 @@ namespace libcmaes
     dVec x = cmasol.best_candidate()._x;
     double xk = x[k];
     double minfvalue = cmasol.best_candidate()._fvalue;
+    double nminfvalue = minfvalue;
     CMASolutions citsol = cmasol;
-    double dxk = sign * xk * 0.1;
     int i = 0;
+    int n = 10;
+    double d = sign * xk * 0.1; // adhoc.
     while(true)
       {
 	// get a new xk point.
-	errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,curve,x,dxk);
-		
+	errstats<TGenoPheno>::take_linear_step(func,parameters,k,minfvalue,fup,n,d,x);
+	
 	//debug
 	//std::cout << "new xk point: " << x.transpose() << std::endl;
 	//debug
@@ -98,34 +100,44 @@ namespace libcmaes
 	      }
 	      return;
 	  }
+	else if (ncitsol.best_candidate()._fvalue < minfvalue)
+	  {
+	    LOG(ERROR) << "profile likelihood finds new minimum: " << ncitsol.best_candidate()._fvalue << std::endl;
+	    // pad and return.
+	    for (int j=0;j<samplesize;j++)
+	      {
+		le._fvaluem[samplesize+sign*(1+j)] = le._fvaluem[samplesize];
+		le._xm.row(samplesize+sign*(1+j)) = le._xm.row(samplesize);
+		le._err[samplesize+sign*(1+j)] = ncitsol._run_status;
+	      }
+	      return;
+	  }
 	else // update current point and solution.
 	  {
 	    citsol = ncitsol;
-	    x = citsol.best_candidate()._x;
-	    minfvalue = citsol.best_candidate()._fvalue;
-	    //std::cout << "minfvalue=" << minfvalue << std::endl;
+	    x = ncitsol.best_candidate()._x;
+	    nminfvalue = ncitsol.best_candidate()._fvalue;
 	  }
 	
 	// store points.
-	dVec phenobx = parameters._gp.pheno(citsol.best_candidate()._x);
+	dVec phenobx = parameters._gp.pheno(ncitsol.best_candidate()._x);
 	if (curve)
 	  {
-	    le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
+	    le._fvaluem[samplesize+sign*(1+i)] = ncitsol.best_candidate()._fvalue;
 	    le._xm.row(samplesize+sign*(1+i)) = phenobx.transpose();
 	    le._err[samplesize+sign*(1+i)] = ncitsol._run_status;
 	  }
-	    
-	bool iterend = (fabs(minfvalue-fup) <= 0.1*fup);
+
+	bool iterend = (fabs(nminfvalue-minfvalue-fup) <= 0.1 * fup);
 	if (!curve && iterend)
 	  {
 	    // pad and return.
 	    for (int j=0;j<samplesize;j++)
 	      {
-		le._fvaluem[samplesize+sign*(1+j)] = citsol.best_candidate()._fvalue;
+		le._fvaluem[samplesize+sign*(1+j)] = ncitsol.best_candidate()._fvalue;
 		le._xm.row(samplesize+sign*(1+j)) = phenobx.transpose();
 		le._err[samplesize+sign*(1+j)] = ncitsol._run_status;
 	      }
-	    //std::cout << "iterend=" << iterend << std::endl;
 	    return;
 	  }
 	++i;
@@ -135,67 +147,73 @@ namespace libcmaes
 	  break;
       }
   }
-						
+
   template <class TGenoPheno>
-  bool errstats<TGenoPheno>::take_linear_step(FitFunc &func,
+  void errstats<TGenoPheno>::take_linear_step(FitFunc &func,
 					      const CMAParameters<TGenoPheno> &parameters,
 					      const int &k,
 					      const double &minfvalue,
 					      const double &fup,
-					      const bool &curve,
-					      dVec &x,
-					      double &dxk)
+					      const int &n,
+					      double &d,
+					      dVec &x)
   {
-    static double fdiff_relative_increase = 0.1;
     double fdelta = 0.1 * fup;
-    double threshold = minfvalue + fup;
     dVec xtmp = x;
-    xtmp[k] += dxk;
     dVec phenoxtmp = parameters._gp.pheno(xtmp);
     double fvalue = func(phenoxtmp.data(),xtmp.size());
-    double fdiff = fvalue - minfvalue;
-    
-    //debug
-    /*std::cout << "xtmp=" << xtmp.transpose() << std::endl;
-    std::cout << "phenoxtmp=" << phenoxtmp.transpose() << std::endl;
-    std::cout << "dxk=" << dxk << " / threshold=" << threshold << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / fabs=" << fabs(fvalue-fup) << " / fdelta=" << fdelta << std::endl;*/
-    //debug
+    double fdiff = fabs(fvalue - minfvalue);
 
-    if (fdiff > threshold * fdiff_relative_increase) // decrease dxk
+    //debug
+    //std::cerr << "d=" << d << " / fdiff=" << fdiff << std::endl;
+    //debug
+    
+    int i = n;
+    if (fdiff > fup + fdelta) // above
       {
-	while((curve || fabs(fvalue-fup)>fdelta)
-	      && fdiff > threshold * fdiff_relative_increase
-	      && phenoxtmp[k] >= parameters._gp._boundstrategy.getPhenoLBound(k))
-	  {
-	    //std::cerr << "fvalue-fup=" << fabs(fvalue-fup) << " / fvalue=" << fvalue << " / fdelta=" << fdelta << " / fup= " << fup << " / xtmpk=" << phenoxtmp[k] << " / dxk=" << dxk << " / fdiff=" << fdiff << " / thresh=" << threshold * fdiff_relative_increase << std::endl;//" / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
-	    dxk /= 2.0;
-	    xtmp[k] = x[k] + dxk;
-	    phenoxtmp = parameters._gp.pheno(xtmp);
-	    fvalue = func(phenoxtmp.data(),xtmp.size());
-	    fdiff = fvalue - minfvalue;
-	  }
-      }
-    else // increase dxk
-      {
-	while ((curve || fabs(fvalue-fup)>fdelta)
-	       && fdiff < threshold * fdiff_relative_increase
+	x[k] -= d;
+	while (fdiff > fup + fdelta
+	       && i > 0
+	       && phenoxtmp[k] >= parameters._gp._boundstrategy.getPhenoLBound(k)
 	       && phenoxtmp[k] <= parameters._gp._boundstrategy.getPhenoUBound(k))
 	  {
-	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << phenoxtmp[k] << " / ubound=" << parameters._gp._boundstrategy.getUBound(k) << std::endl;
-	    dxk *= 2.0;
-	    xtmp[k] = x[k] + dxk;
-	    phenoxtmp =parameters._gp.pheno(xtmp);
+	    d /= 2.0;
+	    xtmp[k] = x[k] + d;
+	    phenoxtmp = parameters._gp.pheno(xtmp);
 	    fvalue = func(phenoxtmp.data(),xtmp.size());
-	    fdiff = fvalue - minfvalue;
-	  }
-	dxk /= 2.0;
-      }
-    x[k] = xtmp[k]; // set value.
-    dVec phenox = parameters._gp.pheno(x);
-    //std::cout << "fvalue=" << fvalue << std::endl;
-    return (fabs(fvalue-fup) < fdelta || phenox[k] < parameters._gp._boundstrategy.getPhenoLBound(k) || phenox[k] > parameters._gp._boundstrategy.getPhenoUBound(k));
-  }
+	    fdiff = fabs(fvalue - minfvalue);
 
+	    //debug
+	    //std::cerr << "xtmpk=" << xtmp[k] << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / dxk=" << -d/i << std::endl;
+	    //debug
+
+	    --i;
+	  }
+      }
+    else // below
+      {
+	while (fdiff < fup - fdelta
+	       && i > 0
+	       && phenoxtmp[k] >= parameters._gp._boundstrategy.getPhenoLBound(k)
+	       && phenoxtmp[k] <= parameters._gp._boundstrategy.getPhenoUBound(k))
+	  {
+	    d *= 2.0;
+	    xtmp[k] = x[k] + d;
+	    phenoxtmp = parameters._gp.pheno(xtmp);
+	    fvalue = func(phenoxtmp.data(),xtmp.size());
+	    fdiff = fabs(fvalue - minfvalue);
+
+	    //debug
+	    //std::cerr << "xtmpk=" << xtmp[k] << " / fvalue=" << fvalue << " / fdiff=" << fdiff << " / dxk=" << d/i << std::endl;
+	    //debug
+	    
+	    --i;
+	  }
+      }
+    x[k] = xtmp[k];
+    phenoxtmp = parameters._gp.pheno(xtmp);
+  }
+  
   template <class TGenoPheno>
   CMASolutions errstats<TGenoPheno>::optimize_vpk(FitFunc &func,
 						  const CMAParameters<TGenoPheno> &parameters,
@@ -212,7 +230,7 @@ namespace libcmaes
 	nparameters.set_fixed_p(k[i],vk[i]);
 	nparameters._sigma_init = ncmasol._sigma = std::max(ncmasol._sigma,fabs(cmasol.best_candidate()._x[k[i]]-vk[i])); // XXX: possibly a better sigma selection ?
       }
-    return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,nullptr,ncmasol); //TODO: explicitely set the initial covariance.
+    return cmaes<TGenoPheno>(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,nullptr,ncmasol); //TODO: explicitely set the initial covariance.
   }
 
   template <class TGenoPheno>
@@ -224,7 +242,7 @@ namespace libcmaes
   {
     std::vector<int> tk = {k};
     std::vector<double> tvk = {vk};
-    return optimize_vpk(func,parameters,cmasol,tk,tvk);
+    return errstats<TGenoPheno>::optimize_vpk(func,parameters,cmasol,tk,tvk);
   }
 
   template <class TGenoPheno>

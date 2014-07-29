@@ -53,16 +53,16 @@ namespace libcmaes
 					  const double &fup,
 					  const double &delta,
 					  const bool &curve);
-    
-    static bool take_linear_step(FitFunc &func,
+
+    static void take_linear_step(FitFunc &func,
 				 const CMAParameters<TGenoPheno> &parameters,
 				 const int &k,
 				 const double &minfvalue,
 				 const double &fup,
-				 const bool &curve,
-				 dVec &x,
-				 double &dxk);
-
+				 const int &n,
+				 double &d,
+				 dVec &x);
+    
     static CMASolutions optimize_vpk(FitFunc &func,
 				     const CMAParameters<TGenoPheno> &parameters,
 				     const CMASolutions &cmasol,
