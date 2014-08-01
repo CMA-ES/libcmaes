@@ -102,14 +102,14 @@ public:
   {};
   
   nn(const std::vector<int> &lsizes,
-     const bool &sigmoid=false,
+     const int &unit=1, // 0: sigmoid, 1: tanh, 2: relu
      const bool &has_grad=false)
-    :_lsizes(lsizes),_has_grad(has_grad),_sigmoid(sigmoid)
+    :_lsizes(lsizes),_has_grad(has_grad),_unit(unit)
   {
     for (size_t i=0;i<_lsizes.size()-1;i++)
       {
 	dMat weights = dMat::Random(_lsizes.at(i),_lsizes.at(i+1)) * sqrt(6.0/(_lsizes.at(i)+_lsizes.at(i+1)));
-	if (_sigmoid)
+	if (_unit == 0)
 	  weights *= 4.0;
 	_lweights.push_back(weights);
 	_lb.push_back(dVec::Zero(_lsizes.at(i+1)));
@@ -155,6 +155,25 @@ public:
   {
     dMat M = sigmoid(X);
     return M.cwiseProduct((dMat::Constant(M.rows(),M.cols(),1)-M));
+  }
+
+  static dMat relu(const dMat &M)
+  {
+    dMat rM = M;
+    return rM.cwiseMax(0);
+  }
+
+  dMat relu_derivative(const dMat &X)
+  {
+    dMat M = X;
+    for (int i=0;i<M.rows();i++)
+      {
+	for (int j=0;j<M.cols();j++)
+	  {
+	    M(i,j) = M(i,j) > 0 ? 1.0 : 0.0;
+	  }
+      }
+    return M;
   }
   
   static dMat softmax(const dMat &M)
@@ -210,9 +229,12 @@ public:
 	  _activations.push_back(activation);
 	if (i != _lweights.size()-1)
 	  {
-	    if (!_sigmoid)
+	    if (_unit == 1)
 	      _lfeatures = mtanh(activation);
-	    else _lfeatures = sigmoid(activation);
+	    else if (_unit == 0)
+	      _lfeatures = sigmoid(activation);
+	    else if (_unit == 2)
+	      _lfeatures = relu(activation);
 	  }
 	else _lfeatures = softmax(activation);
 	if (_has_grad)
@@ -241,9 +263,12 @@ public:
 	  {
 	    dMat delta = _lweights.at(i) * _deltas.back();
 	    dMat der;
-	    if (_sigmoid)
+	    if (_unit == 0)
 	      der = sigmoid_derivative(_activations.at(i-1));
-	    else der = mtanh_derivative(_activations.at(i-1));
+	    else if (_unit == 1)
+	      der = mtanh_derivative(_activations.at(i-1));
+	    else if (_unit == 2)
+	      der = relu_derivative(_activations.at(i-1));
 	    delta = der.cwiseProduct(delta);
 	    _deltas.push_back(delta);
 	  }
@@ -368,7 +393,7 @@ public:
   double _loss = std::numeric_limits<double>::max(); /**< current loss. */
   nn_gradient _grad;
   bool _has_grad = false;
-  bool _sigmoid = false; /**< whether to use sigmoid (default is tanh). */
+  int _unit = false; /**< 0: sigmoid, 1: tanh, 2: relu. */
   std::vector<double> _allgradient; /**< flat representation. */
   std::vector<dMat> _activations; // only for bp.
   std::vector<dMat> _deltas;

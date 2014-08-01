@@ -121,7 +121,7 @@ dMat gtfeatures = dMat::Zero(30,100);
 dMat gtlabels = dMat::Zero(2,100);
 dMat gtweights = dMat::Zero(1,100);
 nn ghiggsnn;
-bool gsigmoid = false;
+int gsigmoid = 1;
 bool gtraining = true;
 bool ggradient = false;
 
@@ -274,7 +274,7 @@ DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) a
 DEFINE_int32(lambda,-1,"number of offsprings at each generation");
 DEFINE_double(sigma0,1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_string(hlayers,"100","comma separated list of number of neurons per hidden layer");
-DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
+DEFINE_int32(punit,false,"what neuronal processing units to use (0: sigmoid, 1: default is tanh, 2: relu");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 DEFINE_string(alg,"sepacmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
@@ -320,7 +320,7 @@ int main(int argc, char *argv[])
       gfeatures.resize(30,FLAGS_n);
       gfeatures = dMat::Random(30,FLAGS_n);
     }
-  gsigmoid = FLAGS_sigmoid;
+  gsigmoid = FLAGS_punit;
   
   //debug
   /*std::cout << "gfeatures: " << gfeatures << std::endl;

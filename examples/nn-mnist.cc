@@ -110,7 +110,7 @@ dMat glabels = dMat::Zero(10,100);
 dMat gtfeatures = dMat::Zero(784,100);
 dMat gtlabels = dMat::Zero(10,100);
 nn gmnistnn;
-bool gsigmoid = false;
+int gsigmoid = 1;
 
 // testing
 double testing(const CMASolutions &cmasols,
@@ -224,7 +224,7 @@ DEFINE_bool(with_gradient,false,"whether to use the gradient (backpropagation) a
 DEFINE_double(lambda,-1,"number of offsprings at each generation");
 DEFINE_double(sigma0,0.01,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_string(hlayers,"100","comma separated list of number of neurons per hidden layer");
-DEFINE_bool(sigmoid,false,"whether to use sigmoid units (default is tanh)");
+DEFINE_int32(punit,1,"what neuronal processing units to use (0: sigmoid, 1: default is tanh, 2: relu)");
 DEFINE_double(testp,0.0,"percentage of the training set used for testing");
 DEFINE_int32(mbatch,-1,"size of minibatch");
 DEFINE_int32(seed,0,"seed for es");
@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
       gfeatures.resize(784,FLAGS_n);
       gfeatures = dMat::Random(784,FLAGS_n);
     }
-  gsigmoid = FLAGS_sigmoid;
+  gsigmoid = FLAGS_punit;
     
   //debug
   /*std::cout << "gfeatures: " << gfeatures << std::endl;
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
   for (size_t i=0;i<hlayers.size();i++)
     glsizes.push_back(hlayers.at(i));
   glsizes.push_back(10);
-  gmnistnn = nn(glsizes,FLAGS_sigmoid,FLAGS_check_grad || FLAGS_with_gradient);
+  gmnistnn = nn(glsizes,FLAGS_punit,FLAGS_check_grad || FLAGS_with_gradient);
 
   if (FLAGS_check_grad)
     {
