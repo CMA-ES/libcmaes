@@ -256,6 +256,7 @@ GradFunc gnn = [](const double *x, const int N)
 ProgressFunc<CMAParameters<>,CMASolutions> hpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
   nn hgn = nn(glsizes,gsigmoid);
+  hgn._allparams.clear();
   for (int i=0;i<cmaparams._dim;i++)
     hgn._allparams.push_back(cmasols.best_candidate()._x(i));
   hgn.forward_pass(gfeatures,glabels);
