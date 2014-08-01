@@ -111,6 +111,7 @@ dMat gtfeatures = dMat::Zero(784,100);
 dMat gtlabels = dMat::Zero(10,100);
 nn gmnistnn;
 int gsigmoid = 1;
+bool gregularize = false;
 
 // testing
 double testing(const dVec &x,
@@ -166,7 +167,7 @@ std::vector<double> gallparams;
 // objective function
 FitFunc nn_of = [](const double *x, const int N)
 {
-  nn mgn = nn(glsizes,gsigmoid);
+  nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize);
   for (int i=0;i<N;i++)
     mgn._allparams.push_back(x[i]);
   if (gbatches <= 0)
@@ -193,7 +194,7 @@ FitFunc nn_of = [](const double *x, const int N)
 
 FitFunc nn_dof = [](const double *x, const int N)
 {
-  nn mgn = nn(glsizes,gsigmoid);
+  nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize);
   mgn._allparams = gallparams;
   int i = 0;
   /*std::cerr << "x=";
@@ -261,6 +262,7 @@ DEFINE_double(nmbatch_acc,0.97,"accuracy target when using minibatches");
 DEFINE_bool(drop,false,"whether to use dropout-like strategy for blackbox optimization");
 DEFINE_int32(dropdim,100,"number of neurons being retained for optimization on each pass");
 DEFINE_int32(maxdroppasses,100,"max number of passes in drop mode");
+DEFINE_bool(regularize,false,"whether to use regularization");
 
 int main(int argc, char *argv[])
 {
@@ -308,7 +310,8 @@ int main(int argc, char *argv[])
       gfeatures = dMat::Random(784,FLAGS_n);
     }
   gsigmoid = FLAGS_punit;
-    
+  gregularize = FLAGS_regularize;
+  
   //debug
   /*std::cout << "gfeatures: " << gfeatures << std::endl;
     std::cout << "glabels: " << glabels << std::endl;*/
@@ -318,7 +321,7 @@ int main(int argc, char *argv[])
   for (size_t i=0;i<hlayers.size();i++)
     glsizes.push_back(hlayers.at(i));
   glsizes.push_back(10);
-  gmnistnn = nn(glsizes,FLAGS_punit,FLAGS_check_grad || FLAGS_with_gradient);
+  gmnistnn = nn(glsizes,FLAGS_punit,FLAGS_check_grad || FLAGS_with_gradient,gregularize,gregularize);
 
   if (FLAGS_check_grad)
     {
@@ -377,7 +380,7 @@ int main(int argc, char *argv[])
 		  Candidate bcand = cmasols.best_candidate();
 		  x0.clear();
 		  std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(x0));
-		  nn hgn = nn(glsizes,gsigmoid);
+		  nn hgn = nn(glsizes,gsigmoid,false,gregularize,gregularize);
 		  for (int i=0;i<(int)x0.size();i++)
 		    hgn._allparams.push_back(x0[i]);
 		  hgn.forward_pass(ggfeatures,gglabels);
@@ -460,7 +463,7 @@ int main(int argc, char *argv[])
 	  cmaparams._fplot = FLAGS_fplot;
 	  cmaparams._algo = aCMAES;
 	  cmaparams.set_ftarget(1e-2);
-	  cmaparams._mt_feval = false;
+	  cmaparams._mt_feval = true;
 	  cmaparams._quiet = true;
 	  cmasols = cmaes<>(nn_dof,cmaparams);
 	  

@@ -103,8 +103,10 @@ public:
   
   nn(const std::vector<int> &lsizes,
      const int &unit=1, // 0: sigmoid, 1: tanh, 2: relu
-     const bool &has_grad=false)
-    :_lsizes(lsizes),_has_grad(has_grad),_unit(unit)
+     const bool &has_grad=false,
+     const bool &r1=false,
+     const bool &r2=false)
+    :_lsizes(lsizes),_has_grad(has_grad),_unit(unit),_r1(r1),_r2(r2)
   {
     for (size_t i=0;i<_lsizes.size()-1;i++)
       {
@@ -211,7 +213,7 @@ public:
 	    logM(i,j) = Mc(i,j) == 0 ? -20.0 : log(Mc(i,j));
 	  }
       }
-    return (-1) * logM;
+    return (-1.0) * logM;
   }
     
   // forward pass over all features at once.
@@ -250,6 +252,20 @@ public:
 	    _deltas.push_back(delta);
 	  }
 	_loss = get_loss(_lfeatures,labels).mean();
+	if (_r1)
+	  {
+	    double l1 = 0.0;
+	    for (size_t i=0;i<_lweights.size();i++)
+	      l1 += _lweights.at(i).cwiseAbs().sum();
+	    _loss += l1;
+	  }
+	if (_r2)
+	  {
+	    double l2 = 0.0;
+	    for (size_t i=0;i<_lweights.size();i++)
+	      l2 += _lweights.at(i).norm();
+	    _loss += l2;
+	  }
       }
   }
 
@@ -398,4 +414,6 @@ public:
   std::vector<dMat> _activations; // only for bp.
   std::vector<dMat> _deltas;
   std::vector<dMat> _predicts;
+  bool _r1 = false; /**< whether to use L1 regularization. */
+  bool _r2 = false; /**< whether to use L2 regularization. */
 };
