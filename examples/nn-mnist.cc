@@ -163,11 +163,12 @@ std::uniform_int_distribution<> gunif(0,41999);
 int gbatches = -1;
 std::map<int,double> gndropdims;
 std::vector<double> gallparams;
+double gl1reg, gl2reg;
 
 // objective function
 FitFunc nn_of = [](const double *x, const int N)
 {
-  nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize);
+  nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,gl1reg,gl2reg);
   for (int i=0;i<N;i++)
     mgn._allparams.push_back(x[i]);
   if (gbatches <= 0)
@@ -194,7 +195,7 @@ FitFunc nn_of = [](const double *x, const int N)
 
 FitFunc nn_dof = [](const double *x, const int N)
 {
-  nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize);
+  nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,gl1reg,gl2reg);
   mgn._allparams = gallparams;
   int i = 0;
   /*std::cerr << "x=";
@@ -263,6 +264,8 @@ DEFINE_bool(drop,false,"whether to use dropout-like strategy for blackbox optimi
 DEFINE_int32(dropdim,100,"number of neurons being retained for optimization on each pass");
 DEFINE_int32(maxdroppasses,100,"max number of passes in drop mode");
 DEFINE_bool(regularize,false,"whether to use regularization");
+DEFINE_double(l1reg,0.0,"L1 regularization factor");
+DEFINE_double(l2reg,1e-4,"L2 regularization weight");
 
 int main(int argc, char *argv[])
 {
@@ -311,6 +314,8 @@ int main(int argc, char *argv[])
     }
   gsigmoid = FLAGS_punit;
   gregularize = FLAGS_regularize;
+  gl1reg = FLAGS_l1reg;
+  gl2reg = FLAGS_l2reg;
   
   //debug
   /*std::cout << "gfeatures: " << gfeatures << std::endl;
@@ -321,7 +326,7 @@ int main(int argc, char *argv[])
   for (size_t i=0;i<hlayers.size();i++)
     glsizes.push_back(hlayers.at(i));
   glsizes.push_back(10);
-  gmnistnn = nn(glsizes,FLAGS_punit,FLAGS_check_grad || FLAGS_with_gradient,gregularize,gregularize);
+  gmnistnn = nn(glsizes,FLAGS_punit,FLAGS_check_grad || FLAGS_with_gradient,gregularize,gregularize,FLAGS_l1reg,FLAGS_l2reg);
 
   if (FLAGS_check_grad)
     {
@@ -380,7 +385,7 @@ int main(int argc, char *argv[])
 		  Candidate bcand = cmasols.best_candidate();
 		  x0.clear();
 		  std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(x0));
-		  nn hgn = nn(glsizes,gsigmoid,false,gregularize,gregularize);
+		  nn hgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,FLAGS_l1reg,FLAGS_l2reg);
 		  for (int i=0;i<(int)x0.size();i++)
 		    hgn._allparams.push_back(x0[i]);
 		  hgn.forward_pass(ggfeatures,gglabels);
@@ -464,8 +469,9 @@ int main(int argc, char *argv[])
 	  cmaparams._algo = aCMAES;
 	  cmaparams.set_ftarget(1e-2);
 	  cmaparams._mt_feval = true;
-	  cmaparams._quiet = true;
+	  cmaparams._quiet = false;
 	  cmasols = cmaes<>(nn_dof,cmaparams);
+	  nevals += cmasols._nevals;
 	  
 	  // update state.
 	  int p = 0;
@@ -478,7 +484,15 @@ int main(int argc, char *argv[])
 	    }
 	  
 	  // loop / break.
-	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate()._fvalue << std::endl;
+	  double acc = 0.0;
+	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate()._fvalue << " / fevals=" << nevals << std::endl;
+	  if (FLAGS_testp || FLAGS_testf != "")
+	    {
+	      dVec bx = Map<dVec>(&gallparams.front(),gallparams.size());
+	      acc = testing(bx,false,false);
+	      std::cout << " / acc=" << acc;
+	    }
+	  std::cout << std::endl;
 	  if (++droppasses >= FLAGS_maxdroppasses)
 	    break;
 	}

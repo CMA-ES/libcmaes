@@ -105,8 +105,10 @@ public:
      const int &unit=1, // 0: sigmoid, 1: tanh, 2: relu
      const bool &has_grad=false,
      const bool &r1=false,
-     const bool &r2=false)
-    :_lsizes(lsizes),_has_grad(has_grad),_unit(unit),_r1(r1),_r2(r2)
+     const bool &r2=false,
+     const double &lambda1=0.1,
+     const double &lambda2=0.1)
+    :_lsizes(lsizes),_has_grad(has_grad),_unit(unit),_r1(r1),_r2(r2),_lambda1(lambda1),_lambda2(lambda2)
   {
     for (size_t i=0;i<_lsizes.size()-1;i++)
       {
@@ -257,14 +259,14 @@ public:
 	    double l1 = 0.0;
 	    for (size_t i=0;i<_lweights.size();i++)
 	      l1 += _lweights.at(i).cwiseAbs().sum();
-	    _loss += l1;
+	    _loss += _lambda1 * l1;
 	  }
 	if (_r2)
 	  {
 	    double l2 = 0.0;
 	    for (size_t i=0;i<_lweights.size();i++)
 	      l2 += _lweights.at(i).norm();
-	    _loss += l2;
+	    _loss += _lambda2 * l2;
 	  }
       }
   }
@@ -416,4 +418,6 @@ public:
   std::vector<dMat> _predicts;
   bool _r1 = false; /**< whether to use L1 regularization. */
   bool _r2 = false; /**< whether to use L2 regularization. */
+  double _lambda1 = 0.1; /**< L1 factor. */
+  double _lambda2 = 0.1; /**< L2 factor. */
 };
