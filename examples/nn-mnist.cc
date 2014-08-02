@@ -260,6 +260,7 @@ DEFINE_int32(nmbatch_budget,-1,"max budget when using minibatches");
 DEFINE_double(nmbatch_ftarget,1e-3,"loss target when using minibatches");
 DEFINE_bool(nmbatch_sim,false,"simplified output for minibatches in order to pipe to file");
 DEFINE_double(nmbatch_acc,0.97,"accuracy target when using minibatches");
+DEFINE_bool(nmbatch_rand,false,"whether to use random minibatches");
 DEFINE_bool(drop,false,"whether to use dropout-like strategy for blackbox optimization");
 DEFINE_int32(dropdim,100,"number of neurons being retained for optimization on each pass");
 DEFINE_int32(maxdroppasses,100,"max number of passes in drop mode");
@@ -406,10 +407,24 @@ int main(int argc, char *argv[])
 	      
 	      int beg = i*FLAGS_n;
 	      int bsize = FLAGS_n;
-	      if (i == npasses-1)
-		bsize = ggfeatures.cols()-i*FLAGS_n;
-	      gfeatures = ggfeatures.block(0,beg,ggfeatures.rows(),bsize);
-	      glabels = gglabels.block(0,beg,gglabels.rows(),bsize);
+	      if (!FLAGS_nmbatch_rand)
+		{
+		  if (i == npasses-1)
+		    bsize = ggfeatures.cols()-i*FLAGS_n;
+		  gfeatures = ggfeatures.block(0,beg,ggfeatures.rows(),bsize);
+		  glabels = gglabels.block(0,beg,gglabels.rows(),bsize);
+		}
+	      else
+		{
+		  gfeatures = dMat(ggfeatures.rows(),bsize);
+		  glabels = dMat(gglabels.rows(),bsize);
+		  for (int j=0;j<bsize;j++)
+		    {
+		      int u = gunif(ggen);
+		      gfeatures.col(j) = ggfeatures.col(u);
+		      glabels.col(j) = gglabels.col(u);
+		    }
+		}
 	      
 	      CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front()/*gmnistnn._allparams.front()*/,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
 	      cmaparams.set_max_iter(FLAGS_maxsolveiter);
@@ -485,7 +500,7 @@ int main(int argc, char *argv[])
 	  
 	  // loop / break.
 	  double acc = 0.0;
-	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate()._fvalue << " / fevals=" << nevals << std::endl;
+	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate()._fvalue << " / fevals=" << nevals;
 	  if (FLAGS_testp || FLAGS_testf != "")
 	    {
 	      dVec bx = Map<dVec>(&gallparams.front(),gallparams.size());
