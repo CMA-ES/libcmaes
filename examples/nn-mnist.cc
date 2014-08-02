@@ -263,7 +263,7 @@ DEFINE_double(nmbatch_acc,0.97,"accuracy target when using minibatches");
 DEFINE_bool(nmbatch_rand,false,"whether to use random minibatches");
 DEFINE_bool(drop,false,"whether to use dropout-like strategy for blackbox optimization");
 DEFINE_int32(dropdim,100,"number of neurons being retained for optimization on each pass");
-DEFINE_int32(maxdroppasses,100,"max number of passes in drop mode");
+DEFINE_int32(maxdroppasses,-1,"max number of passes in drop mode");
 DEFINE_bool(regularize,false,"whether to use regularization");
 DEFINE_double(l1reg,0.0,"L1 regularization factor");
 DEFINE_double(l2reg,1e-4,"L2 regularization weight");
@@ -508,7 +508,7 @@ int main(int argc, char *argv[])
 	      std::cout << " / acc=" << acc;
 	    }
 	  std::cout << std::endl;
-	  if (++droppasses >= FLAGS_maxdroppasses)
+	  if (FLAGS_maxdroppasses > 0 && ++droppasses >= FLAGS_maxdroppasses)
 	    break;
 	}
     }// end run
