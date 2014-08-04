@@ -34,22 +34,21 @@ FitFunc rosenbrock = [](const double *x, const int N)
   return val;
 };
 
-ProgressFunc<CMAParameters<>,CMASolutions> select_time = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
+PlotFunc<CMAParameters<>,CMASolutions> plotf = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
 {
-  if (cmasols._niter % 100 == 0)
-    std::cerr << cmasols._elapsed_last_iter << std::endl;
+  fplotstream << "kappa=" << cmasols._max_eigenv / cmasols._min_eigenv << std::endl; // storing covariance matrix condition number to file.
   return 0;
 };
 
 int main(int argc, char *argv[])
 {
-  int dim = 100; // problem dimensions.
+  int dim = 20; // problem dimensions.
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
   CMAParameters<> cmaparams(dim,&x0.front(),sigma);
-  //cmaparams._algo = BIPOP_CMAES;
-  CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,select_time);
+  cmaparams._fplot = "pffunc.dat"; // DON'T MISS: mandatory output file name.
+  CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,plotf);
   std::cout << "best solution: " << cmasols << std::endl;
   std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
   return cmasols._run_status;
