@@ -161,6 +161,8 @@ std::random_device rd;
 std::mt19937 ggen(rd());
 std::uniform_int_distribution<> gunif(0,41999);
 int gbatches = -1;
+dMat gbatchfeatures;
+dMat gbatchlabels;
 std::map<int,double> gndropdims;
 std::vector<double> gallparams;
 double gl1reg, gl2reg;
@@ -174,18 +176,8 @@ FitFunc nn_of = [](const double *x, const int N)
   if (gbatches <= 0)
     mgn.forward_pass(gfeatures,glabels);
   else
-    {
-      dMat lgfeatures(gfeatures.rows(),gbatches);
-      dMat lglabels(glabels.rows(),gbatches);
-      for (int j=0;j<gbatches;j++)
-	{
-	  int u = gunif(ggen);
-	  lgfeatures.col(j) = gfeatures.col(u);
-	  lglabels.col(j) = glabels.col(u);
-	}
-      mgn.forward_pass(lgfeatures,lglabels);
-    }
-  
+    mgn.forward_pass(gbatchfeatures,gbatchlabels); // gbatchfeatures set in progress function.
+      
   //debug
   //std::cout << "net loss= " << gmnistnn._loss << std::endl;
   //debug
@@ -198,10 +190,6 @@ FitFunc nn_dof = [](const double *x, const int N)
   nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,gl1reg,gl2reg);
   mgn._allparams = gallparams;
   int i = 0;
-  /*std::cerr << "x=";
-  for (size_t j=0;j<N;j++)
-    std::cout << x[j] << " ";
-    std::cout << std::endl;*/
   auto mit = gndropdims.begin();
   while(mit!=gndropdims.end())
     {
@@ -210,7 +198,6 @@ FitFunc nn_dof = [](const double *x, const int N)
       ++i;
     }
   mgn.forward_pass(gfeatures,glabels);
-  //std::cerr << "loss=" << mgn._loss << std::endl;
   return mgn._loss;
 };
 
@@ -237,6 +224,17 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
   double trainacc = testing(cmasols.best_candidate()._x,true,false);
   double testacc = testing(cmasols.best_candidate()._x,false,false);
   std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << trainacc << " / testacc=" << testacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+
+  if (gbatches > 0)
+    {
+      for (int j=0;j<gbatches;j++)
+	{
+	  int u = gunif(ggen);
+	  gbatchfeatures.col(j) = gfeatures.col(u);
+	  gbatchlabels.col(j) = glabels.col(u);
+	}
+    }
+
   return 0;
 };
 							
@@ -284,9 +282,6 @@ int main(int argc, char *argv[])
   for (size_t i=0;i<hlayers_str.size();i++)
     hlayers.push_back(atoi(hlayers_str.at(i).c_str()));
   
-  if (FLAGS_mbatch > 0)
-    gbatches = FLAGS_mbatch;
-
   int load_size = FLAGS_n;
   if (FLAGS_nmbatch)
     load_size = 60000;
@@ -306,7 +301,13 @@ int main(int argc, char *argv[])
 	  exit(1);
 	}
     }
-  
+
+  if (FLAGS_mbatch > 0)
+    {
+      gbatches = FLAGS_mbatch;
+      gbatchfeatures = dMat(gfeatures.rows(),gbatches);
+      gbatchlabels = dMat(glabels.rows(),gbatches);
+    }
   gunif = std::uniform_int_distribution<>(0,gfeatures.cols()-1);
   if (FLAGS_check_grad)
     {
@@ -343,7 +344,7 @@ int main(int argc, char *argv[])
   dMat gglabels;
   CMASolutions cmasols;
   int npasses = 1;
-  if (FLAGS_mbatch)
+  if (FLAGS_nmbatch)
     npasses = ceil(gfeatures.cols()/static_cast<double>(FLAGS_n));
   std::vector<double> sigma0(npasses,FLAGS_sigma0);
   double fvalue = 100000.0;
@@ -436,11 +437,6 @@ int main(int argc, char *argv[])
 	      cmaparams._mt_feval = true;
 	      if (FLAGS_nmbatch)
 		cmaparams._quiet = true;
-	      /*if (gbatches > 0)
-		cmaparams.set_noisy();*/
-	      /*if (!FLAGS_with_gradient)
-		cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
-		else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols);*/
 	      if (FLAGS_nmbatch)
 		{
 		  if (!FLAGS_with_gradient)
@@ -468,7 +464,6 @@ int main(int argc, char *argv[])
 	  // randomly drop units
 	  gmnistnn.to_array();
 	  if (gallparams.empty())
-	    //gallparams = gmnistnn._allparams;
 	    gallparams = std::vector<double>(gmnistnn._allparams_dim,0.0);
 	  gndropdims.clear();
 	  std::vector<double> vndropdims;
