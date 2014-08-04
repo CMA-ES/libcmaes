@@ -222,6 +222,8 @@ GradFunc gnn = [](const double *x, const int N)
   return grad;
 };
 
+int gnpasses = 1;
+int gi = 0;
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
   gtrainacc = testing(cmasols.best_candidate()._x,true,false);
@@ -230,12 +232,23 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
 
   if (gbatches > 0)
     {
-      for (int j=0;j<gbatches;j++)
+      /*for (int j=0;j<gbatches;j++)
 	{
 	  int u = gunif(ggen);
 	  gbatchfeatures.col(j) = gfeatures.col(u);
 	  gbatchlabels.col(j) = glabels.col(u);
+	  }*/
+
+      int beg = gi*gbatches;
+      int bsize = gbatches;
+      if (gi == gnpasses-1)
+	{
+	  bsize = gfeatures.cols()-beg;
+	  gi = 0;
 	}
+      else ++gi;
+      gbatchfeatures = gfeatures.block(0,beg,gfeatures.rows(),bsize);
+      gbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
     }
 
   return 0;
@@ -357,6 +370,10 @@ int main(int argc, char *argv[])
   int npasses = 1;
   if (FLAGS_nmbatch)
     npasses = ceil(gfeatures.cols()/static_cast<double>(FLAGS_n));
+  if (FLAGS_mbatch > 0)
+      npasses = gnpasses = ceil(gfeatures.cols()/static_cast<double>(FLAGS_mbatch));
+  if (FLAGS_sgd)
+    npasses = ceil(gfeatures.cols()/static_cast<double>(gbatches));
   std::vector<double> sigma0(npasses,FLAGS_sigma0);
   double fvalue = 100000.0;
   double acc = 0.0;
@@ -366,6 +383,7 @@ int main(int argc, char *argv[])
   bool init = false;
   bool run = true;
   int droppasses = 0;
+  int epochs = 0;
   std::uniform_int_distribution<> dropunif(0,gmnistnn._allparams_dim-1);
   
   std::cout << "npasses=" << npasses << std::endl;
@@ -449,8 +467,8 @@ int main(int argc, char *argv[])
 	      cmaparams._algo = sepaCMAES;
 	      cmaparams.set_ftarget(1e-2);
 	      cmaparams._mt_feval = true;
-	      if (FLAGS_mbatch)
-		cmaparams.set_noisy();
+	      /*if (FLAGS_mbatch)
+		cmaparams.set_noisy();*/
 	      if (FLAGS_nmbatch)
 		cmaparams._quiet = true;
 	      if (FLAGS_nmbatch)
@@ -526,24 +544,33 @@ int main(int argc, char *argv[])
 	} // end drop
       else if (FLAGS_sgd)
 	{
-	  if (gbatches <= 0)
+	  for (int i=0;i<npasses;i++)
 	    {
-	      std::cout << "Error: need to specify minibatch size with -mbatch\n";
-	      exit(1);
+	      if (gbatches <= 0)
+		{
+		  std::cout << "Error: need to specify minibatch size with -mbatch\n";
+		  exit(1);
+		}
+	      /*for (int j=0;j<gbatches;j++)
+		{
+		  int u = gunif(ggen);
+		  gbatchfeatures.col(i*gbatches+j) = gfeatures.col(u);
+		  gbatchlabels.col(j) = glabels.col(u);
+		  }*/
+	      int beg = i*gbatches;
+	      int bsize = gbatches;
+	      if (i == npasses-1)
+		bsize = gfeatures.cols()-i*gbatches;
+	      gbatchfeatures = gfeatures.block(0,beg,gfeatures.rows(),bsize);
+	      gbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
+	      gmnistnn.sgd(gbatchfeatures,gbatchlabels,0.01);
+	      gmnistnn.clear_grad();
+	      dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
+	      gtrainacc = testing(x,true,false);
+	      gtestacc = testing(x,false,false);
+	      std::cout << "epochs=" << epochs << " / iter=" << epochs * npasses + i << " / loss= " << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
 	    }
-	  for (int j=0;j<gbatches;j++)
-	    {
-	      int u = gunif(ggen);
-	      gbatchfeatures.col(j) = gfeatures.col(u);
-	      gbatchlabels.col(j) = glabels.col(u);
-	    }
-	  gmnistnn.sgd(gbatchfeatures,gbatchlabels,0.01);
-	  gmnistnn.clear_grad();
-	  dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
-	  gtrainacc = testing(x,true,false);
-	  gtestacc = testing(x,false,false);
-	  std::cout << "iter=" << npasses << " / loss= " << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
-	  ++npasses;
+	  ++epochs;
 	}
     }// end run
 
