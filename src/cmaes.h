@@ -33,7 +33,8 @@ namespace libcmaes
   CMASolutions cmaes(FitFunc &func,
 		     CMAParameters<TGenoPheno> &parameters,
 		     ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc=CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,
-		     GradFunc gfunc=nullptr)
+		     GradFunc gfunc=nullptr,
+		     PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> &pffunc=CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultFPFunc)
     {
       switch(parameters._algo)
 	{
@@ -43,6 +44,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    cmaes_vanilla.set_gradient_func(gfunc);
 	  cmaes_vanilla.set_progress_func(pfunc);
+	  cmaes_vanilla.set_plot_func(pffunc);
 	  cmaes_vanilla.optimize();
 	  return cmaes_vanilla._solutions;
 	}
@@ -52,6 +54,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    ipop.set_gradient_func(gfunc);
 	  ipop.set_progress_func(pfunc);
+	  ipop.set_plot_func(pffunc);
 	  ipop.optimize();
 	  return ipop._solutions;
 	}
@@ -61,6 +64,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    bipop.set_gradient_func(gfunc);
 	  bipop.set_progress_func(pfunc);
+	  bipop.set_plot_func(pffunc);
 	  bipop.optimize();
 	  return bipop._solutions;
 	}
@@ -70,6 +74,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    acmaes.set_gradient_func(gfunc);
 	  acmaes.set_progress_func(pfunc);
+	  acmaes.set_plot_func(pffunc);
 	  acmaes.optimize();
 	  return acmaes._solutions;
 	}
@@ -79,6 +84,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    aipop.set_gradient_func(gfunc);
 	  aipop.set_progress_func(pfunc);
+	  aipop.set_plot_func(pffunc);
 	  aipop.optimize();
 	  return aipop._solutions;
 	}
@@ -88,6 +94,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    abipop.set_gradient_func(gfunc);
 	  abipop.set_progress_func(pfunc);
+	  abipop.set_plot_func(pffunc);
 	  abipop.optimize();
 	  return abipop._solutions;
 	}
@@ -98,6 +105,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    sepcmaes.set_gradient_func(gfunc);
 	  sepcmaes.set_progress_func(pfunc);
+	  sepcmaes.set_plot_func(pffunc);
 	  sepcmaes.optimize();
 	  return sepcmaes._solutions;
 	}
@@ -108,6 +116,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    ipop.set_gradient_func(gfunc);
 	  ipop.set_progress_func(pfunc);
+	  ipop.set_plot_func(pffunc);
 	  ipop.optimize();
 	  return ipop._solutions;
 	}
@@ -118,6 +127,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    bipop.set_gradient_func(gfunc);
 	  bipop.set_progress_func(pfunc);
+	  bipop.set_plot_func(pffunc);
 	  bipop.optimize();
 	  return bipop._solutions;
 	}
@@ -128,6 +138,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    sepcmaes.set_gradient_func(gfunc);
 	  sepcmaes.set_progress_func(pfunc);
+	  sepcmaes.set_plot_func(pffunc);
 	  sepcmaes.optimize();
 	  return sepcmaes._solutions;
 	}
@@ -138,6 +149,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    ipop.set_gradient_func(gfunc);
 	  ipop.set_progress_func(pfunc);
+	  ipop.set_plot_func(pffunc);
 	  ipop.optimize();
 	  return ipop._solutions;
 	}
@@ -148,6 +160,7 @@ namespace libcmaes
 	  if (gfunc != nullptr)
 	    bipop.set_gradient_func(gfunc);
 	  bipop.set_progress_func(pfunc);
+	  bipop.set_plot_func(pffunc);
 	  bipop.optimize();
 	  return bipop._solutions;
 	}
