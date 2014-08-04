@@ -127,6 +127,7 @@ double testing(const dVec &x,
   if (training)
     gmnistnn.forward_pass(gfeatures,glabels);
   else gmnistnn.forward_pass(gtfeatures,gtlabels);
+  gmnistnn.clear_grad();
   //std::cout << gmnistnn._lfeatures.cols() << " / " << gmnistnn._lfeatures.rows() << std::endl;
   for (int i=0;i<gmnistnn._lfeatures.cols();i++)
     {
@@ -274,6 +275,7 @@ DEFINE_int32(maxdroppasses,-1,"max number of passes in drop mode");
 DEFINE_bool(regularize,false,"whether to use regularization");
 DEFINE_double(l1reg,0.0,"L1 regularization factor");
 DEFINE_double(l2reg,1e-4,"L2 regularization weight");
+DEFINE_bool(sgd,false,"run stochastic gradient descent, for comparison purpose");
 
 int main(int argc, char *argv[])
 {
@@ -337,8 +339,9 @@ int main(int argc, char *argv[])
   for (size_t i=0;i<hlayers.size();i++)
     glsizes.push_back(hlayers.at(i));
   glsizes.push_back(10);
-  gmnistnn = nn(glsizes,FLAGS_punit,FLAGS_check_grad || FLAGS_with_gradient,gregularize,gregularize,FLAGS_l1reg,FLAGS_l2reg);
-
+  gmnistnn = nn(glsizes,FLAGS_punit,FLAGS_check_grad || FLAGS_with_gradient || FLAGS_sgd,gregularize,gregularize,FLAGS_l1reg,FLAGS_l2reg);
+  gmnistnn.to_array();
+  
   if (FLAGS_check_grad)
     {
       if (gmnistnn.grad_check(gfeatures,glabels))
@@ -371,7 +374,7 @@ int main(int argc, char *argv[])
   std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
   while (run)
     {
-      if (!FLAGS_drop)
+      if (!FLAGS_drop && !FLAGS_sgd)
 	{
 	  for (int i=0;i<npasses;i++)
 	    {
@@ -389,7 +392,6 @@ int main(int argc, char *argv[])
 		  gglabels = glabels;
 		  if (FLAGS_x0 != -std::numeric_limits<double>::max())
 		    {
-		      gmnistnn.to_array();
 		      x0 = gmnistnn._allparams;
 		    }
 		  else x0 = std::vector<double>(gmnistnn._allparams_dim,FLAGS_x0);
@@ -447,8 +449,8 @@ int main(int argc, char *argv[])
 	      cmaparams._algo = sepaCMAES;
 	      cmaparams.set_ftarget(1e-2);
 	      cmaparams._mt_feval = true;
-	      /*if (FLAGS_mbatch)
-		cmaparams.set_noisy();*/
+	      if (FLAGS_mbatch)
+		cmaparams.set_noisy();
 	      if (FLAGS_nmbatch)
 		cmaparams._quiet = true;
 	      if (FLAGS_nmbatch)
@@ -473,7 +475,7 @@ int main(int argc, char *argv[])
 	    break;
 	}
       // end drop
-      else
+      else if (FLAGS_drop)
 	{
 	  // randomly drop units
 	  gmnistnn.to_array();
@@ -521,6 +523,27 @@ int main(int argc, char *argv[])
 	  std::cout << std::endl;
 	  if (FLAGS_maxdroppasses > 0 && ++droppasses >= FLAGS_maxdroppasses)
 	    break;
+	} // end drop
+      else if (FLAGS_sgd)
+	{
+	  if (gbatches <= 0)
+	    {
+	      std::cout << "Error: need to specify minibatch size with -mbatch\n";
+	      exit(1);
+	    }
+	  for (int j=0;j<gbatches;j++)
+	    {
+	      int u = gunif(ggen);
+	      gbatchfeatures.col(j) = gfeatures.col(u);
+	      gbatchlabels.col(j) = glabels.col(u);
+	    }
+	  gmnistnn.sgd(gbatchfeatures,gbatchlabels,0.01);
+	  gmnistnn.clear_grad();
+	  dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
+	  gtrainacc = testing(x,true,false);
+	  gtestacc = testing(x,false,false);
+	  std::cout << "iter=" << npasses << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
+	  ++npasses;
 	}
     }// end run
 

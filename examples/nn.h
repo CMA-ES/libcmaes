@@ -305,6 +305,23 @@ public:
       }
     _grad.accumulate(GWupd,_deltas);
   }
+
+  int sgd(const dMat &batchfeatures, const dMat &batchlabels,
+	  const double &lrt)
+  {
+    // get loss.
+    forward_pass(batchfeatures,batchlabels);
+    
+    // back propagate.
+    back_propagate(batchfeatures);
+    
+    // update weights.
+    grad_to_vec(batchfeatures.cols());
+    std::transform(_allgradient.begin(),_allgradient.end(),_allgradient.begin(),std::bind1st(std::multiplies<double>(),-lrt));
+    std::transform(_allparams.begin(),_allparams.end(),_allgradient.begin(),_allparams.begin(),std::plus<double>());
+    
+    return 0;
+  }
   
   void to_array()
   {
