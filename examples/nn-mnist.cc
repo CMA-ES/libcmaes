@@ -231,7 +231,7 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
   gtrainacc = testing(cmasols.best_candidate()._x,true,false);
   gtestacc = testing(cmasols.best_candidate()._x,false,false);
   //}
-  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << gi << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
           
   if (gbatches > 0)
     {
