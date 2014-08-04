@@ -565,10 +565,13 @@ int main(int argc, char *argv[])
 	      gbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
 	      gmnistnn.sgd(gbatchfeatures,gbatchlabels,0.01);
 	      gmnistnn.clear_grad();
-	      dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
-	      gtrainacc = testing(x,true,false);
-	      gtestacc = testing(x,false,false);
-	      std::cout << "epochs=" << epochs << " / iter=" << epochs * npasses + i << " / loss= " << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
+	      if (i == npasses - 1)
+		{
+		  dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
+		  gtrainacc = testing(x,true,false);
+		  gtestacc = testing(x,false,false);
+		  std::cout << "epochs=" << epochs << " / iter=" << epochs * npasses + i << " / loss= " << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
+		}
 	    }
 	  ++epochs;
 	}
