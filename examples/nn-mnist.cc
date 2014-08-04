@@ -542,7 +542,7 @@ int main(int argc, char *argv[])
 	  dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
 	  gtrainacc = testing(x,true,false);
 	  gtestacc = testing(x,false,false);
-	  std::cout << "iter=" << npasses << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
+	  std::cout << "iter=" << npasses << " / loss= " << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
 	  ++npasses;
 	}
     }// end run
