@@ -234,8 +234,9 @@ GradFunc gnn = [](const double *x, const int N)
 
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
-  double acc = testing(cmasols.best_candidate()._x,false,false);
-  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / acc=" << acc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  double trainacc = testing(cmasols.best_candidate()._x,true,false);
+  double testacc = testing(cmasols.best_candidate()._x,false,false);
+  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << trainacc << " / testacc=" << testacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
   return 0;
 };
 							
@@ -393,17 +394,18 @@ int main(int argc, char *argv[])
 		  fvalue = hgn._loss; // on ggfeatures and gglabels.
 		}
 	      
-	      double acc = 0.0;
+	      double trainacc=0.0,testacc = 0.0;
 	      if (cmasols._sepcov.size())
 		{
 		  dVec bx = cmasols.best_candidate()._x;
-		  acc = testing(bx,false,false);
+		  trainacc = testing(bx,true,false);
+		  testacc = testing(bx,false,false);
 		}
 	      std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
 	      elapsed_total = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 	      if (!FLAGS_nmbatch_sim)
-		std::cout << "pass #" << i << " / fvalue=" << fvalue << " / nevals=" << nevals << " / acc=" << acc << " / tim=" << elapsed/1000.0 << " / timt=" << elapsed_total/1000.0 << std::endl;
-	      else std::cout << fvalue << "," << nevals << "," << acc << "," << elapsed/1000.0 << "\t" << elapsed_total / 1000.0 << std::endl;
+		std::cout << "pass #" << i << " / fvalue=" << fvalue << " / nevals=" << nevals << " / trainacc=" << trainacc << " / testacc=" << testacc << " / tim=" << elapsed/1000.0 << " / timt=" << elapsed_total/1000.0 << std::endl;
+	      else std::cout << fvalue << "," << nevals << "," << trainacc << "," << testacc << "," << elapsed/1000.0 << "\t" << elapsed_total / 1000.0 << std::endl;
 	      
 	      int beg = i*FLAGS_n;
 	      int bsize = FLAGS_n;
