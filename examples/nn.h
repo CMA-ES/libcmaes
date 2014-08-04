@@ -317,8 +317,13 @@ public:
     
     // update weights.
     grad_to_vec(batchfeatures.cols());
+    std::vector<double> reg(_allparams.size());
+    if (_r2)
+      std::transform(_allparams.begin(),_allparams.end(),reg.begin(),std::bind1st(std::multiplies<double>(),-lrt));
     std::transform(_allgradient.begin(),_allgradient.end(),_allgradient.begin(),std::bind1st(std::multiplies<double>(),-lrt));
     std::transform(_allparams.begin(),_allparams.end(),_allgradient.begin(),_allparams.begin(),std::plus<double>());
+    if (_r2)
+      std::transform(_allparams.begin(),_allparams.end(),reg.begin(),_allparams.begin(),std::plus<double>());
     
     return 0;
   }
