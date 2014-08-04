@@ -112,6 +112,8 @@ dMat gtlabels = dMat::Zero(10,100);
 nn gmnistnn;
 int gsigmoid = 1;
 bool gregularize = false;
+double gtrainacc = 0.0;
+double gtestacc = 0.0;
 
 // testing
 double testing(const dVec &x,
@@ -221,9 +223,9 @@ GradFunc gnn = [](const double *x, const int N)
 
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
-  double trainacc = testing(cmasols.best_candidate()._x,true,false);
-  double testacc = testing(cmasols.best_candidate()._x,false,false);
-  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << trainacc << " / testacc=" << testacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  gtrainacc = testing(cmasols.best_candidate()._x,true,false);
+  gtestacc = testing(cmasols.best_candidate()._x,false,false);
+  std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
 
   if (gbatches > 0)
     {
@@ -238,6 +240,12 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
   return 0;
 };
 							
+PlotFunc<CMAParameters<>,CMASolutions> mpffunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+{
+  std::string sep = " ";
+  fplotstream << cmasols.best_candidate()._fvalue << sep << cmasols._nevals << sep << cmasols._sigma << sep << sqrt(cmasols._max_eigenv/cmasols._min_eigenv) << sep << cmasols._max_eigenv << sep << gtrainacc << sep << gtestacc << std::endl;
+  return 0;
+};
 
 DEFINE_string(fdata,"train.csv","name of the file that contains the training data for MNIST");
 DEFINE_int32(n,100,"max number of examples to train from");
@@ -379,8 +387,12 @@ int main(int argc, char *argv[])
 		{
 		  ggfeatures = gfeatures;
 		  gglabels = glabels;
-		  gmnistnn.to_array();
-		  x0 = gmnistnn._allparams;
+		  if (FLAGS_x0 != -std::numeric_limits<double>::max())
+		    {
+		      gmnistnn.to_array();
+		      x0 = gmnistnn._allparams;
+		    }
+		  else x0 = std::vector<double>(gmnistnn._allparams_dim,FLAGS_x0);
 		  init = true;
 		}
 	      else
@@ -435,19 +447,21 @@ int main(int argc, char *argv[])
 	      cmaparams._algo = sepaCMAES;
 	      cmaparams.set_ftarget(1e-2);
 	      cmaparams._mt_feval = true;
+	      /*if (FLAGS_mbatch)
+		cmaparams.set_noisy();*/
 	      if (FLAGS_nmbatch)
 		cmaparams._quiet = true;
 	      if (FLAGS_nmbatch)
 		{
 		  if (!FLAGS_with_gradient)
-		    cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
-		  else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols);
+		    cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols,mpffunc);
+		  else cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,gnn,cmasols,mpffunc);
 		}
 	      else
 		{
 		  if (!FLAGS_with_gradient)
-		    cmasols = cmaes<>(nn_of,cmaparams,mpfunc,nullptr,cmasols);
-		  else cmasols = cmaes<>(nn_of,cmaparams,mpfunc,gnn,cmasols);
+		    cmasols = cmaes<>(nn_of,cmaparams,mpfunc,nullptr,cmasols,mpffunc);
+		  else cmasols = cmaes<>(nn_of,cmaparams,mpfunc,gnn,cmasols,mpffunc);
 		}
 	      
 	      sigma0[i] = cmasols._sigma;
