@@ -36,7 +36,7 @@ FitFunc rosenbrock = [](const double *x, const int N)
 
 ProgressFunc<CMAParameters<>,CMASolutions> select_time = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
-  if (cmasols._niter % 1000 == 0)
+  if (cmasols._niter % 100 == 0)
     std::cerr << cmasols._elapsed_last_iter << std::endl;
   return 0;
 };
