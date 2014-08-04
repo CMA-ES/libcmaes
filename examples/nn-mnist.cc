@@ -226,10 +226,13 @@ int gnpasses = 1;
 int gi = 0;
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
+  /*if (gbatches <= 0 || gi == gnpasses - 1)
+    {*/
   gtrainacc = testing(cmasols.best_candidate()._x,true,false);
   gtestacc = testing(cmasols.best_candidate()._x,false,false);
+  //}
   std::cout << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
-
+          
   if (gbatches > 0)
     {
       /*for (int j=0;j<gbatches;j++)
@@ -408,7 +411,7 @@ int main(int argc, char *argv[])
 		{
 		  ggfeatures = gfeatures;
 		  gglabels = glabels;
-		  if (FLAGS_x0 != -std::numeric_limits<double>::max())
+		  if (FLAGS_x0 == -std::numeric_limits<double>::max())
 		    {
 		      x0 = gmnistnn._allparams;
 		    }
