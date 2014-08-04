@@ -292,6 +292,7 @@ DEFINE_bool(regularize,false,"whether to use regularization");
 DEFINE_double(l1reg,0.0,"L1 regularization factor");
 DEFINE_double(l2reg,1e-4,"L2 regularization weight");
 DEFINE_bool(sgd,false,"run stochastic gradient descent, for comparison purpose");
+DEFINE_int32(maxepochs,-1,"maximum minibatch epochs");
 
 int main(int argc, char *argv[])
 {
@@ -576,11 +577,17 @@ int main(int argc, char *argv[])
 		  std::cout << "epochs=" << epochs << " / iter=" << epochs * npasses + i << " / loss= " << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
 		}
 	    }
+	  // stop after n epochs.
+	  if (FLAGS_maxepochs && epochs >= FLAGS_maxepochs)
+	    {
+	      gallparams = gmnistnn._allparams;
+	      break;
+	    }
 	  ++epochs;
 	}
     }// end run
 
-  if (!FLAGS_drop)
+  if (!FLAGS_drop && !FLAGS_sgd)
     {
       gfeatures = ggfeatures;
       glabels = gglabels;
@@ -588,7 +595,7 @@ int main(int argc, char *argv[])
   
   // testing on training set.
   dVec bx;
-  if (!FLAGS_drop)
+  if (!FLAGS_drop && !FLAGS_sgd)
     bx = cmasols.best_candidate()._x;
   else bx = Map<dVec>(&gallparams.front(),gallparams.size());
   testing(bx,true);
