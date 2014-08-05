@@ -134,8 +134,8 @@ namespace libcmaes
 	int c = 0;
 	for (int i=0;i<histlength;i++)
 	  {
-	    if (cmas._best_candidates_hist.at(histsize-1-i)._fvalue
-		== cmas._k_best_candidates_hist.at(histsize-1-i)._fvalue)
+	    if (fabs(cmas._best_candidates_hist.at(histsize-1-i)._fvalue
+		     -cmas._k_best_candidates_hist.at(histsize-1-i)._fvalue) < cmap._ftolerance)
 	      c++;
 	  }
 	if (c > histlength / 3.0)
