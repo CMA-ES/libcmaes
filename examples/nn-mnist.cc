@@ -200,7 +200,9 @@ FitFunc nn_dof = [](const double *x, const int N)
       ++mit;
       ++i;
     }
-  mgn.forward_pass(gfeatures,glabels);
+  if (gbatches < 0)
+    mgn.forward_pass(gfeatures,glabels);
+  else mgn.forward_pass(gbatchfeatures,gbatchlabels);
   return mgn._loss;
 };
 
@@ -224,13 +226,14 @@ GradFunc gnn = [](const double *x, const int N)
 
 int gnpasses = 1;
 int gi = 0;
+bool gdrop = false;
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
-  /*if (gbatches <= 0 || gi == gnpasses - 1)
-    {*/
-  gtrainacc = testing(cmasols.best_candidate()._x,true,false);
-  gtestacc = testing(cmasols.best_candidate()._x,false,false);
-  //}
+  if (!gdrop)
+    {
+      gtrainacc = testing(cmasols.best_candidate()._x,true,false);
+      gtestacc = testing(cmasols.best_candidate()._x,false,false);
+    }
   std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << gi << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
           
   if (gbatches > 0)
@@ -491,7 +494,8 @@ int main(int argc, char *argv[])
 	      sigma0[i] = cmasols._sigma;
 	      nevals += cmasols._nevals;
 	      elapsed += cmasols._elapsed_time;
-	      //std::cout << "status: " << cmasols._run_status << std::endl;
+	      if (FLAGS_mbatch > 0)
+		break;
 	    }
 	  if (!FLAGS_nmbatch)
 	    break;
@@ -499,6 +503,8 @@ int main(int argc, char *argv[])
       // end drop
       else if (FLAGS_drop)
 	{
+	  gdrop = FLAGS_drop;
+	  gi = 0;
 	  // randomly drop units
 	  gmnistnn.to_array();
 	  if (gallparams.empty())
@@ -520,7 +526,7 @@ int main(int argc, char *argv[])
 	  cmaparams.set_ftarget(1e-2);
 	  cmaparams._mt_feval = true;
 	  cmaparams._quiet = false;
-	  cmasols = cmaes<>(nn_dof,cmaparams);
+	  cmasols = cmaes<>(nn_dof,cmaparams,mpfunc);
 	  nevals += cmasols._nevals;
 	  
 	  // update state.
@@ -539,8 +545,9 @@ int main(int argc, char *argv[])
 	  if (FLAGS_testp || FLAGS_testf != "")
 	    {
 	      dVec bx = Map<dVec>(&gallparams.front(),gallparams.size());
-	      acc = testing(bx,false,false);
-	      std::cout << " / acc=" << acc;
+	      gtrainacc = testing(bx,true,false);
+	      gtestacc = testing(bx,false,false);
+	      std::cout << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc;
 	    }
 	  std::cout << std::endl;
 	  if (FLAGS_maxdroppasses > 0 && ++droppasses >= FLAGS_maxdroppasses)
@@ -574,7 +581,7 @@ int main(int argc, char *argv[])
 		  dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
 		  gtrainacc = testing(x,true,false);
 		  gtestacc = testing(x,false,false);
-		  std::cout << "epochs=" << epochs << " / iter=" << epochs * npasses + i << " / loss= " << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
+		  std::cout << "epochs=" << epochs << " / iter=" << epochs * npasses + i << " / loss=" << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
 		}
 	    }
 	  // stop after n epochs.
@@ -587,7 +594,7 @@ int main(int argc, char *argv[])
 	}
     }// end run
 
-  if (!FLAGS_drop && !FLAGS_sgd)
+  if (!FLAGS_drop && !FLAGS_sgd && FLAGS_mbatch <= 0)
     {
       gfeatures = ggfeatures;
       glabels = gglabels;
@@ -595,7 +602,7 @@ int main(int argc, char *argv[])
   
   // testing on training set.
   dVec bx;
-  if (!FLAGS_drop && !FLAGS_sgd)
+  if (!FLAGS_drop && !FLAGS_sgd && FLAGS_mbatch <= 0)
     bx = cmasols.best_candidate()._x;
   else bx = Map<dVec>(&gallparams.front(),gallparams.size());
   testing(bx,true);
