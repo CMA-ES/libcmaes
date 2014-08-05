@@ -587,7 +587,7 @@ int main(int argc, char *argv[])
 		}
 	    }
 	  // stop after n epochs.
-	  if (FLAGS_maxepochs && epochs >= FLAGS_maxepochs)
+	  if (FLAGS_maxepochs > 0 && epochs >= FLAGS_maxepochs)
 	    {
 	      gallparams = gmnistnn._allparams;
 	      break;
