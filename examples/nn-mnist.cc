@@ -296,6 +296,7 @@ DEFINE_double(l1reg,0.0,"L1 regularization factor");
 DEFINE_double(l2reg,1e-4,"L2 regularization weight");
 DEFINE_bool(sgd,false,"run stochastic gradient descent, for comparison purpose");
 DEFINE_int32(maxepochs,-1,"maximum minibatch epochs");
+DEFINE_double(ftolerance,1e-12,"tolerance for comparing function values");
 
 int main(int argc, char *argv[])
 {
@@ -526,6 +527,7 @@ int main(int argc, char *argv[])
 	  cmaparams.set_ftarget(1e-2);
 	  cmaparams._mt_feval = true;
 	  cmaparams._quiet = false;
+	  cmaparams.set_ftolerance(FLAGS_ftolerance);
 	  cmasols = cmaes<>(nn_dof,cmaparams,mpfunc);
 	  nevals += cmasols._nevals;
 	  
