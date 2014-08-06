@@ -37,6 +37,17 @@ namespace libcmaes
     initialize_parameters();
   }
 
+  template<class TGenoPheno>
+  CMAParameters<TGenoPheno>::CMAParameters(const std::vector<double> &x0,
+					   const double &sigma,
+					   const int &lambda,
+					   const uint64_t &seed,
+					   const TGenoPheno &gp)
+    :Parameters<TGenoPheno>(x0.size(),&x0.front(),lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+  {
+    initialize_parameters();
+  }
+  
   template <class TGenoPheno>
   CMAParameters<TGenoPheno>::~CMAParameters()
   {
