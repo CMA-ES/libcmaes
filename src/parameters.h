@@ -181,7 +181,7 @@ namespace libcmaes
    * \brief returns maximum number of iterations
    * @return max number of iterations allowed
    */
-  void get_max_iter() const
+  int get_max_iter() const
   {
     return _max_iter;
   }
