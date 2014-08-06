@@ -415,7 +415,7 @@ namespace libcmaes
    */
   void set_mt_feval(const bool &mt)
   {
-    _mt_feval;
+    _mt_feval = mt;
   }
 
   /**
