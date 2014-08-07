@@ -317,6 +317,8 @@ namespace libcmaes
 									     const double *ubounds)
     :_id(true)
     {
+      (void)lbounds;
+      (void)ubounds;
       _scalingstrategy = linScalingStrategy(scaling,shift);
     }
   

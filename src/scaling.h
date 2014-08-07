@@ -41,10 +41,19 @@ namespace libcmaes
 
     NoScalingStrategy(const double *lbounds,
 		      const double *ubounds,
-		      const int &dim) {}
+		      const int &dim)
+      {
+	(void)lbounds;
+	(void)ubounds;
+	(void)dim;
+      }
 
     NoScalingStrategy(const dVec &scaling,
-		      const dVec &shift) {}
+		      const dVec &shift)
+      {
+	(void)scaling;
+	(void)shift;
+      }
 
     ~NoScalingStrategy() {}
 
