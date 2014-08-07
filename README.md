@@ -109,6 +109,59 @@ int main(int argc, char *argv[])
 }
 ```
 
+### Python bindings
+To build the Python bindings and use libcmaes from Python code:
+- install 'boost-python', on Debian/Ubuntu systems:
+```
+sudo apt-get install libboost-python-dev
+```
+- build the libcmaes with support for Python bindings:
+```
+./configure --enable-python --with-prefix=/home/yourusername
+make
+make install
+```
+- test the bindings:
+```
+cd python
+export LD_LIBRARY_PATH=/home/yourusername/lib
+python ptest.py
+```
+
+Sample python code:
+```Python
+import lcmaes
+
+# input parameters for a 10-D problem
+x = [10]*10
+olambda = 10 # lambda is a reserved keyword in python, using olambda instead.
+seed = 0 # 0 for seed auto-generated within the lib.
+sigma = 0.1
+p = lcmaes.make_parameters(x,sigma,olambda,seed)
+
+# objective function.
+def nfitfunc(x,n):
+    val = 0.0
+    for i in range(0,n):
+        val += x[i]*x[i]
+    return val
+
+# generate a function object
+objfunc = lcmaes.fitfunc_pbf.from_callable(nfitfunc);
+
+# pass the function and parameter to cmaes, run optimization and collect solution object.
+cmasols = lcmaes.pcmaes(objfunc,p)
+
+# collect and inspect results
+bcand = cmasols.best_candidate()
+bx = lcmaes.get_candidate_x(bcand)
+print "best x=",bx
+print "distribution mean=",lcmaes.get_solution_xmean(cmasols)
+cov = lcmaes.get_solution_cov(cmasols) # numpy array
+print "cov=",cov
+print "elapsed time=",cmasols.elapsed_time(),"ms"
+```
+
 ### Practical hints
 
 CMA-ES requires two components from the user:
