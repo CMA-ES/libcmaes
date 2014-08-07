@@ -117,9 +117,13 @@ AC_HELP_STRING([--enable-python],[Enable support for python wrapper (default is 
 	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-python) ;;
 esac],[python=false])
 AM_CONDITIONAL(HAVE_PYTHON, test x$python = xtrue)
-#if test x"$python" = x"true"; then
-#   AC_DEFINE(HAVE_PYTHON, 1, [debug])
-#fi
+if test x"$python" = x"true"; then
+#   AC_DEFINE(HAVE_PYTHON, 1, [python boost])
+    AX_BOOST_PYTHON()
+    if test "$BOOST_PYTHON_LIB" == ""; then
+       AC_MSG_ERROR(boost python required for building the python wrapper,1)
+    fi
+fi
 
 # Whether to only compile the library, without exe (e.g. tests and examples).
 AC_ARG_ENABLE(onlylib,
