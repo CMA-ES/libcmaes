@@ -1,11 +1,14 @@
 import lcmaes
 
 # input parameters for a 10-D problem
-x = [10]*10
+x = [3]*10
 olambda = 10 # lambda is a reserved keyword in python, using olambda instead.
 seed = 0 # 0 for seed auto-generated within the lib.
 sigma = 0.1
-p = lcmaes.make_parameters(x,sigma,olambda,seed)
+lbounds = [-4]*10
+ubounds = [4]*10
+gp = lcmaes.make_genopheno_pwqb(lbounds,ubounds,10)
+p = lcmaes.make_parameters_pwqb(x,sigma,olambda,seed,gp)
 
 # objective function.
 def nfitfunc(x,n):
@@ -18,7 +21,7 @@ def nfitfunc(x,n):
 objfunc = lcmaes.fitfunc_pbf.from_callable(nfitfunc);
 
 # pass the function and parameter to cmaes, run optimization and collect solution object.
-cmasols = lcmaes.pcmaes(objfunc,p)
+cmasols = lcmaes.pcmaes_pwqb(objfunc,p)
 
 # collect and inspect results
 bcand = cmasols.best_candidate()

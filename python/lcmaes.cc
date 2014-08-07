@@ -58,13 +58,13 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   CMAParameters<TGenoPheno> make_parameters(const boost::python::list &x0,
 					    const double &sigma,
 					    const int &lambda=-1,
-					    const uint64_t &seed=0)/*,
-					    const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())*/
+					    const uint64_t &seed=0,
+					    const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
 {
   std::vector<double> vx0;
   for (int i=0;i<len(x0);i++)
     vx0.push_back(boost::python::extract<double>(x0[i]));
-  return CMAParameters<TGenoPheno>(vx0,sigma,lambda,seed);//,gp);
+  return CMAParameters<TGenoPheno>(vx0,sigma,lambda,seed,gp);
 }
 
 boost::python::list get_solution_xmean(const CMASolutions &s)
@@ -111,14 +111,27 @@ boost::python::object get_solution_sepcov(const CMASolutions &s)
   return boostobj;
 }
 
+template <class TBoundStrategy=NoBoundStrategy,class TScalingStrategy=NoScalingStrategy>
+GenoPheno<TBoundStrategy,TScalingStrategy> make_genopheno(const boost::python::list &lbounds,
+							  const boost::python::list &ubounds,
+							  const int &dim)
+{
+  assert(len(lbounds)==len(ubounds));
+  std::vector<double> vlbounds, vubounds;
+  for (int i=0;i<len(lbounds);i++)
+    {
+      vlbounds.push_back(boost::python::extract<double>(lbounds[i]));
+      vubounds.push_back(boost::python::extract<double>(ubounds[i]));
+    }
+  return GenoPheno<TBoundStrategy,TScalingStrategy>(&vlbounds.front(),&vubounds.front(),dim);
+}
+
 BOOST_PYTHON_MODULE(lcmaes)
 {
   import_array(); // numpy.
   
   /*- parameters object and maker -*/
-  def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed"));
   class_<CMAParameters<GenoPheno<NoBoundStrategy>>>("CMAParametersNB")
-    .def(init<const int&,const double*,const double&,const int&,const uint64_t&,const GenoPheno<NoBoundStrategy>&>())
     .def("initialize_parameters", &CMAParameters<GenoPheno<NoBoundStrategy>>::initialize_parameters)
     .def("set_noisy", &CMAParameters<GenoPheno<NoBoundStrategy>>::set_noisy)
     .def("set_sep",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_sep)
@@ -144,7 +157,6 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("quiet",&CMAParameters<GenoPheno<NoBoundStrategy>>::quiet)
     .def("set_algo",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_algo)
     .def("get_algo",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_algo)
-    //TODO: geno with set_gp / get_gp
     .def("set_fplot",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_fplot)
     .def("get_fplot",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_fplot)
     .def("set_gradient",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_gradient)
@@ -154,7 +166,116 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_mt_feval)
     .def("get_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_mt_feval)
     ;
-
+  def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed","gp"));
+  class_<CMAParameters<GenoPheno<pwqBoundStrategy>>>("CMAParametersNB")
+    .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy>>::initialize_parameters)
+    .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy>>::set_noisy)
+    .def("set_sep",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_sep)
+    .def("set_automaxiter",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_automaxiter)
+    .def("set_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_fixed_p)
+    .def("unset_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy>>::unset_fixed_p)
+    .def("set_restarts",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_restarts)
+    .def("set_max_iter",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_max_iter)
+    .def("get_max_iter",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_max_iter)
+    .def("set_max_fevals",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_max_fevals)
+    .def("set_ftarget",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_ftarget)
+    .def("reset_ftarget",&CMAParameters<GenoPheno<pwqBoundStrategy>>::reset_ftarget)
+    .def("get_ftarget",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_ftarget)
+    .def("set_seed",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_seed)
+    .def("get_seed",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_seed)
+    .def("set_ftolerance",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_ftolerance)
+    .def("get_ftolerance",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_ftolerance)
+    .def("set_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_xtolerance)
+    .def("get_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_xtolerance)
+    .def("lambda",&CMAParameters<GenoPheno<pwqBoundStrategy>>::lambda)
+    .def("dim",&CMAParameters<GenoPheno<pwqBoundStrategy>>::dim)
+    .def("set_quiet",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_quiet)
+    .def("quiet",&CMAParameters<GenoPheno<pwqBoundStrategy>>::quiet)
+    .def("set_algo",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_algo)
+    .def("get_algo",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_algo)
+    .def("set_fplot",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_fplot)
+    .def("get_fplot",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_fplot)
+    .def("set_gradient",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_gradient)
+    .def("get_gradient",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_gradient)
+    .def("set_edm",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_edm)
+    .def("get_edm",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_edm)
+    .def("set_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_mt_feval)
+    .def("get_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_mt_feval)
+    ;
+  def("make_parameters_pwqb",make_parameters<GenoPheno<pwqBoundStrategy>>,args("x0","sigma","lambda","gp"));
+  class_<CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>>("CMAParametersNB")
+    .def("initialize_parameters", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::initialize_parameters)
+    .def("set_noisy", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_noisy)
+    .def("set_sep",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_sep)
+    .def("set_automaxiter",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_automaxiter)
+    .def("set_fixed_p",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_fixed_p)
+    .def("unset_fixed_p",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::unset_fixed_p)
+    .def("set_restarts",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_restarts)
+    .def("set_max_iter",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_max_iter)
+    .def("get_max_iter",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_max_iter)
+    .def("set_max_fevals",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_max_fevals)
+    .def("set_ftarget",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_ftarget)
+    .def("reset_ftarget",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::reset_ftarget)
+    .def("get_ftarget",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_ftarget)
+    .def("set_seed",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_seed)
+    .def("get_seed",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_seed)
+    .def("set_ftolerance",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_ftolerance)
+    .def("get_ftolerance",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_ftolerance)
+    .def("set_xtolerance",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_xtolerance)
+    .def("get_xtolerance",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_xtolerance)
+    .def("lambda",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::lambda)
+    .def("dim",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::dim)
+    .def("set_quiet",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_quiet)
+    .def("quiet",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::quiet)
+    .def("set_algo",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_algo)
+    .def("get_algo",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_algo)
+    .def("set_fplot",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_fplot)
+    .def("get_fplot",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_fplot)
+    .def("set_gradient",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_gradient)
+    .def("get_gradient",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_gradient)
+    .def("set_edm",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_edm)
+    .def("get_edm",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_edm)
+    .def("set_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_mt_feval)
+    .def("get_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_mt_feval)
+    ;
+  def("make_parameters_ls",make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
+  class_<CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>>("CMAParametersNB")
+    .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::initialize_parameters)
+    .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_noisy)
+    .def("set_sep",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_sep)
+    .def("set_automaxiter",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_automaxiter)
+    .def("set_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_fixed_p)
+    .def("unset_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::unset_fixed_p)
+    .def("set_restarts",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_restarts)
+    .def("set_max_iter",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_max_iter)
+    .def("get_max_iter",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_max_iter)
+    .def("set_max_fevals",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_max_fevals)
+    .def("set_ftarget",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_ftarget)
+    .def("reset_ftarget",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::reset_ftarget)
+    .def("get_ftarget",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_ftarget)
+    .def("set_seed",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_seed)
+    .def("get_seed",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_seed)
+    .def("set_ftolerance",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_ftolerance)
+    .def("get_ftolerance",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_ftolerance)
+    .def("set_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_xtolerance)
+    .def("get_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_xtolerance)
+    .def("lambda",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::lambda)
+    .def("dim",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::dim)
+    .def("set_quiet",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_quiet)
+    .def("quiet",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::quiet)
+    .def("set_algo",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_algo)
+    .def("get_algo",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_algo)
+    .def("set_fplot",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_fplot)
+    .def("get_fplot",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_fplot)
+    .def("set_gradient",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_gradient)
+    .def("get_gradient",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_gradient)
+    .def("set_edm",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_edm)
+    .def("get_edm",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_edm)
+    .def("set_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_mt_feval)
+    .def("get_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_mt_feval)
+    ;
+    def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
+    
   /*- FitFunc -*/  
   def_function<double(const boost::python::list&,const int&)>("fitfunc_pbf","fitfunc for python");
   scope().attr("fitfunc_bf") = fitfunc_bf;
@@ -182,6 +303,22 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_fvalue",&Candidate::get_fvalue)
     ;
   def("get_candidate_x",get_candidate_x,args("cand"));
+
+  /*- genopheno object -*/
+  class_<GenoPheno<NoBoundStrategy>>("GenoPhenoNB")
+    ;
+  def("make_genopheno",make_genopheno<NoBoundStrategy,NoScalingStrategy>,args("lbounds","ubounds","dim"));
+  class_<GenoPheno<pwqBoundStrategy>>("GenoPhenoPWQB")
+    ;
+  def("make_genopheno_pwqb",make_genopheno<pwqBoundStrategy,NoScalingStrategy>,args("lbounds","ubounds","dim"));
+  class_<GenoPheno<NoBoundStrategy,linScalingStrategy>>("GenoPhenoLS")
+    ;
+  def("make_genopheno_ls",make_genopheno<NoBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"));
+  class_<GenoPheno<pwqBoundStrategy,linScalingStrategy>>("GenoPhenoPWQBLS")
+    ;
+  def("make_genopheno_pwqb_ls",make_genopheno<pwqBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"));
+  //TODO: geno/pheno custom transforms.
+
   
   /* esoptimizer object -*/
   //class_<ESOptimizer<CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>,CMAParameters<GenoPheno<NoBoundStrategy>>>>("ESOptimizer",init<FitFunc&,CMAParameters<GenoPheno<NoBoundStrategy>>&>())
@@ -190,5 +327,8 @@ BOOST_PYTHON_MODULE(lcmaes)
 
   /*- cmaes header -*/
   def("pcmaes",pcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","parameters"));
+  def("pcmaes_pwqb",pcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","parameters"));
+  def("pcmaes_ls",pcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"));
+  def("pcmaes_pwqb_ls",pcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"));
   
 } // end boost
