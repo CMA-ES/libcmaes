@@ -25,6 +25,8 @@ using namespace libcmaes;
 #include <boost/python.hpp>
 //#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include <boost/python/list.hpp>
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#include <numpy/arrayobject.h>
 using namespace boost::python;
 #include "py_boost_function.hpp"
 
@@ -65,8 +67,54 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   return CMAParameters<TGenoPheno>(vx0,sigma,lambda,seed);//,gp);
 }
 
+boost::python::list get_solution_xmean(const CMASolutions &s)
+{
+  boost::python::list xmean;
+  for (int i=0;i<s._xmean.size();i++)
+    xmean.append(s._xmean(i));
+  return xmean;
+}
+
+boost::python::list get_candidate_x(const Candidate &c)
+{
+  boost::python::list x;
+  for (int i=0;i<c._x.size();i++)
+    x.append(c._x(i));
+  return x;
+}
+
+PyObject* get_solution_cov_py(const CMASolutions &s)
+{
+  npy_intp shape[2] = {s._cov.rows(),s._cov.cols()};
+  PyObject* pyArray = PyArray_SimpleNewFromData(2, shape, NPY_DOUBLE, (double*)s._cov.data());
+  return pyArray;
+}
+
+boost::python::object get_solution_cov(const CMASolutions &s)
+{
+  PyObject *pobj = get_solution_cov_py(s);
+  boost::python::object boostobj(boost::python::handle<>((PyObject*)pobj));
+  return boostobj;
+}
+
+PyObject* get_solution_sepcov_py(const CMASolutions &s)
+{
+  npy_intp shape[1] = {s._sepcov.size()};
+  PyObject* pyArray = PyArray_SimpleNewFromData(1, shape, NPY_DOUBLE, (double*)s._cov.data());
+  return pyArray;
+}
+
+boost::python::object get_solution_sepcov(const CMASolutions &s)
+{
+  PyObject *pobj = get_solution_cov_py(s);
+  boost::python::object boostobj(boost::python::handle<>((PyObject*)pobj));
+  return boostobj;
+}
+
 BOOST_PYTHON_MODULE(lcmaes)
 {
+  import_array(); // numpy.
+  
   /*- parameters object and maker -*/
   def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed"));
   class_<CMAParameters<GenoPheno<NoBoundStrategy>>>("CMAParametersNB")
@@ -117,24 +165,23 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("sort_candidates",&CMASolutions::sort_candidates)
     .def("update_best_candidate",&CMASolutions::update_best_candidates)
     //TODO: update_eigenv ?
-    //TODO: best_candidate, need to return a python candidate object...
+    .def("best_candidate",&CMASolutions::best_candidate)
     .def("size",&CMASolutions::size)
     .def("edm",&CMASolutions::edm)
-    //TODO: cov, see http://eigen.tuxfamily.org/index.php?title=PythonInteropBoost for wrapping Eigen3 structures.
-    //TODO: sepcov
     .def("sigma",&CMASolutions::sigma)
-    //TODO: xmean
     .def("run_status",&CMASolutions::run_status)
     .def("elapsed_time",&CMASolutions::elapsed_time)
     .def("niter",&CMASolutions::niter)
     ;
-
-  /*- TODO: candidate object -*/
+  def("get_solution_xmean",get_solution_xmean,args("sol"));
+  def("get_solution_cov",get_solution_cov,args("sol"));
+  def("get_solution_sepcov",get_solution_sepcov,args("sol"));
+  
+  /*- solution candidate object -*/
   class_<Candidate>("Candidate")
-    //TODO: constructor with dVec ?
     .def("get_fvalue",&Candidate::get_fvalue)
-    //TODO: various get_x !
     ;
+  def("get_candidate_x",get_candidate_x,args("cand"));
   
   /* esoptimizer object -*/
   //class_<ESOptimizer<CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>,CMAParameters<GenoPheno<NoBoundStrategy>>>>("ESOptimizer",init<FitFunc&,CMAParameters<GenoPheno<NoBoundStrategy>>&>())
