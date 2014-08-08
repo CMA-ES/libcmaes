@@ -6,6 +6,7 @@ olambda = 10 # lambda is a reserved keyword in python, using olambda instead.
 seed = 0 # 0 for seed auto-generated within the lib.
 sigma = 0.1
 p = lcmaes.make_simple_parameters(x,sigma,olambda,seed)
+p.set_str_algo("acmaes")
 
 # objective function.
 def nfitfunc(x,n):
