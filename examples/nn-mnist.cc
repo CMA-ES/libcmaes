@@ -238,13 +238,6 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
           
   if (gbatches > 0)
     {
-      /*for (int j=0;j<gbatches;j++)
-	{
-	  int u = gunif(ggen);
-	  gbatchfeatures.col(j) = gfeatures.col(u);
-	  gbatchlabels.col(j) = glabels.col(u);
-	  }*/
-
       int beg = gi*gbatches;
       int bsize = gbatches;
       if (gi == gnpasses-1)
