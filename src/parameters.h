@@ -24,6 +24,7 @@
 
 #include "eo_matrix.h"
 #include "genopheno.h"
+#include "llogging.h"
 #include <string>
 #include <ctime>
 #include <cmath>
@@ -326,6 +327,18 @@ namespace libcmaes
   {
     _algo = algo;
   }
+
+  /**
+   * \brief sets the optimization algorithm.
+   * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop
+   */
+  void set_str_algo(const std::string &algo)
+  {
+    std::map<std::string,int>::const_iterator mit;
+    if ((mit = Parameters<TGenoPheno>::_algos.find(algo))!=Parameters<TGenoPheno>::_algos.end())
+      _algo = (*mit).second;
+    else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
+  }
   
   /**
    * \brief returns which algorithm is set for the optimization at hand.
@@ -451,7 +464,11 @@ namespace libcmaes
   TGenoPheno _gp; /**< genotype / phenotype object. */
 
   bool _mt_feval = false; /**< whether to force multithreaded (i.e. parallel) function evaluations. */ 
- };
+  static std::map<std::string,int> _algos;// = { {"cmaes",0}, {"ipop",1}};
+  };
+
+  template<class TGenoPheno>
+    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11}};
   
 }
 
