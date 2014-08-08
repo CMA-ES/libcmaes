@@ -35,6 +35,8 @@ The library makes use of C++ policy design for modularity, performance and putti
 libcmaes is designed and implemented by Emmanuel Benazera on behalf of Inria Saclay / Research group TAO / LAL Appstats.
 
 ### Build
+Below are instruction for Linux systems, for building on Mac, see https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX
+
 Beware of dependencies, typically on Debian/Ubuntu Linux, do:
 
 ```
