@@ -120,6 +120,7 @@ sudo apt-get install libboost-python-dev
 ```
 - build the libcmaes with support for Python bindings:
 ```
+./autogen.sh
 ./configure --enable-python --with-prefix=/home/yourusername
 make
 make install
