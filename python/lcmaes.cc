@@ -67,6 +67,17 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   return CMAParameters<TGenoPheno>(vx0,sigma,lambda,seed,gp);
 }
 
+CMAParameters<GenoPheno<NoBoundStrategy>> make_simple_parameters(const boost::python::list &x0,
+								 const double &sigma,
+								 const int &lambda=-1,
+								 const uint64_t &seed=0)
+{
+  std::vector<double> vx0;
+  for (int i=0;i<len(x0);i++)
+    vx0.push_back(boost::python::extract<double>(x0[i]));
+  return CMAParameters<>(vx0,sigma,lambda,seed);
+}
+
 boost::python::list get_solution_xmean(const CMASolutions &s)
 {
   boost::python::list xmean;
@@ -167,6 +178,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_mt_feval)
     ;
   def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed","gp"));
+  def("make_simple_parameters",make_simple_parameters,args("x0","sigma","lambda","seed"));
   class_<CMAParameters<GenoPheno<pwqBoundStrategy>>>("CMAParametersNB")
     .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy>>::initialize_parameters)
     .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy>>::set_noisy)
