@@ -171,7 +171,6 @@ namespace libcmaes
     dVec phenoxtmp = parameters._gp.pheno(xtmp);
     double fvalue = func(phenoxtmp.data(),xtmp.size());
     double fdiff = fabs(fvalue - minfvalue);
-    double dinc = d;
     
     //debug
     //std::cerr << "d=" << d << " / fdiff=" << fdiff << " / xtmpk=" << xtmp[k] << std::endl;
