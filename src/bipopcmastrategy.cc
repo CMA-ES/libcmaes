@@ -73,7 +73,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   int BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
   {
-    std::array<int,2> budgets = {0,0}; // 0: r1, 1: r2
+    std::array<int,2> budgets = {{0,0}}; // 0: r1, 1: r2
     CMASolutions best_run;
     for (int r=0;r<CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._nrestarts;r++)
       {

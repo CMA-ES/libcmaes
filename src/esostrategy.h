@@ -33,6 +33,9 @@ namespace libcmaes
   template<class TParameters,class TSolutions>
     using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
 
+  template<class TParameters,class TSolutions>
+    using PlotFunc = std::function<int (const TParameters&, const TSolutions&, std::ofstream &fplotstream)>;
+  
   /**
    * \brief Main class describing an evolutionary optimization strategy.
    *        Every algorithm in libcmaes descends from this class, and bring
@@ -140,6 +143,14 @@ namespace libcmaes
     }
 
     /**
+     * \brief Sets the possibly custom plot to file function,
+     *        that is useful for storing into file various possibly custom
+     *        variable values for each step until termination.
+     * @param pffunc a stream to file output function
+     */
+    void set_plot_func(PlotFunc<TParameters,TSolutions> &pffunc) { _pffunc = pffunc; }
+    
+    /**
      * \brief returns numerical gradient of objective function at x.
      * @return vector of numerical gradient of the objective function at x.
      */
@@ -163,6 +174,7 @@ namespace libcmaes
     TParameters _parameters; /**< the optimizer's set of static parameters, from inputs or internal. */
     ProgressFunc<TParameters,TSolutions> _pfunc; /**< possibly custom progress function. */
     GradFunc _gfunc = nullptr; /**< gradient function, when available. */
+    PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
   };
   
 }
