@@ -363,6 +363,23 @@ int main(int argc, char *argv[])
       else std::cout << "Gradient check did fail\n";
       exit(1);
     }
+
+  std::vector<int> dropdimbounds; // allows for sampling dimensions proportionally to each inter-layer connection space.
+  std::vector<int> dropdimsize;
+  if (FLAGS_drop)
+    {
+      int nddim = 0;
+      for (size_t i=0;i<gmnistnn._lweights.size();i++)
+	{
+	  dropdimbounds.push_back(gmnistnn._lweights.at(i).size() + gmnistnn._lb.at(i).size());
+	  //dropdimsize.push_back(ceil((dropdimbounds.back() / static_cast<double>(gmnistnn._allparams_dim)) * FLAGS_dropdim)); //TODO: beware of floor leaving some weights unreachable.
+	  dropdimsize.push_back(ceil((1.0/static_cast<double>(gmnistnn._lweights.size())) * FLAGS_dropdim));
+	  nddim += dropdimsize.back();
+	  std::cout << "bound=" << dropdimbounds.back() << " / dim=" << dropdimsize.back() << std::endl;
+	}
+      FLAGS_dropdim = nddim;
+      std::cout << "updated dropdim to " << FLAGS_dropdim << std::endl;
+    }
   
   // training.
   dMat ggfeatures;
@@ -505,11 +522,26 @@ int main(int argc, char *argv[])
 	    gallparams = std::vector<double>(gmnistnn._allparams_dim,0.0);
 	  gndropdims.clear();
 	  std::vector<double> vndropdims;
-	  for (int d=0;d<FLAGS_dropdim;d++)
+	  /*for (int d=0;d<FLAGS_dropdim;d++)
 	    {
 	      int u = dropunif(ggen);
 	      gndropdims.insert(std::pair<int,double>(u,gallparams.at(u)));
 	      vndropdims.push_back(gallparams.at(u));
+	      }*/
+	  int pos = 0;
+	  for (size_t l=0;l<dropdimsize.size();l++)
+	    {
+	      //int beg = (l == 0) ? 0 : dropdimbounds.at(l-1);
+	      dropunif = std::uniform_int_distribution<>(pos,pos+dropdimbounds.at(l)-1);
+	      std::cout << "pos=" << pos << " / bound=" << pos+dropdimbounds.at(l)-1 << std::endl;
+	      pos += dropdimbounds.at(l);
+	      for (int d=0;d<dropdimsize.at(l);d++)
+		{
+		  int u = dropunif(ggen);
+		  //std::cout << "u=" << u << std::endl;
+		  gndropdims.insert(std::pair<int,double>(u,gallparams.at(u)));
+		  vndropdims.push_back(gallparams.at(u));
+		}
 	    }
 	  
 	  // optimize network until convergence or maxiter etc...
@@ -535,7 +567,7 @@ int main(int argc, char *argv[])
 	    }
 	  
 	  // loop / break.
-	  double acc = 0.0;
+	  //double acc = 0.0;
 	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate()._fvalue << " / fevals=" << nevals;
 	  if (FLAGS_testp || FLAGS_testf != "")
 	    {
