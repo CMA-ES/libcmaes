@@ -9,7 +9,7 @@ var searchData=
   ['get_5fgp',['get_gp',['../classlibcmaes_1_1Parameters.html#a365039e6948ee2242c0ad34ed4ff02ab',1,'libcmaes::Parameters']]],
   ['get_5fgradient',['get_gradient',['../classlibcmaes_1_1Parameters.html#ac7f6c27e00d1c0d744221b5a32e9efee',1,'libcmaes::Parameters']]],
   ['get_5fmax_5ffevals',['get_max_fevals',['../classlibcmaes_1_1Parameters.html#af738c73caee922feff43ba29218ea8ad',1,'libcmaes::Parameters']]],
-  ['get_5fmax_5fiter',['get_max_iter',['../classlibcmaes_1_1Parameters.html#a10ef0d0fa8751d520ed5d4e223e366e4',1,'libcmaes::Parameters']]],
+  ['get_5fmax_5fiter',['get_max_iter',['../classlibcmaes_1_1Parameters.html#a95b8ff475b28b2cbf89cd147ab09eeee',1,'libcmaes::Parameters']]],
   ['get_5fmt_5ffeval',['get_mt_feval',['../classlibcmaes_1_1Parameters.html#aac3914b24de6312e6d1fe3d493bb42f5',1,'libcmaes::Parameters']]],
   ['get_5fseed',['get_seed',['../classlibcmaes_1_1Parameters.html#af98c1effaa3e0a4321ae5046f1bdd615',1,'libcmaes::Parameters']]],
   ['get_5fx0max',['get_x0max',['../classlibcmaes_1_1Parameters.html#adba08aae48f823c1611466ec86ae3b75',1,'libcmaes::Parameters']]],

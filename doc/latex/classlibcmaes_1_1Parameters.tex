@@ -44,7 +44,7 @@ void \hyperlink{classlibcmaes_1_1Parameters_a540a57691845698e79af120f16d27f2c}{u
 \begin{DoxyCompactList}\small\item\em unfreezes a parameter. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1Parameters_acefab965b50d45c6609e4f3267785ace}{set\-\_\-max\-\_\-iter} (const int \&maxiter)
 \begin{DoxyCompactList}\small\item\em sets the maximum number of iterations allowed for the optimization. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1Parameters_a10ef0d0fa8751d520ed5d4e223e366e4}{get\-\_\-max\-\_\-iter} () const 
+int \hyperlink{classlibcmaes_1_1Parameters_a95b8ff475b28b2cbf89cd147ab09eeee}{get\-\_\-max\-\_\-iter} () const 
 \begin{DoxyCompactList}\small\item\em returns maximum number of iterations \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1Parameters_aa924cb4c8ffee0d148b63f5c0b55b4ce}{set\-\_\-max\-\_\-fevals} (const int \&fevals)
 \begin{DoxyCompactList}\small\item\em sets the maximum budget of objective function calls allowed for the optimization. \end{DoxyCompactList}\item 
@@ -78,6 +78,8 @@ void \hyperlink{classlibcmaes_1_1Parameters_ae93cf5c15dbe42b19339b26b1c57f872}{s
 bool \hyperlink{classlibcmaes_1_1Parameters_a8562a739088f9f9f466b8d658084c9f7}{quiet} () const 
 \begin{DoxyCompactList}\small\item\em returns whether the quiet mode is on. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1Parameters_aeb869d18fa0c987f56216d9bfa1f1a0d}{set\-\_\-algo} (const int \&algo)
+\begin{DoxyCompactList}\small\item\em sets the optimization algorithm. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1Parameters_a3d8d58e5d69795804a1a22768c78134d}{set\-\_\-str\-\_\-algo} (const std\-::string \&algo)
 \begin{DoxyCompactList}\small\item\em sets the optimization algorithm. \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1Parameters_a39697cd6cfb705a970223f8e95894545}{get\-\_\-algo} () const 
 \begin{DoxyCompactList}\small\item\em returns which algorithm is set for the optimization at hand. \end{DoxyCompactList}\item 
@@ -139,6 +141,12 @@ std\-::unordered\-\_\-map$<$ int, double $>$ \hyperlink{classlibcmaes_1_1Paramet
 T\-Geno\-Pheno \hyperlink{classlibcmaes_1_1Parameters_ab8e153b4785de9358599caa840b94ef2}{\-\_\-gp}
 \item 
 bool \hyperlink{classlibcmaes_1_1Parameters_a78a3b97b4119776b661c1be4fc283069}{\-\_\-mt\-\_\-feval} = false
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classlibcmaes_1_1Parameters_a5d2fd0ca871efd0f4f4b223515544204}{static std\-::map$<$ std\-::string, int $>$ {\bfseries \-\_\-algos} = \{\{\char`\"{}cmaes\char`\"{},0\},\{\char`\"{}ipop\char`\"{},1\},\{\char`\"{}bipop\char`\"{},2\},\{\char`\"{}acmaes\char`\"{},3\},\{\char`\"{}aipop\char`\"{},4\},\{\char`\"{}abipop\char`\"{},5\},\{\char`\"{}sepcmaes\char`\"{},6\},\{\char`\"{}sepipop\char`\"{},7\},\{\char`\"{}sepbipop\char`\"{},8\},\{\char`\"{}sepacmaes\char`\"{},9\},\{\char`\"{}sepipop\char`\"{},10\},\{\char`\"{}sepbipop\char`\"{},11\}\}}\label{classlibcmaes_1_1Parameters_a5d2fd0ca871efd0f4f4b223515544204}
+
 \end{DoxyCompactItemize}
 
 
@@ -305,13 +313,13 @@ returns maximum budget of objective function calls
 \begin{DoxyReturn}{Returns}
 max number of objective function evaluations 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Parameters_a10ef0d0fa8751d520ed5d4e223e366e4}{\index{libcmaes\-::\-Parameters@{libcmaes\-::\-Parameters}!get\-\_\-max\-\_\-iter@{get\-\_\-max\-\_\-iter}}
+\hypertarget{classlibcmaes_1_1Parameters_a95b8ff475b28b2cbf89cd147ab09eeee}{\index{libcmaes\-::\-Parameters@{libcmaes\-::\-Parameters}!get\-\_\-max\-\_\-iter@{get\-\_\-max\-\_\-iter}}
 \index{get\-\_\-max\-\_\-iter@{get\-\_\-max\-\_\-iter}!libcmaes::Parameters@{libcmaes\-::\-Parameters}}
-\subsubsection[{get\-\_\-max\-\_\-iter}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-Parameters}$<$ T\-Geno\-Pheno $>$\-::get\-\_\-max\-\_\-iter (
+\subsubsection[{get\-\_\-max\-\_\-iter}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ int {\bf libcmaes\-::\-Parameters}$<$ T\-Geno\-Pheno $>$\-::get\-\_\-max\-\_\-iter (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Parameters_a10ef0d0fa8751d520ed5d4e223e366e4}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Parameters_a95b8ff475b28b2cbf89cd147ab09eeee}
 
 
 returns maximum number of iterations 
@@ -626,6 +634,22 @@ sets random generator's seed, 0 is special value to generate random seed.
 
 \begin{DoxyParams}{Parameters}
 {\em seed} & integer seed \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1Parameters_a3d8d58e5d69795804a1a22768c78134d}{\index{libcmaes\-::\-Parameters@{libcmaes\-::\-Parameters}!set\-\_\-str\-\_\-algo@{set\-\_\-str\-\_\-algo}}
+\index{set\-\_\-str\-\_\-algo@{set\-\_\-str\-\_\-algo}!libcmaes::Parameters@{libcmaes\-::\-Parameters}}
+\subsubsection[{set\-\_\-str\-\_\-algo}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-Parameters}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-str\-\_\-algo (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{algo}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Parameters_a3d8d58e5d69795804a1a22768c78134d}
+
+
+sets the optimization algorithm. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em algo} & as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop \\
 \hline
 \end{DoxyParams}
 \hypertarget{classlibcmaes_1_1Parameters_a61660152146a78000b5cc59a0298a8f0}{\index{libcmaes\-::\-Parameters@{libcmaes\-::\-Parameters}!set\-\_\-x0@{set\-\_\-x0}}

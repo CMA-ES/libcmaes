@@ -64,6 +64,9 @@ double $\ast$, const int \&n)$>$ {\bfseries Grad\-Func}}\label{namespacelibcmaes
 \hypertarget{namespacelibcmaes_a8d4db4c2a1758fd5964499aba7cf8a9f}{{\footnotesize template$<$class T\-Parameters , class T\-Solutions $>$ }\\using {\bfseries Progress\-Func} = std\-::function$<$ int(const T\-Parameters \&, const T\-Solutions \&)$>$}\label{namespacelibcmaes_a8d4db4c2a1758fd5964499aba7cf8a9f}
 
 \item 
+\hypertarget{namespacelibcmaes_aaf23de7982c40bf628eba76801677b78}{{\footnotesize template$<$class T\-Parameters , class T\-Solutions $>$ }\\using {\bfseries Plot\-Func} = std\-::function$<$ int(const T\-Parameters \&, const T\-Solutions \&, std\-::ofstream \&fplotstream)$>$}\label{namespacelibcmaes_aaf23de7982c40bf628eba76801677b78}
+
+\item 
 \hypertarget{namespacelibcmaes_a05b1e5e516cec9483ccdb964284ef82c}{typedef std\-::function$<$ void(const \\*
 double $\ast$, double $\ast$, const int \&)$>$ {\bfseries Trans\-Func}}\label{namespacelibcmaes_a05b1e5e516cec9483ccdb964284ef82c}
 
@@ -93,7 +96,7 @@ enum {\bfseries C\-M\-A\-Stop\-Crit\-Type} \{ \\*
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{namespacelibcmaes_ac6e46889cb95b4f1840c205406b1e4d7}{{\footnotesize template$<$class T\-Geno\-Pheno  = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ }\\\hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} {\bfseries cmaes} (Fit\-Func \&func, \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&parameters, Progress\-Func$<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} $>$ \&pfunc=\hyperlink{classlibcmaes_1_1CMAStrategy}{C\-M\-A\-Strategy}$<$ \hyperlink{classlibcmaes_1_1CovarianceUpdate}{Covariance\-Update}, T\-Geno\-Pheno $>$\-::\-\_\-default\-P\-Func, Grad\-Func gfunc=nullptr)}\label{namespacelibcmaes_ac6e46889cb95b4f1840c205406b1e4d7}
+\hypertarget{namespacelibcmaes_a6ea1009c6049caf18558816bdecac610}{{\footnotesize template$<$class T\-Geno\-Pheno  = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ }\\\hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} {\bfseries cmaes} (Fit\-Func \&func, \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&parameters, Progress\-Func$<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} $>$ \&pfunc=\hyperlink{classlibcmaes_1_1CMAStrategy}{C\-M\-A\-Strategy}$<$ \hyperlink{classlibcmaes_1_1CovarianceUpdate}{Covariance\-Update}, T\-Geno\-Pheno $>$\-::\-\_\-default\-P\-Func, Grad\-Func gfunc=nullptr, Plot\-Func$<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} $>$ \&pffunc=\hyperlink{classlibcmaes_1_1CMAStrategy}{C\-M\-A\-Strategy}$<$ \hyperlink{classlibcmaes_1_1CovarianceUpdate}{Covariance\-Update}, T\-Geno\-Pheno $>$\-::\-\_\-default\-F\-P\-Func)}\label{namespacelibcmaes_a6ea1009c6049caf18558816bdecac610}
 
 \item 
 \hypertarget{namespacelibcmaes_a1922020e8d2259dd870ccd7893c3ea24}{std\-::ostream \& {\bfseries operator$<$$<$} (std\-::ostream \&out, const \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} \&cmas)}\label{namespacelibcmaes_a1922020e8d2259dd870ccd7893c3ea24}

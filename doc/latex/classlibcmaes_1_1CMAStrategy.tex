@@ -40,6 +40,9 @@ int \hyperlink{classlibcmaes_1_1CMAStrategy_a68cb0023f51e2824758b1bd1c7512f39}{o
 static Progress\-Func\\*
 $<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\\*
 , \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} $>$ \hyperlink{classlibcmaes_1_1CMAStrategy_af6d980c670eef47ee810645739999d5b}{\-\_\-default\-P\-Func}
+\item 
+static Plot\-Func$<$ \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}\\*
+$<$ T\-Geno\-Pheno $>$, \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} $>$ \hyperlink{classlibcmaes_1_1CMAStrategy_a0fcdccd9451a2dc509ee651f664ac31f}{\-\_\-default\-F\-P\-Func}
 \end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
@@ -103,7 +106,30 @@ true if search must stop, false otherwise.
 
 
 \subsection{Member Data Documentation}
-\hypertarget{classlibcmaes_1_1CMAStrategy_af6d980c670eef47ee810645739999d5b}{\index{libcmaes\-::\-C\-M\-A\-Strategy@{libcmaes\-::\-C\-M\-A\-Strategy}!\-\_\-default\-P\-Func@{\-\_\-default\-P\-Func}}
+\hypertarget{classlibcmaes_1_1CMAStrategy_a0fcdccd9451a2dc509ee651f664ac31f}{\index{libcmaes\-::\-C\-M\-A\-Strategy@{libcmaes\-::\-C\-M\-A\-Strategy}!\-\_\-default\-F\-P\-Func@{\-\_\-default\-F\-P\-Func}}
+\index{\-\_\-default\-F\-P\-Func@{\-\_\-default\-F\-P\-Func}!libcmaes::CMAStrategy@{libcmaes\-::\-C\-M\-A\-Strategy}}
+\subsubsection[{\-\_\-default\-F\-P\-Func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update, class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ Plot\-Func$<$ {\bf C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, {\bf C\-M\-A\-Solutions} $>$ {\bf libcmaes\-::\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::\-\_\-default\-F\-P\-Func\hspace{0.3cm}{\ttfamily [static]}}}\label{classlibcmaes_1_1CMAStrategy_a0fcdccd9451a2dc509ee651f664ac31f}
+{\bfseries Initial value\-:}
+\begin{DoxyCode}
+= [](\textcolor{keyword}{const} CMAParameters<TGenoPheno> &cmaparams, \textcolor{keyword}{const} CMASolutions &cmasols, std::ofstream &fplotstream)
+  \{
+    std::string sep = \textcolor{stringliteral}{" "};
+    fplotstream << fabs(cmasols.\_best\_candidates\_hist.back().\_fvalue) << sep << cmasols.\_nevals << sep << 
+      cmasols.\_sigma << sep << sqrt(cmasols.\_max\_eigenv/cmasols.\_min\_eigenv) << sep;
+    fplotstream << cmasols.\_leigenvalues.transpose() << sep;
+    \textcolor{keywordflow}{if} (!cmaparams.\_sep)
+      fplotstream << cmasols.\_cov.sqrt().diagonal().transpose() << sep; 
+    \textcolor{keywordflow}{else} fplotstream << cmasols.\_sepcov.cwiseSqrt().transpose() << sep;
+    fplotstream << cmasols.\_xmean.transpose();
+    fplotstream << sep << cmasols.\_elapsed\_last\_iter;
+
+
+
+    fplotstream << std::endl;
+    \textcolor{keywordflow}{return} 0;
+  \}
+\end{DoxyCode}
+the default plot to file function. \hypertarget{classlibcmaes_1_1CMAStrategy_af6d980c670eef47ee810645739999d5b}{\index{libcmaes\-::\-C\-M\-A\-Strategy@{libcmaes\-::\-C\-M\-A\-Strategy}!\-\_\-default\-P\-Func@{\-\_\-default\-P\-Func}}
 \index{\-\_\-default\-P\-Func@{\-\_\-default\-P\-Func}!libcmaes::CMAStrategy@{libcmaes\-::\-C\-M\-A\-Strategy}}
 \subsubsection[{\-\_\-default\-P\-Func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update, class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ Progress\-Func$<$ {\bf C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$, {\bf C\-M\-A\-Solutions} $>$ {\bf libcmaes\-::\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::\-\_\-default\-P\-Func\hspace{0.3cm}{\ttfamily [static]}}}\label{classlibcmaes_1_1CMAStrategy_af6d980c670eef47ee810645739999d5b}
 {\bfseries Initial value\-:}

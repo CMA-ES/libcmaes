@@ -165,6 +165,10 @@ double *, const int &amp;n)&gt;&#160;</td><td class="memItemRight" valign="botto
 template&lt;class TParameters , class TSolutions &gt; </td></tr>
 <tr class="memitem:a8d4db4c2a1758fd5964499aba7cf8a9f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ProgressFunc</b> = std::function&lt; int(const TParameters &amp;, const TSolutions &amp;)&gt;</td></tr>
 <tr class="separator:a8d4db4c2a1758fd5964499aba7cf8a9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf23de7982c40bf628eba76801677b78"><td class="memTemplParams" colspan="2"><a class="anchor" id="aaf23de7982c40bf628eba76801677b78"></a>
+template&lt;class TParameters , class TSolutions &gt; </td></tr>
+<tr class="memitem:aaf23de7982c40bf628eba76801677b78"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>PlotFunc</b> = std::function&lt; int(const TParameters &amp;, const TSolutions &amp;, std::ofstream &amp;fplotstream)&gt;</td></tr>
+<tr class="separator:aaf23de7982c40bf628eba76801677b78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05b1e5e516cec9483ccdb964284ef82c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a05b1e5e516cec9483ccdb964284ef82c"></a>
 typedef std::function&lt; void(const <br class="typebreak"/>
 double *, double *, const int &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TransFunc</b></td></tr>
@@ -195,10 +199,10 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac6e46889cb95b4f1840c205406b1e4d7"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac6e46889cb95b4f1840c205406b1e4d7"></a>
+<tr class="memitem:a6ea1009c6049caf18558816bdecac610"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6ea1009c6049caf18558816bdecac610"></a>
 template&lt;class TGenoPheno  = GenoPheno&lt;NoBoundStrategy&gt;&gt; </td></tr>
-<tr class="memitem:ac6e46889cb95b4f1840c205406b1e4d7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>cmaes</b> (FitFunc &amp;func, <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;parameters, ProgressFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pfunc=<a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a>&lt; <a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a>, TGenoPheno &gt;::_defaultPFunc, GradFunc gfunc=nullptr)</td></tr>
-<tr class="separator:ac6e46889cb95b4f1840c205406b1e4d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ea1009c6049caf18558816bdecac610"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>cmaes</b> (FitFunc &amp;func, <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;parameters, ProgressFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pfunc=<a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a>&lt; <a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a>, TGenoPheno &gt;::_defaultPFunc, GradFunc gfunc=nullptr, PlotFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pffunc=<a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a>&lt; <a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a>, TGenoPheno &gt;::_defaultFPFunc)</td></tr>
+<tr class="separator:a6ea1009c6049caf18558816bdecac610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1922020e8d2259dd870ccd7893c3ea24"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1922020e8d2259dd870ccd7893c3ea24"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;out, const <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;cmas)</td></tr>
 <tr class="separator:a1922020e8d2259dd870ccd7893c3ea24"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -227,7 +231,7 @@ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_IF<
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 15 2014 10:32:46 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

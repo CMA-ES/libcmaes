@@ -21,6 +21,8 @@ Inheritance diagram for libcmaes\-:\-:C\-M\-A\-Parameters$<$ T\-Geno\-Pheno $>$\
 \item 
 \hyperlink{classlibcmaes_1_1CMAParameters_a18d6039c0adffddd51caee1250b072bc}{C\-M\-A\-Parameters} (const int \&\hyperlink{classlibcmaes_1_1Parameters_a95a3c04400a77d134bb1e9705189a24e}{dim}, const double $\ast$x0, const double \&sigma, const int \&\hyperlink{classlibcmaes_1_1Parameters_a3d569987e9a5eb61bc781ee75b2ab18a}{lambda}=-\/1, const uint64\-\_\-t \&seed=0, const T\-Geno\-Pheno \&gp=\hyperlink{classlibcmaes_1_1GenoPheno}{Geno\-Pheno}$<$ \hyperlink{classlibcmaes_1_1NoBoundStrategy}{No\-Bound\-Strategy} $>$())
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classlibcmaes_1_1CMAParameters_a676e688fd58f9244886270f32cbad47e}{C\-M\-A\-Parameters} (const std\-::vector$<$ double $>$ \&x0, const double \&sigma, const int \&\hyperlink{classlibcmaes_1_1Parameters_a3d569987e9a5eb61bc781ee75b2ab18a}{lambda}=-\/1, const uint64\-\_\-t \&seed=0, const T\-Geno\-Pheno \&gp=\hyperlink{classlibcmaes_1_1GenoPheno}{Geno\-Pheno}$<$ \hyperlink{classlibcmaes_1_1NoBoundStrategy}{No\-Bound\-Strategy} $>$())
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 \hypertarget{classlibcmaes_1_1CMAParameters_a0d963d4719d9b6447cddeeca542167a1}{void \hyperlink{classlibcmaes_1_1CMAParameters_a0d963d4719d9b6447cddeeca542167a1}{initialize\-\_\-parameters} ()}\label{classlibcmaes_1_1CMAParameters_a0d963d4719d9b6447cddeeca542167a1}
 
 \begin{DoxyCompactList}\small\item\em initialize required parameters based on dim, lambda, x0 and sigma. \end{DoxyCompactList}\item 
@@ -89,6 +91,7 @@ bool \hyperlink{classlibcmaes_1_1CMAParameters_ad7f26f864149ce4d62169e15daa530fa
 \item 
 bool \hyperlink{classlibcmaes_1_1CMAParameters_a9a66e6d8cf1e1c67cd9c43d5c87a71d1}{\-\_\-has\-\_\-max\-\_\-iter} = true
 \end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
 
 
 \subsection{Detailed Description}
@@ -118,6 +121,36 @@ Constructor.
 {\em dim} & problem dimensions \\
 \hline
 {\em x0} & initial search point \\
+\hline
+{\em sigma} & initial distribution step size (positive, otherwise automatically set) \\
+\hline
+{\em lambda} & number of offsprings sampled at each step \\
+\hline
+{\em seed} & initial random seed, useful for reproducing results (if unspecified, automatically generated from current time) \\
+\hline
+{\em gp} & genotype / phenotype object \\
+\hline
+{\em sep} & whether to use sep-\/\-C\-M\-A-\/\-E\-S, using diagonal covariance matrix (modifies covariance default learning rate) \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMAParameters_a676e688fd58f9244886270f32cbad47e}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!C\-M\-A\-Parameters@{C\-M\-A\-Parameters}}
+\index{C\-M\-A\-Parameters@{C\-M\-A\-Parameters}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{C\-M\-A\-Parameters}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno$>$ {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::{\bf C\-M\-A\-Parameters} (
+\begin{DoxyParamCaption}
+\item[{const std\-::vector$<$ double $>$ \&}]{x0, }
+\item[{const double \&}]{sigma, }
+\item[{const int \&}]{lambda = {\ttfamily -\/1}, }
+\item[{const uint64\-\_\-t \&}]{seed = {\ttfamily 0}, }
+\item[{const T\-Geno\-Pheno \&}]{gp = {\ttfamily {\bf Geno\-Pheno}$<${\bf No\-Bound\-Strategy}$>$()}}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1CMAParameters_a676e688fd58f9244886270f32cbad47e}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x0} & initial search point as vector of problem dimension \\
 \hline
 {\em sigma} & initial distribution step size (positive, otherwise automatically set) \\
 \hline

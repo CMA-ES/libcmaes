@@ -36,6 +36,8 @@ void \hyperlink{classlibcmaes_1_1ESOStrategy_a9cfe783dc0284fce441c8757cd5222c3}{
 \item 
 void \hyperlink{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}{set\-\_\-progress\-\_\-func} (Progress\-Func$<$ T\-Parameters, T\-Solutions $>$ \&pfunc)
 \begin{DoxyCompactList}\small\item\em Sets the possibly custom progress function, that is called in between every search step, and gives an outside user a simple way to witness progress of the algorithm, as well as to add custom termination criteria. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}{set\-\_\-plot\-\_\-func} (Plot\-Func$<$ T\-Parameters, T\-Solutions $>$ \&pffunc)
+\begin{DoxyCompactList}\small\item\em Sets the possibly custom plot to file function, that is useful for storing into file various possibly custom variable values for each step until termination. \end{DoxyCompactList}\item 
 d\-Vec \hyperlink{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}{gradf} (const d\-Vec \&x)
 \begin{DoxyCompactList}\small\item\em returns numerical gradient of objective function at x. \end{DoxyCompactList}\item 
 \hypertarget{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}{d\-Vec {\bfseries gradgp} (const d\-Vec \&x) const }\label{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}
@@ -63,6 +65,8 @@ Progress\-Func$<$ T\-Parameters, \\*
 T\-Solutions $>$ \hyperlink{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}{\-\_\-pfunc}
 \item 
 Grad\-Func \hyperlink{classlibcmaes_1_1ESOStrategy_a76926e49a2ca941a22362167bc230093}{\-\_\-gfunc} = nullptr
+\item 
+Plot\-Func$<$ T\-Parameters, T\-Solutions $>$ \hyperlink{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}{\-\_\-pffunc}
 \end{DoxyCompactItemize}
 
 
@@ -169,6 +173,22 @@ Finds the minimum of the objective function. It makes alternative calls to \hype
 \begin{DoxyReturn}{Returns}
 success or error code, as defined in \hyperlink{opti__err_8h_source}{opti\-\_\-err.\-h} 
 \end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!set\-\_\-plot\-\_\-func@{set\-\_\-plot\-\_\-func}}
+\index{set\-\_\-plot\-\_\-func@{set\-\_\-plot\-\_\-func}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
+\subsubsection[{set\-\_\-plot\-\_\-func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::set\-\_\-plot\-\_\-func (
+\begin{DoxyParamCaption}
+\item[{Plot\-Func$<$ T\-Parameters, T\-Solutions $>$ \&}]{pffunc}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}
+
+
+Sets the possibly custom plot to file function, that is useful for storing into file various possibly custom variable values for each step until termination. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pffunc} & a stream to file output function \\
+\hline
+\end{DoxyParams}
 \hypertarget{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!set\-\_\-progress\-\_\-func@{set\-\_\-progress\-\_\-func}}
 \index{set\-\_\-progress\-\_\-func@{set\-\_\-progress\-\_\-func}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
 \subsubsection[{set\-\_\-progress\-\_\-func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::set\-\_\-progress\-\_\-func (
@@ -233,7 +253,10 @@ number of function evaluations. \hypertarget{classlibcmaes_1_1ESOStrategy_aaf5c0
 number of iterations. \hypertarget{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-parameters@{\-\_\-parameters}}
 \index{\-\_\-parameters@{\-\_\-parameters}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
 \subsubsection[{\-\_\-parameters}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ T\-Parameters {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-parameters}}\label{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}
-the optimizer's set of static parameters, from inputs or internal. \hypertarget{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-pfunc@{\-\_\-pfunc}}
+the optimizer's set of static parameters, from inputs or internal. \hypertarget{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-pffunc@{\-\_\-pffunc}}
+\index{\-\_\-pffunc@{\-\_\-pffunc}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
+\subsubsection[{\-\_\-pffunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ Plot\-Func$<$T\-Parameters,T\-Solutions$>$ {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-pffunc}}\label{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}
+possibly custom stream data to file function. \hypertarget{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-pfunc@{\-\_\-pfunc}}
 \index{\-\_\-pfunc@{\-\_\-pfunc}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
 \subsubsection[{\-\_\-pfunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ Progress\-Func$<$T\-Parameters,T\-Solutions$>$ {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-pfunc}}\label{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}
 possibly custom progress function. \hypertarget{classlibcmaes_1_1ESOStrategy_a8fe0f8dc2201951e9e4ed2768b5a09ab}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-solutions@{\-\_\-solutions}}

@@ -190,6 +190,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_gradient_func</b>
 <tr class="memitem:a9d44ba79106b6afbd5881c4f33800840 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#a9d44ba79106b6afbd5881c4f33800840">set_progress_func</a> (ProgressFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pfunc)</td></tr>
 <tr class="memdesc:a9d44ba79106b6afbd5881c4f33800840 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the possibly custom progress function, that is called in between every search step, and gives an outside user a simple way to witness progress of the algorithm, as well as to add custom termination criteria.  <a href="#a9d44ba79106b6afbd5881c4f33800840">More...</a><br/></td></tr>
 <tr class="separator:a9d44ba79106b6afbd5881c4f33800840 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0cdfca8b5614843661af4153e8c6b51 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#ac0cdfca8b5614843661af4153e8c6b51">set_plot_func</a> (PlotFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pffunc)</td></tr>
+<tr class="memdesc:ac0cdfca8b5614843661af4153e8c6b51 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the possibly custom plot to file function, that is useful for storing into file various possibly custom variable values for each step until termination.  <a href="#ac0cdfca8b5614843661af4153e8c6b51">More...</a><br/></td></tr>
+<tr class="separator:ac0cdfca8b5614843661af4153e8c6b51 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43bd0b30c43445bc4ee2257963eebf47 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="memItemLeft" align="right" valign="top">dVec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#a43bd0b30c43445bc4ee2257963eebf47">gradf</a> (const dVec &amp;x)</td></tr>
 <tr class="memdesc:a43bd0b30c43445bc4ee2257963eebf47 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns numerical gradient of objective function at x.  <a href="#a43bd0b30c43445bc4ee2257963eebf47">More...</a><br/></td></tr>
 <tr class="separator:a43bd0b30c43445bc4ee2257963eebf47 inherit pub_methods_classlibcmaes_1_1ESOStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -240,11 +243,17 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a25d597189596f434a2530887fddea189 inherit pub_attribs_classlibcmaes_1_1ESOStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76926e49a2ca941a22362167bc230093 inherit pub_attribs_classlibcmaes_1_1ESOStrategy"><td class="memItemLeft" align="right" valign="top">GradFunc&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#a76926e49a2ca941a22362167bc230093">_gfunc</a></td></tr>
 <tr class="separator:a76926e49a2ca941a22362167bc230093 inherit pub_attribs_classlibcmaes_1_1ESOStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2c9909de76f98e4b9c207bda577255d inherit pub_attribs_classlibcmaes_1_1ESOStrategy"><td class="memItemLeft" align="right" valign="top">PlotFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a><br class="typebreak"/>
+&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#af2c9909de76f98e4b9c207bda577255d">_pffunc</a></td></tr>
+<tr class="separator:af2c9909de76f98e4b9c207bda577255d inherit pub_attribs_classlibcmaes_1_1ESOStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_attribs_classlibcmaes_1_1CMAStrategy"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classlibcmaes_1_1CMAStrategy')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="classlibcmaes_1_1CMAStrategy.html">libcmaes::CMAStrategy&lt; TCovarianceUpdate, TGenoPheno &gt;</a></td></tr>
 <tr class="memitem:af6d980c670eef47ee810645739999d5b inherit pub_static_attribs_classlibcmaes_1_1CMAStrategy"><td class="memItemLeft" align="right" valign="top">static ProgressFunc<br class="typebreak"/>
 &lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;<br class="typebreak"/>
 , <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStrategy.html#af6d980c670eef47ee810645739999d5b">_defaultPFunc</a></td></tr>
 <tr class="separator:af6d980c670eef47ee810645739999d5b inherit pub_static_attribs_classlibcmaes_1_1CMAStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fcdccd9451a2dc509ee651f664ac31f inherit pub_static_attribs_classlibcmaes_1_1CMAStrategy"><td class="memItemLeft" align="right" valign="top">static PlotFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a><br class="typebreak"/>
+&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStrategy.html#a0fcdccd9451a2dc509ee651f664ac31f">_defaultFPFunc</a></td></tr>
+<tr class="separator:a0fcdccd9451a2dc509ee651f664ac31f inherit pub_static_attribs_classlibcmaes_1_1CMAStrategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class TCovarianceUpdate, class TGenoPheno&gt;<br/>
@@ -317,7 +326,7 @@ template&lt;class TCovarianceUpdate , class TGenoPheno &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 15 2014 10:32:46 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

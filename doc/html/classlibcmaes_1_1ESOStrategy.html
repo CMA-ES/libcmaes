@@ -135,6 +135,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_gradient_func</b>
 <tr class="memitem:a9d44ba79106b6afbd5881c4f33800840"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#a9d44ba79106b6afbd5881c4f33800840">set_progress_func</a> (ProgressFunc&lt; TParameters, TSolutions &gt; &amp;pfunc)</td></tr>
 <tr class="memdesc:a9d44ba79106b6afbd5881c4f33800840"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the possibly custom progress function, that is called in between every search step, and gives an outside user a simple way to witness progress of the algorithm, as well as to add custom termination criteria.  <a href="#a9d44ba79106b6afbd5881c4f33800840">More...</a><br/></td></tr>
 <tr class="separator:a9d44ba79106b6afbd5881c4f33800840"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0cdfca8b5614843661af4153e8c6b51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#ac0cdfca8b5614843661af4153e8c6b51">set_plot_func</a> (PlotFunc&lt; TParameters, TSolutions &gt; &amp;pffunc)</td></tr>
+<tr class="memdesc:ac0cdfca8b5614843661af4153e8c6b51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the possibly custom plot to file function, that is useful for storing into file various possibly custom variable values for each step until termination.  <a href="#ac0cdfca8b5614843661af4153e8c6b51">More...</a><br/></td></tr>
+<tr class="separator:ac0cdfca8b5614843661af4153e8c6b51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43bd0b30c43445bc4ee2257963eebf47"><td class="memItemLeft" align="right" valign="top">dVec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#a43bd0b30c43445bc4ee2257963eebf47">gradf</a> (const dVec &amp;x)</td></tr>
 <tr class="memdesc:a43bd0b30c43445bc4ee2257963eebf47"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns numerical gradient of objective function at x.  <a href="#a43bd0b30c43445bc4ee2257963eebf47">More...</a><br/></td></tr>
 <tr class="separator:a43bd0b30c43445bc4ee2257963eebf47"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,6 +168,8 @@ TSolutions &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 <tr class="separator:a25d597189596f434a2530887fddea189"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76926e49a2ca941a22362167bc230093"><td class="memItemLeft" align="right" valign="top">GradFunc&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#a76926e49a2ca941a22362167bc230093">_gfunc</a> = nullptr</td></tr>
 <tr class="separator:a76926e49a2ca941a22362167bc230093"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2c9909de76f98e4b9c207bda577255d"><td class="memItemLeft" align="right" valign="top">PlotFunc&lt; TParameters, TSolutions &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOStrategy.html#af2c9909de76f98e4b9c207bda577255d">_pffunc</a></td></tr>
+<tr class="separator:af2c9909de76f98e4b9c207bda577255d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class TParameters, class TSolutions, class TStopCriteria&gt;<br/>
@@ -328,6 +333,40 @@ template&lt;class TParameters, class TSolutions, class TStopCriteria&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="ac0cdfca8b5614843661af4153e8c6b51"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TParameters, class TSolutions, class TStopCriteria&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classlibcmaes_1_1ESOStrategy.html">libcmaes::ESOStrategy</a>&lt; TParameters, TSolutions, TStopCriteria &gt;::set_plot_func </td>
+          <td>(</td>
+          <td class="paramtype">PlotFunc&lt; TParameters, TSolutions &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pffunc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the possibly custom plot to file function, that is useful for storing into file various possibly custom variable values for each step until termination. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pffunc</td><td>a stream to file output function </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a9d44ba79106b6afbd5881c4f33800840"></a>
 <div class="memitem">
 <div class="memproto">
@@ -484,6 +523,21 @@ template&lt;class TParameters, class TSolutions, class TStopCriteria&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="af2c9909de76f98e4b9c207bda577255d"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TParameters, class TSolutions, class TStopCriteria&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">PlotFunc&lt;TParameters,TSolutions&gt; <a class="el" href="classlibcmaes_1_1ESOStrategy.html">libcmaes::ESOStrategy</a>&lt; TParameters, TSolutions, TStopCriteria &gt;::_pffunc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>possibly custom stream data to file function. </p>
+
+</div>
+</div>
 <a class="anchor" id="a25d597189596f434a2530887fddea189"></a>
 <div class="memitem">
 <div class="memproto">
@@ -521,7 +575,7 @@ template&lt;class TParameters, class TSolutions, class TStopCriteria&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 15 2014 10:32:47 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

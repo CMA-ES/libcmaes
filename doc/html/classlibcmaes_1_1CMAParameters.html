@@ -115,6 +115,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a18d6039c0adffddd51caee1250b072bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAParameters.html#a18d6039c0adffddd51caee1250b072bc">CMAParameters</a> (const int &amp;<a class="el" href="classlibcmaes_1_1Parameters.html#a95a3c04400a77d134bb1e9705189a24e">dim</a>, const double *x0, const double &amp;sigma, const int &amp;<a class="el" href="classlibcmaes_1_1Parameters.html#a3d569987e9a5eb61bc781ee75b2ab18a">lambda</a>=-1, const uint64_t &amp;seed=0, const TGenoPheno &amp;gp=<a class="el" href="classlibcmaes_1_1GenoPheno.html">GenoPheno</a>&lt; <a class="el" href="classlibcmaes_1_1NoBoundStrategy.html">NoBoundStrategy</a> &gt;())</td></tr>
 <tr class="memdesc:a18d6039c0adffddd51caee1250b072bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a18d6039c0adffddd51caee1250b072bc">More...</a><br/></td></tr>
 <tr class="separator:a18d6039c0adffddd51caee1250b072bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a676e688fd58f9244886270f32cbad47e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAParameters.html#a676e688fd58f9244886270f32cbad47e">CMAParameters</a> (const std::vector&lt; double &gt; &amp;x0, const double &amp;sigma, const int &amp;<a class="el" href="classlibcmaes_1_1Parameters.html#a3d569987e9a5eb61bc781ee75b2ab18a">lambda</a>=-1, const uint64_t &amp;seed=0, const TGenoPheno &amp;gp=<a class="el" href="classlibcmaes_1_1GenoPheno.html">GenoPheno</a>&lt; <a class="el" href="classlibcmaes_1_1NoBoundStrategy.html">NoBoundStrategy</a> &gt;())</td></tr>
+<tr class="memdesc:a676e688fd58f9244886270f32cbad47e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a676e688fd58f9244886270f32cbad47e">More...</a><br/></td></tr>
+<tr class="separator:a676e688fd58f9244886270f32cbad47e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d963d4719d9b6447cddeeca542167a1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d963d4719d9b6447cddeeca542167a1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAParameters.html#a0d963d4719d9b6447cddeeca542167a1">initialize_parameters</a> ()</td></tr>
 <tr class="memdesc:a0d963d4719d9b6447cddeeca542167a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize required parameters based on dim, lambda, x0 and sigma. <br/></td></tr>
@@ -177,9 +180,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:acefab965b50d45c6609e4f3267785ace inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#acefab965b50d45c6609e4f3267785ace">set_max_iter</a> (const int &amp;maxiter)</td></tr>
 <tr class="memdesc:acefab965b50d45c6609e4f3267785ace inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the maximum number of iterations allowed for the optimization.  <a href="#acefab965b50d45c6609e4f3267785ace">More...</a><br/></td></tr>
 <tr class="separator:acefab965b50d45c6609e4f3267785ace inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10ef0d0fa8751d520ed5d4e223e366e4 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a10ef0d0fa8751d520ed5d4e223e366e4">get_max_iter</a> () const </td></tr>
-<tr class="memdesc:a10ef0d0fa8751d520ed5d4e223e366e4 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns maximum number of iterations  <a href="#a10ef0d0fa8751d520ed5d4e223e366e4">More...</a><br/></td></tr>
-<tr class="separator:a10ef0d0fa8751d520ed5d4e223e366e4 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95b8ff475b28b2cbf89cd147ab09eeee inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a95b8ff475b28b2cbf89cd147ab09eeee">get_max_iter</a> () const </td></tr>
+<tr class="memdesc:a95b8ff475b28b2cbf89cd147ab09eeee inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns maximum number of iterations  <a href="#a95b8ff475b28b2cbf89cd147ab09eeee">More...</a><br/></td></tr>
+<tr class="separator:a95b8ff475b28b2cbf89cd147ab09eeee inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa924cb4c8ffee0d148b63f5c0b55b4ce inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#aa924cb4c8ffee0d148b63f5c0b55b4ce">set_max_fevals</a> (const int &amp;fevals)</td></tr>
 <tr class="memdesc:aa924cb4c8ffee0d148b63f5c0b55b4ce inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the maximum budget of objective function calls allowed for the optimization.  <a href="#aa924cb4c8ffee0d148b63f5c0b55b4ce">More...</a><br/></td></tr>
 <tr class="separator:aa924cb4c8ffee0d148b63f5c0b55b4ce inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,6 +232,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:aeb869d18fa0c987f56216d9bfa1f1a0d inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#aeb869d18fa0c987f56216d9bfa1f1a0d">set_algo</a> (const int &amp;algo)</td></tr>
 <tr class="memdesc:aeb869d18fa0c987f56216d9bfa1f1a0d inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the optimization algorithm.  <a href="#aeb869d18fa0c987f56216d9bfa1f1a0d">More...</a><br/></td></tr>
 <tr class="separator:aeb869d18fa0c987f56216d9bfa1f1a0d inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d8d58e5d69795804a1a22768c78134d inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a3d8d58e5d69795804a1a22768c78134d">set_str_algo</a> (const std::string &amp;algo)</td></tr>
+<tr class="memdesc:a3d8d58e5d69795804a1a22768c78134d inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the optimization algorithm.  <a href="#a3d8d58e5d69795804a1a22768c78134d">More...</a><br/></td></tr>
+<tr class="separator:a3d8d58e5d69795804a1a22768c78134d inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39697cd6cfb705a970223f8e95894545 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a39697cd6cfb705a970223f8e95894545">get_algo</a> () const </td></tr>
 <tr class="memdesc:a39697cd6cfb705a970223f8e95894545 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns which algorithm is set for the optimization at hand.  <a href="#a39697cd6cfb705a970223f8e95894545">More...</a><br/></td></tr>
 <tr class="separator:a39697cd6cfb705a970223f8e95894545 inherit pub_methods_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -350,6 +356,13 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>_fact_pc</b></td></
 <tr class="separator:ab8e153b4785de9358599caa840b94ef2 inherit pub_attribs_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78a3b97b4119776b661c1be4fc283069 inherit pub_attribs_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a78a3b97b4119776b661c1be4fc283069">_mt_feval</a> = false</td></tr>
 <tr class="separator:a78a3b97b4119776b661c1be4fc283069 inherit pub_attribs_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_static_attribs_classlibcmaes_1_1Parameters"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classlibcmaes_1_1Parameters')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters&lt; TGenoPheno &gt;</a></td></tr>
+<tr class="memitem:a5d2fd0ca871efd0f4f4b223515544204 inherit pub_static_attribs_classlibcmaes_1_1Parameters"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d2fd0ca871efd0f4f4b223515544204"></a>
+static std::map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_algos</b> = {{&quot;cmaes&quot;,0},{&quot;ipop&quot;,1},{&quot;bipop&quot;,2},{&quot;acmaes&quot;,3},{&quot;aipop&quot;,4},{&quot;abipop&quot;,5},{&quot;sepcmaes&quot;,6},{&quot;sepipop&quot;,7},{&quot;sepbipop&quot;,8},{&quot;sepacmaes&quot;,9},{&quot;sepipop&quot;,10},{&quot;sepbipop&quot;,11}}</td></tr>
+<tr class="separator:a5d2fd0ca871efd0f4f4b223515544204 inherit pub_static_attribs_classlibcmaes_1_1Parameters"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt;<br/>
@@ -412,6 +425,65 @@ template&lt;class TGenoPheno&gt; </div>
   <table class="params">
     <tr><td class="paramname">dim</td><td>problem dimensions </td></tr>
     <tr><td class="paramname">x0</td><td>initial search point </td></tr>
+    <tr><td class="paramname">sigma</td><td>initial distribution step size (positive, otherwise automatically set) </td></tr>
+    <tr><td class="paramname">lambda</td><td>number of offsprings sampled at each step </td></tr>
+    <tr><td class="paramname">seed</td><td>initial random seed, useful for reproducing results (if unspecified, automatically generated from current time) </td></tr>
+    <tr><td class="paramname">gp</td><td>genotype / phenotype object </td></tr>
+    <tr><td class="paramname">sep</td><td>whether to use sep-CMA-ES, using diagonal covariance matrix (modifies covariance default learning rate) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a676e688fd58f9244886270f32cbad47e"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classlibcmaes_1_1CMAParameters.html">libcmaes::CMAParameters</a>&lt; TGenoPheno &gt;::<a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>sigma</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>lambda</em> = <code>-1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint64_t &amp;&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const TGenoPheno &amp;&#160;</td>
+          <td class="paramname"><em>gp</em> = <code><a class="el" href="classlibcmaes_1_1GenoPheno.html">GenoPheno</a>&lt;<a class="el" href="classlibcmaes_1_1NoBoundStrategy.html">NoBoundStrategy</a>&gt;()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x0</td><td>initial search point as vector of problem dimension </td></tr>
     <tr><td class="paramname">sigma</td><td>initial distribution step size (positive, otherwise automatically set) </td></tr>
     <tr><td class="paramname">lambda</td><td>number of offsprings sampled at each step </td></tr>
     <tr><td class="paramname">seed</td><td>initial random seed, useful for reproducing results (if unspecified, automatically generated from current time) </td></tr>
@@ -878,7 +950,7 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 15 2014 10:32:46 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
