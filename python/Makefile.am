@@ -1,3 +1,5 @@
+lcmaesdir = $(libdir)
+
 TARGET = lcmaes
 
 $(TARGET).so: $(TARGET).o
@@ -7,6 +9,9 @@ $(TARGET).o: $(TARGET).cc
 	$(CXX) -g -Wall -fopenmp $(CXXFLAGS) -I../ -I../src -I$(EIGEN3_INC) $(PYTHON_CPPFLAGS) -fPIC -c $(TARGET).cc
 
 all:lcmaes.so
+
+install: all
+	$(INSTALL) lcmaes.so $(libdir)
 
 clean:
 	rm *.so *.o
