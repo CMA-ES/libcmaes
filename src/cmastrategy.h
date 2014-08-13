@@ -45,6 +45,14 @@ namespace libcmaes
     {
     public:
     /**
+     * \brief dummy constructor.
+     */
+    CMAStrategy()
+    :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno>>()
+    {
+    }
+
+      /**
        * \brief constructor.
        * @param func objective function to minimize
        * @param parameters stochastic search parameters
@@ -100,7 +108,7 @@ namespace libcmaes
     private:
       EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
-      std::ofstream _fplotstream; /**< plotting file stream, not in parameters because of copy-constructor hell. */
+      std::ofstream *_fplotstream = nullptr; /**< plotting file stream, not in parameters because of copy-constructor hell. */
 
     public:
     static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
