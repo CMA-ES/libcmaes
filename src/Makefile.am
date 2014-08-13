@@ -9,4 +9,4 @@ libcmaes_la_SOURCES=libcmaes_config.h cmaes.h eo_matrix.h cmastrategy.cc esoptim
 libcmaesinclude_HEADERS = cmaes.h eo_matrix.h cmastrategy.h esoptimizer.h esostrategy.h cmasolutions.h parameters.h cmaparameters.h cmastopcriteria.h ipopcmastrategy.h bipopcmastrategy.h covarianceupdate.h acovarianceupdate.h pwq_bound_strategy.h eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h llogging.h
 
 AM_CPPFLAGS=-I$(EIGEN3_INC)
-AM_CXXFLAGS=-Wall -g -fopenmp
+AM_CXXFLAGS=-Wall -Wextra -g -fopenmp
