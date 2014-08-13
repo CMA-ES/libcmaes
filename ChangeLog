@@ -1,3 +1,14 @@
+2014-08-12	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.8.1:
+	- Added customization of data to file streaming function, ref #51
+	- Added configure control for compiling the library alone without examples or tools, ref #11
+	- Fixed code in order to avoid various compiler warnings
+	- Fixed sample code in README, ref #54
+	- Fixed get_max_iter and set_mt_feval in Parameters object
+	- New CMAParameters constructor, from x0 as a vector of double
+	- Updated building instructions for Mac OSX
+	- New set_str_algo in Parameters object
+	
 2014-07-15	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v0.8:
 	- Improved API of main userland objects
