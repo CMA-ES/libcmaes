@@ -83,7 +83,7 @@ namespace libcmaes
   {
     _best_candidates_hist.push_back(_candidates.at(0)); // supposed candidates is sorted.
     _k_best_candidates_hist.push_back(_candidates.at(_kcand));
-    if (_best_candidates_hist.size() > _max_hist)
+    if ((int)_best_candidates_hist.size() > _max_hist)
       {
 	_best_candidates_hist.erase(_best_candidates_hist.begin());
 	_k_best_candidates_hist.erase(_k_best_candidates_hist.begin());
