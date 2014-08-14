@@ -439,6 +439,15 @@ namespace libcmaes
   {
     return _mt_feval;
   }
+
+  /**
+   * \brief sets maximum history size, allows to keep memory requirements fixed.
+   * @param m number of steps of candidate history that are kept into memory (for stopping criteria equalfunvals mostly).
+   */
+  void set_max_hist(const int &m)
+  {
+    _max_hist = m;
+  }
   
   int _dim; /**< function space dimensions. */
   int _lambda = -1; /**< number of offsprings. */
@@ -464,6 +473,8 @@ namespace libcmaes
   TGenoPheno _gp; /**< genotype / phenotype object. */
 
   bool _mt_feval = false; /**< whether to force multithreaded (i.e. parallel) function evaluations. */ 
+  int _max_hist = 100; /**< max size of the history, keeps memory requirements fixed. */
+
   static std::map<std::string,int> _algos;// = { {"cmaes",0}, {"ipop",1}};
   };
 
