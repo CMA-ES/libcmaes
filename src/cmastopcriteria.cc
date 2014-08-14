@@ -128,7 +128,7 @@ namespace libcmaes
       {
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
 	int histlength = std::min(cmap._dim,histsize);
-	if (histlength < cmap._dim) // not enough data
+	if (histlength < cmas._max_hist)//cmap._dim) // not enough data
 	  return CONT;
 
 	int c = 0;
