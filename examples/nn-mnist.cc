@@ -29,6 +29,8 @@
 
 using namespace libcmaes;
 
+bool isZero(double d) { return d == 0; }
+
 void tokenize(const std::string &str,
 	      std::vector<std::string> &tokens,
 	      const std::string &delim)
@@ -188,6 +190,9 @@ FitFunc nn_of = [](const double *x, const int N)
   return mgn._loss;
 };
 
+int gnpasses = 1;
+int gi = 0;
+bool gdrop = false;
 FitFunc nn_dof = [](const double *x, const int N)
 {
   nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,gl1reg,gl2reg);
@@ -200,9 +205,27 @@ FitFunc nn_dof = [](const double *x, const int N)
       ++mit;
       ++i;
     }
+
+  dMat ggbatchfeatures;
+  dMat ggbatchlabels;
+  if (gbatches > 0)
+    {
+      int beg = gi*gbatches;
+      int bsize = gbatches;
+      if (gi == gnpasses-1)
+	{
+	  bsize = gfeatures.cols()-beg;
+	  gi = 0;
+	}
+      else ++gi;
+      ggbatchfeatures = gfeatures.block(0,beg,gfeatures.rows(),bsize);
+      ggbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
+    }
+
   if (gbatches < 0)
     mgn.forward_pass(gfeatures,glabels);
-  else mgn.forward_pass(gbatchfeatures,gbatchlabels);
+  else mgn.forward_pass(ggbatchfeatures,ggbatchlabels);
+  
   return mgn._loss;
 };
 
@@ -224,9 +247,6 @@ GradFunc gnn = [](const double *x, const int N)
   return grad;
 };
 
-int gnpasses = 1;
-int gi = 0;
-bool gdrop = false;
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
   if (!gdrop)
@@ -234,9 +254,9 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       gtrainacc = testing(cmasols.best_candidate()._x,true,false);
       gtestacc = testing(cmasols.best_candidate()._x,false,false);
     }
-  std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << gi << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
-          
-  if (gbatches > 0)
+  std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  
+  /*if (gbatches > 0)
     {
       int beg = gi*gbatches;
       int bsize = gbatches;
@@ -248,7 +268,7 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       else ++gi;
       gbatchfeatures = gfeatures.block(0,beg,gfeatures.rows(),bsize);
       gbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
-    }
+      }*/
 
   return 0;
 };
@@ -543,9 +563,12 @@ int main(int argc, char *argv[])
 		  vndropdims.push_back(gallparams.at(u));
 		}
 	    }
+
+	  std::cout << "zero weights=" << std::count_if(gallparams.begin(),gallparams.end(),isZero) << std::endl;
 	  
 	  // optimize network until convergence or maxiter etc...
-	  CMAParameters<> cmaparams(FLAGS_dropdim,&vndropdims.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
+	  double lambda = gnpasses;
+	  CMAParameters<> cmaparams(FLAGS_dropdim,&vndropdims.front(),FLAGS_sigma0,lambda,FLAGS_seed);
 	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
 	  cmaparams._fplot = FLAGS_fplot;
 	  cmaparams._algo = aCMAES;
