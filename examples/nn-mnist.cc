@@ -247,6 +247,7 @@ GradFunc gnn = [](const double *x, const int N)
   return grad;
 };
 
+double gmaxmaha = 0.0;
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
   if (!gdrop)
@@ -254,7 +255,7 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       gtrainacc = testing(cmasols.best_candidate()._x,true,false);
       gtestacc = testing(cmasols.best_candidate()._x,false,false);
     }
-  std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / maha=" << cmasols._maha << " / iter=" << cmasols._elapsed_last_iter << std::endl;
   
   /*if (gbatches > 0)
     {
@@ -270,6 +271,14 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       gbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
       }*/
 
+  if (cmasols._maha > gmaxmaha)
+    gmaxmaha = cmasols._maha;
+  if (cmasols._maha < gmaxmaha / 10.0)
+    {
+      std::cout << "Mahalanobis drop to 1/10th of its max, stopping optimization\n";
+      return 1;
+    }
+  
   return 0;
 };
 							
@@ -392,7 +401,16 @@ int main(int argc, char *argv[])
       for (size_t i=0;i<gmnistnn._lweights.size();i++)
 	{
 	  dropdimbounds.push_back(gmnistnn._lweights.at(i).size() + gmnistnn._lb.at(i).size());
-	  //dropdimsize.push_back(ceil((dropdimbounds.back() / static_cast<double>(gmnistnn._allparams_dim)) * FLAGS_dropdim)); //TODO: beware of floor leaving some weights unreachable.
+	  /*int layer_sample_size = 0;
+	  if (i != gmnistnn._lweights.size()-1)
+	    layer_sample_size = ceil((dropdimbounds.back() / static_cast<double>(gmnistnn._allparams_dim)) * FLAGS_dropdim - (gmnistnn._lweights.back().size()+gmnistnn._lb.back().size())/3);
+	  else
+	    {
+	      layer_sample_size = ceil(dropdimbounds.back()/3.0);
+	      layer_sample_size += std::max(0,FLAGS_dropdim-nddim);//std::accumulate(dropdimsize.begin(),dropdimsize.end(),layer_sample_size)); 
+	      std::cout << "layer_sample_size=" << layer_sample_size << std::endl;
+	    }
+	    dropdimsize.push_back(layer_sample_size); *///TODO: beware of floor leaving some weights unreachable.*/
 	  dropdimsize.push_back(ceil((1.0/static_cast<double>(gmnistnn._lweights.size())) * FLAGS_dropdim));
 	  nddim += dropdimsize.back();
 	  std::cout << "bound=" << dropdimbounds.back() << " / dim=" << dropdimsize.back() << std::endl;
@@ -536,10 +554,12 @@ int main(int argc, char *argv[])
 	{
 	  gdrop = FLAGS_drop;
 	  gi = 0;
+	  gmaxmaha = 0;
 	  // randomly drop units
 	  gmnistnn.to_array();
 	  if (gallparams.empty())
 	    gallparams = std::vector<double>(gmnistnn._allparams_dim,0.0);
+	  std::map<int,double> olddropdims = gndropdims;
 	  gndropdims.clear();
 	  std::vector<double> vndropdims;
 	  /*for (int d=0;d<FLAGS_dropdim;d++)
@@ -548,21 +568,63 @@ int main(int argc, char *argv[])
 	      gndropdims.insert(std::pair<int,double>(u,gallparams.at(u)));
 	      vndropdims.push_back(gallparams.at(u));
 	      }*/
+	  
+	  int zeroweights = std::count_if(gallparams.begin(),gallparams.end(),isZero);
+	  double factor = 1.0;
+	  if (zeroweights < gallparams.size())
+	    {
+	      factor = 2.0;
+	      std::map<double,int,std::greater<double>> bdims;
+	      for (int v=0;v<cmasols._leigenvalues.size();v++)
+		bdims.insert(std::pair<double,int>(cmasols._leigenvalues(v),v));
+	      int ulim = ceil(FLAGS_dropdim / factor);
+	      int p = 0;
+	      std::map<double,int,std::greater<double>>::const_iterator bdmit = bdims.begin();
+	      
+	      while(bdmit!=bdims.end())
+		{
+		  int u = (*bdmit).second;
+		  std::map<int,double>::const_iterator odmit = olddropdims.begin();
+		  int c = 0;
+		  while(odmit != olddropdims.end())
+		    {
+		      if (c == u)
+			{
+			  u = (*odmit).first;
+			  break;
+			}
+		      ++c;
+		      ++odmit;
+		    }
+		  gndropdims.insert(std::pair<int,double>(u,gallparams.at(u)));
+		  vndropdims.push_back(gallparams.at(u));
+		  ++bdmit;
+		  ++p;
+		  if (p >= ulim)
+		    break;
+		}
+	      std::cout << "kept " << gndropdims.size() << " dimensions\n";
+	    }
+	      
 	  int pos = 0;
+	  //std::cout << "selected dims=";
 	  for (size_t l=0;l<dropdimsize.size();l++)
 	    {
 	      //int beg = (l == 0) ? 0 : dropdimbounds.at(l-1);
 	      dropunif = std::uniform_int_distribution<>(pos,pos+dropdimbounds.at(l)-1);
-	      std::cout << "pos=" << pos << " / bound=" << pos+dropdimbounds.at(l)-1 << std::endl;
+	      //std::cout << "pos=" << pos << " / bound=" << pos+dropdimbounds.at(l)-1 << std::endl;
 	      pos += dropdimbounds.at(l);
-	      for (int d=0;d<dropdimsize.at(l);d++)
+	      int ulim = ceil(dropdimsize.at(l) / factor);
+	      //std::cout << "ulim=" << ulim << std::endl;
+	      for (int d=0;d<ulim;d++)
 		{
 		  int u = dropunif(ggen);
-		  //std::cout << "u=" << u << std::endl;
+		  //std::cout << u << " ";
 		  gndropdims.insert(std::pair<int,double>(u,gallparams.at(u)));
 		  vndropdims.push_back(gallparams.at(u));
 		}
 	    }
+	  //std::cout << std::endl;
 
 	  std::cout << "zero weights=" << std::count_if(gallparams.begin(),gallparams.end(),isZero) << std::endl;
 	  
@@ -575,6 +637,7 @@ int main(int argc, char *argv[])
 	  cmaparams.set_ftarget(1e-2);
 	  cmaparams._mt_feval = true;
 	  cmaparams._quiet = false;
+	  cmaparams._kl = true;
 	  cmaparams.set_ftolerance(FLAGS_ftolerance);
 	  cmasols = cmaes<>(nn_dof,cmaparams,mpfunc);
 	  nevals += cmasols._nevals;
