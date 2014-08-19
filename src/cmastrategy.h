@@ -45,6 +45,11 @@ namespace libcmaes
     {
     public:
       /**
+       * \brief dummy constructor
+       */
+      CMAStrategy();
+    
+      /**
        * \brief constructor.
        * @param func objective function to minimize
        * @param parameters stochastic search parameters
