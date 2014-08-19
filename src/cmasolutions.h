@@ -245,6 +245,15 @@ namespace libcmaes
 
     std::map<int,pli> _pls; /**< profile likelihood for parameters it has been computed for. */
     double _edm = 0.0; /**< expected vertical distance to the minimum. */
+
+    dVec _xmeanold; /**< mean vector at previous step, used for KL computation only. */
+    dMat _covold; /**< covariance at previous step, used for KL computation only. */
+    double _sigmaold = 0.0; /**< sigma at previous step. */
+    double _kl = 0.0; /**< exact KL divergence. */
+    double _kl_approx_det = 0.0; /**< KL approx with det=0. */
+    double _kl_approx_trace_det = 0.0; /**< KL limited to covariance elements. */
+    double _sigma_divergence = 0.0; /**< simple sigma 'divergence'. */
+    double _maha = 0.0; /**< Mahalanobis distance for two steps of cov. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

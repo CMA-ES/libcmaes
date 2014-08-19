@@ -427,6 +427,7 @@ DEFINE_bool(with_gradient,false,"whether to use the function gradient when avail
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
+DEFINE_bool(kl,false,"whether to compute KL divergence in between two steps");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -454,6 +455,7 @@ CMASolutions cmaes_opt()
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
     cmaparams.set_noisy();
+  cmaparams._kl = FLAGS_kl;
   if (FLAGS_alg == "cmaes")
     cmaparams._algo = CMAES_DEFAULT;
   else if (FLAGS_alg == "ipop")

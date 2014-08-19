@@ -226,6 +226,8 @@ namespace libcmaes
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
     eostrat<TGenoPheno>::_solutions._elapsed_tell = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 #endif
+    if (eostrat<TGenoPheno>::_niter > 0 && eostrat<TGenoPheno>::_parameters._kl)
+      compute_kl();
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -276,6 +278,31 @@ namespace libcmaes
   void CMAStrategy<TCovarianceUpdate,TGenoPheno>::plot()
   {
     eostrat<TGenoPheno>::_pffunc(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions,*_fplotstream);
+  }
+
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void CMAStrategy<TCovarianceUpdate,TGenoPheno>::compute_kl()
+  {
+    dMat covinv = (pow(eostrat<TGenoPheno>::_solutions._sigma,2) * eostrat<TGenoPheno>::_solutions._cov).inverse();
+    double tracenosig = (eostrat<TGenoPheno>::_solutions._cov.inverse()*eostrat<TGenoPheno>::_solutions._covold).trace();
+    double trace = (covinv*(pow(eostrat<TGenoPheno>::_solutions._sigmaold,2) * eostrat<TGenoPheno>::_solutions._covold)).trace();
+    dVec xmeandiff = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._xmeanold;
+    double maha = xmeandiff.transpose()*covinv*xmeandiff;
+    eostrat<TGenoPheno>::_solutions._maha = xmeandiff.transpose()*eostrat<TGenoPheno>::_solutions._cov.inverse()*xmeandiff;
+    double det0 = (pow(eostrat<TGenoPheno>::_solutions._sigmaold,2)*eostrat<TGenoPheno>::_solutions._covold).determinant();
+    double det1 = (pow(eostrat<TGenoPheno>::_solutions._sigma,2)*eostrat<TGenoPheno>::_solutions._cov).determinant();
+    double det0nosig = eostrat<TGenoPheno>::_solutions._covold.determinant();
+    double det1nosig = eostrat<TGenoPheno>::_solutions._cov.determinant();
+    double det = std::log(det0/det1);
+
+    //debug
+    //std::cerr << "trace=" << trace << " / maha=" << maha << " / det=" << det << std::endl;
+    //debug
+    
+    eostrat<TGenoPheno>::_solutions._kl = 0.5 * (trace + maha - eostrat<TGenoPheno>::_parameters._dim - det);
+    eostrat<TGenoPheno>::_solutions._kl_approx_det = 0.5 * (trace + maha - eostrat<TGenoPheno>::_parameters._dim);
+    eostrat<TGenoPheno>::_solutions._kl_approx_trace_det = 0.5 * (tracenosig - eostrat<TGenoPheno>::_parameters._dim - std::log(det0nosig/det1nosig));
+    eostrat<TGenoPheno>::_solutions._sigma_divergence = 0.5 * ((eostrat<TGenoPheno>::_solutions._sigma*eostrat<TGenoPheno>::_solutions._sigma)-(eostrat<TGenoPheno>::_solutions._sigmaold*eostrat<TGenoPheno>::_solutions._sigmaold));
   }
   
   template class CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;

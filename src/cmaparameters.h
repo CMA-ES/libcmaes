@@ -151,6 +151,9 @@ namespace libcmaes
 
     // stopping criteria.
     bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
+
+    // kl.
+    bool _kl = false;
   };
   
 }

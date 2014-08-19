@@ -96,6 +96,9 @@ namespace libcmaes
        *        as defined in the _parameters object.
        */
       void plot();
+
+    private:
+    void compute_kl();
     
     private:
       EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
