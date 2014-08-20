@@ -47,14 +47,7 @@ namespace libcmaes
 	(void)ubounds;
 	(void)dim;
       }
-
-    NoScalingStrategy(const dVec &scaling,
-		      const dVec &shift)
-      {
-	(void)scaling;
-	(void)shift;
-      }
-
+    
     ~NoScalingStrategy() {}
 
     void scale_to_internal(dVec &x,
