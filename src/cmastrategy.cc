@@ -57,6 +57,12 @@ namespace libcmaes
     fplotstream << std::endl;
     return 0;
   };
+
+  template <class TCovarianceUpdate, class TGenoPheno>
+  CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy()
+    :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >()
+  {
+  }
   
   template <class TCovarianceUpdate, class TGenoPheno>
   CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy(FitFunc &func,
