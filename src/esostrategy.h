@@ -46,6 +46,13 @@ namespace libcmaes
   {
   public:
     /**
+     * \brief dummy constructor.
+     */
+    ESOStrategy()
+      {
+      }
+    
+    /**
      * \brief constructor
      * @param func function to minimize
      * @param parameters optimization parameters

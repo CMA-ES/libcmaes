@@ -31,5 +31,7 @@ if HAVE_GTEST
 AM_LDFLAGS += -lgtest -lgtest_main
 endif
 
+if HAVE_BBOB
 clean-local:
-	rm -rf bbobc.tar.gz bbob.v13* *_bbob
+	rm -rf bbobc.tar.gz bbob.v13* *_bbob .deps/benchmarks* .deps/dir* .deps/fgeneric* .deps/bbob*
+endif

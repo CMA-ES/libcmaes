@@ -72,6 +72,7 @@ namespace libcmaes
     _pc = dVec::Zero(p._dim);
     _candidates.resize(p._lambda);
     _kcand = std::min(p._lambda-1,static_cast<int>(1.0+ceil(0.1+p._lambda/4.0)));
+    _max_hist = p._max_hist;
   }
 
   CMASolutions::~CMASolutions()
@@ -82,7 +83,12 @@ namespace libcmaes
   {
     _best_candidates_hist.push_back(_candidates.at(0)); // supposed candidates is sorted.
     _k_best_candidates_hist.push_back(_candidates.at(_kcand));
-
+    if ((int)_best_candidates_hist.size() > _max_hist)
+      {
+	_best_candidates_hist.erase(_best_candidates_hist.begin());
+	_k_best_candidates_hist.erase(_k_best_candidates_hist.begin());
+      }
+    
     _bfvalues.push_back(_candidates.at(0)._fvalue);
     if (_bfvalues.size() > 20)
       _bfvalues.erase(_bfvalues.begin());

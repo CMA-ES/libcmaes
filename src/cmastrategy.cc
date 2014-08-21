@@ -57,6 +57,12 @@ namespace libcmaes
     fplotstream << std::endl;
     return 0;
   };
+
+  template <class TCovarianceUpdate, class TGenoPheno>
+  CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy()
+    :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >()
+  {
+  }
   
   template <class TCovarianceUpdate, class TGenoPheno>
   CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy(FitFunc &func,
@@ -87,14 +93,14 @@ namespace libcmaes
     _esolver = EigenMultivariateNormal<double>(false,eostrat<TGenoPheno>::_parameters._seed); // seeding the multivariate normal generator.
     LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / lazy_update=" << eostrat<TGenoPheno>::_parameters._lazy_update << std::endl;
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
-      _fplotstream.open(eostrat<TGenoPheno>::_parameters._fplot);
+      _fplotstream = new std::ofstream(eostrat<TGenoPheno>::_parameters._fplot);
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
   CMAStrategy<TCovarianceUpdate,TGenoPheno>::~CMAStrategy()
   {
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
-      _fplotstream.close();
+      delete _fplotstream;
   }
   
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -257,7 +263,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   void CMAStrategy<TCovarianceUpdate,TGenoPheno>::plot()
   {
-    eostrat<TGenoPheno>::_pffunc(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions,_fplotstream);
+    eostrat<TGenoPheno>::_pffunc(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions,*_fplotstream);
   }
   
   template class CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
