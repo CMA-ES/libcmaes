@@ -475,7 +475,7 @@ namespace libcmaes
   bool _mt_feval = false; /**< whether to force multithreaded (i.e. parallel) function evaluations. */ 
   int _max_hist = 100; /**< max size of the history, keeps memory requirements fixed. */
 
-  static std::map<std::string,int> _algos;// = { {"cmaes",0}, {"ipop",1}};
+  static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
   };
 
   template<class TGenoPheno>
