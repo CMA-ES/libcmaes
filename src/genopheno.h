@@ -83,6 +83,10 @@ namespace libcmaes
 	      const double *ubounds=nullptr)
     :_id(true)
     {
+      (void)scaling;
+      (void)shift;
+      (void)lbounds;
+      (void)ubounds;
     }
     
     ~GenoPheno() {};

@@ -69,6 +69,22 @@ namespace libcmaes
 		const uint64_t &seed=0,
 		const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
 
+    /**
+   * \brief Constructor.
+   * @param x0 initial search point as vector of problem dimension
+   * @param sigma vector of initial distribution step sizes (positive, otherwise automatically set)
+   * @param lambda number of offsprings sampled at each step
+   * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
+   * @param gp genotype / phenotype object
+   * @param sep whether to use sep-CMA-ES, using diagonal covariance matrix (modifies covariance default learning rate)
+   */
+  CMAParameters(const std::vector<double> &x0,
+		const std::vector<double> &sigma,
+		const int &lambda=-1,
+		const std::vector<double> &lbounds=std::vector<double>(),
+		const std::vector<double> &ubounds=std::vector<double>(),
+		const uint64_t &seed=0);
+  
   ~CMAParameters();
 
     /**
@@ -150,7 +166,6 @@ namespace libcmaes
     // stopping criteria.
     bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
   };
-  
 }
 
 #endif

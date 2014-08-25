@@ -47,6 +47,23 @@ namespace libcmaes
   {
     initialize_parameters();
   }
+
+  template<class TGenoPheno>
+  CMAParameters<TGenoPheno>::CMAParameters(const std::vector<double> &x0,
+					   const std::vector<double> &sigma,
+					   const int &lambda,
+					   const std::vector<double> &lbounds,
+					   const std::vector<double> &ubounds,
+					   const uint64_t &seed)
+    :Parameters<TGenoPheno>(x0.size(),&x0.front(),lambda,seed,TGenoPheno()),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+  {
+    dVec scaling = dVec::Constant(x0.size(),1.0).cwiseQuotient(Map<dVec>(const_cast<double*>(&sigma.front()),sigma.size()));
+    dVec shift = dVec::Constant(x0.size(),0.0);
+    TGenoPheno gp(scaling,shift,&lbounds.front(),&ubounds.front()); // XXX: is only effective when GenoPheno has linScalingStrategy
+    this->set_gp(gp);
+    _sigma_init = *std::min_element(sigma.begin(),sigma.end());
+    initialize_parameters();
+  }
   
   template <class TGenoPheno>
   CMAParameters<TGenoPheno>::~CMAParameters()
