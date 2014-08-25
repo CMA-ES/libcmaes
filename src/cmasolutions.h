@@ -41,7 +41,7 @@ namespace libcmaes
     /**
      * \brief dummy constructor.
      */
-    CMASolutions() {};
+    CMASolutions() {}
 
     /**
      * \brief initializes solutions from stochastic optimization parameters.

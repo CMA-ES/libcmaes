@@ -35,7 +35,7 @@ namespace libcmaes
   class CMAParameters : public Parameters<TGenoPheno>
   {
   public:
-    CMAParameters() {}; //TODO: var init even if this constructor is not supposed to be used for now.
+    CMAParameters() {} //TODO: var init even if this constructor is not supposed to be used for now.
 
     /**
      * \brief Constructor.

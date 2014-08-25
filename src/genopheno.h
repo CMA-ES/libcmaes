@@ -36,11 +36,11 @@ namespace libcmaes
     public:
     GenoPheno()
     :_id(true)
-    {};
+    {}
 
     GenoPheno(TransFunc &genof, TransFunc &phenof)
     :_genof(genof),_phenof(phenof),_id(false)
-    {};
+    {}
     
     GenoPheno(const double *lbounds, const double *ubounds, const int &dim)
     :_boundstrategy(lbounds,ubounds,dim),_id(true),_scalingstrategy(lbounds,ubounds,dim)
@@ -53,7 +53,7 @@ namespace libcmaes
 	  std::vector<double> ub(dim,_scalingstrategy._intmax);
 	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),dim);
 	}
-    };
+    }
 
     GenoPheno(TransFunc &genof, TransFunc &phenof,
 	      const double *lbounds, const double *ubounds, const int &dim)
@@ -67,7 +67,7 @@ namespace libcmaes
 	  std::vector<double> ub(dim,_scalingstrategy._intmax);
 	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),dim);
 	}
-    };
+    }
 
     /**
      * \brief this is a dummy constructor to accomodate an easy to use 
@@ -89,7 +89,7 @@ namespace libcmaes
       (void)ubounds;
     }
     
-    ~GenoPheno() {};
+    ~GenoPheno() {}
 
     private:
     dMat pheno_candidates(const dMat &candidates) const

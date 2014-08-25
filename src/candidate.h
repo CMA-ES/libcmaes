@@ -37,7 +37,7 @@ namespace libcmaes
      * \brief empty constructor.
      */
   Candidate():
-    _fvalue(0.0) {};
+    _fvalue(0.0) {}
     
     /**
      * \brief constructor.
@@ -47,9 +47,9 @@ namespace libcmaes
   Candidate(const double &fvalue,
 	    const dVec &x)
     :_fvalue(fvalue),_x(x)
-    {};
+    {}
 
-  ~Candidate() {};
+  ~Candidate() {}
 
   double get_fvalue() const { return _fvalue; }
 
