@@ -37,9 +37,9 @@ int main(int argc, char *argv[])
   std::vector<double> x0 = {1.0,2.7,400.0};
   std::vector<double> sigmas = {1e-3,0.57,2.3};
   CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>> cmaparams(x0,sigmas);
-  cmaparams._algo = aCMAES;
+  cmaparams.set_algo(aCMAES);
   CMASolutions cmasols = cmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
-  return cmasols._run_status;
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  return cmasols.run_status();
 }

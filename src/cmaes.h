@@ -36,7 +36,7 @@ namespace libcmaes
 		     GradFunc gfunc=nullptr,
 		     PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> &pffunc=CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultFPFunc)
     {
-      switch(parameters._algo)
+      switch(parameters.get_algo())
 	{
 	case CMAES_DEFAULT:
 	{
@@ -46,7 +46,7 @@ namespace libcmaes
 	  cmaes_vanilla.set_progress_func(pfunc);
 	  cmaes_vanilla.set_plot_func(pffunc);
 	  cmaes_vanilla.optimize();
-	  return cmaes_vanilla._solutions;
+	  return cmaes_vanilla.get_solutions();
 	}
 	case IPOP_CMAES:
 	{
@@ -56,7 +56,7 @@ namespace libcmaes
 	  ipop.set_progress_func(pfunc);
 	  ipop.set_plot_func(pffunc);
 	  ipop.optimize();
-	  return ipop._solutions;
+	  return ipop.get_solutions();
 	}
 	case BIPOP_CMAES:
 	{
@@ -66,7 +66,7 @@ namespace libcmaes
 	  bipop.set_progress_func(pfunc);
 	  bipop.set_plot_func(pffunc);
 	  bipop.optimize();
-	  return bipop._solutions;
+	  return bipop.get_solutions();
 	}
 	case aCMAES:
 	{
@@ -76,7 +76,7 @@ namespace libcmaes
 	  acmaes.set_progress_func(pfunc);
 	  acmaes.set_plot_func(pffunc);
 	  acmaes.optimize();
-	  return acmaes._solutions;
+	  return acmaes.get_solutions();
 	}
 	case aIPOP_CMAES:
 	{
@@ -86,7 +86,7 @@ namespace libcmaes
 	  aipop.set_progress_func(pfunc);
 	  aipop.set_plot_func(pffunc);
 	  aipop.optimize();
-	  return aipop._solutions;
+	  return aipop.get_solutions();
 	}
 	case aBIPOP_CMAES:
 	{
@@ -96,7 +96,7 @@ namespace libcmaes
 	  abipop.set_progress_func(pfunc);
 	  abipop.set_plot_func(pffunc);
 	  abipop.optimize();
-	  return abipop._solutions;
+	  return abipop.get_solutions();
 	}
 	case sepCMAES:
 	{
@@ -107,7 +107,7 @@ namespace libcmaes
 	  sepcmaes.set_progress_func(pfunc);
 	  sepcmaes.set_plot_func(pffunc);
 	  sepcmaes.optimize();
-	  return sepcmaes._solutions;
+	  return sepcmaes.get_solutions();
 	}
 	case sepIPOP_CMAES:
 	{
@@ -118,7 +118,7 @@ namespace libcmaes
 	  ipop.set_progress_func(pfunc);
 	  ipop.set_plot_func(pffunc);
 	  ipop.optimize();
-	  return ipop._solutions;
+	  return ipop.get_solutions();
 	}
 	case sepBIPOP_CMAES:
 	{
@@ -129,7 +129,7 @@ namespace libcmaes
 	  bipop.set_progress_func(pfunc);
 	  bipop.set_plot_func(pffunc);
 	  bipop.optimize();
-	  return bipop._solutions;
+	  return bipop.get_solutions();
 	}
 	case sepaCMAES:
 	{
@@ -140,7 +140,7 @@ namespace libcmaes
 	  sepcmaes.set_progress_func(pfunc);
 	  sepcmaes.set_plot_func(pffunc);
 	  sepcmaes.optimize();
-	  return sepcmaes._solutions;
+	  return sepcmaes.get_solutions();
 	}
 	case sepaIPOP_CMAES:
 	{
@@ -151,7 +151,7 @@ namespace libcmaes
 	  ipop.set_progress_func(pfunc);
 	  ipop.set_plot_func(pffunc);
 	  ipop.optimize();
-	  return ipop._solutions;
+	  return ipop.get_solutions();
 	}
 	case sepaBIPOP_CMAES:
 	{
@@ -162,7 +162,7 @@ namespace libcmaes
 	  bipop.set_progress_func(pfunc);
 	  bipop.set_plot_func(pffunc);
 	  bipop.optimize();
-	  return bipop._solutions;
+	  return bipop.get_solutions();
 	}
 	default:
 	return CMASolutions();

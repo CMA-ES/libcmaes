@@ -33,6 +33,8 @@ namespace libcmaes
   template <class TBoundStrategy=NoBoundStrategy,class TScalingStrategy=NoScalingStrategy>
     class GenoPheno
     {
+      friend class CMASolutions;
+      
     public:
     GenoPheno()
     :_id(true)
@@ -234,7 +236,8 @@ namespace libcmaes
 	}
       else return gen;
     }
-    
+
+    private:
     TBoundStrategy _boundstrategy;
     TransFunc _genof;
     TransFunc _phenof;

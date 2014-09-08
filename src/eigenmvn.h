@@ -80,6 +80,10 @@ namespace Eigen {
     bool _use_cholesky;
 
   public:
+    void set_covar(const Matrix<Scalar,Dynamic,Dynamic> &covar) { _covar = covar; }
+    void set_transform(const Matrix<Scalar,Dynamic,Dynamic> &transform) { _transform = transform; }
+    
+  private:
     Matrix<Scalar,Dynamic,Dynamic> _covar;
     Matrix<Scalar,Dynamic,Dynamic> _transform;
     

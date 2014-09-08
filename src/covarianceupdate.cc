@@ -33,7 +33,7 @@ namespace libcmaes
     // compute mean, Eq. (2)
     dVec xmean = dVec::Zero(parameters._dim);
     for (int i=0;i<parameters._mu;i++)
-      xmean += parameters._weights[i] * solutions._candidates.at(i)._x;
+      xmean += parameters._weights[i] * solutions._candidates.at(i).get_x_dvec();
     
     // reusable variables.
     dVec diffxmean = 1.0/solutions._sigma * (xmean-solutions._xmean); // (m^{t+1}-m^t)/sigma^t
@@ -68,7 +68,7 @@ namespace libcmaes
     else wdiff = dMat::Zero(parameters._dim,1);
     for (int i=0;i<parameters._mu;i++)
       {
-	dVec difftmp = solutions._candidates.at(i)._x - solutions._xmean;
+	dVec difftmp = solutions._candidates.at(i).get_x_dvec() - solutions._xmean;
 	if (!parameters._sep)
 	  wdiff += parameters._weights[i] * (difftmp*difftmp.transpose());
 	else wdiff += parameters._weights[i] * (difftmp.cwiseProduct(difftmp));

@@ -54,12 +54,12 @@ public:
     // custom eval.
     for (int r=0;r<candidates.cols();r++)
       {
-	_solutions._candidates.at(r)._x = candidates.col(r);
+	_solutions.get_candidate(r).set_x(candidates.col(r));
 	if (phenocandidates.size()) // if candidates in phenotype space are given
-	  _solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
-	else _solutions._candidates.at(r)._fvalue = _func(candidates.col(r).data(),candidates.rows());
+	  _solutions.get_candidate(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
+	else _solutions.get_candidate(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
 	
-	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
+	//std::cerr << "candidate x: " << _solutions.get_candidate(r).get_x_dvec().transpose() << std::endl;
       }
     update_fevals(candidates.cols());
   }
@@ -93,5 +93,5 @@ int main(int argc, char *argv[])
       optim.tell();
       optim.inc_iter(); // important step: signals next iteration.
     }
-  std::cout << optim._solutions << std::endl;
+  std::cout << optim.get_solutions() << std::endl;
 }

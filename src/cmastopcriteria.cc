@@ -91,9 +91,9 @@ namespace libcmaes
       {
 	if (cmap._ftarget != std::numeric_limits<double>::infinity())
 	  {
-	    if (cmas.best_candidate()._fvalue <= cmap._ftarget)
+	    if (cmas.best_candidate().get_fvalue() <= cmap._ftarget)
 	      {
-		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate()._fvalue << " / ftarget=" << cmap._ftarget << std::endl;
+		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate().get_fvalue() << " / ftarget=" << cmap._ftarget << std::endl;
 		return FTARGET;
 	      }
 	  }
@@ -111,7 +111,7 @@ namespace libcmaes
 	std::pair<double,double> frange(std::numeric_limits<double>::max(),-std::numeric_limits<double>::max());
 	for (int i=0;i<histlength;i++)
 	  {
-	    double val = cmas._best_candidates_hist.at(histsize-1-i)._fvalue;
+	    double val = cmas._best_candidates_hist.at(histsize-1-i).get_fvalue();
 	    frange.first = std::min(val,frange.first);
 	    frange.second = std::max(val,frange.second);
 	  }
@@ -134,8 +134,8 @@ namespace libcmaes
 	int c = 0;
 	for (int i=0;i<histlength;i++)
 	  {
-	    if (cmas._best_candidates_hist.at(histsize-1-i)._fvalue
-		== cmas._k_best_candidates_hist.at(histsize-1-i)._fvalue)
+	    if (cmas._best_candidates_hist.at(histsize-1-i).get_fvalue()
+		== cmas._k_best_candidates_hist.at(histsize-1-i).get_fvalue())
 	      c++;
 	  }
 	if (c > histlength / 3.0)
