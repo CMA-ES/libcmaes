@@ -172,6 +172,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns reference to error covariance matrix
+     * @return error covariance matrix
+     */
+    inline const dMat& cov_ref() const
+    {
+      return _cov;
+    }
+    
+    /**
      * \brief returns pointer to covariance matrix array
      * @return pointer to covariance matrix array
      */
@@ -189,6 +198,15 @@ namespace libcmaes
       return _sepcov;
     }
 
+    /**
+     * \brief returns reference to separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
+     * @return error covariance diagonal vector
+     */
+    inline const dMat& sepcov_ref() const
+    {
+      return _sepcov;
+    }
+    
     /**
      * \brief returns pointer to covariance diagnoal vector
      * @return pointer to covariance diagonal array
@@ -252,6 +270,15 @@ namespace libcmaes
       return _niter;
     }
 
+    /**
+     * \brief returns current budget (number of objective function calls)
+     * @return number of objective function calls
+     */
+    inline int nevals() const
+    {
+      return _nevals;
+    }
+    
     /**
      * \brief returns current minimal eigen value
      * @return minimal eigen value
