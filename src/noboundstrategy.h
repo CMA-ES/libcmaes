@@ -46,14 +46,14 @@ namespace libcmaes
 	(void)pubounds;
 	(void)dim;
       }; // empty constructor with signature.
-
+    
     ~NoBoundStrategy() {};
 
     void to_f_representation(const dVec &x, dVec &y) const
     {
       (void)x;
       (void)y;
-    };
+    }
 
     double getLBound(const int &k) const { (void)k;return -std::numeric_limits<double>::max(); }
     double getUBound(const int &k) const { (void)k;return std::numeric_limits<double>::max(); }

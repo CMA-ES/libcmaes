@@ -53,6 +53,11 @@ namespace libcmaes
     }
 
       /**
+       * \brief dummy constructor
+       */
+      CMAStrategy();
+    
+      /**
        * \brief constructor.
        * @param func objective function to minimize
        * @param parameters stochastic search parameters
@@ -105,7 +110,7 @@ namespace libcmaes
        */
       void plot();
     
-    private:
+    protected:
       EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
       std::ofstream *_fplotstream = nullptr; /**< plotting file stream, not in parameters because of copy-constructor hell. */

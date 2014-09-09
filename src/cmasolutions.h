@@ -39,11 +39,21 @@ namespace libcmaes
    */
   class CMASolutions
   {
+    template <class U, class V> friend class CMAStrategy;
+    template <class U, class V, class W> friend class ESOptimizer;
+    template <class U, class V, class W> friend class ESOStrategy;
+    template <class U> friend class CMAStopCriteria;
+    template <class U, class V> friend class IPOPCMAStrategy;
+    template <class U, class V> friend class BIPOPCMAStrategy;
+    friend class CovarianceUpdate;
+    friend class ACovarianceUpdate;
+    template <class U> friend class errstats;
+    
   public:
     /**
      * \brief dummy constructor.
      */
-    CMASolutions() {};
+    CMASolutions() {}
 
     /**
      * \brief initializes solutions from stochastic optimization parameters.
@@ -60,7 +70,7 @@ namespace libcmaes
     void sort_candidates()
     {
       std::sort(_candidates.begin(),_candidates.end(),
-		[](Candidate const &c1, Candidate const &c2){return c1._fvalue < c2._fvalue;});
+		[](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() < c2.get_fvalue();});
     }
 
     /**
@@ -84,16 +94,25 @@ namespace libcmaes
      * @return currentbest candidate
      * @see CMASolutions::sort_candidates
      */
-    Candidate best_candidate() const
+    inline Candidate best_candidate() const
     {
       return _best_candidates_hist.back();
     }
 
     /**
+     * \brief get a reference to the r-th candidate in current set
+     * @param r candidate position
+     */
+    inline Candidate& get_candidate(const int &r)
+      {
+	return _candidates.at(r);
+      }
+    
+    /**
      * \brief number of candidate solutions.
      * @return current number of solution candidates.
      */
-    int size() const
+    inline int size() const
     {
       return _candidates.size();
     }
@@ -126,10 +145,19 @@ namespace libcmaes
     }
 
     /**
+     * \brief return problem dimension.
+     * @return problem dimension
+     */
+    inline int dim() const
+    {
+      return _xmean.size();
+    }
+    
+    /**
      * \brief returns expected distance to minimum.
      * @return edm
      */
-    double edm() const
+    inline double edm() const
     {
       return _edm;
     }
@@ -138,25 +166,43 @@ namespace libcmaes
      * \brief returns error covariance matrix
      * @return error covariance matrix
      */
-    dMat cov() const
+    inline dMat cov() const
     {
       return _cov;
     }
 
     /**
+     * \brief returns pointer to covariance matrix array
+     * @return pointer to covariance matrix array
+     */
+    inline const double* cov_data() const
+    {
+      return _cov.data();
+    }
+    
+    /**
      * \brief returns separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
      * @return error covariance diagonal vector
      */
-    dMat sepcov() const
+    inline dMat sepcov() const
     {
       return _sepcov;
     }
 
     /**
+     * \brief returns pointer to covariance diagnoal vector
+     * @return pointer to covariance diagonal array
+     */
+    inline const double* sepcov_data() const
+    {
+      return _sepcov.data();
+    }
+    
+    /**
      * \brief returns current value of step-size sigma
      * @return current step-size
      */
-    double sigma() const
+    inline double sigma() const
     {
       return _sigma;
     }
@@ -165,7 +211,7 @@ namespace libcmaes
      * \brief returns current distribution's mean in parameter space
      * @return mean
      */
-    dVec xmean() const
+    inline dVec xmean() const
     {
       return _xmean;
     }
@@ -174,7 +220,7 @@ namespace libcmaes
      * \brief returns current optimization status.
      * @return status
      */
-    int run_status() const
+    inline int run_status() const
     {
       return _run_status;
     }
@@ -183,18 +229,54 @@ namespace libcmaes
      * \brief returns currently elapsed time spent on optimization
      * @return time spent on optimization
      */
-    int elapsed_time() const
+    inline int elapsed_time() const
     {
       return _elapsed_time;
     }
 
     /**
+     * \brief returns time spent on last iteration
+     * @return time spent on last iteration
+     */
+    inline int elapsed_last_iter() const
+    {
+      return _elapsed_last_iter;
+    }
+    
+    /**
      * \brief returns current number of iterations
      * @return number of iterations
      */
-    int niter() const
+    inline int niter() const
     {
       return _niter;
+    }
+
+    /**
+     * \brief returns current minimal eigen value
+     * @return minimal eigen value
+     */
+    inline double min_eigenv() const
+    {
+      return _min_eigenv;
+    }
+
+    /**
+     * \brief returns current maximal eigen value
+     * @return maximal eigen value
+     */
+    inline double max_eigenv() const
+    {
+      return _max_eigenv;
+    }
+
+    /**
+     * \brief returns whether the last update is lazy
+     * @return whether the last update is lazy
+     */
+    inline bool updated_eigen() const
+    {
+      return _updated_eigen;
     }
     
     /**
@@ -205,6 +287,7 @@ namespace libcmaes
     std::ostream& print(std::ostream &out,
 			const int &verb_level=0) const;
 
+  private:
     dMat _cov; /**< covariance matrix. */
     dMat _csqinv; /** inverse root square of covariance matrix. */
     dMat _sepcov;

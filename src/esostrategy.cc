@@ -69,10 +69,10 @@ namespace libcmaes
 #pragma omp parallel for if (_parameters._mt_feval)
     for (int r=0;r<candidates.cols();r++)
       {
-	_solutions._candidates.at(r)._x = candidates.col(r);
+	_solutions._candidates.at(r).set_x(candidates.col(r));
 	if (phenocandidates.size())
-	  _solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
-	else _solutions._candidates.at(r)._fvalue = _func(candidates.col(r).data(),candidates.rows());
+	  _solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
+	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }

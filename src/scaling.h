@@ -36,6 +36,9 @@ namespace libcmaes
 
   class NoScalingStrategy
   {
+    friend class CMASolutions;
+    template <class U, class V> friend class GenoPheno;
+    
   public:
     NoScalingStrategy() {}
 
@@ -47,14 +50,7 @@ namespace libcmaes
 	(void)ubounds;
 	(void)dim;
       }
-
-    NoScalingStrategy(const dVec &scaling,
-		      const dVec &shift)
-      {
-	(void)scaling;
-	(void)shift;
-      }
-
+    
     ~NoScalingStrategy() {}
 
     void scale_to_internal(dVec &x,
@@ -69,6 +65,7 @@ namespace libcmaes
       y = x;
     }
 
+  private:
     double _intmin = -std::numeric_limits<double>::max();  /**< default internal min bound. */
     double _intmax = std::numeric_limits<double>::max();  /**< default internal max bound. */
     bool _id = true;
@@ -76,6 +73,9 @@ namespace libcmaes
   
   class linScalingStrategy
   {
+    friend class CMASolutions;
+    template <class U, class V> friend class GenoPheno;
+    
   public:
     linScalingStrategy() // identity scaling
       :_scaling(dVec::Constant(1,1.0)),_shift(dVec::Zero(1)),_id(true)
@@ -125,6 +125,9 @@ namespace libcmaes
       y = y.cwiseQuotient(_scaling);
     }
 
+    bool is_id() const { return _id; }
+    
+  private:
     double _intmin = 0.0;  /**< default internal min bound. */
     double _intmax = 10.0;  /**< default internal max bound. */
     dVec _scaling;

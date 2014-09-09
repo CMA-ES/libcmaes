@@ -71,6 +71,7 @@ namespace libcmaes
      */
     int stop(const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas) const;
 
+  private:
     std::map<int,StopCriteriaFunc<TGenoPheno> > _scriteria; /**< the set of predefined criteria, with priorities. */
     bool _active; /**< whether these termination criteria are active. */
   };
