@@ -104,11 +104,11 @@ int main(int argc, char *argv[])
   double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
   CMAParameters<> cmaparams(dim,&x0.front(),sigma);
-  //cmaparams._algo = BIPOP_CMAES;
+  //cmaparams.set_algo(BIPOP_CMAES);
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
-  return cmasols._run_status;
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  return cmasols.run_status();
 }
 ```
 

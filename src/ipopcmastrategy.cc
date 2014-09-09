@@ -92,7 +92,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   void IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::capture_best_solution(CMASolutions &best_run)
   {
-    if (best_run._candidates.empty() || CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions.best_candidate()._fvalue < best_run.best_candidate()._fvalue)
+    if (best_run._candidates.empty() || CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions.best_candidate().get_fvalue() < best_run.best_candidate().get_fvalue())
       best_run = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions;
   }
 

@@ -37,7 +37,7 @@ namespace libcmaes
      * \brief empty constructor.
      */
   Candidate():
-    _fvalue(0.0) {};
+    _fvalue(0.0) {}
     
     /**
      * \brief constructor.
@@ -47,25 +47,54 @@ namespace libcmaes
   Candidate(const double &fvalue,
 	    const dVec &x)
     :_fvalue(fvalue),_x(x)
-    {};
+    {}
 
-  ~Candidate() {};
+  ~Candidate() {}
 
-  double get_fvalue() const { return _fvalue; }
+  /**
+   * \brief set candidate's function value.
+   * @param fval function value
+   */
+  inline void set_fvalue(const double &fval) { _fvalue = fval; }
 
-  dVec get_x_dvec() const { return _x; }
+  /**
+   * \brief get function value of this candidate.
+   * @return function value
+   */
+  inline double get_fvalue() const { return _fvalue; }
 
-  const double* get_x() const { return _x.data(); }
+  /**
+   * \brief sets parameter vector of this candidate.
+   * @param x parameter vector
+   */
+  inline void set_x(const dVec &x) { _x = x; }
+  
+  /**
+   * \brief get parameter vector of this candidate in Eigen vector format.
+   * @return parameter vector in Eigen vector format
+   */
+  inline dVec get_x_dvec() const { return _x; }
 
+  /**
+   * \brief get parameter vector of this candidate as array.
+   * @return parameter vector as array
+   */
+  inline const double* get_x() const { return _x.data(); }
+
+  /**
+   * \brief get pheno transform of parameter vector of this candidate in Eigen vector format.
+   * @return pheno transform of parameter vector in Eigen vector format
+   */
   template<class TGenoPheno>
-    dVec get_x_pheno(const CMAParameters<TGenoPheno> &p) const
+    dVec get_x_pheno_dvec(const CMAParameters<TGenoPheno> &p) const
     {
       dVec gx = p._gp.pheno(_x);
       return gx;
     }
   
-  double _fvalue; /**< function value. */
-  dVec _x; /**< function parameter vector. */
+  private:
+   double _fvalue; /**< function value. */
+   dVec _x; /**< function parameter vector. */
   };
 
 }

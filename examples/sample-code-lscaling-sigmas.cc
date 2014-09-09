@@ -24,31 +24,21 @@
 
 using namespace libcmaes;
 
-FitFunc rosenbrock = [](const double *x, const int N)
+FitFunc fsphere = [](const double *x, const int N)
 {
   double val = 0.0;
-  for (int i=0;i<N-1;i++)
-    {
-      val += 100.0*pow((x[i+1]-x[i]*x[i]),2) + pow((x[i]-1.0),2);
-    }
+  for (int i=0;i<N;i++)
+    val += x[i]*x[i];
   return val;
-};
-
-PlotFunc<CMAParameters<>,CMASolutions> plotf = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
-{
-  fplotstream << "kappa=" << cmasols.max_eigenv() / cmasols.min_eigenv() << std::endl; // storing covariance matrix condition number to file.
-  return 0;
 };
 
 int main(int argc, char *argv[])
 {
-  int dim = 20; // problem dimensions.
-  std::vector<double> x0(dim,10.0);
-  double sigma = 0.1;
-  //int lambda = 100; // offsprings at each generation.
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
-  cmaparams.set_fplot("pffunc.dat"); // DON'T MISS: mandatory output file name.
-  CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,plotf);
+  std::vector<double> x0 = {1.0,2.7,400.0};
+  std::vector<double> sigmas = {1e-3,0.57,2.3};
+  CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>> cmaparams(x0,sigmas);
+  cmaparams.set_algo(aCMAES);
+  CMASolutions cmasols = cmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
   std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   return cmasols.run_status();

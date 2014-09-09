@@ -37,11 +37,20 @@ namespace libcmaes
    */
   class CMASolutions
   {
+    template <class U, class V> friend class CMAStrategy;
+    template <class U, class V> friend class ESOptimizer;
+    template <class U, class V, class W> friend class ESOStrategy;
+    template <class U> friend class CMAStopCriteria;
+    template <class U, class V> friend class IPOPCMAStrategy;
+    template <class U, class V> friend class BIPOPCMAStrategy;
+    friend class CovarianceUpdate;
+    friend class ACovarianceUpdate;
+    
   public:
     /**
      * \brief dummy constructor.
      */
-    CMASolutions() {};
+    CMASolutions() {}
 
     /**
      * \brief initializes solutions from stochastic optimization parameters.
@@ -58,7 +67,7 @@ namespace libcmaes
     void sort_candidates()
     {
       std::sort(_candidates.begin(),_candidates.end(),
-		[](Candidate const &c1, Candidate const &c2){return c1._fvalue < c2._fvalue;});
+		[](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() < c2.get_fvalue();});
     }
 
     /**
@@ -87,6 +96,15 @@ namespace libcmaes
       return _best_candidates_hist.back();
     }
 
+    /**
+     * \brief get a reference to the r-th candidate in current set
+     * @param r candidate position
+     */
+    Candidate& get_candidate(const int &r)
+      {
+	return _candidates.at(r);
+      }
+    
     /**
      * \brief number of candidate solutions.
      * @return current number of solution candidates.
@@ -160,12 +178,39 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns time spent on last iteration
+     * @return time spent on last iteration
+     */
+    int elapsed_last_iter() const
+    {
+      return _elapsed_last_iter;
+    }
+    
+    /**
      * \brief returns current number of iterations
      * @return number of iterations
      */
     int niter() const
     {
       return _niter;
+    }
+
+    /**
+     * \brief returns current minimal eigen value
+     * @return minimal eigen value
+     */
+    double min_eigenv() const
+    {
+      return _min_eigenv;
+    }
+
+    /**
+     * \brief returns current maximal eigen value
+     * @return maximal eigen value
+     */
+    double max_eigenv() const
+    {
+      return _max_eigenv;
     }
     
     /**
@@ -176,12 +221,13 @@ namespace libcmaes
     std::ostream& print(std::ostream &out,
 			const int &verb_level=0) const;
 
+  private:
     dMat _cov; /**< covariance matrix. */
     dMat _csqinv; /** inverse root square of covariance matrix. */
     dMat _sepcov;
     dMat _sepcsqinv;
     dVec _xmean; /**< distribution mean. */
-    dVec _psigma; /**< cummulation for sigma. */
+    dVec _psigma; /**< cumulation for sigma. */
     dVec _pc; /**< cumulation for covariance. */
     short _hsig = 1; /**< 0 or 1. */
     double _sigma; /**< step size. */

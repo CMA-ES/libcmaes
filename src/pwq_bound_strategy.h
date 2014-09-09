@@ -43,8 +43,11 @@ namespace libcmaes
 
     double getLBound(const int &k) const { return _lbounds[k]; }
     double getUBound(const int &k) const { return _ubounds[k]; }
+
+    double getAL(const int &k) const { return _al[k]; }
+    double getAU(const int &k) const { return _au[k]; }
     
-  public:
+  private:
     dVec _lbounds;
     dVec _ubounds;
     dVec _al;

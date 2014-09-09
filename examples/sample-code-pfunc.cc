@@ -36,8 +36,8 @@ FitFunc rosenbrock = [](const double *x, const int N)
 
 ProgressFunc<CMAParameters<>,CMASolutions> select_time = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
-  if (cmasols._niter % 100 == 0)
-    std::cerr << cmasols._elapsed_last_iter << std::endl;
+  if (cmasols.niter() % 100 == 0)
+    std::cerr << cmasols.elapsed_last_iter() << std::endl;
   return 0;
 };
 
@@ -51,6 +51,6 @@ int main(int argc, char *argv[])
   //cmaparams._algo = BIPOP_CMAES;
   CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,select_time);
   std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
-  return cmasols._run_status;
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  return cmasols.run_status();
 }

@@ -423,40 +423,40 @@ CMASolutions cmaes_opt()
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
-  cmaparams._fplot = FLAGS_fplot;
-  cmaparams._lazy_update = FLAGS_lazy_update;
-  cmaparams._quiet = FLAGS_quiet;
-  cmaparams._with_gradient = FLAGS_with_gradient || FLAGS_with_num_gradient;
-  cmaparams._with_edm = FLAGS_with_edm;
-  cmaparams._mt_feval = FLAGS_mt;
+  cmaparams.set_fplot(FLAGS_fplot);
+  cmaparams.set_lazy_update(FLAGS_lazy_update);
+  cmaparams.set_quiet(FLAGS_quiet);
+  cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
+  cmaparams.set_edm(FLAGS_with_edm);
+  cmaparams.set_mt_feval(FLAGS_mt);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
     cmaparams.set_noisy();
   if (FLAGS_alg == "cmaes")
-    cmaparams._algo = CMAES_DEFAULT;
+    cmaparams.set_algo(CMAES_DEFAULT);
   else if (FLAGS_alg == "ipop")
-    cmaparams._algo = IPOP_CMAES;
+    cmaparams.set_algo(IPOP_CMAES);
   else if (FLAGS_alg == "bipop")
-    cmaparams._algo = BIPOP_CMAES;
+    cmaparams.set_algo(BIPOP_CMAES);
   else if (FLAGS_alg == "acmaes")
-    cmaparams._algo = aCMAES;
+    cmaparams.set_algo(aCMAES);
   else if (FLAGS_alg == "aipop")
-    cmaparams._algo = aIPOP_CMAES;
+    cmaparams.set_algo(aIPOP_CMAES);
   else if (FLAGS_alg == "abipop")
-    cmaparams._algo = aBIPOP_CMAES;
+    cmaparams.set_algo(aBIPOP_CMAES);
   else if (FLAGS_alg == "sepcmaes")
-    cmaparams._algo = sepCMAES;
+    cmaparams.set_algo(sepCMAES);
   else if (FLAGS_alg == "sepipop")
-    cmaparams._algo = sepIPOP_CMAES;
+    cmaparams.set_algo(sepIPOP_CMAES);
   else if (FLAGS_alg == "sepbipop")
-    cmaparams._algo = sepBIPOP_CMAES;
+    cmaparams.set_algo(sepBIPOP_CMAES);
   else if (FLAGS_alg == "sepacmaes")
-    cmaparams._algo = sepaCMAES;
+    cmaparams.set_algo(sepaCMAES);
   else if (FLAGS_alg == "sepaipop")
-    cmaparams._algo = sepaIPOP_CMAES;
+    cmaparams.set_algo(sepaIPOP_CMAES);
   else if (FLAGS_alg == "sepabipop")
-    cmaparams._algo = sepaBIPOP_CMAES;
+    cmaparams.set_algo(sepaBIPOP_CMAES);
   else
     {
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
@@ -499,32 +499,32 @@ int main(int argc, char *argv[])
 	      ++mit;
 	      continue;
 	    }
-	  int dim = msols[(*mit).first]._x.rows();
+	  int dim = msols[(*mit).first].get_x_dvec().rows();
 	  std::vector<double> x0(dim,FLAGS_x0);
 	  CMAParameters<> cmaparams(dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
-	  cmaparams._max_iter = FLAGS_max_iter;
+	  cmaparams.set_max_iter(FLAGS_max_iter);
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;
-	  cmaparams._quiet = true;
-	  cmaparams._lazy_update = FLAGS_lazy_update;
+	  cmaparams.set_quiet(true);
+	  cmaparams.set_lazy_update(FLAGS_lazy_update);
 	  if (FLAGS_alg == "cmaes")
-	    cmaparams._algo = CMAES_DEFAULT;
+	    cmaparams.set_algo(CMAES_DEFAULT);
 	  else if (FLAGS_alg == "ipop")
-	    cmaparams._algo = IPOP_CMAES;
+	    cmaparams.set_algo(IPOP_CMAES);
 	  else if (FLAGS_alg == "bipop")
-	    cmaparams._algo = BIPOP_CMAES;
+	    cmaparams.set_algo(BIPOP_CMAES);
 	  else if (FLAGS_alg == "acmaes")
-	    cmaparams._algo = aCMAES;
+	    cmaparams.set_algo(aCMAES);
 	  else if (FLAGS_alg == "aipop")
-	    cmaparams._algo = aIPOP_CMAES;
+	    cmaparams.set_algo(aIPOP_CMAES);
 	  else if (FLAGS_alg == "abipop")
-	    cmaparams._algo = aBIPOP_CMAES;
+	    cmaparams.set_algo(aBIPOP_CMAES);
 	  CMASolutions cmasols = cmaes<>(mfuncs[(*mit).first],cmaparams);
 	  Candidate c = cmasols.best_candidate();
 	  //TODO: check on solution in x space.
-	  if (compEp(c._fvalue,(*fmit).second._fvalue,FLAGS_epsilon))
+	  if (compEp(c.get_fvalue(),(*fmit).second.get_fvalue(),FLAGS_epsilon))
 	    LOG(INFO) << (*mit).first << " -- OK\n";
-	  else LOG(INFO) << (*mit).first << " -- FAILED - f-value=" << c._fvalue << " / expected f-value=" << (*fmit).second._fvalue << std::endl;
+	  else LOG(INFO) << (*mit).first << " -- FAILED - f-value=" << c.get_fvalue() << " / expected f-value=" << (*fmit).second.get_fvalue() << std::endl;
 	  ++mit;
 	}
       exit(1);
@@ -554,11 +554,11 @@ int main(int argc, char *argv[])
       LOG(ERROR) << "Unknown boundtype " << FLAGS_boundtype << std::endl;
       exit(-1);
     }
-  if (cmasols._run_status < 0)
-    LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
-  LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+  if (cmasols.run_status() < 0)
+    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
+  LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   LOG(INFO) << cmasols << std::endl;
   if (FLAGS_with_edm)
-    LOG(INFO) << "EDM=" << cmasols._edm << " / EDM/fm=" << cmasols._edm / cmasols.best_candidate()._fvalue << std::endl;
+    LOG(INFO) << "EDM=" << cmasols.edm() << " / EDM/fm=" << cmasols.edm() / cmasols.best_candidate().get_fvalue() << std::endl;
   //cmasols.print(std::cout,1);
  }

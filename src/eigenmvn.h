@@ -80,6 +80,10 @@ namespace Eigen {
     bool _use_cholesky;
 
   public:
+    void set_covar(const Matrix<Scalar,Dynamic,Dynamic> &covar) { _covar = covar; }
+    void set_transform(const Matrix<Scalar,Dynamic,Dynamic> &transform) { _transform = transform; }
+    
+  private:
     Matrix<Scalar,Dynamic,Dynamic> _covar;
     Matrix<Scalar,Dynamic,Dynamic> _transform;
     
@@ -92,7 +96,7 @@ namespace Eigen {
       :_use_cholesky(use_cholesky)
       {
 	randN.seed(seed);
-      };
+      }
   EigenMultivariateNormal(const Matrix<Scalar,Dynamic,1>& mean,const Matrix<Scalar,Dynamic,Dynamic>& covar,
 			  const bool &use_cholesky=false,const uint64_t &seed=std::mt19937::default_seed)
       :_use_cholesky(use_cholesky)

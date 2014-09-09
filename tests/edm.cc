@@ -56,13 +56,13 @@ int main(int argc, char *argv[])
 	{
 	  double lambda = lambdas.at(i);
 	  CMAParameters<> cmaparams(dim,&x0.front(),sigma,lambda);
-	  cmaparams._quiet = true;
+	  cmaparams.set_quiet(true);
 	  //cmaparams.set_ftarget(1e-8);
-	  //cmaparams._algo = aCMAES;
+	  //cmaparams.set_algo(aCMAES);
 	  ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> cmaes(fsphere,cmaparams);
 	  //cmaes.set_gradient_func(grad_fsphere);
 	  cmaes.optimize();
-	  std::cout << lambda << sep << cmaes._solutions._edm << sep << cmaes._solutions._edm /  cmaes._func(cmaes._solutions._xmean.data(),dim) << std::endl;
+	  std::cout << lambda << sep << cmaes.get_solutions().edm() << sep << cmaes.get_solutions().edm() /  cmaes.fitfunc(cmaes.get_solutions().xmean().data(),dim) << std::endl;
 	}
       ++s;
     }
