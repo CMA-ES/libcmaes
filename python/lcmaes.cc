@@ -81,23 +81,23 @@ CMAParameters<GenoPheno<NoBoundStrategy>> make_simple_parameters(const boost::py
 boost::python::list get_solution_xmean(const CMASolutions &s)
 {
   boost::python::list xmean;
-  for (int i=0;i<s._xmean.size();i++)
-    xmean.append(s._xmean(i));
+  for (int i=0;i<s.xmean().size();i++)
+    xmean.append(s.xmean()(i));
   return xmean;
 }
 
 boost::python::list get_candidate_x(const Candidate &c)
 {
   boost::python::list x;
-  for (int i=0;i<c._x.size();i++)
-    x.append(c._x(i));
+  for (int i=0;i<(int)c.get_x_size();i++)
+    x.append(c.get_x()[i]);
   return x;
 }
 
 PyObject* get_solution_cov_py(const CMASolutions &s)
 {
-  npy_intp shape[2] = {s._cov.rows(),s._cov.cols()};
-  PyObject* pyArray = PyArray_SimpleNewFromData(2, shape, NPY_DOUBLE, (double*)s._cov.data());
+  npy_intp shape[2] = {s.dim(),s.dim()};
+  PyObject* pyArray = PyArray_SimpleNewFromData(2, shape, NPY_DOUBLE, (double*)s.cov_data());
   return pyArray;
 }
 
@@ -110,8 +110,8 @@ boost::python::object get_solution_cov(const CMASolutions &s)
 
 PyObject* get_solution_sepcov_py(const CMASolutions &s)
 {
-  npy_intp shape[1] = {s._sepcov.size()};
-  PyObject* pyArray = PyArray_SimpleNewFromData(1, shape, NPY_DOUBLE, (double*)s._cov.data());
+  npy_intp shape[1] = {s.dim()};
+  PyObject* pyArray = PyArray_SimpleNewFromData(1, shape, NPY_DOUBLE, (double*)s.sepcov_data());
   return pyArray;
 }
 

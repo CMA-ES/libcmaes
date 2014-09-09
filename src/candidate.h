@@ -82,6 +82,12 @@ namespace libcmaes
   inline const double* get_x() const { return _x.data(); }
 
   /**
+   * \brief get x vector size
+   * @return x vector size
+   */
+  inline unsigned int get_x_size() const { return _x.size(); }
+  
+  /**
    * \brief get pheno transform of parameter vector of this candidate in Eigen vector format.
    * @return pheno transform of parameter vector in Eigen vector format
    */

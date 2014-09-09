@@ -115,6 +115,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief return problem dimension.
+     * @return problem dimension
+     */
+    int dim() const
+    {
+      return _xmean.size();
+    }
+    
+    /**
      * \brief returns expected distance to minimum.
      * @return edm
      */
@@ -133,6 +142,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns pointer to covariance matrix array
+     * @return pointer to covariance matrix array
+     */
+    inline const double* cov_data() const
+    {
+      return _cov.data();
+    }
+    
+    /**
      * \brief returns separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
      * @return error covariance diagonal vector
      */
@@ -141,6 +159,15 @@ namespace libcmaes
       return _sepcov;
     }
 
+    /**
+     * \brief returns pointer to covariance diagnoal vector
+     * @return pointer to covariance diagonal array
+     */
+    inline const double* sepcov_data() const
+    {
+      return _sepcov.data();
+    }
+    
     /**
      * \brief returns current value of step-size sigma
      * @return current step-size
