@@ -467,7 +467,7 @@ namespace libcmaes
       int _max_iter = -1; /**< max iterations. */
       int _max_fevals = -1; /**< max budget as number of function evaluations. */
       
-      bool _quiet = false; /**< quiet all outputs. */
+      bool _quiet = true; /**< quiet all outputs. */
       std::string _fplot = ""; /**< plotting file, if specified. */
       dVec _x0min; /**< initial mean vector min bound value for all components. */
       dVec _x0max; /**< initial mean vector max bound value for all components. */
