@@ -98,38 +98,38 @@ int main(int argc, char *argv[])
   /*if (FLAGS_x0 != std::numeric_limits<double>::min())
     cmaparams.set_x0(FLAGS_x0);*/
   if (FLAGS_alg == "cmaes")
-    cmaparams._algo = CMAES_DEFAULT;
+    cmaparams.set_algo(CMAES_DEFAULT);
   else if (FLAGS_alg == "ipop")
-    cmaparams._algo = IPOP_CMAES;
+    cmaparams.set_algo(IPOP_CMAES);
   else if (FLAGS_alg == "bipop")
-    cmaparams._algo = BIPOP_CMAES;
+    cmaparams.set_algo(BIPOP_CMAES);
   else if (FLAGS_alg == "acmaes")
-    cmaparams._algo = aCMAES;
+    cmaparams.set_algo(aCMAES);
   else if (FLAGS_alg == "aipop")
-    cmaparams._algo = aIPOP_CMAES;
+    cmaparams.set_algo(aIPOP_CMAES);
   else if (FLAGS_alg == "abipop")
-    cmaparams._algo = aBIPOP_CMAES;
+    cmaparams.set_algo(aBIPOP_CMAES);
   else if (FLAGS_alg == "sepcmaes")
-    cmaparams._algo = sepCMAES;
+    cmaparams.set_algo(sepCMAES);
   else if (FLAGS_alg == "sepipop")
-    cmaparams._algo = sepIPOP_CMAES;
+    cmaparams.set_algo(sepIPOP_CMAES);
   else if (FLAGS_alg == "sepbipop")
-    cmaparams._algo = sepBIPOP_CMAES;
+    cmaparams.set_algo(sepBIPOP_CMAES);
   else
     {
       std::cout << "unknown algorithm flavor " << FLAGS_alg << std::endl;
       exit(-1);
     }
   CMASolutions cmasols = cmaes<>(ff,cmaparams);
-  std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
 
-  if (cmasols._run_status >= 0 && FLAGS_le)
+  if (cmasols.run_status() >= 0 && FLAGS_le)
     {
-      std::cerr << "Now computing confidence intervals around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate()._fvalue + FLAGS_le_fup << ")\n";
+      std::cerr << "Now computing confidence intervals around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate().get_fvalue() + FLAGS_le_fup << ")\n";
       for (int k=0;k<dim;k++)
 	errstats<>::profile_likelihood(ff,cmaparams,cmasols,k,false,
 				       FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta);
     }
   std::cout << "best solution: " << cmasols << std::endl;
-  return cmasols._run_status;
+  return cmasols.run_status();
 }

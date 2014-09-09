@@ -44,14 +44,6 @@ namespace libcmaes
     class CMAStrategy : public ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >
     {
     public:
-    /**
-     * \brief dummy constructor.
-     */
-    CMAStrategy()
-    :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno>>()
-    {
-    }
-
       /**
        * \brief dummy constructor
        */

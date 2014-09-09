@@ -155,7 +155,7 @@ namespace libcmaes
     removeElement(_psigma,k);
     removeElement(_pc,k);
     for (size_t i=0;i<_candidates.size();i++)
-      removeElement(_candidates.at(i)._x,k);
+      removeElement(_candidates.at(i).get_x_dvec_ref(),k);
     _best_candidates_hist.clear();
     removeElement(_leigenvalues,k);
     removeRow(_leigenvectors,k);

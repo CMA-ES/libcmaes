@@ -237,6 +237,11 @@ namespace libcmaes
       else return gen;
     }
 
+    TBoundStrategy get_boundstrategy() const
+      {
+	return _boundstrategy;
+      }
+      
     private:
     TBoundStrategy _boundstrategy;
     TransFunc _genof;

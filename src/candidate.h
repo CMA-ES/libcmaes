@@ -76,11 +76,17 @@ namespace libcmaes
   inline dVec get_x_dvec() const { return _x; }
 
   /**
+   * \brief get reference parameter vector of this candidate in Eigen vector format.
+   * @return reference to parameter vector in Eigen vector format
+   */
+  inline dVec& get_x_dvec_ref() { return _x; }
+  
+  /**
    * \brief get parameter vector of this candidate as array.
    * @return parameter vector as array
    */
   inline const double* get_x() const { return _x.data(); }
-
+  
   /**
    * \brief get x vector size
    * @return x vector size
@@ -94,7 +100,7 @@ namespace libcmaes
   template<class TGenoPheno>
     dVec get_x_pheno_dvec(const CMAParameters<TGenoPheno> &p) const
     {
-      dVec gx = p._gp.pheno(_x);
+      dVec gx = p.get_gp().pheno(_x);
       return gx;
     }
   
