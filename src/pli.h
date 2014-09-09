@@ -72,6 +72,16 @@ namespace libcmaes
       _errmin = _min - _xm(_samplesize,_k);
       _errmax = _max - _xm(_samplesize,_k);
     }
+
+    inline double getErrMin() const
+    {
+      return _errmin;
+    }
+
+    inline double getErrMax() const
+    {
+      return _errmax;
+    }
     
   private:
     int _k = -1;
