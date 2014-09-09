@@ -143,7 +143,7 @@ namespace libcmaes
        * \brief returns lower bound on x0 vector
        * @return lower bound on x0
        */
-      dVec get_x0min() const
+      inline dVec get_x0min() const
       {
 	return _x0min;
       }
@@ -152,7 +152,7 @@ namespace libcmaes
        * \brief returns upper bound on x0 vector
        * @return upper bound on x0
        */
-      dVec get_x0max() const
+      inline dVec get_x0max() const
       {
 	return _x0max;
       }
@@ -191,7 +191,7 @@ namespace libcmaes
        * \brief returns maximum number of iterations
        * @return max number of iterations allowed
        */
-      int get_max_iter() const
+      inline int get_max_iter() const
       {
 	return _max_iter;
       }
@@ -209,7 +209,7 @@ namespace libcmaes
        * \brief returns maximum budget of objective function calls
        * @return max number of objective function evaluations
        */
-      int get_max_fevals() const
+      inline int get_max_fevals() const
       {
 	return _max_fevals;
       }
@@ -235,7 +235,7 @@ namespace libcmaes
        * \brief returns objective function target value.
        * @return objective function target value
        */
-      double get_ftarget() const
+      inline double get_ftarget() const
       {
 	return _ftarget;
       }
@@ -255,7 +255,7 @@ namespace libcmaes
        * \brief returns random generator's seed.
        * @return integer seed
        */
-      int get_seed() const
+      inline int get_seed() const
       {
 	return _seed;
       }
@@ -272,7 +272,7 @@ namespace libcmaes
        * \brief returns function tolerance
        * @return function tolerance
        */
-      double get_ftolerance() const
+      inline double get_ftolerance() const
       {
 	return _ftolerance;
       }
@@ -281,7 +281,10 @@ namespace libcmaes
        * \brief sets parameter tolerance as stopping criteria for TolX.
        * @param v value of the parameter tolerance.
        */
-      void set_xtolerance(const double &v) { _xtol = v; }
+      void set_xtolerance(const double &v)
+      {
+	_xtol = v;
+      }
       
       /**
        * \brief returns parameter tolerance
@@ -296,7 +299,7 @@ namespace libcmaes
        * \brief returns lambda, number of offsprings per generation
        * @return lambda
        */
-      int lambda() const
+      inline int lambda() const
       {
 	return _lambda;
       }
@@ -305,7 +308,7 @@ namespace libcmaes
        * \brief returns the problem's dimension
        * @return dimensions
        */
-      int dim() const
+      inline int dim() const
       {
 	return _dim;
       }
@@ -323,7 +326,7 @@ namespace libcmaes
        * \brief returns whether the quiet mode is on.
        * @return quiet mode
        */
-      bool quiet() const
+      inline bool quiet() const
       {
 	return _quiet;
       }
@@ -353,7 +356,7 @@ namespace libcmaes
        * \brief returns which algorithm is set for the optimization at hand.
        * @return algorithm integer code
        */
-      int get_algo() const
+      inline int get_algo() const
       {
 	return _algo;
       }
@@ -371,7 +374,7 @@ namespace libcmaes
        * \brief returns the current genotype/phenotype transform object.
        * @return GenoPheno object
        */
-      TGenoPheno get_gp() const
+      inline TGenoPheno get_gp() const
       {
 	return _gp;
       }
@@ -389,7 +392,7 @@ namespace libcmaes
        * \brief returns the current output filename.
        * @return output filename
        */
-      std::string get_fplot() const
+      inline std::string get_fplot() const
       {
 	return _fplot;
       }
@@ -408,7 +411,7 @@ namespace libcmaes
        * \brief returns whether the gradient injection scheme is activated.
        * @return with gradient
        */
-      bool get_gradient() const
+      inline bool get_gradient() const
       {
 	return _with_gradient;
       }
@@ -426,7 +429,7 @@ namespace libcmaes
        * \brief returns whether edm is activated.
        * @return edm
        */
-      bool get_edm() const
+      inline bool get_edm() const
       {
 	return _with_edm;
       }
@@ -444,7 +447,7 @@ namespace libcmaes
        * \brief resturns whether the parallel evaluation of objective function is activated
        * @return activation status
        */
-      bool get_mt_feval() const
+      inline bool get_mt_feval() const
       {
 	return _mt_feval;
       }
