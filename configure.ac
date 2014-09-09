@@ -64,6 +64,7 @@ else
   GFLAGS_LIBS=
 fi
 AC_SUBST(GFLAGS_LIBS)
+AM_CONDITIONAL(HAVE_GFLAGS, test x"$ac_cv_have_libgflags" = x"1")
 
 # Check if there is google-glog library installed.
 AC_ARG_ENABLE(gglog,
