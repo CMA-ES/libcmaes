@@ -10,3 +10,6 @@ libcmaesinclude_HEADERS = cmaes.h eo_matrix.h cmastrategy.h esoptimizer.h esostr
 
 AM_CPPFLAGS=-I$(EIGEN3_INC)
 AM_CXXFLAGS=-Wall -Wextra -g -fopenmp
+
+uninstall-hook:
+	if test -d ${libcmaesincludedir}; then rm -rf ${libcmaesincludedir}; fi
