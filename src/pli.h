@@ -32,6 +32,9 @@ namespace libcmaes
    */
   class pli
   {
+    friend class CMASolutions;
+    template <class U> friend class errstats;
+    
   public:
   pli() {}
   pli(const int &k, const int &samplesize, const int &dim,
@@ -69,7 +72,8 @@ namespace libcmaes
       _errmin = _min - _xm(_samplesize,_k);
       _errmax = _max - _xm(_samplesize,_k);
     }
-	
+    
+  private:
     int _k = -1;
     int _samplesize = 0;
     dVec _fvaluem;
