@@ -14,7 +14,7 @@ Current features include:
 - some operations benefit from multicores;
 - support for objective function gradient, when available;
 - a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
-
+- python bindings
 
 Documentation:
 
@@ -26,7 +26,8 @@ Dependencies:
 - [eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) for all matrix operations;
 - [glog](https://code.google.com/p/google-glog/) for logging events and debug (optional);
 - [gflags](https://code.google.com/p/gflags/) for command line parsing (optional);
-- [gtest](https://code.google.com/p/googletest/) for unit testing (optional).
+- [gtest](https://code.google.com/p/googletest/) for unit testing (optional);
+- [libboost-python](http://www.boost.org/doc/libs/1_56_0/libs/python/doc/) for Python bindings (optional).
 
 Implementation:
 The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithms described in (2) and (6).
