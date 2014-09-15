@@ -444,7 +444,7 @@ namespace libcmaes
       }
       
       /**
-       * \brief resturns whether the parallel evaluation of objective function is activated
+       * \brief returns whether the parallel evaluation of objective function is activated
        * @return activation status
        */
       inline bool get_mt_feval() const
@@ -459,6 +459,24 @@ namespace libcmaes
       void set_max_hist(const int &m)
       {
 	_max_hist = m;
+      }
+
+      /**
+       * \brief active internal maximization scheme (simply returns -f instead of f)
+       * @param maximize whether to maximize instead of minimizing
+       */
+      void set_maximize(const bool &maximize)
+      {
+	_maximize = maximize;
+      }
+
+      /**
+       * \brief returns whether the maximization mode is enabled
+       * @return true if maximizing
+       */
+      bool get_maximize() const
+      {
+	return _maximize;
       }
       
     protected:
@@ -487,6 +505,8 @@ namespace libcmaes
       
       bool _mt_feval = false; /**< whether to force multithreaded (i.e. parallel) function evaluations. */ 
       int _max_hist = 100; /**< max size of the history, keeps memory requirements fixed. */
+
+      bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
       
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
     };
