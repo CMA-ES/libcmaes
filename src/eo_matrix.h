@@ -22,7 +22,7 @@
 #ifndef IO_MATRIX_H
 #define IO_MATRIX_H
 
-#include <Eigen/Sparse>
+#include <Eigen/Dense>
 #include <stdlib.h>
 
 typedef Eigen::MatrixXd dMat; // declares a column-major non-sparse matrix type of double
