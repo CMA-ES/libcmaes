@@ -49,7 +49,7 @@ namespace libcmaes
     if (!cmaparams._sep)
       fplotstream << cmasols._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
     else fplotstream << cmasols._sepcov.cwiseSqrt().transpose() << sep;
-    fplotstream << cmasols._xmean.transpose();
+    fplotstream << cmaparams._gp.pheno(cmasols._xmean).transpose();
     fplotstream << sep << cmasols._elapsed_last_iter;
 #ifdef HAVE_DEBUG
     fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
@@ -82,7 +82,7 @@ namespace libcmaes
 	if (!cmaparams._sep)
 	  fplotstream << cmasols._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
 	else fplotstream << cmasols._sepcov.cwiseSqrt().transpose() << sep;
-	fplotstream << cmasols._xmean.transpose();
+	fplotstream << cmaparams._gp.pheno(cmasols._xmean).transpose();
 	fplotstream << sep << cmasols._elapsed_last_iter;
 #ifdef HAVE_DEBUG
 	fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
