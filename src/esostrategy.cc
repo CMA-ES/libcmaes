@@ -38,6 +38,11 @@ namespace libcmaes
 								 TParameters &parameters)
     :_func(func),_nevals(0),_niter(0),_parameters(parameters)
   {
+    if (parameters._maximize)
+      {
+	_funcaux = _func;
+	_func = [&](const double *x, const int N) { return -1.0*_funcaux(x,N); };
+      }
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
   }

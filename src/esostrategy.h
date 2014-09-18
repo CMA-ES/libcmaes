@@ -209,6 +209,7 @@ namespace libcmaes
     ProgressFunc<TParameters,TSolutions> _pfunc; /**< possibly custom progress function. */
     GradFunc _gfunc = nullptr; /**< gradient function, when available. */
     PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
+    FitFunc _funcaux;
   };
   
 }

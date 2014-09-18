@@ -23,7 +23,7 @@
 #define EO_MATRIX_H
 
 #include <algorithm>
-#include <Eigen/Sparse>
+#include <Eigen/Dense>
 #include <stdlib.h>
 
 typedef Eigen::MatrixXd dMat; // declares a column-major non-sparse matrix type of double
