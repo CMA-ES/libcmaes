@@ -48,6 +48,7 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      friend class Candidate;
       
     public:
       /**
