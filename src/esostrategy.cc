@@ -105,7 +105,8 @@ namespace libcmaes
     for (int i=0;i<_parameters._dim;i++)
       {
 	dVec ei1 = x;
-	ei1(i,0) += epsilon(i);
+	ei1(i,0) += epsilon(i); //TODO: beware of bounds ?
+	ei1(i,0) = std::min(ei1(i,0),_parameters.get_gp().get_boundstrategy().getUBound(i));
 	double gradi = (_func(ei1.data(),_parameters._dim) - fx)/epsilon(i);
 	vgradf(i,0) = gradi;
       }
