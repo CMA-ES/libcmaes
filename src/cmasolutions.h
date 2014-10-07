@@ -45,6 +45,8 @@ namespace libcmaes
     template <class U, class V> friend class BIPOPCMAStrategy;
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
+    template <class U, class V> friend class SimpleSurrogateStrategy;
+    template <class U, class V> friend class ACMSurrogateStrategy;
     
   public:
     /**
@@ -104,6 +106,14 @@ namespace libcmaes
       {
 	return _candidates.at(r);
       }
+
+    /**
+     * \brief get a reference to the full candidate set
+     */
+    inline std::vector<Candidate>& candidates()
+    {
+      return _candidates;
+    }
     
     /**
      * \brief number of candidate solutions.
@@ -151,7 +161,7 @@ namespace libcmaes
     }
     
     /**
-     * \brief returns separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
+     * \brief returns separable covariance diagonal matrix, only applicable to sep-CMA-ES algorithms.
      * @return error covariance diagonal vector
      */
     inline dMat sepcov() const
@@ -166,6 +176,24 @@ namespace libcmaes
     inline const double* sepcov_data() const
     {
       return _sepcov.data();
+    }
+
+    /**
+     * \brief returns inverse root square of covariance matrix
+     * @return square root of error covariance matrix
+     */
+    inline dMat csqinv() const
+    {
+      return _csqinv;
+    }
+
+    /**
+     * \brief returns inverse root square of separable covariance diagonal matrix, only applicable to sep-CMA-ES algorithms.
+     * @return square root of error covariance diagonal matrix
+     */
+    inline dMat sepcsqinv() const
+    {
+      return _sepcsqinv;
     }
     
     /**
@@ -186,6 +214,15 @@ namespace libcmaes
       return _xmean;
     }
 
+    /**
+     * \brief sets the current distributions' mean in parameter space
+     * @param xmean mean vector
+     */
+    inline void set_xmean(const dVec &xmean)
+    {
+      _xmean = xmean;
+    }
+    
     /**
      * \brief returns current optimization status.
      * @return status
@@ -238,6 +275,24 @@ namespace libcmaes
     inline double max_eigenv() const
     {
       return _max_eigenv;
+    }
+
+    /**
+     * \brief returns current number of objective function evaluations
+     * @return number of objective function evaluations
+     */
+    inline int fevals() const
+    {
+      return _nevals;
+    }
+
+    /**
+     * \brief returns last computed eigenvalues
+     * @return last computed eigenvalues
+     */
+    inline dVec eigenvalues() const
+    {
+      return _leigenvalues;
     }
     
     /**
