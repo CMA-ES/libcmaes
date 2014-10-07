@@ -143,7 +143,7 @@ namespace libcmaes
     // gradient if available.
     if (eostrat<TGenoPheno>::_parameters._with_gradient)
       {
-	dVec grad_at_mean = eostrat<TGenoPheno>::gradf(eostrat<TGenoPheno>::_solutions._xmean);
+	dVec grad_at_mean = eostrat<TGenoPheno>::gradf(eostrat<TGenoPheno>::_parameters._gp.pheno(eostrat<TGenoPheno>::_solutions._xmean));
 	dVec gradgp_at_mean = eostrat<TGenoPheno>::gradgp(eostrat<TGenoPheno>::_solutions._xmean); // for geno / pheno transform.
 	grad_at_mean = grad_at_mean.cwiseProduct(gradgp_at_mean);
 	if (grad_at_mean != dVec::Zero(eostrat<TGenoPheno>::_parameters._dim))
