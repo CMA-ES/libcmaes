@@ -246,6 +246,7 @@ namespace libcmaes
     
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
+    eostrat<TGenoPheno>::_solutions._bfvalues.clear(); // XXX: hack to deactivate median fvalues check, that fails due to ranks replacing true fvalues.
     
     // CMA-ES update, depends on the selected 'flavor'.
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,this->_esolver,eostrat<TGenoPheno>::_solutions);
