@@ -102,14 +102,6 @@ namespace libcmaes
     _median_fvalues.push_back(median);
     if (_median_fvalues.size() > static_cast<size_t>(ceil(0.2*_niter+120+30*_xmean.size()/static_cast<double>(_candidates.size()))))
       _median_fvalues.erase(_median_fvalues.begin());
-    
-    //debug
-    /*std::cerr << "ordered candidates:\n";
-    for (size_t i=0;i<_candidates.size();i++)
-      {
-	std::cerr << _candidates.at(i).get_fvalue() << " / " << _candidates.at(i)._x.transpose() << std::endl;
-	}*/
-    //debug
   }
 
   void CMASolutions::update_eigenv(const dVec &eigenvalues,
