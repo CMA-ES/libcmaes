@@ -110,6 +110,12 @@ namespace libcmaes
        * \brief fix parameters for sep-CMA-ES, using only the diagonal of covariance matrix.
        */
       void set_sep();
+
+      /**
+       * \brief whether algorithm leverages separability.
+       * @return separability status
+       */
+      bool is_sep() const { return _sep; }
       
       /**
        * \brief turns stopping criteria MaxIter that automatically stops optimization after a 
