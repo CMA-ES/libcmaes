@@ -89,7 +89,7 @@ namespace libcmaes
 
     std::sort(ctest_set.begin(),ctest_set.end(),
 	      [](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() > c2.get_fvalue();});
-    
+
     this->predict(ctest_set,cov);
     
     double err = 0.0;
@@ -134,8 +134,11 @@ namespace libcmaes
 	// compute test error if needed.
 	if (this->_niter != 0 && (int)this->_tset.size() >= this->_l)
 	  {
-	    this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
-						     eostrat<TGenoPheno>::get_solutions().csqinv())); //TODO: sep
+	    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	      this->set_test_error(this->compute_error(eostrat<TGenoPheno>::_solutions._candidates,
+						       eostrat<TGenoPheno>::_solutions._csqinv));
+	    else this->set_test_error(this->compute_error(eostrat<TGenoPheno>::_solutions._candidates,
+							  eostrat<TGenoPheno>::_solutions._sepcsqinv));
 	  }
 	
 	// use original objective function and collect points.
@@ -149,8 +152,11 @@ namespace libcmaes
 	for (int r=0;r<candidates.cols();r++)
 	  {
 	    eostrat<TGenoPheno>::get_solutions().get_candidate(r).set_x(candidates.col(r));
-	    this->predict(eostrat<TGenoPheno>::get_solutions().candidates(),
-			  eostrat<TGenoPheno>::get_solutions().csqinv());
+	    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	      this->predict(eostrat<TGenoPheno>::get_solutions().candidates(),
+			    eostrat<TGenoPheno>::get_solutions().csqinv());
+	    else this->predict(eostrat<TGenoPheno>::get_solutions().candidates(),
+			       eostrat<TGenoPheno>::get_solutions().sepcsqinv());
 	  }
       }
   }
@@ -227,8 +233,11 @@ namespace libcmaes
 	// compute test error if needed.
 	if (this->_niter != 0 && (int)this->_tset.size() >= this->_l)
 	  {
-	    this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
-						     eostrat<TGenoPheno>::_solutions._csqinv)); //TODO: sep
+	    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	      this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
+						       eostrat<TGenoPheno>::_solutions._csqinv));
+	    else this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
+							  eostrat<TGenoPheno>::_solutions._sepcsqinv));
 	  }
 	
 	// use original objective function and collect points.
@@ -261,8 +270,9 @@ namespace libcmaes
     // train surrogate as required.
     if (do_train())
       {
-	this->train(this->_tset,
-		    eostrat<TGenoPheno>::_solutions._csqinv);
+	if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	  this->train(this->_tset,eostrat<TGenoPheno>::_solutions._csqinv);
+	else this->train(this->_tset,eostrat<TGenoPheno>::_solutions._sepcsqinv);
       }
   }
   
@@ -273,9 +283,11 @@ namespace libcmaes
     eostrat<TGenoPheno>::_solutions._candidates.clear();
     for (int r=0;r<candidates.cols();r++)
       {
-	eostrat<TGenoPheno>::_solutions._candidates.push_back(Candidate(0.0,candidates.col(r)));//.at(r).set_x(candidates.col(r));
+	eostrat<TGenoPheno>::_solutions._candidates.push_back(Candidate(0.0,candidates.col(r)));
       }
-    this->predict(eostrat<TGenoPheno>::_solutions._candidates,eostrat<TGenoPheno>::_solutions._csqinv); // XXX: prediction from genotype since learning from genotype!
+    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+      this->predict(eostrat<TGenoPheno>::_solutions._candidates,eostrat<TGenoPheno>::_solutions._csqinv);
+    else this->predict(eostrat<TGenoPheno>::_solutions._candidates,eostrat<TGenoPheno>::_solutions._sepcsqinv);
     eostrat<TGenoPheno>::_solutions.sort_candidates();
 
     // - draw 'a'<lambda_pre samples according to lambda_pre*N(0,theta_sel0^2) and retain each sample from initial population, with rank r < floor(a)
@@ -320,7 +332,9 @@ namespace libcmaes
       }
 
     // test error.
-    this->set_test_error(this->compute_error(test_set,eostrat<TGenoPheno>::_solutions._csqinv));
+    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+      this->set_test_error(this->compute_error(test_set,eostrat<TGenoPheno>::_solutions._csqinv));
+    else this->set_test_error(this->compute_error(test_set,eostrat<TGenoPheno>::_solutions._sepcsqinv));
     
     // set candidate set.
     eostrat<TGenoPheno>::_solutions._candidates = ncandidates;

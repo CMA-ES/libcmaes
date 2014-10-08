@@ -218,7 +218,13 @@ class RankingSVM
   {
     for (int i=0;i<x.cols();i++)
       x.col(i) -= xmean;
-    x = covinv * x;
+    if (covinv.cols() > 1)
+      x = covinv * x;
+    else
+      {
+	for (int i=0;i<x.cols();i++)
+	  x.col(i) = covinv.cwiseProduct(x.col(i));
+      }
   }
 
   /**

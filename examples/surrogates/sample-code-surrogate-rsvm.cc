@@ -66,14 +66,12 @@ template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoB
 	  dVec fvalues;
 	  std::vector<Candidate> cp = c;
 	  to_mat_vec(cp,x,fvalues);
-//int niter = 1e6;//floor(50000*sqrt(c.at(0).get_x_size()));
 	  dVec xmean = eostrat<TGenoPheno>::get_solutions().xmean();
 	  _rsvm = RankingSVM<RBFKernel>();
 	  _rsvm._encode = true;
 	  _rsvm.train(x,_rsvm_iter,cov,xmean);
 	  
-	  this->set_train_error(this->compute_error(cp,
-						    eostrat<TGenoPheno>::get_solutions().csqinv()));
+          this->set_train_error(this->compute_error(cp,cov));
 	  
 	  //debug
 	  //std::cout << "training error=" << _rsvm.error(x,x,fvalues,cov,xmean) << std::endl;
@@ -95,7 +93,7 @@ template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoB
 
 	  dVec fit;
 	  dVec xmean = eostrat<TGenoPheno>::get_solutions().xmean();
-	  _rsvm.predict(fit,x_test,x_train,eostrat<TGenoPheno>::get_solutions().csqinv(),xmean);
+          _rsvm.predict(fit,x_test,x_train,cov,xmean);
 	  if (fit.size() != 0)
 	    for (int i=0;i<(int)c.size();i++)
 	      c.at(i).set_fvalue(fit(i));
