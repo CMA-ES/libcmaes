@@ -156,9 +156,10 @@ namespace libcmaes
 	  if (cmas._pc[i]>=tfactor)
 	    return CONT;
 	//test 2: all square root components of cov . factor < tolx.
-	for (int i=0;i<cmas._cov.rows();i++)
+	int covrows = std::max(cmas._cov.rows(),cmas._sepcov.rows());
+	for (int i=0;i<covrows;i++)
 	  if ((!cmap._sep && sqrt(cmas._cov(i,i))>=tfactor)
-	      || (cmap._sep && sqrt(cmas._sepcov(i))>=tfactor))
+		|| (cmap._sep && sqrt(cmas._sepcov(i))>=tfactor))
 	    return CONT;
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
