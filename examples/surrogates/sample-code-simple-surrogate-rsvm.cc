@@ -24,6 +24,8 @@
 #include "rankingsvm.hpp"
 #include <iostream>
 
+#include <gflags/gflags.h>
+
 using namespace libcmaes;
 
 void to_mat_vec(std::vector<Candidate> &cp,
@@ -43,19 +45,18 @@ void to_mat_vec(std::vector<Candidate> &cp,
 template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
 
 template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-  class RSVMSurrogateStrategy : public SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>
+  class RSVMSimpleSurrogateStrategy : public SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>
   {
   public:
-    RSVMSurrogateStrategy()
+    RSVMSimpleSurrogateStrategy()
       :SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>()
     {
     }
 
-    RSVMSurrogateStrategy(FitFunc &func,
-			  CMAParameters<TGenoPheno> &parameters)
+    RSVMSimpleSurrogateStrategy(FitFunc &func,
+				CMAParameters<TGenoPheno> &parameters)
       :SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
     {
-      this->_l = 100;
       this->_train = [this](const std::vector<Candidate> &c, const dMat &cov)
 	{
 	  if (c.empty())
@@ -64,18 +65,17 @@ template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoB
 	  dVec fvalues;
 	  std::vector<Candidate> cp = c;
 	  to_mat_vec(cp,x,fvalues);
-	  int niter = 1e6;//floor(50000*sqrt(c.at(0).get_x_size()));
 	  dVec xmean = eostrat<TGenoPheno>::get_solutions().xmean();
 	  _rsvm = RankingSVM<RBFKernel>();
 	  _rsvm._encode = true;
-	  _rsvm.train(x,niter,cov,xmean);
+	  _rsvm.train(x,_rsvm_iter,cov,xmean);
 	  
 	  this->set_train_error(this->compute_error(cp,
 						    eostrat<TGenoPheno>::get_solutions().csqinv()));
 	  
 	  //debug
 	  //std::cout << "training error=" << _rsvm.error(x,x,fvalues,cov,xmean) << std::endl;
-	  std::cout << "train error=" << this->get_train_error() << std::endl;
+	  //std::cout << "train error=" << this->get_train_error() << std::endl;
 	  //debug
 	  
 	  return 0;
@@ -101,16 +101,27 @@ template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoB
 	};
     }
 
-    ~RSVMSurrogateStrategy() {}
+    ~RSVMSimpleSurrogateStrategy() {}
     
     RankingSVM<RBFKernel> _rsvm;
-  };
+    int _rsvm_iter = 1e6; /**< number of iterations for optimizing the ranking SVM */
+};
 
 FitFunc fsphere = [](const double *x, const int N)
 {
   double val = 0.0;
   for (int i=0;i<N;i++)
     val += x[i]*x[i];
+  return val;
+};
+
+FitFunc elli = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0] * x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += exp(log(1e3)*2.0*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
   return val;
 };
 
@@ -124,17 +135,44 @@ FitFunc rosenbrock = [](const double *x, const int N)
   return val;
 };
 
+std::map<std::string,FitFunc> mfuncs;
+
+DEFINE_string(fname,"fsphere","name of the function to optimize");
+DEFINE_int32(dim,2,"problem dimension");
+DEFINE_int32(lambda,-1,"number of offsprings");
+DEFINE_int32(max_iter,-1,"maximum number of iteration (-1 for unlimited)");
+DEFINE_int32(max_fevals,-1,"maximum budget as number of function evaluations (-1 for unlimited)");
+DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
+DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
+DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
+DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
+DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_bool(no_exploit,false,"whether to exploit the surrogate model");
+DEFINE_int32(l,-1,"training set size (number of points)");
+DEFINE_int32(rsvm_iter,1e6,"number of iterations for optimizing the ranking SVM");
+DEFINE_int32(lifel,-1,"surrogate lifelength, -1 for automatic & dynamic determination");
+
 int main(int argc, char *argv[])
 {
-  int dim = 10; // problem dimensions.
-  std::vector<double> x0(dim,2.0);
-  double sigma = 1.0;
-
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
+  mfuncs["fsphere"]=fsphere;
+  mfuncs["elli"]=elli;
+  mfuncs["rosenbrock"]=rosenbrock;
+  
+  google::ParseCommandLineFlags(&argc, &argv, true);
+  std::vector<double> x0(FLAGS_dim,FLAGS_x0);
+  
+  CMAParameters<> cmaparams(x0,FLAGS_sigma0);
   cmaparams.set_quiet(false);
-  cmaparams.set_ftarget(1e-8);
-  ESOptimizer<RSVMSurrogateStrategy<>,CMAParameters<>> optim(fsphere,cmaparams);
-  optim.set_exploit(false); // test mode.
+  cmaparams.set_ftarget(FLAGS_ftarget);
+  cmaparams.set_str_algo(FLAGS_alg);
+  cmaparams.set_fplot(FLAGS_fplot);
+  cmaparams.set_max_iter(FLAGS_max_iter);
+  cmaparams.set_max_fevals(FLAGS_max_fevals);
+  ESOptimizer<RSVMSimpleSurrogateStrategy<>,CMAParameters<>> optim(fsphere,cmaparams);
+  if (FLAGS_no_exploit)
+    optim.set_exploit(!FLAGS_no_exploit);
+  optim.set_nsteps(FLAGS_lifel);
+  optim._rsvm_iter = FLAGS_rsvm_iter;
   
   while(!optim.stop())
     {

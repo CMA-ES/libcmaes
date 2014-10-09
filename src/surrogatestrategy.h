@@ -95,7 +95,7 @@ namespace libcmaes
      */
     double compute_error(const std::vector<Candidate> &test_set,
 			 const dMat &cov=dMat(0,0));
-
+    
     /**
      * \brief conditionals on training, to be specialized in inherited surrogate strategies
      * @return whether to train surrogate
@@ -167,6 +167,23 @@ namespace libcmaes
      * @param c point to add to the training set
      */
     void add_to_training_set(const Candidate &c);
+
+    /**
+     * \brief sets the lifelength of the surrogate, i.e. the number of steps in between to training steps
+     * @param nsteps surrogate lifelength, -1 for automatic determination
+     */
+    inline void set_nsteps(const int &nsteps)
+    {
+      _nsteps = nsteps;
+      if (_nsteps < 0)
+	_auto_nsteps = true;
+    }
+
+    /**
+     * \brief returns the current surrogate lifelength
+     * @return current surrogate lifelength
+     */
+    int get_nsteps() const { return _nsteps; }
     
   protected:
     bool _exploit = true; /**< whether to exploit or test the surrogate. */
@@ -179,6 +196,7 @@ namespace libcmaes
     double _smooth_test_err = 0.5; /**< smoothed test error as (1-\beta_err)*_test_err + \beta_err * new_test_err */
     double _beta_err = 0.2; /**< smoothing constant. */
     int _nsteps = 1; /**< steps in between two training phases. */
+    int _auto_nsteps = false; /**< whether to automatically set the surrogate lifelength. */
     };
 
   /**
@@ -227,6 +245,12 @@ namespace libcmaes
     void tell();
 
     /**
+     * \brief estimates surrogate lifelength
+     * @return estimated surrogate lifelength
+     */
+    int compute_lifelength();
+    
+    /**
      * \brief whether to train the model
      * @return whether to train the model
      */
@@ -236,8 +260,11 @@ namespace libcmaes
 	return true;
       return ((this->_niter == 0 || this->_niter % this->_nsteps == 0) && (int)this->_tset.size() >= this->_l);
     }
-    
-  };
+
+    public:
+    double _terr = 0.45; /**< error threshold for estimating optimal nsteps */
+    int _nmax = 20;
+    };
 
   /**
    * \brief ACM Surrogate strategy for CMA-ES, follows:

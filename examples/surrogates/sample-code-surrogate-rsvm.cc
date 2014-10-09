@@ -136,7 +136,6 @@ FitFunc rosenbrock = [](const double *x, const int N)
 };
 
 std::map<std::string,FitFunc> mfuncs;
-int rsvm_iter = 1e6;
 
 DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");

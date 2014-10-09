@@ -114,7 +114,8 @@ namespace libcmaes
   SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::SimpleSurrogateStrategy()
     :SurrogateStrategy<TCovarianceUpdate,TGenoPheno>()
   {
-    this->_exploit = false;
+    this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
+    this->_stopcriteria.set_criteria_active(AUTOMAXITER,false);
   }
 
   template<class TCovarianceUpdate, class TGenoPheno>
@@ -122,15 +123,24 @@ namespace libcmaes
 										 CMAParameters<TGenoPheno> &parameters)
     :SurrogateStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
   {
-    this->_exploit = false;
+    eostrat<TGenoPheno>::_pfunc = [this](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
+      {
+	LOG_IF(INFO,!cmaparams.quiet()) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / trainerr=" << this->_train_err << " / testerr=" << this->_test_err << " / smtesterr=" << this->_smooth_test_err << " / slifel=" << this->_nsteps << std::endl;//compute_lifelength() << std::endl;
+	return 0;
+      };
+    this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
+    this->_stopcriteria.set_criteria_active(AUTOMAXITER,false);
   }
   
   template<class TCovarianceUpdate, class TGenoPheno>
   void SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::eval(const dMat &candidates,
 								   const dMat &phenocandidates)
   {
-    if (!this->_exploit || this->_niter == 0 || this->_niter % this->_nsteps == 0 || (int)this->_tset.size() < this->_l)
+    if (!this->_exploit || this->_niter % this->_nsteps == 0 || (int)this->_tset.size() < this->_l)
       {
+	// reactivate fvalue-based stopping criteria
+	this->_stopcriteria.set_criteria_active(FTARGET,true);
+	
 	// compute test error if needed.
 	if (this->_niter != 0 && (int)this->_tset.size() >= this->_l)
 	  {
@@ -139,6 +149,8 @@ namespace libcmaes
 						       eostrat<TGenoPheno>::_solutions._csqinv));
 	    else this->set_test_error(this->compute_error(eostrat<TGenoPheno>::_solutions._candidates,
 							  eostrat<TGenoPheno>::_solutions._sepcsqinv));
+	    if (this->_auto_nsteps)
+	      this->_nsteps = compute_lifelength();
 	  }
 	
 	// use original objective function and collect points.
@@ -148,6 +160,9 @@ namespace libcmaes
       }
     else
       {
+	// deactivate value-based stopping criteria
+	this->_stopcriteria.set_criteria_active(FTARGET,false);
+	
 	// exploit surrogate
 	for (int r=0;r<candidates.cols();r++)
 	  {
@@ -173,6 +188,13 @@ namespace libcmaes
 		    eostrat<TGenoPheno>::_solutions._csqinv);
       }
   }  
+
+  template<class TCovarianceUpdate, class TGenoPheno>
+  int SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::compute_lifelength()
+  {
+    int nsteps = std::max(1,static_cast<int>(std::floor((_terr - this->_smooth_test_err)/_terr * _nmax)));
+    return nsteps+1;
+  }
   
   /*- ACMSurrogateStrategy -*/
   template<class TCovarianceUpdate, class TGenoPheno>
@@ -181,6 +203,7 @@ namespace libcmaes
   {
     _lambdaprime = std::floor(eostrat<TGenoPheno>::_parameters.lambda()/3.0);
     init_rd();
+    this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
   }
 
   template<class TCovarianceUpdate, class TGenoPheno>
@@ -189,6 +212,7 @@ namespace libcmaes
   {
     _lambdaprime = std::floor(eostrat<TGenoPheno>::_parameters.lambda()/3.0);
     init_rd();
+    this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
   }
   
   template<class TCovarianceUpdate, class TGenoPheno>
@@ -255,8 +279,7 @@ namespace libcmaes
     
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
-    eostrat<TGenoPheno>::_solutions._bfvalues.clear(); // XXX: hack to deactivate median fvalues check, that fails due to ranks replacing true fvalues.
-    
+        
     // CMA-ES update, depends on the selected 'flavor'.
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,this->_esolver,eostrat<TGenoPheno>::_solutions);
     
