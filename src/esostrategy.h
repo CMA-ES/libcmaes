@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -28,10 +28,14 @@
 namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
+  typedef std::function<dVec (const double*, const int &n)> GradFunc;
+  
+  template<class TParameters,class TSolutions>
+    using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
 
   template<class TParameters,class TSolutions>
-    using ProgressFunc = std::function<int (const TParameters, const TSolutions)>; // template aliasing.
-
+    using PlotFunc = std::function<int (const TParameters&, const TSolutions&, std::ofstream &fplotstream)>;
+  
   /**
    * \brief Main class describing an evolutionary optimization strategy.
    *        Every algorithm in libcmaes descends from this class, and bring
@@ -41,6 +45,13 @@ namespace libcmaes
     class ESOStrategy
   {
   public:
+    /**
+     * \brief dummy constructor.
+     */
+    ESOStrategy()
+      {
+      }
+    
     /**
      * \brief constructor
      * @param func function to minimize
@@ -65,8 +76,11 @@ namespace libcmaes
      *        and their f-value into the _solutions object that bears the 
      *        current set of potential solutions to the optimization problem.
      * @param candidates A matrix whose rows contain the candidates.
+     * @param phenocandidates The candidates transformed into phenotype, 
+     *        leave empty if no pheno transform.
      */
-    void eval(const dMat &candidates);
+    void eval(const dMat &candidates,
+	      const dMat &phenocandidates=dMat(0,0));
 
     /**
      * \brief Updates the state of the stochastic search, and prepares
@@ -88,15 +102,93 @@ namespace libcmaes
      */
     int optimize();
 
+    /**
+     * \brief increment iteration count.
+     */
+    void inc_iter();
+
+    /**
+     * \brief updates the consumed budget of objective function evaluations.
+     * @param evals increment to the current consumed budget
+     */
+    void update_fevals(const int &evals);
+    
+    /**
+     * \brief sets gradient function
+     * @param gfunc gradient function
+     */
+    void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
+    
+    /**
+     * \brief Sets the possibly custom progress function,
+     *        that is called in between every search step, and gives an outside
+     *        user a simple way to witness progress of the algorithm, as well as
+     *        to add custom termination criteria.
+     * @param pfunc a progress function
+     */
+    void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
+
+    /**
+     * \brief Sets the possibly custom plot to file function,
+     *        that is useful for storing into file various possibly custom
+     *        variable values for each step until termination.
+     * @param pffunc a stream to file output function
+     */
+    void set_plot_func(PlotFunc<TParameters,TSolutions> &pffunc) { _pffunc = pffunc; }
+    
+    /**
+     * \brief returns numerical gradient of objective function at x.
+     * @param x point at which to compute the gradient
+     * @return vector of numerical gradient of the objective function at x.
+     */
+    dVec gradf(const dVec &x);
+
+    /**
+     * \brief returns the numerical gradient of the objective function in phenotype space
+     * @param x point in genotype coordinates at which to compute the gradient
+     * @return vector of numerical gradient computed in phenotype space
+     */
+    dVec gradgp(const dVec &x) const;
+
+    /**
+     * \brief computes expected distance to minimum (EDM).
+     * @return EDM
+     */
+    double edm();
+
+    /**
+     * \brief returns reference to current solution object
+     * @return current solution object
+     */
+    TSolutions& get_solutions() { return _solutions; }
+
+    /**
+     * \brief returns reference to current optimization parameters object
+     * @return current optimization parameters object
+     */
+    TParameters& get_parameters() { return _parameters; }
+
+    /**
+     * \brief execute objective function
+     * @param x point at which to execute the function
+     * @param N dimension of array x
+     * @return objective function value at x
+     */
+    double fitfunc(const double *x, const int N) { return _func(x,N); }
+    
     // deprecated.
     Candidate best_solution() const;
-    
+
+  protected:
     FitFunc _func; /**< the objective function. */
     int _nevals;  /**< number of function evaluations. */
     int _niter;  /**< number of iterations. */
     TSolutions _solutions; /**< holder of the current set of solutions and the dynamic elemenst of the search state in general. */
     TParameters _parameters; /**< the optimizer's set of static parameters, from inputs or internal. */
     ProgressFunc<TParameters,TSolutions> _pfunc; /**< possibly custom progress function. */
+    GradFunc _gfunc = nullptr; /**< gradient function, when available. */
+    PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
+    FitFunc _funcaux;
   };
   
 }

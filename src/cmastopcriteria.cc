@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -19,12 +19,17 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "libcmaes_config.h"
 #include "cmastopcriteria.h"
 #include <cmath>
 #include <iterator>
-#include <glog/logging.h>
+#include "llogging.h"
 #include <limits>
 #include <iostream>
+
+#ifdef HAVE_DEBUG
+#include <chrono>
+#endif
 
 namespace libcmaes
 {
@@ -45,9 +50,35 @@ namespace libcmaes
   CMAStopCriteria<TGenoPheno>::CMAStopCriteria()
     :_active(true)
   {
+    StopCriteriaFunc<TGenoPheno> maxFEvals = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._max_fevals == -1)
+	  return CONT;
+	if (cmas._nevals >= cmap._max_fevals)
+	  {
+	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria maxFEvals => cmas._nevals=" << cmas._nevals << " / max_fevals=" << cmap._max_fevals << std::endl;
+	    return MAXFEVALS;
+	  }
+	else return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXFEVALS,maxFEvals));
+    StopCriteriaFunc<TGenoPheno> maxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._max_iter == -1)
+	  return CONT;
+	if (cmas._niter >= cmap._max_iter)
+	  {
+	    LOG_IF(INFO,!cmap._max_iter) << "stopping criteria maxIter=" << cmas._niter << std::endl;
+	    return MAXITER;
+	  }
+	else return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXITER,maxIter));
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	int thresh = static_cast<int>(100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda));
+	double thresh = 100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda);
+	if (!cmap._has_max_iter) // this criteria is deactivated
+	  return CONT;
 	if (cmas._niter >= thresh)
 	  {
 	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria autoMaxIter => thresh=" << thresh << std::endl;
@@ -56,18 +87,31 @@ namespace libcmaes
 	return CONT;
       };
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(AUTOMAXITER,autoMaxIter));
+    StopCriteriaFunc<TGenoPheno> fTarget = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
+      {
+	if (cmap._ftarget != std::numeric_limits<double>::infinity())
+	  {
+	    if (cmas.best_candidate().get_fvalue() <= cmap._ftarget)
+	      {
+		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate().get_fvalue() << " / ftarget=" << cmap._ftarget << std::endl;
+		return FTARGET;
+	      }
+	  }
+	return CONT;
+      };
+    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(FTARGET,fTarget));
     StopCriteriaFunc<TGenoPheno> tolHistFun = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	static double threshold = 1e-12;
+	double threshold = std::max(cmap._ftolerance,1e-12);
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
-	int histthresh = static_cast<int>(10+floor(30*cmap._dim/cmap._lambda));
+	int histthresh = static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda));
 	int histlength = std::min(histthresh,histsize);
 	if (histlength < histthresh) // not enough data
 	  return CONT;
-	std::pair<double,double> frange(std::numeric_limits<double>::max(),std::numeric_limits<double>::min());
+	std::pair<double,double> frange(std::numeric_limits<double>::max(),-std::numeric_limits<double>::max());
 	for (int i=0;i<histlength;i++)
 	  {
-	    double val = cmas._best_candidates_hist.at(histsize-1-i)._fvalue;
+	    double val = cmas._best_candidates_hist.at(histsize-1-i).get_fvalue();
 	    frange.first = std::min(val,frange.first);
 	    frange.second = std::max(val,frange.second);
 	  }
@@ -84,14 +128,14 @@ namespace libcmaes
       {
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
 	int histlength = std::min(cmap._dim,histsize);
-	if (histlength < cmap._dim) // not enough data
+	if (histlength < cmas._max_hist) // not enough data
 	  return CONT;
 
 	int c = 0;
 	for (int i=0;i<histlength;i++)
 	  {
-	    if (cmas._best_candidates_hist.at(histsize-1-i)._fvalue
-		== cmas._k_best_candidates_hist.at(histsize-1-i)._fvalue)
+	    if (cmas._best_candidates_hist.at(histsize-1-i).get_fvalue()
+		== cmas._k_best_candidates_hist.at(histsize-1-i).get_fvalue())
 	      c++;
 	  }
 	if (c > histlength / 3.0)
@@ -104,7 +148,7 @@ namespace libcmaes
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(EQUALFUNVALS,equalFunVals));
     StopCriteriaFunc<TGenoPheno> tolX = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
-	static double tolx = 1e-12;
+	double tolx = std::max(cmap._xtol,1e-12);
 	double factor = cmas._sigma / cmap._sigma_init;
 	double tfactor = tolx * factor;
 	// test1: all components of pc . factor < tolx.
@@ -112,8 +156,10 @@ namespace libcmaes
 	  if (cmas._pc[i]>=tfactor)
 	    return CONT;
 	//test 2: all square root components of cov . factor < tolx.
-	for (int i=0;i<cmas._cov.rows();i++)
-	  if (sqrt(cmas._cov(i,i))>tfactor)
+	int covrows = std::max(cmas._cov.rows(),cmas._sepcov.rows());
+	for (int i=0;i<covrows;i++)
+	  if ((!cmap._sep && sqrt(cmas._cov(i,i))>=tfactor)
+		|| (cmap._sep && sqrt(cmas._sepcov(i))>=tfactor))
 	    return CONT;
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
@@ -148,7 +194,6 @@ namespace libcmaes
 	return CONT;
       };
     _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(STAGNATION,stagnation));
-
     StopCriteriaFunc<TGenoPheno> conditionCov = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	static double bound = 1e14;
@@ -168,7 +213,8 @@ namespace libcmaes
 	  {
 	    double ei = fact * sqrt(cmas._leigenvalues(i));
 	    for (int j=0;j<cmap._dim;j++)
-	      if (cmas._xmean[i] != cmas._xmean[i] + ei * cmas._leigenvectors(i,j))
+	      if ((!cmap._sep && cmas._xmean[i] != cmas._xmean[i] + ei * cmas._leigenvectors(i,j))
+		  || (cmap._sep && cmas._xmean[i] != cmas._xmean[i] + ei))
 		return CONT;
 	  }
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectAxis\n";
@@ -179,7 +225,8 @@ namespace libcmaes
       {
 	double fact = 0.2*cmas._sigma;
 	for (int i=0;i<cmap._dim;i++)
-	  if (cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
+	  if ((!cmap._sep && cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
+	      || (cmap._sep && cmas._xmean[i] == fact * sqrt(cmas._sepcov(i))))
 	    {
 	      LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
 	      return NOEFFECTCOOR;
@@ -197,17 +244,32 @@ namespace libcmaes
   template <class TGenoPheno>
   int CMAStopCriteria<TGenoPheno>::stop(const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas) const
   {
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+#endif
     if (!_active)
       return 0;
     int r = 0;
     for (auto imap : _scriteria)
       {
 	if ((r=imap.second(cmap,cmas))!=0)
-	  return r;
+	  {
+#ifdef HAVE_DEBUG
+	    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+	    const_cast<CMASolutions&>(cmas)._elapsed_stop = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+#endif
+	    return r;
+	  }
       }
-    return 0;
+#ifdef HAVE_DEBUG
+    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
+    const_cast<CMASolutions&>(cmas)._elapsed_stop = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
+#endif
+    return CONT;
   }
 
   template class CMAStopCriteria<GenoPheno<NoBoundStrategy>>;
   template class CMAStopCriteria<GenoPheno<pwqBoundStrategy>>;
+  template class CMAStopCriteria<GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAStopCriteria<GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

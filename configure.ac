@@ -1,13 +1,14 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.5)
+AC_INIT(libcmaes,0.9.1)
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(config.h)
+AM_CONFIG_HEADER([libcmaes_config.h])
+AC_CONFIG_FILES(libcmaes.pc)
 
-ac_default_prefix=`pwd`
-bindir=$ac_default_prefix/bin/$host
-libdir=$ac_default_prefix/lib/$host
+#ac_default_prefix=`pwd`
+#bindir=$ac_default_prefix/bin/$host
+#libdir=$ac_default_prefix/lib/$host
 
 AC_PROG_INSTALL
 AC_CANONICAL_HOST
@@ -63,8 +64,20 @@ else
   GFLAGS_LIBS=
 fi
 AC_SUBST(GFLAGS_LIBS)
+AM_CONDITIONAL(HAVE_GFLAGS, test x"$ac_cv_have_libgflags" = x"1")
 
 # Check if there is google-glog library installed.
+AC_ARG_ENABLE(gglog,
+AC_HELP_STRING([--enable-gglog],[Enable google glog (default is NO)]),
+[case "${enableval}" in 
+	yes) gglog=true ;;
+	no) gglog=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-gglog) ;;
+esac],[gglog=false])
+if test x"$gglog" = x"true"; then
+   AC_DEFINE(HAVE_GLOG,1,[google glog requested])
+fi
+
 AC_ARG_WITH(glog, AS_HELP_STRING[--with-glog=GLOG_DIR],
   GLOG_CFLAGS="-I${with_glog}/include"
   GLOG_LIBS="-L${with_glog}/lib -lglog"
@@ -89,7 +102,7 @@ AM_CONDITIONAL(HAVE_GTEST, test x"$gtest_header_avail" = xyes)
 
 # Whether to compile with BBOB
 AC_ARG_ENABLE(bbob,
-AC_HELP_STRING([--enable-bbob],[Enable the linear programming optimization (default is NO)]),
+AC_HELP_STRING([--enable-bbob],[Enable support for BBOB'2013 benchmark (default is NO)]),
 [case "${enableval}" in 
 	yes) bbob=true ;;
 	no) bbob=false ;;
@@ -97,5 +110,45 @@ AC_HELP_STRING([--enable-bbob],[Enable the linear programming optimization (defa
 esac],[bbob=false])
 AM_CONDITIONAL(HAVE_BBOB, test x$bbob = xtrue)
 
-AC_OUTPUT(Makefile src/Makefile tests/Makefile examples/Makefile)
+# Whether to compile with python wrapper support
+AC_ARG_ENABLE(python,
+AC_HELP_STRING([--enable-python],[Enable support for python wrapper (default is NO)]),
+[case "${enableval}" in 
+	yes) python=true ;;
+	no) python=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-python) ;;
+esac],[python=false])
+AM_CONDITIONAL(HAVE_PYTHON, test x$python = xtrue)
+if test x"$python" = x"true"; then
+#   AC_DEFINE(HAVE_PYTHON, 1, [python boost])
+    AX_BOOST_PYTHON()
+    if test "$BOOST_PYTHON_LIB" == ""; then
+       AC_MSG_ERROR(boost python required for building the python wrapper,1)
+    fi
+fi
+
+# Whether to only compile the library, without exe (e.g. tests and examples).
+AC_ARG_ENABLE(onlylib,
+AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and examples (default is NO)]),
+[case "${enableval}" in 
+	yes) onlylib=true ;;
+	no) onlylib=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-onlylib) ;;
+esac],[onlylib=false])
+AM_CONDITIONAL(HAVE_ONLYLIB, test x$onlylib = xtrue)
+
+# Whether debug mode
+AC_ARG_ENABLE(debug,
+AC_HELP_STRING([--enable-debug],[Enable debug mode (default is NO)]),
+[case "${enableval}" in 
+	yes) debug=true ;;
+	no) debug=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-debug) ;;
+esac],[debug=false])
+if test x"$debug" = x"true"; then
+   AC_DEFINE(HAVE_DEBUG, 1, [debug])
+fi
+#AM_CONDITIONAL(HAVE_DEBUG, test x$debug = xtrue)
+
+AC_OUTPUT(Makefile src/Makefile tests/Makefile examples/Makefile python/Makefile)
 

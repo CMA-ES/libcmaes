@@ -1,7 +1,11 @@
 AUTOMAKE_OPTIONS = subdir-objects
-bin_PROGRAMS=simple_test test_functions
-simple_test_SOURCES=simple-test.cc
+bin_PROGRAMS=simple_test edm
+if HAVE_GFLAGS
+bin_PROGRAMS += test_functions
 test_functions_SOURCES=test-functions.cc
+endif
+simple_test_SOURCES=simple-test.cc
+edm_SOURCES=edm.cc
 if HAVE_BBOB
 libbbobdir = $(libdir)
 libbbob_LIBRARIES=libbbob.a
@@ -12,8 +16,9 @@ endif
 
 if HAVE_GTEST
 TESTS = $(check_PROGRAMS)
-check_PROGRAMS = ut_pwqbounds
+check_PROGRAMS = ut_pwqbounds ut_scaling
 ut_pwqbounds_SOURCES=ut-pwqbounds.cc
+ut_scaling_SOURCES=ut-scaling.cc
 endif
 
 AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)
@@ -29,5 +34,7 @@ if HAVE_GTEST
 AM_LDFLAGS += -lgtest -lgtest_main
 endif
 
+if HAVE_BBOB
 clean-local:
-	rm -rf bbobc.tar.gz bbob.v13* *_bbob
+	rm -rf bbobc.tar.gz bbob.v13* *_bbob .deps/benchmarks* .deps/dir* .deps/fgeneric* .deps/bbob*
+endif

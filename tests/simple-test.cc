@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -21,7 +21,7 @@
 
 #include "esoptimizer.h"
 #include "cmastrategy.h"
-#include <glog/logging.h>
+#include "llogging.h"
 
 using namespace libcmaes;
 
@@ -36,14 +36,20 @@ FitFunc cigtab = [](const double *x, const int N)
 
 int main(int argc, char *argv[])
 {
+#ifdef HAVE_GLOG
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr=1;
   google::SetLogDestination(google::INFO,"");
   //FLAGS_log_prefix=false;
+#endif
 
-  int dim = 5;
+  int dim = 10;
+  std::vector<double> x0 = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+  double sigma = 0.2;
   int lambda = 10;
-  CMAParameters<> cmaparams(dim,lambda);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma,lambda);
   ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> cmaes(cigtab,cmaparams);
   cmaes.optimize();
+  double edm = cmaes.edm();
+  std::cerr << "EDM=" << edm << " / EDM/fm=" << edm / cmaes.get_solutions().best_candidate().get_fvalue() << std::endl;
 }

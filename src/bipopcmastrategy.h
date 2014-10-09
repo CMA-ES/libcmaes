@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -69,6 +69,8 @@ namespace libcmaes
     std::uniform_real_distribution<> _unif;
     double _lambda_def;
     double _lambda_l;
+    double _sigma_init; // to save the original value
+    double _max_fevals; // to save the original value
   };
 }
 

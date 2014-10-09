@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -34,14 +34,20 @@ namespace libcmaes
     ~pwqBoundStrategy();
 
     void to_f_representation(const dVec &x,
-			     dVec &y);
+			     dVec &y) const;
     
     void to_internal_representation(dVec &x,
-				    const dVec &y);
+				    const dVec &y) const;
 
-    void shift_into_feasible(const dVec &x, dVec &x_s);
+    void shift_into_feasible(const dVec &x, dVec &x_s) const;
+
+    double getLBound(const int &k) const { return _lbounds[k]; }
+    double getUBound(const int &k) const { return _ubounds[k]; }
+
+    double getAL(const int &k) const { return _al[k]; }
+    double getAU(const int &k) const { return _au[k]; }
     
-  public:
+  private:
     dVec _lbounds;
     dVec _ubounds;
     dVec _al;

@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -25,7 +25,7 @@
 #include <limits>
 #include <iostream>
 #include <cmath>
-#include <glog/logging.h>
+#include "llogging.h"
 
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
@@ -99,6 +99,14 @@ FitFunc fsphere = [](const double *x, const int N)
   return val;
 };
 
+GradFunc grad_fsphere = [](const double *x, const int N)
+{
+  dVec grad(N);
+  for (int i=0;i<N;i++)
+    grad(i) = 2.0*x[i];
+  return grad;
+};
+
 FitFunc cigtab = [](const double *x, const int N)
 {
   int i;
@@ -116,6 +124,17 @@ FitFunc rosenbrock = [](const double *x, const int N)
       val += 100.0*pow((x[i+1]-x[i]*x[i]),2) + pow((x[i]-1.0),2);
     }
   return val;
+};
+
+GradFunc grad_rosenbrock = [](const double *x, const int N)
+{
+  dVec grad = dVec::Zero(N);
+  for (int i=0;i<N-1;i++)
+    {
+      grad(i) = -400.0*x[i]*(x[i+1]-x[i]*x[i])-2.0*(1.0-x[i]);
+      grad(i+1) += 200.0*(x[i+1]-x[i]*x[i]);
+    }
+  return grad;
 };
 
 FitFunc beale = [](const double *x, const int N)
@@ -204,7 +223,8 @@ FitFunc rastrigin = [](const double *x, const int N)
     val += x[i]*x[i] - A*cos(2*M_PI*x[i]);
   return val;
 };
-CMAParameters<> rastrigin_params(10,400,5.0,1234); // 1234 is seed.
+std::vector<double> rastx0(10,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
+CMAParameters<> rastrigin_params(10,&rastx0.front(),5.0,400,1234); // 1234 is seed.
 
 FitFunc elli = [](const double *x, const int N)
 {
@@ -212,8 +232,21 @@ FitFunc elli = [](const double *x, const int N)
     return x[0] * x[0];
   double val = 0.0;
   for (int i=0;i<N;i++)
-    val += exp(log(1000.0)*2.0*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+    val += exp(log(1e3)*2.0*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
   return val;
+};
+
+GradFunc grad_elli = [](const double *x, const int N)
+{
+  dVec grad(N);
+  if (N == 1)
+    {
+      grad(0) = 2.0*x[0];
+      return grad;
+    }
+  for (int i=0;i<N;i++)
+    grad(i) = exp(log(1e3)*2.0*static_cast<double>(i)/static_cast<double>((N-1)))*2.0*x[i];
+  return grad;
 };
 
 FitFunc tablet = [](const double *x, const int N)
@@ -222,6 +255,15 @@ FitFunc tablet = [](const double *x, const int N)
   for (int i=1;i<N;i++)
     val += x[i]*x[i];
   return val;
+};
+
+GradFunc grad_tablet = [](const double *x, const int N)
+{
+  dVec grad(N);
+  grad(0) = 1e6*2.0*x[0];
+  for (int i=0;i<N;i++)
+    grad(i) = 2.0*x[i];
+  return grad;
 };
 
 FitFunc cigar = [](const double *x, const int N)
@@ -245,7 +287,7 @@ FitFunc ellirot = [](const double *x, const int N)
       double y = 0.0;
       for (int k=0;k<N;k++)
 	y += b(i,k)*x[k];
-      val += exp(log(1e6)*2.0*static_cast<double>(i)/(N-1)) * y*y;
+      val += exp(log(1e3)*2.0*static_cast<double>(i)/(N-1)) * y*y;
     }
   return val;
 };
@@ -276,7 +318,17 @@ FitFunc diffpowrot = [](const double *x, const int N)
   return val;
 };
 
+FitFunc hardcos = [](const double *x, const int N)
+{
+  double sum = 0.0;
+  for (int i=0;i<N;i++)
+    sum += x[i]*x[i];
+  sum*=(cos(sum)+2.0);
+  return sum;
+};
+
 std::map<std::string,FitFunc> mfuncs;
+std::map<std::string,GradFunc> mgfuncs;
 std::map<std::string,Candidate> msols;
 std::map<std::string,CMAParameters<>> mparams;
 std::map<std::string,FitFunc>::const_iterator mit;
@@ -289,9 +341,11 @@ void fillupfuncs()
   mfuncs["ackleys"]=ackleys;
   msols["ackleys"]=Candidate(0.0,dVec::Constant(2,0));
   mfuncs["fsphere"]=fsphere;
+  mgfuncs["fsphere"]=grad_fsphere;
   msols["fsphere"]=Candidate(0.0,dVec::Constant(20,0));
   mfuncs["cigtab"]=cigtab;
   mfuncs["rosenbrock"]=rosenbrock;
+  mgfuncs["rosenbrock"]=grad_rosenbrock;
   msols["rosenbrock"]=Candidate(0.0,dVec::Constant(20,1));
   mfuncs["beale"]=beale;
   mfuncs["goldstein_price"]=goldstein_price;
@@ -313,8 +367,10 @@ void fillupfuncs()
   rastrigin_params.set_x0(5.0);
   mparams["rastrigin"]=rastrigin_params;
   mfuncs["elli"]=elli;
+  mgfuncs["elli"]=grad_elli;
   msols["elli"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["tablet"]=tablet;
+  mgfuncs["tablet"]=grad_tablet;
   msols["tablet"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["cigar"]=cigar;
   msols["cigar"]=Candidate(0.0,dVec::Constant(10,0));
@@ -322,6 +378,7 @@ void fillupfuncs()
   msols["ellirot"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["diffpow"]=diffpow;
   mfuncs["diffpowrot"]=diffpowrot;
+  mfuncs["hardcos"]=hardcos;
 }
 
 void printAvailFuncs()
@@ -335,7 +392,7 @@ void printAvailFuncs()
 // command line options.
 DEFINE_string(fname,"fsphere","name of the function to optimize");
 DEFINE_int32(dim,2,"problem dimension");
-DEFINE_int32(lambda,10,"number of offsprings");
+DEFINE_int32(lambda,-1,"number of offsprings");
 DEFINE_int32(max_iter,-1,"maximum number of iteration (-1 for unlimited)");
 DEFINE_int32(max_fevals,-1,"maximum budget as number of function evaluations (-1 for unlimited)");
 DEFINE_bool(list,false,"returns a list of available functions");
@@ -343,15 +400,24 @@ DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
-DEFINE_double(x0,std::numeric_limits<double>::min(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
-DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop & abipop");
+DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
 DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
+DEFINE_bool(quiet,false,"no intermediate output");
+DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
+DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
+DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
+DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
+DEFINE_bool(with_gradient,false,"whether to use the function gradient when available in closed form");
+DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
+DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
+DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
 
-template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
 {
   double lbounds[FLAGS_dim];
@@ -362,35 +428,70 @@ CMASolutions cmaes_opt()
       ubounds[i] = FLAGS_ubound;
     }
   TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
-  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_sigma0,FLAGS_seed,gp);
-  cmaparams._max_iter = FLAGS_max_iter;
-  cmaparams._max_fevals = FLAGS_max_fevals;
-  cmaparams._fplot = FLAGS_fplot;
-  cmaparams._lazy_update = FLAGS_lazy_update;
+  std::vector<double> x0(FLAGS_dim,FLAGS_x0);
+  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
+  cmaparams.set_max_iter(FLAGS_max_iter);
+  cmaparams.set_max_fevals(FLAGS_max_fevals);
+  cmaparams.set_restarts(FLAGS_restarts);
+  cmaparams.set_fplot(FLAGS_fplot);
+  cmaparams.set_lazy_update(FLAGS_lazy_update);
+  cmaparams.set_quiet(FLAGS_quiet);
+  cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
+  cmaparams.set_edm(FLAGS_with_edm);
+  cmaparams.set_mt_feval(FLAGS_mt);
+  if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
+    cmaparams.set_ftarget(FLAGS_ftarget);
+  if (FLAGS_noisy)
+    cmaparams.set_noisy();
   if (FLAGS_alg == "cmaes")
-    cmaparams._algo = CMAES_DEFAULT;
+    cmaparams.set_algo(CMAES_DEFAULT);
   else if (FLAGS_alg == "ipop")
-    cmaparams._algo = IPOP_CMAES;
+    cmaparams.set_algo(IPOP_CMAES);
   else if (FLAGS_alg == "bipop")
-    cmaparams._algo = BIPOP_CMAES;
+    cmaparams.set_algo(BIPOP_CMAES);
   else if (FLAGS_alg == "acmaes")
-    cmaparams._algo = aCMAES;
+    cmaparams.set_algo(aCMAES);
   else if (FLAGS_alg == "aipop")
-    cmaparams._algo = aIPOP_CMAES;
+    cmaparams.set_algo(aIPOP_CMAES);
   else if (FLAGS_alg == "abipop")
-    cmaparams._algo = aBIPOP_CMAES;
-  CMASolutions cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+    cmaparams.set_algo(aBIPOP_CMAES);
+  else if (FLAGS_alg == "sepcmaes")
+    cmaparams.set_algo(sepCMAES);
+  else if (FLAGS_alg == "sepipop")
+    cmaparams.set_algo(sepIPOP_CMAES);
+  else if (FLAGS_alg == "sepbipop")
+    cmaparams.set_algo(sepBIPOP_CMAES);
+  else if (FLAGS_alg == "sepacmaes")
+    cmaparams.set_algo(sepaCMAES);
+  else if (FLAGS_alg == "sepaipop")
+    cmaparams.set_algo(sepaIPOP_CMAES);
+  else if (FLAGS_alg == "sepabipop")
+    cmaparams.set_algo(sepaBIPOP_CMAES);
+  else
+    {
+      LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
+      exit(-1);
+    }
+  CMASolutions cmasols;
+  if (!FLAGS_with_gradient)
+    cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  else
+    {
+      cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
+    }
   return cmasols;
 }
 
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
+#ifdef HAVE_GLOG
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr=1;
   google::SetLogDestination(google::INFO,"");
   //FLAGS_log_prefix=false;
-
+#endif
+  
   fillupfuncs();
 
   if (FLAGS_list)
@@ -408,30 +509,32 @@ int main(int argc, char *argv[])
 	      ++mit;
 	      continue;
 	    }
-	  int dim = msols[(*mit).first]._x.rows();
-	  CMAParameters<> cmaparams(dim,FLAGS_lambda,FLAGS_max_iter);
+	  int dim = msols[(*mit).first].get_x_dvec().rows();
+	  std::vector<double> x0(dim,FLAGS_x0);
+	  CMAParameters<> cmaparams(dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+	  cmaparams.set_max_iter(FLAGS_max_iter);
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;
-	  cmaparams._quiet = true;
-	  cmaparams._lazy_update = FLAGS_lazy_update;
+	  cmaparams.set_quiet(true);
+	  cmaparams.set_lazy_update(FLAGS_lazy_update);
 	  if (FLAGS_alg == "cmaes")
-	    cmaparams._algo = CMAES_DEFAULT;
+	    cmaparams.set_algo(CMAES_DEFAULT);
 	  else if (FLAGS_alg == "ipop")
-	    cmaparams._algo = IPOP_CMAES;
+	    cmaparams.set_algo(IPOP_CMAES);
 	  else if (FLAGS_alg == "bipop")
-	    cmaparams._algo = BIPOP_CMAES;
+	    cmaparams.set_algo(BIPOP_CMAES);
 	  else if (FLAGS_alg == "acmaes")
-	    cmaparams._algo = aCMAES;
+	    cmaparams.set_algo(aCMAES);
 	  else if (FLAGS_alg == "aipop")
-	    cmaparams._algo = aIPOP_CMAES;
+	    cmaparams.set_algo(aIPOP_CMAES);
 	  else if (FLAGS_alg == "abipop")
-	    cmaparams._algo = aBIPOP_CMAES;
+	    cmaparams.set_algo(aBIPOP_CMAES);
 	  CMASolutions cmasols = cmaes<>(mfuncs[(*mit).first],cmaparams);
 	  Candidate c = cmasols.best_candidate();
 	  //TODO: check on solution in x space.
-	  if (compEp(c._fvalue,(*fmit).second._fvalue,FLAGS_epsilon))
+	  if (compEp(c.get_fvalue(),(*fmit).second.get_fvalue(),FLAGS_epsilon))
 	    LOG(INFO) << (*mit).first << " -- OK\n";
-	  else LOG(INFO) << (*mit).first << " -- FAILED\n";
+	  else LOG(INFO) << (*mit).first << " -- FAILED - f-value=" << c.get_fvalue() << " / expected f-value=" << (*fmit).second.get_fvalue() << std::endl;
 	  ++mit;
 	}
       exit(1);
@@ -445,12 +548,27 @@ int main(int argc, char *argv[])
     }
   CMASolutions cmasols;
   if (FLAGS_boundtype == "none")
-    cmasols = cmaes_opt<>();
+    {
+      if (!FLAGS_linscaling)
+	cmasols = cmaes_opt<>();
+      else cmasols = cmaes_opt<GenoPheno<NoBoundStrategy,linScalingStrategy>>();
+    }
   else if (FLAGS_boundtype == "pwq")
-    cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
-  if (cmasols._run_status < 0)
-    LOG(INFO) << "optimization failed with termination criteria " << cmasols._run_status << std::endl;
-  LOG(INFO) << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
+    {
+      if (!FLAGS_linscaling)
+	cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
+      else cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy,linScalingStrategy>>();
+    }
+  else
+    {
+      LOG(ERROR) << "Unknown boundtype " << FLAGS_boundtype << std::endl;
+      exit(-1);
+    }
+  if (cmasols.run_status() < 0)
+    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
+  LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   LOG(INFO) << cmasols << std::endl;
+  if (FLAGS_with_edm)
+    LOG(INFO) << "EDM=" << cmasols.edm() << " / EDM/fm=" << cmasols.edm() / cmasols.best_candidate().get_fvalue() << std::endl;
   //cmasols.print(std::cout,1);
  }

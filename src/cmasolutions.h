@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -22,6 +22,7 @@
 #ifndef CMASOLUTIONS_H
 #define CMASOLUTIONS_H
 
+#include "libcmaes_config.h"
 #include "candidate.h"
 #include "eo_matrix.h"
 #include "cmaparameters.h"
@@ -36,11 +37,20 @@ namespace libcmaes
    */
   class CMASolutions
   {
+    template <class U, class V> friend class CMAStrategy;
+    template <class U, class V> friend class ESOptimizer;
+    template <class U, class V, class W> friend class ESOStrategy;
+    template <class U> friend class CMAStopCriteria;
+    template <class U, class V> friend class IPOPCMAStrategy;
+    template <class U, class V> friend class BIPOPCMAStrategy;
+    friend class CovarianceUpdate;
+    friend class ACovarianceUpdate;
+    
   public:
     /**
      * \brief dummy constructor.
      */
-    CMASolutions() {};
+    CMASolutions() {}
 
     /**
      * \brief initializes solutions from stochastic optimization parameters.
@@ -57,7 +67,7 @@ namespace libcmaes
     void sort_candidates()
     {
       std::sort(_candidates.begin(),_candidates.end(),
-		[](Candidate const &c1, Candidate const &c2){return c1._fvalue < c2._fvalue;});
+		[](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() < c2.get_fvalue();});
     }
 
     /**
@@ -81,20 +91,155 @@ namespace libcmaes
      * @return currentbest candidate
      * @see CMASolutions::sort_candidates
      */
-    Candidate best_candidate() const
+    inline Candidate best_candidate() const
     {
       return _best_candidates_hist.back();
     }
 
     /**
+     * \brief get a reference to the r-th candidate in current set
+     * @param r candidate position
+     */
+    inline Candidate& get_candidate(const int &r)
+      {
+	return _candidates.at(r);
+      }
+    
+    /**
      * \brief number of candidate solutions.
      * @return current number of solution candidates.
      */
-    int size() const
+    inline int size() const
     {
       return _candidates.size();
     }
 
+    /**
+     * \brief return problem dimension.
+     * @return problem dimension
+     */
+    inline int dim() const
+    {
+      return _xmean.size();
+    }
+    
+    /**
+     * \brief returns expected distance to minimum.
+     * @return edm
+     */
+    inline double edm() const
+    {
+      return _edm;
+    }
+
+    /**
+     * \brief returns error covariance matrix
+     * @return error covariance matrix
+     */
+    inline dMat cov() const
+    {
+      return _cov;
+    }
+
+    /**
+     * \brief returns pointer to covariance matrix array
+     * @return pointer to covariance matrix array
+     */
+    inline const double* cov_data() const
+    {
+      return _cov.data();
+    }
+    
+    /**
+     * \brief returns separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
+     * @return error covariance diagonal vector
+     */
+    inline dMat sepcov() const
+    {
+      return _sepcov;
+    }
+
+    /**
+     * \brief returns pointer to covariance diagnoal vector
+     * @return pointer to covariance diagonal array
+     */
+    inline const double* sepcov_data() const
+    {
+      return _sepcov.data();
+    }
+    
+    /**
+     * \brief returns current value of step-size sigma
+     * @return current step-size
+     */
+    inline double sigma() const
+    {
+      return _sigma;
+    }
+
+    /**
+     * \brief returns current distribution's mean in parameter space
+     * @return mean
+     */
+    inline dVec xmean() const
+    {
+      return _xmean;
+    }
+
+    /**
+     * \brief returns current optimization status.
+     * @return status
+     */
+    inline int run_status() const
+    {
+      return _run_status;
+    }
+
+    /**
+     * \brief returns currently elapsed time spent on optimization
+     * @return time spent on optimization
+     */
+    inline int elapsed_time() const
+    {
+      return _elapsed_time;
+    }
+
+    /**
+     * \brief returns time spent on last iteration
+     * @return time spent on last iteration
+     */
+    inline int elapsed_last_iter() const
+    {
+      return _elapsed_last_iter;
+    }
+    
+    /**
+     * \brief returns current number of iterations
+     * @return number of iterations
+     */
+    inline int niter() const
+    {
+      return _niter;
+    }
+
+    /**
+     * \brief returns current minimal eigen value
+     * @return minimal eigen value
+     */
+    inline double min_eigenv() const
+    {
+      return _min_eigenv;
+    }
+
+    /**
+     * \brief returns current maximal eigen value
+     * @return maximal eigen value
+     */
+    inline double max_eigenv() const
+    {
+      return _max_eigenv;
+    }
+    
     /**
      * \brief print the solution object out.
      * @param out output stream
@@ -103,16 +248,20 @@ namespace libcmaes
     std::ostream& print(std::ostream &out,
 			const int &verb_level=0) const;
 
+  private:
     dMat _cov; /**< covariance matrix. */
     dMat _csqinv; /** inverse root square of covariance matrix. */
+    dMat _sepcov;
+    dMat _sepcsqinv;
     dVec _xmean; /**< distribution mean. */
-    dVec _psigma; /**< cummulation for sigma. */
+    dVec _psigma; /**< cumulation for sigma. */
     dVec _pc; /**< cumulation for covariance. */
     short _hsig = 1; /**< 0 or 1. */
     double _sigma; /**< step size. */
     std::vector<Candidate> _candidates; /**< current set of candidate solutions. */
     std::vector<Candidate> _best_candidates_hist; /**< history of best candidate solutions. */
-
+    int _max_hist = 100; /**< max size of the history, keeps memory requirements fixed. */
+    
     double _max_eigenv = 0.0; /**< max eigenvalue, for termination criteria. */
     double _min_eigenv = 0.0; /**< min eigenvalue, for termination criteria. */
     dVec _leigenvalues; /**< last computed eigenvalues, for termination criteria. */
@@ -130,6 +279,14 @@ namespace libcmaes
     // status of the run.
     int _run_status = 0; /**< current status of the stochastic optimization (e.g. running, or stopped under termination criteria). */
     int _elapsed_time = 0; /**< final elapsed time of stochastic optimization. */
+    int _elapsed_last_iter = 0; /**< time consumed during last iteration. */
+#ifdef HAVE_DEBUG
+    int _elapsed_eval = 0;
+    int _elapsed_ask = 0;
+    int _elapsed_tell = 0;
+    int _elapsed_stop = 0;
+#endif
+    double _edm = 0.0; /**< expected vertical distance to the minimum. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -35,15 +35,18 @@ namespace libcmaes
   enum CMAStopCritType
   {
     CONT = 0,
-    AUTOMAXITER = -10,
+    AUTOMAXITER = 7,
     TOLHISTFUN = 1, // convergence
-    EQUALFUNVALS = -11,
-    TOLX = -12,
+    EQUALFUNVALS = 5, // partial success, user error
+    TOLX = 2, // partial success
     TOLUPSIGMA = -13,
-    STAGNATION = -14,
-    CONDITIONCOV = -15,
-    NOEFFECTAXIS = -16,
-    NOEFFECTCOOR = -17
+    STAGNATION = 6, // partial success
+    CONDITIONCOV = -15, // error, user action needed
+    NOEFFECTAXIS = 3, // partial success
+    NOEFFECTCOOR = 4, // partial success
+    MAXFEVALS = 8,
+    MAXITER = 9,
+    FTARGET = 10 // success
   };
 
   /**
@@ -68,6 +71,7 @@ namespace libcmaes
      */
     int stop(const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas) const;
 
+  private:
     std::map<int,StopCriteriaFunc<TGenoPheno> > _scriteria; /**< the set of predefined criteria, with priorities. */
     bool _active; /**< whether these termination criteria are active. */
   };

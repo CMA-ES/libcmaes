@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -25,7 +25,7 @@
 #include <functional>
 #include <chrono>
 #include "parameters.h"
-#include "cmastrategy.h"
+#include "esostrategy.h"
 
 /* algorithms */
 enum {
@@ -40,7 +40,19 @@ enum {
   /* Active IPOP-CMA-ES */
   aIPOP_CMAES = 4,
   /* Active BIPOP-CMA-ES */
-  aBIPOP_CMAES = 5
+  aBIPOP_CMAES = 5,
+  /* sep-CMA-ES */
+  sepCMAES = 6,
+  /* sep-IPOP-CMA-ES */
+  sepIPOP_CMAES = 7,
+  /* sep-BIPOP-CMA-ES */
+  sepBIPOP_CMAES = 8,
+  /* Active sep-CMA-ES */
+  sepaCMAES = 9,
+  /* Active sep-IPOP-CMA-ES */
+  sepaIPOP_CMAES = 10,
+  /* Active sep-BIPOP-CMA-ES */
+  sepaBIPOP_CMAES = 11
 };
 
 namespace libcmaes
@@ -52,6 +64,14 @@ namespace libcmaes
     class ESOptimizer : public TESOStrategy
     {
     public:
+      /**
+       * \brief dummy constructor
+       */
+      ESOptimizer()
+       :TESOStrategy()
+      {
+      }
+    
       /**
        * \brief constructor
        * @param func function to minimize

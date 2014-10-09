@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -45,12 +45,18 @@ namespace libcmaes
     {
     public:
       /**
+       * \brief dummy constructor
+       */
+      CMAStrategy();
+    
+      /**
        * \brief constructor.
        * @param func objective function to minimize
        * @param parameters stochastic search parameters
        */
       CMAStrategy(FitFunc &func,
 		  CMAParameters<TGenoPheno> &parameters);
+    
       ~CMAStrategy();
 
       /**
@@ -79,29 +85,21 @@ namespace libcmaes
        * Note: the termination criteria code is held by _solutions._run_status
        */
       int optimize();
-
+    
       /**
        * \brief Stream the internal state of the search into an output file, 
        *        as defined in the _parameters object.
        */
       void plot();
-
-      /**
-       * \brief Sets the possibly custom progress function,
-       *        that is called in between every search step, and gives an outside
-       *        user a simple way to witness progress of the algorithm, as well as
-       *        to add custom termination criteria.
-       * @param pfunc a progress function
-       */
-      void set_progress_func(ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
-      
-    private:
+    
+    protected:
       EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
-      std::ofstream _fplotstream; /**< plotting file stream, not in parameters because of copy-constructor hell. */
+      std::ofstream *_fplotstream = nullptr; /**< plotting file stream, not in parameters because of copy-constructor hell. */
 
     public:
-      static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
+    static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
+    static PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultFPFunc; /**< the default plot to file function. */
     };
   
 }

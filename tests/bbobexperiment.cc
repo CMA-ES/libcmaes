@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -33,53 +33,122 @@
 #include "bbobStructures.h" /* Include all declarations for BBOB calls */
 #include <vector>
 #include <gflags/gflags.h>
+#include <mutex>
+#include <iostream>
 
 using namespace libcmaes;
 
-void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg)
+void tokenize(const std::string &str,
+	      std::vector<std::string> &tokens,
+	      const std::string &delim)
+{
+  
+  // Skip delimiters at beginning.
+  std::string::size_type lastPos = str.find_first_not_of(delim, 0);
+  // Find first "non-delimiter".
+  std::string::size_type pos = str.find_first_of(delim, lastPos);
+  while (std::string::npos != pos || std::string::npos != lastPos)
+    {
+      // Found a token, add it to the vector.
+      tokens.push_back(str.substr(lastPos, pos - lastPos));
+      // Skip delimiters.  Note the "not_of"
+      lastPos = str.find_first_not_of(delim, pos);
+      // Find next "non-delimiter"
+      pos = str.find_first_of(delim, lastPos);
+    }
+}
+
+std::mutex fmtx; // WARNING: bbob function calls are NOT thread-safe (learnt the hard way...).
+
+void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient)
 {
   // map fct to libcmaes FitFunc.
   FitFunc ff = [&](const double *x, const int N)
     {
-      return (*fitnessfunction)(const_cast<double*>(x));
+      std::lock_guard<std::mutex> lck(fmtx);
+      double fval = (*fitnessfunction)(const_cast<double*>(x));
+      return fval;
     };
 
   // call to cmaes().
-  CMAParameters cmaparams(dim,-1,maxfunevals);
-  cmaparams._algo = alg;
-  cmaparams._quiet = true;
+  std::vector<double> x0(dim,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
+  double lbounds[dim];
+  double ubounds[dim];
+  for (size_t i=0;i<dim;i++)
+    {
+      lbounds[i] = -5.0;
+      ubounds[i] = 5.0;
+    }
+  GenoPheno<pwqBoundStrategy> gp(lbounds,ubounds,dim);
+  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0.front(),2.0,-1,0,gp);
+  //CMAParameters<> cmaparams(dim,&x0.front(),2.0,-1,0);
+  cmaparams.set_max_fevals(maxfunevals);
+  cmaparams.set_ftarget(ftarget);
+  //cmaparams.set_x0(-5.0,5.0);
+  cmaparams.set_algo(alg);
+  cmaparams.set_quiet(true);
+  cmaparams.set_gradient(withnumgradient);
+  if (noisy)
+    cmaparams.set_noisy();
   cmaes(ff,cmaparams);
   /*CMASolutions cmasols = cmaes(ff,cmaparams);
-    Candidate bc = cmasols.best_candidate();*/
+    Candidate bc = cmasols.best_candidate();
+    std::cerr << "solution: " << cmasols << std::endl;*/
 }
 
-DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop & abipop");
+DEFINE_string(alg,"cmaes","comma separated list of algorithms, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop");
+DEFINE_bool(noisy,false,"whether to benchmark noisy functions");
+DEFINE_string(comment,"","comment for the experiment. If using multiple algorithms, the comment will apply to all experiments");
+DEFINE_double(maxfunevals,1e6,"maximum number of function evaluations");
+DEFINE_double(minfunevals,-1,"minimum number of function evaluations, -1 for automatic definition based on dimension");
+DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 
 int main(int argc, char *argv[])
 {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
+  // parse the alg flags in order to capture all requested algorithm flavors.
+  std::vector<std::string> algs;
+  tokenize(FLAGS_alg,algs,",");
+  
   std::map<int,std::string> flavors;
-  if (FLAGS_alg == "cmaes")
-    flavors.insert(std::pair<int,std::string>(CMAES_DEFAULT,FLAGS_alg));
-  else if (FLAGS_alg == "ipop")
-    flavors.insert(std::pair<int,std::string>(IPOP_CMAES,FLAGS_alg));
-  else if (FLAGS_alg == "bipop")
-    flavors.insert(std::pair<int,std::string>(BIPOP_CMAES,FLAGS_alg));
-  else if (FLAGS_alg == "acmaes")
-    flavors.insert(std::pair<int,std::string>(aCMAES,FLAGS_alg));
-  else if (FLAGS_alg == "aipop")
-    flavors.insert(std::pair<int,std::string>(aIPOP_CMAES,FLAGS_alg));
-  else if (FLAGS_alg == "abipop")
-    flavors.insert(std::pair<int,std::string>(aBIPOP_CMAES,FLAGS_alg));
+  for (size_t i=0;i<algs.size();i++)
+    {
+      if (algs.at(i) == "cmaes")
+	flavors.insert(std::pair<int,std::string>(CMAES_DEFAULT,algs.at(i)));
+      else if (algs.at(i) == "ipop")
+	flavors.insert(std::pair<int,std::string>(IPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "bipop")
+	flavors.insert(std::pair<int,std::string>(BIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "acmaes")
+	flavors.insert(std::pair<int,std::string>(aCMAES,algs.at(i)));
+      else if (algs.at(i) == "aipop")
+	flavors.insert(std::pair<int,std::string>(aIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "abipop")
+	flavors.insert(std::pair<int,std::string>(aBIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "sepcmaes")
+	flavors.insert(std::pair<int,std::string>(sepCMAES,algs.at(i)));
+      else if (algs.at(i) == "sepipop")
+	flavors.insert(std::pair<int,std::string>(sepIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "sepbipop")
+	flavors.insert(std::pair<int,std::string>(sepBIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "sepacmaes")
+	flavors.insert(std::pair<int,std::string>(sepaCMAES,algs.at(i)));
+      else if (algs.at(i) == "sepaipop")
+	flavors.insert(std::pair<int,std::string>(sepaIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "sepabipop")
+	flavors.insert(std::pair<int,std::string>(sepaBIPOP_CMAES,algs.at(i)));
+    }
   
   for (auto mit=flavors.begin();mit!=flavors.end();++mit)
     {
+      std::cout << "Running BBOB with algorithm " << (*mit).second << std::endl;
+      
       unsigned int dim[6] = {2, 3, 5, 10, 20, 40};
       unsigned int instances[15] = {1, 2, 3, 4, 5, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
-      unsigned int idx_dim, ifun, idx_instances, seed;
+      unsigned int idx_dim, ifun, idx_instances;// seed;
       int independent_restarts;
-      double maxfunevals, minfunevals;
+      double maxfunevals = FLAGS_maxfunevals, minfunevals = FLAGS_minfunevals;
       
       clock_t t0 = clock();
       time_t Tval;
@@ -96,7 +165,7 @@ int main(int argc, char *argv[])
       /* please beforehand run from the command-line 'python createfolders.py PUT_MY_BBOB_DATA_PATH'
        * to create the necessary folder structure to run an experiment. */
       strcpy(params.algName,(*mit).second.c_str());
-      //strcpy(params.comments, "testrun");
+      strcpy(params.comments, FLAGS_comment.c_str());
       
       /*seed = time(nullptr);
 	srand(seed);*/ /* used by MY_OPTIMIZER */
@@ -109,9 +178,13 @@ int main(int argc, char *argv[])
       for (idx_dim = 0; idx_dim < 6; idx_dim++)
 	{
 	  /* Function indices are from 1 to 24 (noiseless) or from 101 to 130 (noisy) */
-	  /* for the noisy functions exchange the for loop with */
-	  /* for (ifun = 101; ifun <= 130; ifun++) */
-	  for (ifun = 1; ifun <= 24; ifun++)
+	  unsigned int ifunbegin = 1, ifunend = 24;
+	  if (FLAGS_noisy)
+	    {
+	      ifunbegin = 101;
+	      ifunend = 130;
+	    }
+	  for (ifun = ifunbegin; ifun <= ifunend; ifun++)
 	    {
 	      for (idx_instances = 0; idx_instances < 15; idx_instances++)
 		{
@@ -134,22 +207,24 @@ int main(int argc, char *argv[])
 		   *                 after fgeneric_initialization
 		   *         fgeneric_best() the best value reached  
 		   */
-		  maxfunevals = 1e6;//5. * dim[idx_dim]; /* PUT APPROPRIATE MAX. NUMBER OF FEVALS */
+		  //maxfunevals = 1e6;//5. * dim[idx_dim]; /* PUT APPROPRIATE MAX. NUMBER OF FEVALS */
 		  /* 5. * dim should be fine to just check everything */
-		  minfunevals = dim[idx_dim] + 2;  /* PUT MINIMAL USEFUL NUMBER OF FEVALS */
+		  if (minfunevals == -1)
+		    minfunevals = dim[idx_dim] + 2;  /* PUT MINIMAL USEFUL NUMBER OF FEVALS */
 		  independent_restarts = -1;
 		  while (fgeneric_evaluations() + minfunevals <= maxfunevals)
 		    {
 		      if (++independent_restarts > 0) 
                         fgeneric_restart("independent restart");  /* additional info */
 		      MY_OPTIMIZER(&fgeneric_evaluate, dim[idx_dim], fgeneric_ftarget(),
-				   maxfunevals - fgeneric_evaluations(), (*mit).first);
+				   maxfunevals - fgeneric_evaluations(), (*mit).first, FLAGS_noisy, FLAGS_with_num_gradient);
 		      if (fgeneric_best() < fgeneric_ftarget())
                         break;
 		    }
 		  
 		  printf("  f%d in %d-D, instance %d: FEs=%.0f with %d restarts,", ifun, dim[idx_dim],
 			 instances[idx_instances], fgeneric_evaluations(), independent_restarts);
+		  //std::cout << "\nfbest=" << fgeneric_best() << " / ftarget=" << fgeneric_ftarget() << std::endl;
 		  printf(" fbest-ftarget=%.4e, elapsed time [h]: %.2f\n", 
 			 fgeneric_best() - fgeneric_ftarget(), (double)(clock()-t0)/CLOCKS_PER_SEC/60./60.);
 		  /* call the BBOB closing function to wrap things up neatly */

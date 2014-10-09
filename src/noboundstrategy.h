@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -29,10 +29,23 @@ namespace libcmaes
   class NoBoundStrategy
   {
   public:
-    NoBoundStrategy(const double *lbounds=nullptr,const double *ubounds=nullptr,const int dim=0) {}; // empty constructor with signature.
+    NoBoundStrategy(const double *lbounds=nullptr,const double *ubounds=nullptr,const int dim=0)
+      {
+	(void)lbounds;
+	(void)ubounds;
+	(void)dim;
+      } // empty constructor with signature.
+
     ~NoBoundStrategy() {};
 
-    void to_f_representation(const dVec &x, dVec &y) {};
+    void to_f_representation(const dVec &x, dVec &y) const
+    {
+      (void)x;
+      (void)y;
+    }
+
+    double getLBound(const int &k) const { (void)k;return -std::numeric_limits<double>::max(); }
+    double getUBound(const int &k) const { (void)k;return std::numeric_limits<double>::max(); }
   };
 }
 

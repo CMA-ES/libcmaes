@@ -1,6 +1,6 @@
 ##
-# CMA-ES, Covariance Matrix Evolution Strategy
-# Copyright (c) 2014 INRIA
+# CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+# Copyright (c) 2014 Inria
 # Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
 #
 # This file is part of libcmaes.
@@ -53,6 +53,7 @@ for c in range(single_values+2*dim,single_values+3*dim):
 xmean = dat[:,xmeanc]
 
 # plot data.
+pylab.rcParams['font.size'] = 10
 xlab = "function evaluations"
 
 # plot fvalue, sigma, kappa
@@ -86,3 +87,6 @@ title('Standard Deviation in all coordinates')
 grid(True)
 
 pylab.show()
+
+msg = '  --- press return to continue --- '
+raw_input(msg) if sys.version < '3' else input(msg)

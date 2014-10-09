@@ -1,5 +1,5 @@
 ## libcmaes
-libcmaes is a multithreaded C++ implementation of the CMA-ES algorithm for stochastic optimization of nonlinear 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
+libcmaes is a multithreaded C++ implementation (with Python bindings) of the CMA-ES algorithm for optimization of nonlinear non-convex 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
 
 Over the past decade, both the original CMA-ES and its improved flavors have proven very effective in optimizing functions when no gradient is available. Typically, the algorithm does find the minimum value of an objective function in a minimal number of function calls, compared to other methods. For a full report of recent results, see (3).
 
@@ -10,28 +10,38 @@ At the moment, the library implements a vanilla version of CMA-ES (1).
 Current features include:
 
 - high-level API for simple use in external applications;
-- implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies;
+- implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES (linear time & space complexity) along with support for IPOP and BIPOP flavors as well;
 - some operations benefit from multicores;
+- support for objective function gradient, when available;
 - a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
+- python bindings
+
+Documentation:
+
+- Full documentation is available from https://github.com/beniz/libcmaes/wiki
+- API documentation is available from http://beniz.github.io/libcmaes/doc/html/index.html
 
 Dependencies:
 
 - [eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) for all matrix operations;
-- [glog](https://code.google.com/p/google-glog/) for logging events and debug;
-- [gflags](https://code.google.com/p/gflags/) for command line parsing;
-- [gtest](https://code.google.com/p/googletest/) for unit testing (optional).
+- [glog](https://code.google.com/p/google-glog/) for logging events and debug (optional);
+- [gflags](https://code.google.com/p/gflags/) for command line parsing (optional);
+- [gtest](https://code.google.com/p/googletest/) for unit testing (optional);
+- [libboost-python](http://www.boost.org/doc/libs/1_56_0/libs/python/doc/) for Python bindings (optional).
 
 Implementation:
 The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithms described in (2) and (6).
 
 ### Authors
-libcmaes is designed and implemented by Emmanuel Benazera on behalf of INRIA Saclay / Research group TAO / LAL Appstats.
+libcmaes is designed and implemented by Emmanuel Benazera on behalf of Inria Saclay / Research group TAO / LAL Appstats.
 
 ### Build
+Below are instruction for Linux systems, for building on Mac, see https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX
+
 Beware of dependencies, typically on Debian/Ubuntu Linux, do:
 
 ```
-sudo apt-get install libgoogle-glog-dev libgflags-dev libeigen3-dev
+sudo apt-get install autoconf automake libtool libgoogle-glog-dev libgflags-dev libeigen3-dev
 ```
 
 For compiling with basic options enabled:
@@ -90,17 +100,82 @@ FitFunc fsphere = [](const double *x, const int N)
 
 int main(int argc, char *argv[])
 {
-  int dim = 10; // problem dimensions.                                                                    
+  int dim = 10; // problem dimensions.
+  std::vector<double> x0(dim,10.0);
+  double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
-  //CMAParameters cmaparams(dim,lambda);
-  CMAParameters<> cmaparams(dim);
-  //cmaparams._algo = BIPOP_CMAES;                                                                        
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
+  //cmaparams.set_algo(BIPOP_CMAES);
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
-  return cmasols._run_status;
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  return cmasols.run_status();
 }
 ```
+
+### Python bindings
+To build the Python bindings and use libcmaes from Python code:
+- install 'boost-python', on Debian/Ubuntu systems:
+```
+sudo apt-get install libboost-python-dev
+```
+- build the libcmaes with support for Python bindings:
+```
+./autogen.sh
+./configure --enable-python --with-prefix=/home/yourusername
+make
+make install
+```
+- test the bindings:
+```
+cd python
+export LD_LIBRARY_PATH=/home/yourusername/lib
+python ptest.py
+```
+
+Sample python code:
+```Python
+import lcmaes
+
+# input parameters for a 10-D problem
+x = [10]*10
+olambda = 10 # lambda is a reserved keyword in python, using olambda instead.
+seed = 0 # 0 for seed auto-generated within the lib.
+sigma = 0.1
+p = lcmaes.make_simple_parameters(x,sigma,olambda,seed)
+
+# objective function.
+def nfitfunc(x,n):
+    val = 0.0
+    for i in range(0,n):
+        val += x[i]*x[i]
+    return val
+
+# generate a function object
+objfunc = lcmaes.fitfunc_pbf.from_callable(nfitfunc);
+
+# pass the function and parameter to cmaes, run optimization and collect solution object.
+cmasols = lcmaes.pcmaes(objfunc,p)
+
+# collect and inspect results
+bcand = cmasols.best_candidate()
+bx = lcmaes.get_candidate_x(bcand)
+print "best x=",bx
+print "distribution mean=",lcmaes.get_solution_xmean(cmasols)
+cov = lcmaes.get_solution_cov(cmasols) # numpy array
+print "cov=",cov
+print "elapsed time=",cmasols.elapsed_time(),"ms"
+```
+
+### Practical hints
+
+CMA-ES requires two components from the user:
+- the initial start point x0;
+- the initial value for sigma, the so-called step-size or error guess.
+
+In short: the optimum that is looked after should better not be far away from the interval [x0 - sigma0, x0 + sigma0] in each dimension, where distance is defined by sigma0.
+
+See https://www.lri.fr/~hansen/cmaes_inmatlab.html#practical for more detailed useful advices using CMA-ES.
 
 ### Run BBOB 2013 Black-Box Optimization Benchmark
 

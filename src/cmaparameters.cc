@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -22,16 +22,56 @@
 #include "cmaparameters.h"
 #include <cmath>
 #include <iostream>
-#include <glog/logging.h>
 
 namespace libcmaes
 {
   template<class TGenoPheno>
-  CMAParameters<TGenoPheno>::CMAParameters(const int &dim, const int &lambda,
-					   const double &sigma_init,
+  CMAParameters<TGenoPheno>::CMAParameters(const int &dim,
+					   const double *x0,
+					   const double &sigma,
+					   const int &lambda,
 					   const uint64_t &seed,
 					   const TGenoPheno &gp)
-    :Parameters<TGenoPheno>(dim,lambda,seed,gp),_sigma_init(sigma_init),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+    :Parameters<TGenoPheno>(dim,x0,lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+  {
+    initialize_parameters();
+  }
+
+  template<class TGenoPheno>
+  CMAParameters<TGenoPheno>::CMAParameters(const std::vector<double> &x0,
+					   const double &sigma,
+					   const int &lambda,
+					   const uint64_t &seed,
+					   const TGenoPheno &gp)
+    :Parameters<TGenoPheno>(x0.size(),&x0.front(),lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+  {
+    initialize_parameters();
+  }
+
+  template<class TGenoPheno>
+  CMAParameters<TGenoPheno>::CMAParameters(const std::vector<double> &x0,
+					   const std::vector<double> &sigma,
+					   const int &lambda,
+					   const std::vector<double> &lbounds,
+					   const std::vector<double> &ubounds,
+					   const uint64_t &seed)
+    :Parameters<TGenoPheno>(x0.size(),&x0.front(),lambda,seed,TGenoPheno()),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+  {
+    dVec scaling = dVec::Constant(x0.size(),1.0).cwiseQuotient(Map<dVec>(const_cast<double*>(&sigma.front()),sigma.size()));
+    dVec shift = dVec::Constant(x0.size(),0.0);
+    TGenoPheno gp(scaling,shift,&lbounds.front(),&ubounds.front()); // XXX: is only effective when GenoPheno has linScalingStrategy
+    this->set_gp(gp);
+    _sigma_init = *std::min_element(sigma.begin(),sigma.end());
+    initialize_parameters();
+  }
+  
+  template <class TGenoPheno>
+  CMAParameters<TGenoPheno>::~CMAParameters()
+  {
+  }
+
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::initialize_parameters()
   {
     _mu = floor(Parameters<TGenoPheno>::_lambda / 2.0);
     _weights = dVec::Zero(_mu);
@@ -66,14 +106,49 @@ namespace libcmaes
     _lazy_value = 1.0/(_c1+_cmu)/Parameters<TGenoPheno>::_dim/10.0;
 
     // active cma.
-    _deltamaxsigma = std::numeric_limits<double>::max(); 
+    _deltamaxsigma = std::numeric_limits<double>::max();
+  }
+  
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::set_noisy()
+  {
+    static double factor = 0.2;
+    static double lfactor = 5.0; // lambda factor.
+    Parameters<TGenoPheno>::_lambda *= lfactor;
+    initialize_parameters(); // reinit parameters.
+    _c1 *= factor;
+    _cmu = std::min(1.0-_c1,2.0*factor*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
+  }
+  
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::set_sep()
+  {
+    _sep = true;
+    _c1 *= (Parameters<TGenoPheno>::_dim+2.0)/3.0;
+    _cmu = std::min(1.0-_c1,2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
+    _lazy_value = 1.0/(_c1+_cmu)/Parameters<TGenoPheno>::_dim/10.0;
   }
 
   template <class TGenoPheno>
-  CMAParameters<TGenoPheno>::~CMAParameters()
+  void CMAParameters<TGenoPheno>::set_fixed_p(const int &index, const double &value)
   {
+    Parameters<TGenoPheno>::set_fixed_p(index,value);
+    double ndim = Parameters<TGenoPheno>::_dim-Parameters<TGenoPheno>::_fixed_p.size();
+    _chi = sqrt(ndim)*(1.0-1.0/(4.0*ndim) + 1.0/(21.0*ndim*ndim));
+    _lazy_value = 1.0/(_c1+_cmu)/ndim/10.0;
   }
 
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::unset_fixed_p(const int &index)
+  {
+    Parameters<TGenoPheno>::unset_fixed_p(index);
+    double ndim = Parameters<TGenoPheno>::_dim-Parameters<TGenoPheno>::_fixed_p.size();
+    _chi = sqrt(ndim)*(1.0-1.0/(4.0*ndim) + 1.0/(21.0*ndim*ndim));
+    _lazy_value = 1.0/(_c1+_cmu)/ndim/10.0;
+  }
+  
   template class CMAParameters<GenoPheno<NoBoundStrategy>>;
   template class CMAParameters<GenoPheno<pwqBoundStrategy>>;
+  template class CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

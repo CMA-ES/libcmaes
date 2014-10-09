@@ -1,6 +1,6 @@
 /**
- * CMA-ES, Covariance Matrix Evolution Strategy
- * Copyright (c) 2014 INRIA
+ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Copyright (c) 2014 Inria
  * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
  *
  * This file is part of libcmaes.
@@ -48,13 +48,14 @@ TransFunc phenof = [](const double *in, double *ext, const int &dim)
 int main(int argc, char *argv[])
 {
   int dim = 10; // problem dimensions.
+  std::vector<double> x0(dim,1.0);
+  double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
   GenoPheno<> gp(genof,phenof);
-  //CMAParameters cmaparams(dim,lambda);
-  CMAParameters<> cmaparams(dim,-1,-1.0,0,gp);
+  CMAParameters<> cmaparams(dim,&x0.front(),sigma,-1,0,gp); // -1 for automatically decided lambda.
   //cmaparams._algo = BIPOP_CMAES;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols._elapsed_time / 1000.0 << " seconds\n";
-  return cmasols._run_status;
+  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  return cmasols.run_status();
 }

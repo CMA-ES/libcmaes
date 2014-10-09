@@ -1,0 +1,43 @@
+2014-10-09	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.9.1:
+	- small API improvements
+	- fixed bug in tolX stopping criteria when using 'sep' algorithm
+	- fixed bug to the natural gradient with genotype/phenotype transforms
+	- file stream now outputs parameters' mean in phenotype
+	- tiny wrapper to simplify maximization of objective function (default is minimization)
+	
+2014-09-10	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.9.0:
+	- Python bindings, ref #26
+	- Cleaned up setters / getters interface, ref #64
+	- Lib is now quiet by default, ref #61
+	- Support for pkg-config, ref #58
+	- Improved make uninstall, ref #66
+	- API improvements (e.g. new parameters constructor from vector, ref #60)
+	- Stopping criteria with explicit control of in-memory history size for large-scale optimization
+	
+2014-08-12	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.8.1:
+	- Added customization of data to file streaming function, ref #51
+	- Added configure control for compiling the library alone without examples or tools, ref #11
+	- Fixed code in order to avoid various compiler warnings
+	- Fixed sample code in README, ref #54
+	- Fixed get_max_iter and set_mt_feval in Parameters object
+	- New CMAParameters constructor, from x0 as a vector of double
+	- Updated building instructions for Mac OSX
+	- New set_str_algo in Parameters object
+	
+2014-07-15	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.8:
+	- Improved API of main userland objects
+	- Many fixes and improvements to genotype / phenotype transforms with gradient and EDM
+	- full documentation
+
+	
+2014-06-23	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.7:
+	- Support for Estimated Distance to Minimum (EDM)
+	- Support for gradient injection
+	- Improved examples
+	- Support for sep-active-CMA-ES for high dimensional problems
+	
