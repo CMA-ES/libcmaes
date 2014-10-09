@@ -49,7 +49,7 @@ namespace libcmaes
     if (!cmaparams._sep)
       fplotstream << cmasols._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
     else fplotstream << cmasols._sepcov.cwiseSqrt().transpose() << sep;
-    fplotstream << cmasols._xmean.transpose();
+    fplotstream << cmaparams._gp.pheno(cmasols._xmean).transpose();
     fplotstream << sep << cmasols._elapsed_last_iter;
 #ifdef HAVE_DEBUG
     fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
@@ -82,7 +82,7 @@ namespace libcmaes
 	if (!cmaparams._sep)
 	  fplotstream << cmasols._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
 	else fplotstream << cmasols._sepcov.cwiseSqrt().transpose() << sep;
-	fplotstream << cmasols._xmean.transpose();
+	fplotstream << cmaparams._gp.pheno(cmasols._xmean).transpose();
 	fplotstream << sep << cmasols._elapsed_last_iter;
 #ifdef HAVE_DEBUG
 	fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
@@ -143,7 +143,7 @@ namespace libcmaes
     // gradient if available.
     if (eostrat<TGenoPheno>::_parameters._with_gradient)
       {
-	dVec grad_at_mean = eostrat<TGenoPheno>::gradf(eostrat<TGenoPheno>::_solutions._xmean);
+	dVec grad_at_mean = eostrat<TGenoPheno>::gradf(eostrat<TGenoPheno>::_parameters._gp.pheno(eostrat<TGenoPheno>::_solutions._xmean));
 	dVec gradgp_at_mean = eostrat<TGenoPheno>::gradgp(eostrat<TGenoPheno>::_solutions._xmean); // for geno / pheno transform.
 	grad_at_mean = grad_at_mean.cwiseProduct(gradgp_at_mean);
 	if (grad_at_mean != dVec::Zero(eostrat<TGenoPheno>::_parameters._dim))

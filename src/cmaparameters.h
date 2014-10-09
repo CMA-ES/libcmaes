@@ -107,9 +107,29 @@ namespace libcmaes
       void set_noisy();
       
       /**
+       * \brief sets the optimization algorithm.
+       * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop
+       */
+      void set_str_algo(const std::string &algo)
+      {
+	std::map<std::string,int>::const_iterator mit;
+	if ((mit = Parameters<TGenoPheno>::_algos.find(algo))!=Parameters<TGenoPheno>::_algos.end())
+	  Parameters<TGenoPheno>::_algo = (*mit).second;
+	if (algo.find("sep")!=std::string::npos)
+	  _sep = true;
+	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
+      }
+      
+      /**
        * \brief fix parameters for sep-CMA-ES, using only the diagonal of covariance matrix.
        */
       void set_sep();
+
+      /**
+       * \brief whether algorithm leverages separability.
+       * @return separability status
+       */
+      bool is_sep() const { return _sep; }
       
       /**
        * \brief turns stopping criteria MaxIter that automatically stops optimization after a 
@@ -191,6 +211,9 @@ namespace libcmaes
       // stopping criteria.
       bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
     };
+
+  template<class TGenoPheno>
+    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11}};
 }
 
 #endif
