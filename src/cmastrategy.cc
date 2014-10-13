@@ -160,6 +160,14 @@ namespace libcmaes
 	    pop.col(0) = nx;
 	  }
       }
+
+    //TODO: if initial elitist, reinject initial solution as needed.
+    /*if (eostrat<TGenoPheno>::_parameters._initial_elitist)
+      {
+	//TODO: number of points whose value is below initial point candidate value.
+	
+	pop.col(1) = eostrat<TGenoPheno>::_solutions._initial_candidate._x;
+	}*/
     
     // if some parameters are fixed, reset them.
     if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
@@ -242,6 +250,13 @@ namespace libcmaes
     //debug
     //DLOG(INFO) << "optimize()\n";
     //debug
+
+    if (eostrat<TGenoPheno>::_initial_elitist)
+      {
+	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim),
+								       eostrat<TGenoPheno>::_solutions._xmean);
+      }
+    
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
     while(!stop())
       {
@@ -255,6 +270,26 @@ namespace libcmaes
       }
     if (eostrat<TGenoPheno>::_parameters._with_edm)
       eostrat<TGenoPheno>::edm();
+
+    // test on final value wrt. to best candidate value and number of iterations in between.
+    if (eostrat<TGenoPheno>::_parameters._elitist)
+      {
+	if (eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue()
+	    < eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue())
+	  //&& eostrat<TGenoPheno>::_niter - eostrat<TGenoPheno>::_solutions._best_seen_iter >= 100.0*eostrat<TGenoPheno>::_parameters.dim())
+	  {
+	    std::cout << "setting initial elitist: bfvalue=" << eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue() << " / biter=" << eostrat<TGenoPheno>::_solutions._best_seen_iter << std::endl;
+	    this->set_initial_elitist(true);
+
+	    // reinit solution and re-optimize.
+	    eostrat<TGenoPheno>::_parameters.set_x0(eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_x());
+	    eostrat<TGenoPheno>::_solutions = CMASolutions(eostrat<TGenoPheno>::_parameters);
+	    eostrat<TGenoPheno>::_solutions._nevals = eostrat<TGenoPheno>::_nevals;
+	    eostrat<TGenoPheno>::_niter = 0;
+	    optimize();
+	  }
+      }
+    
     if (eostrat<TGenoPheno>::_solutions._run_status >= 0)
       return OPTI_SUCCESS;
     else return OPTI_ERR_TERMINATION; // exact termination code is in eostrat<TGenoPheno>::_solutions._run_status.

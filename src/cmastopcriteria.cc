@@ -21,6 +21,7 @@
 
 #include "libcmaes_config.h"
 #include "cmastopcriteria.h"
+//#include "opti_err.h"
 #include <cmath>
 #include <iterator>
 #include "llogging.h"

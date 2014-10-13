@@ -179,6 +179,8 @@ namespace libcmaes
     // deprecated.
     Candidate best_solution() const;
 
+    void set_initial_elitist(const bool &e) { _initial_elitist = e; }
+    
   protected:
     FitFunc _func; /**< the objective function. */
     int _nevals;  /**< number of function evaluations. */
@@ -189,6 +191,7 @@ namespace libcmaes
     GradFunc _gfunc = nullptr; /**< gradient function, when available. */
     PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
     FitFunc _funcaux;
+    bool _initial_elitist = false; /**< restarts from and re-injects best seen solution if not the final one. */
   };
   
 }

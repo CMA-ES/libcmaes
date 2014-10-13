@@ -102,6 +102,13 @@ namespace libcmaes
     _median_fvalues.push_back(median);
     if (_median_fvalues.size() > static_cast<size_t>(ceil(0.2*_niter+120+30*_xmean.size()/static_cast<double>(_candidates.size()))))
       _median_fvalues.erase(_median_fvalues.begin());
+
+    // store best seen candidate.
+    if (_niter == 0 || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
+      {
+	_best_seen_candidate = _candidates.at(0);
+	_best_seen_iter = _niter;
+      }
   }
 
   void CMASolutions::update_eigenv(const dVec &eigenvalues,
@@ -118,7 +125,6 @@ namespace libcmaes
   {
     if (_candidates.empty())
       {
-	out << "empth solution set\n";
 	return out;
       }
     out << "best solution => f-value=" << best_candidate().get_fvalue() << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << best_candidate().get_x_dvec().transpose(); //TODO: print pheno(x), but it requires access to the genopheno object.

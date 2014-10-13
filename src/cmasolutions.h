@@ -287,6 +287,10 @@ namespace libcmaes
     int _elapsed_stop = 0;
 #endif
     double _edm = 0.0; /**< expected vertical distance to the minimum. */
+
+    Candidate _best_seen_candidate; /**< best seen candidate along the run. */
+    int _best_seen_iter;
+    Candidate _initial_candidate;
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

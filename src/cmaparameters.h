@@ -175,6 +175,8 @@ namespace libcmaes
        * @param whether lazy update is activated
        */
       inline bool get_lazy_update() { return _lazy_update; }
+
+      inline void set_elitist(const bool &e) { _elitist = e; }
       
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
@@ -210,6 +212,8 @@ namespace libcmaes
       
       // stopping criteria.
       bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
+
+      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
     };
 
   template<class TGenoPheno>

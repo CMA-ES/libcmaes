@@ -416,6 +416,7 @@ DEFINE_bool(with_gradient,false,"whether to use the function gradient when avail
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
+DEFINE_bool(elitist,false,"whether to activate elistist scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -439,6 +440,7 @@ CMASolutions cmaes_opt()
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
+  cmaparams.set_elitist(FLAGS_elitist);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
