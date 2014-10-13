@@ -72,7 +72,7 @@ namespace libcmaes
     _pc = dVec::Zero(p._dim);
     _candidates.resize(p._lambda);
     _kcand = std::min(p._lambda-1,static_cast<int>(1.0+ceil(0.1+p._lambda/4.0)));
-    _max_hist = p._max_hist;
+    _max_hist = (p._max_hist > 0) ? p._max_hist : static_cast<int>(10+ceil(30*p._dim/p._lambda));
   }
 
   CMASolutions::~CMASolutions()
