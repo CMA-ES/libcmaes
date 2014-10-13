@@ -260,7 +260,7 @@ namespace libcmaes
     double _sigma; /**< step size. */
     std::vector<Candidate> _candidates; /**< current set of candidate solutions. */
     std::vector<Candidate> _best_candidates_hist; /**< history of best candidate solutions. */
-    int _max_hist = 100; /**< max size of the history, keeps memory requirements fixed. */
+    int _max_hist = -1; /**< max size of the history, keeps memory requirements fixed. */
     
     double _max_eigenv = 0.0; /**< max eigenvalue, for termination criteria. */
     double _min_eigenv = 0.0; /**< min eigenvalue, for termination criteria. */
