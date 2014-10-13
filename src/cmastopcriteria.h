@@ -49,6 +49,23 @@ namespace libcmaes
     FTARGET = 10 // success
   };
 
+  template <class TGenoPheno=NoBoundStrategy>
+  class StopCriteria
+  {
+  public:
+    StopCriteria(const StopCriteriaFunc<TGenoPheno> &sfunc)
+      :_sfunc(sfunc)
+    {}
+    ~StopCriteria() {}
+
+    inline bool active() const { return _active; }
+  
+    void set_active(const bool &a) { _active = a; }
+  
+    StopCriteriaFunc<TGenoPheno> _sfunc;
+    bool _active = true;
+  };
+  
   /**
    * \brief CMA-ES termination criteria, see reference paper in cmastrategy.h
    */
@@ -71,8 +88,16 @@ namespace libcmaes
      */
     int stop(const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas) const;
 
+    /**
+     * \brief activates / deactivates a stopping criteria
+     * @param c the criteria to modify
+     * @param true to activate, false to deactivate
+     * @return 1 if criteria cannot be found, 0 otherwise
+     */
+    int set_criteria_active(const int &c, const bool &active);
+  
   private:
-    std::map<int,StopCriteriaFunc<TGenoPheno> > _scriteria; /**< the set of predefined criteria, with priorities. */
+    std::map<int,StopCriteria<TGenoPheno> > _scriteria; /**< the set of predefined criteria, with priorities. */
     bool _active; /**< whether these termination criteria are active. */
   };
   

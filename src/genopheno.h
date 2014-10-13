@@ -237,10 +237,7 @@ namespace libcmaes
       else return gen;
     }
 
-    TBoundStrategy get_boundstrategy() const
-      {
-	return _boundstrategy;
-      }
+    TBoundStrategy& get_boundstrategy() { return _boundstrategy; }
       
     private:
     TBoundStrategy _boundstrategy;

@@ -1,3 +1,11 @@
+2014-10-09	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.9.1:
+	- small API improvements
+	- fixed bug in tolX stopping criteria when using 'sep' algorithm
+	- fixed bug to the natural gradient with genotype/phenotype transforms
+	- file stream now outputs parameters' mean in phenotype
+	- tiny wrapper to simplify maximization of objective function (default is minimization)
+	
 2014-09-10	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v0.9.0:
 	- Python bindings, ref #26

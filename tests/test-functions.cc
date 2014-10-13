@@ -334,6 +334,15 @@ FitFunc diffpowrot = [](const double *x, const int N)
   return val;
 };
 
+FitFunc hardcos = [](const double *x, const int N)
+{
+  double sum = 0.0;
+  for (int i=0;i<N;i++)
+    sum += x[i]*x[i];
+  sum*=(cos(sum)+2.0);
+  return sum;
+};
+
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,GradFunc> mgfuncs;
 std::map<std::string,Candidate> msols;
@@ -385,6 +394,7 @@ void fillupfuncs()
   msols["ellirot"]=Candidate(0.0,dVec::Constant(10,0));
   mfuncs["diffpow"]=diffpow;
   mfuncs["diffpowrot"]=diffpowrot;
+  mfuncs["hardcos"]=hardcos;
 }
 
 void printAvailFuncs()

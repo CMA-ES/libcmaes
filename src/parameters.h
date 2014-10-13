@@ -355,18 +355,6 @@ namespace libcmaes
       }
       
       /**
-       * \brief sets the optimization algorithm.
-       * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop
-       */
-      void set_str_algo(const std::string &algo)
-      {
-	std::map<std::string,int>::const_iterator mit;
-	if ((mit = Parameters<TGenoPheno>::_algos.find(algo))!=Parameters<TGenoPheno>::_algos.end())
-	  _algo = (*mit).second;
-	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
-      }
-      
-      /**
        * \brief returns which algorithm is set for the optimization at hand.
        * @return algorithm integer code
        */
@@ -524,10 +512,6 @@ namespace libcmaes
       
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
     };
-  
-  template<class TGenoPheno>
-    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11}};
-  
 }
 
 #endif
