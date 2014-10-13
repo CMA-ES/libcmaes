@@ -105,7 +105,7 @@ namespace libcmaes
       {
 	double threshold = std::max(cmap._ftolerance,1e-12);
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
-	int histthresh = static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda));
+	int histthresh = std::min(cmas._max_hist,static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda)));
 	int histlength = std::min(histthresh,histsize);
 	if (histlength < histthresh) // not enough data
 	  return CONT;
