@@ -48,6 +48,7 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      friend class VDCMAUpdate;
       friend class Candidate;
       
     public:
@@ -497,7 +498,6 @@ namespace libcmaes
       int _max_hist = -1; /**< max size of the history, keeps memory requirements fixed. */
 
       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
-      
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
     };
 }

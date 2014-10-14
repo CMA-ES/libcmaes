@@ -92,8 +92,10 @@ namespace libcmaes
 
     _csigma = (_muw+2.0)/(Parameters<TGenoPheno>::_dim+_muw+5.0);
     _cc = (4.0+_muw/static_cast<double>(Parameters<TGenoPheno>::_dim))/(Parameters<TGenoPheno>::_dim+4.0+2.0*_muw/static_cast<double>(Parameters<TGenoPheno>::_dim));
+    
     _c1 = 2.0/(pow((Parameters<TGenoPheno>::_dim+1.3),2)+_muw);
-    _cmu = std::min(1.0-_c1,2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
+    _cmu = 2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw);
+    _cmu = std::min(1.0-_c1,_cmu);
     
     _dsigma = 1.0+_csigma+2.0*std::max(0.0,sqrt((_muw-1)/(Parameters<TGenoPheno>::_dim+1))-1);
 
@@ -127,6 +129,18 @@ namespace libcmaes
     _c1 *= (Parameters<TGenoPheno>::_dim+2.0)/3.0;
     _cmu = std::min(1.0-_c1,2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
     _lazy_value = 1.0/(_c1+_cmu)/Parameters<TGenoPheno>::_dim/10.0;
+  }
+  
+  template <class TGenoPheno>
+  void CMAParameters<TGenoPheno>::set_vd()
+  {
+    _vd = true;
+    _csigma = std::sqrt(_muw)/(2.0*(std::sqrt(Parameters<TGenoPheno>::_dim) + std::sqrt(_muw)));
+    //_csigma = 0.5/(std::sqrt(Parameters<TGenoPheno>::_dim/_muw));
+    _c1 *= (Parameters<TGenoPheno>::_dim-5)/6.0;
+    _cmu = std::min(1.0-_c1,(Parameters<TGenoPheno>::_dim-5)/6.0*(2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw)));
+    _dsigma = 1.0+_csigma+2.0*std::max(0.0,sqrt((_muw-1)/(Parameters<TGenoPheno>::_dim+1))-1);
+    _fact_ps = sqrt(_csigma*(2.0-_csigma)*_muw);
   }
 
   template <class TGenoPheno>

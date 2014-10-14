@@ -443,6 +443,7 @@ CMASolutions cmaes_opt()
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
     cmaparams.set_noisy();
+  //cmaparams.set_str_algo(FLAGS_alg);
   if (FLAGS_alg == "cmaes")
     cmaparams.set_algo(CMAES_DEFAULT);
   else if (FLAGS_alg == "ipop")
@@ -467,6 +468,8 @@ CMASolutions cmaes_opt()
     cmaparams.set_algo(sepaIPOP_CMAES);
   else if (FLAGS_alg == "sepabipop")
     cmaparams.set_algo(sepaBIPOP_CMAES);
+  else if (FLAGS_alg == "vdcma")
+    cmaparams.set_algo(VD_CMAES);
   else
     {
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;

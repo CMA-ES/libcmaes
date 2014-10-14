@@ -42,6 +42,7 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      friend class VDCMAUpdate;
       
     public:
       CMAParameters() {} //TODO: var init even if this constructor is not supposed to be used for now.
@@ -115,9 +116,11 @@ namespace libcmaes
 	std::map<std::string,int>::const_iterator mit;
 	if ((mit = Parameters<TGenoPheno>::_algos.find(algo))!=Parameters<TGenoPheno>::_algos.end())
 	  Parameters<TGenoPheno>::_algo = (*mit).second;
-	if (algo.find("sep")!=std::string::npos)
-	  _sep = true;
 	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
+	if (algo.find("sep")!=std::string::npos)
+	  _sep = true;//set_sep();
+	if (algo.find("vd")!=std::string::npos)
+	  _vd = true;
       }
       
       /**
@@ -130,6 +133,11 @@ namespace libcmaes
        * @return separability status
        */
       bool is_sep() const { return _sep; }
+
+      /**
+       * \brief activates VD decomposition.
+       */
+      void set_vd();
       
       /**
        * \brief turns stopping criteria MaxIter that automatically stops optimization after a 
@@ -207,13 +215,14 @@ namespace libcmaes
       
       // sep cma (diagonal cov).
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
+      bool _vd = false;
       
       // stopping criteria.
       bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
     };
 
   template<class TGenoPheno>
-    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11}};
+    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11},{"vdcma",12}};
 }
 
 #endif
