@@ -151,10 +151,11 @@ namespace libcmaes
 	double normv = eostrat<TGenoPheno>::_solutions._v.squaredNorm();
 	double fact = std::sqrt(1+normv)-1;
 	dVec vbar = eostrat<TGenoPheno>::_solutions._v / std::sqrt(normv);
-	//TODO: parallelize
+
+	pop += fact * vbar * (vbar.transpose() * pop);
 	for (int i=0;i<pop.cols();i++)
 	  {
-	    pop.col(i) = eostrat<TGenoPheno>::_solutions._xmean + eostrat<TGenoPheno>::_solutions._sigma * eostrat<TGenoPheno>::_solutions._sepcov.cwiseProduct((pop.col(i) + fact * (pop.col(i).dot(vbar)) * vbar));
+	    pop.col(i) = eostrat<TGenoPheno>::_solutions._xmean + eostrat<TGenoPheno>::_solutions._sigma * eostrat<TGenoPheno>::_solutions._sepcov.cwiseProduct(pop.col(i));
 	  }
       }
     

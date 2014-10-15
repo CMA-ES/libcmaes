@@ -28,7 +28,13 @@
 
 namespace libcmaes
 {
-
+  /**
+   * \brief VD-CMA update that is a linear time/space variant of CMA-ES
+   * This is an implementation that closely follows:
+   * Y. Akimoto, A. Auger and N. Hansen: Comparison-Based Natural 
+   *  Gradient Optimization in High Dimension. In Proceedings of Genetic
+   *  and Evolutionary Computation Conference (2014)
+   */
   class VDCMAUpdate
   {
   public:

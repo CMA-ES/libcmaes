@@ -19,6 +19,12 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Parts of this code are rewrittent from Y. Akimoto original code for
+ * Y. Akimoto, A. Auger and N. Hansen, Comparison-Based Natural Gradient 
+ * Optimization in High Dimension, GECCO-2014.
+ */
+
 #include "vdcmaupdate.h"
 #include <iostream>
 
@@ -43,7 +49,7 @@ namespace libcmaes
     
     // update psigma
     solutions._psigma = (1.0-parameters._csigma)*solutions._psigma;
-    solutions._psigma += parameters._fact_ps * ((dVec::Constant(parameters._dim,1.0) + solutions._v.cwiseProduct(solutions._v)).cwiseSqrt().cwiseInverse().cwiseProduct(solutions._sepcsqinv)).cwiseProduct(diffxmean);
+    solutions._psigma += parameters._fact_ps * (dVec::Constant(parameters._dim,1.0) + solutions._v.cwiseProduct(solutions._v)).cwiseSqrt().cwiseInverse().cwiseProduct(solutions._sepcsqinv).cwiseProduct(diffxmean);
     double norm_ps = solutions._psigma.norm();
     
     // update pc
@@ -52,52 +58,59 @@ namespace libcmaes
     if (norm_ps < val_for_hsig)
       solutions._hsig = 1; //TODO: simplify equation instead.
     solutions._pc = (1.0-parameters._cc) * solutions._pc + solutions._hsig * parameters._fact_pc * diffxmean;
-    dMat spc = solutions._pc.cwiseProduct(solutions._pc);
-
-    // sigma update
-    //solutions._sigma *= exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0));
     
     // compute s and t
     double normv = solutions._v.squaredNorm(); //TODO: store in solution object.
     dVec vbar = solutions._v / std::sqrt(normv);
     dVec vbarbar = vbar.cwiseProduct(vbar);
-    double gammav = 1.0+normv;
-    double alpha = std::sqrt(normv*normv+(2-1.0/std::sqrt(gammav))*gammav / (vbarbar.maxCoeff())) / (2.0+normv); // Eq. (7)
-    alpha = std::min(1.0,alpha);
-    double b = -(1-alpha*alpha)*normv*normv/gammav + 2.0*alpha*alpha; // Lemma 3.4
-    dVec Ainv = (dVec::Constant(parameters._dim,2.0) - (b + 2*alpha) * vbarbar).cwiseInverse();
 
-    dVec nsepcov = solutions._sepcov;
-    dVec s(parameters._dim);
-    dVec t(parameters._dim);
-    //TODO: parallelize
-    for (int i=0;i<parameters._mu+1;i++)
+    bool test = parameters._cmu + parameters._c1 * solutions._hsig > 0;
+    if (test)
       {
-	dVec y;
-	if (i != parameters._mu)
-	  y = solutions._sepcsqinv.cwiseProduct(solutions._candidates.at(i).get_x_dvec() - solutions._xmean) / solutions._sigma;
-	else y = solutions._sepcsqinv.cwiseProduct(solutions._pc);
-	double yvbar = y.dot(vbar);
-	s = y.cwiseProduct(y) - (normv*yvbar/gammav) * y.cwiseProduct(vbar) - dVec::Constant(parameters._dim,1.0); // step 1
-	t = yvbar*y - 0.5*(yvbar*yvbar + gammav)*vbar;
-	s -= alpha/gammav * ((2+normv)*vbar.cwiseProduct(t) - normv*vbar.dot(t)*vbarbar);
-	s = Ainv.cwiseProduct(s) - (b/(1+b*vbarbar.dot(Ainv.cwiseProduct(vbarbar)))) * s.dot(Ainv.cwiseProduct(vbarbar))*Ainv.cwiseProduct(vbarbar);
-	t -= alpha*((2+normv)*vbar.cwiseProduct(s)-s.dot(vbarbar)*vbar);
+	double gammav = 1.0+normv;
+	double alpha = std::sqrt(normv*normv+(2-1.0/std::sqrt(gammav))*gammav / (vbarbar.maxCoeff())) / (2.0+normv); // Eq. (7)
+	alpha = std::min(1.0,alpha);
+	double b = -(1-alpha*alpha)*normv*normv/gammav + 2.0*alpha*alpha; // Lemma 3.4
+	dVec Ainv = (dVec::Constant(parameters._dim,2.0) - (b + 2*alpha*alpha) * vbarbar).cwiseInverse(); //TODO: store Ainv * vbarbar // paper has alpha, code has alpha^2
+	dVec Ainvbb = Ainv.cwiseProduct(vbarbar);
 	
-	// covariance update.
-	if (i != parameters._mu)
+	dMat y(parameters._dim,parameters._mu);
+	for (int i=0;i<parameters._mu;i++)
 	  {
-	    solutions._v += parameters._cmu * (parameters._weights[i]/std::sqrt(normv)) * t;
-	    nsepcov += parameters._cmu * parameters._weights[i] * solutions._sepcov.cwiseProduct(s);
+	    y.col(i) = solutions._sepcsqinv.cwiseProduct(solutions._candidates.at(i).get_x_dvec() - solutions._xmean) / solutions._sigma;
+	  }
+        dMat ym = solutions._sepcsqinv.cwiseProduct(solutions._pc);
+	dVec yvbar = vbar.transpose() * y;
+	dVec pvec = (y.cwiseProduct(y) - (normv / gammav) * ((vbar*yvbar.transpose()).cwiseProduct(y)) - dMat::Constant(parameters._dim,parameters._mu,1.0))*parameters._weights;
+	dMat qvec = (y.cwiseProduct(yvbar.replicate(1,parameters._dim).transpose()) - 0.5*vbar*(yvbar.cwiseProduct(yvbar) + dVec::Constant(parameters._mu,gammav)).transpose())*parameters._weights;
+	yvbar = vbar.transpose() * ym;
+	dVec pone = (ym.cwiseProduct(ym) - (normv / gammav) * ((vbar*yvbar.transpose()).cwiseProduct(ym)) - dVec::Constant(parameters._dim,1.0));
+	dVec qone = (ym.cwiseProduct(yvbar.replicate(1,parameters._dim).transpose()) - 0.5*vbar*(yvbar.cwiseProduct(yvbar) + dVec::Constant(1,gammav)));
+	
+	if (solutions._hsig)
+	  {
+	    pvec = parameters._cmu * pvec + parameters._c1 * pone;
+	    qvec = parameters._cmu * qvec + parameters._c1 * qone;
 	  }
 	else
 	  {
-	    solutions._v += (1-solutions._hsig)*parameters._c1*t/std::sqrt(normv);
-	    nsepcov += (1-solutions._hsig)*parameters._c1*solutions._sepcov.cwiseProduct(s);
+	    pvec = parameters._cmu * pvec;
+	    qvec = parameters._cmu * qvec;
 	  }
+	
+	double nu = (vbar.transpose()*qvec)(0);
+	dVec rvec = pvec - (alpha/gammav) * ((2.0+normv)*(vbar.cwiseProduct(qvec)) - normv*nu*vbarbar);
+	nu = Ainvbb.transpose()*rvec;
+	double nu2 = Ainvbb.transpose()*vbarbar;
+	dVec svec = rvec.cwiseProduct(Ainv) - (b * nu/(1.0+b*nu2)) * Ainvbb;
+	nu = svec.transpose()*vbarbar;
+	dVec ngv = (qvec - alpha * ((2+normv) * (vbar.cwiseProduct(svec)) - nu * vbar))/std::sqrt(normv);
+	dVec ngd = solutions._sepcov.cwiseProduct(svec);
+	
+	solutions._v += ngv;
+	solutions._sepcov += ngd;
       }
-    solutions._sepcov = nsepcov;
-
+    
     solutions._sigma *= exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0));
     
     // set mean.
