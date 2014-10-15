@@ -416,6 +416,7 @@ DEFINE_bool(with_gradient,false,"whether to use the function gradient when avail
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
+DEFINE_int32(max_hist,-1,"maximum stored history, helps mitigate the memory usage though preventing the 'stagnation' criteria to trigger");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -439,6 +440,7 @@ CMASolutions cmaes_opt()
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
+  cmaparams.set_max_hist(FLAGS_max_hist);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
@@ -570,7 +572,8 @@ int main(int argc, char *argv[])
   if (cmasols.run_status() < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
   LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
-  LOG(INFO) << cmasols << std::endl;
+  if (cmasols.best_candidate().get_x_size() <= 1000)
+    LOG(INFO) << cmasols << std::endl;
   if (FLAGS_with_edm)
     LOG(INFO) << "EDM=" << cmasols.edm() << " / EDM/fm=" << cmasols.edm() / cmasols.best_candidate().get_fvalue() << std::endl;
   //cmasols.print(std::cout,1);
