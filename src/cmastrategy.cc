@@ -19,7 +19,6 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//#define NDEBUG 1
 
 #include "libcmaes_config.h"
 #include "cmastrategy.h"
@@ -160,14 +159,6 @@ namespace libcmaes
 	    pop.col(0) = nx;
 	  }
       }
-
-    //TODO: if initial elitist, reinject initial solution as needed.
-    /*if (eostrat<TGenoPheno>::_parameters._initial_elitist)
-      {
-	//TODO: number of points whose value is below initial point candidate value.
-	
-	pop.col(1) = eostrat<TGenoPheno>::_solutions._initial_candidate._x;
-	}*/
     
     // if some parameters are fixed, reset them.
     if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
@@ -275,8 +266,8 @@ namespace libcmaes
     if (eostrat<TGenoPheno>::_parameters._elitist)
       {
 	if (eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue()
-	    < eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue())
-	  //&& eostrat<TGenoPheno>::_niter - eostrat<TGenoPheno>::_solutions._best_seen_iter >= 100.0*eostrat<TGenoPheno>::_parameters.dim())
+	    < eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue()
+	    && eostrat<TGenoPheno>::_niter - eostrat<TGenoPheno>::_solutions._best_seen_iter >= 3)
 	  {
 	    std::cout << "setting initial elitist: bfvalue=" << eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue() << " / biter=" << eostrat<TGenoPheno>::_solutions._best_seen_iter << std::endl;
 	    this->set_initial_elitist(true);
