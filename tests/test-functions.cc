@@ -484,6 +484,16 @@ CMASolutions cmaes_opt()
     {
       cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
     }
+  if (cmasols.run_status() < 0)
+    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
+  LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  if (cmasols.best_candidate().get_x_size() <= 1000)
+    {
+      cmasols.print(std::cout,false,cmaparams.get_gp());
+      std::cout << std::endl;
+    }
+  if (FLAGS_with_edm)
+    LOG(INFO) << "EDM=" << cmasols.edm() << " / EDM/fm=" << cmasols.edm() / cmasols.best_candidate().get_fvalue() << std::endl;
   return cmasols;
 }
 
@@ -569,12 +579,4 @@ int main(int argc, char *argv[])
       LOG(ERROR) << "Unknown boundtype " << FLAGS_boundtype << std::endl;
       exit(-1);
     }
-  if (cmasols.run_status() < 0)
-    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
-  LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
-  if (cmasols.best_candidate().get_x_size() <= 1000)
-    LOG(INFO) << cmasols << std::endl;
-  if (FLAGS_with_edm)
-    LOG(INFO) << "EDM=" << cmasols.edm() << " / EDM/fm=" << cmasols.edm() / cmasols.best_candidate().get_fvalue() << std::endl;
-  //cmasols.print(std::cout,1);
- }
+}
