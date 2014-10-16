@@ -112,16 +112,18 @@ namespace libcmaes
     _leigenvalues = eigenvalues;
     _leigenvectors = eigenvectors;
   }
-  
+
+  template <class TGenoPheno>
   std::ostream& CMASolutions::print(std::ostream &out,
-				    const int &verb_level) const
+				    const int &verb_level,
+				    const TGenoPheno &gp) const
   {
     if (_candidates.empty())
       {
 	out << "empth solution set\n";
 	return out;
       }
-    out << "best solution => f-value=" << best_candidate().get_fvalue() << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << best_candidate().get_x_dvec().transpose(); //TODO: print pheno(x), but it requires access to the genopheno object.
+    out << "best solution => f-value=" << best_candidate().get_fvalue() << " / fevals=" << _nevals << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << gp.pheno(best_candidate().get_x_dvec()).transpose();
     if (verb_level)
       {
 	out << "\ncovdiag=" << _cov.diagonal().transpose() << std::endl;
@@ -134,11 +136,16 @@ namespace libcmaes
   std::ostream& operator<<(std::ostream &out, const CMASolutions &cmas)
   {
     cmas.print(out,0);
-    return out;
+        return out;
   }
-
+  
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&);
+
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy,linScalingStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy,linScalingStrategy>&) const;
 }
