@@ -115,9 +115,9 @@ namespace libcmaes
 	std::map<std::string,int>::const_iterator mit;
 	if ((mit = Parameters<TGenoPheno>::_algos.find(algo))!=Parameters<TGenoPheno>::_algos.end())
 	  Parameters<TGenoPheno>::_algo = (*mit).second;
-	if (algo.find("sep")!=std::string::npos)
-	  _sep = true;
 	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
+	if (algo.find("sep")!=std::string::npos)
+	  set_sep();
       }
       
       /**

@@ -245,8 +245,10 @@ namespace libcmaes
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
      */
+    template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
     std::ostream& print(std::ostream &out,
-			const int &verb_level=0) const;
+			const int &verb_level=0,
+			const TGenoPheno &gp=GenoPheno<NoBoundStrategy>()) const;
 
   private:
     dMat _cov; /**< covariance matrix. */
