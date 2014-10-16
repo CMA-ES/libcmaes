@@ -176,7 +176,21 @@ namespace libcmaes
        */
       inline bool get_lazy_update() { return _lazy_update; }
 
+      /**
+       * \brief sets initial elitist scheme: restart if best encountered solution is not
+       *        the final solution and reinjects the best solution until the population
+       *        has better fitness, in its majority
+       * @param e whether to activate the initial elitist scheme
+       */
       inline void set_elitist(const bool &e) { _elitist = e; }
+
+      /**
+       * \brief sets the optima hoppping scheme: restart while best encountered solution is not
+       *        the final solution and reinects the best solution during each run until the population
+       *        has better fitness, in its majority
+       * @param oh whether to activate the optimal hopping scheme
+       */
+      inline void set_optima_hopping(const bool &oh) { _optima_hopping = oh; }
       
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
@@ -214,6 +228,7 @@ namespace libcmaes
       bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
 
       bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      bool _optima_hopping = false; /**< activates a form of elistism that always restart from the best seen solution. */
     };
 
   template<class TGenoPheno>
