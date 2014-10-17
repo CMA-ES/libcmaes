@@ -118,7 +118,7 @@ namespace libcmaes
 	  Parameters<TGenoPheno>::_algo = (*mit).second;
 	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
 	if (algo.find("sep")!=std::string::npos)
-	  _sep = true;//set_sep();
+	  set_sep();
 	if (algo.find("vd")!=std::string::npos)
 	  _vd = true;
       }
