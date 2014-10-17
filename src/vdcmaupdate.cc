@@ -41,7 +41,7 @@ namespace libcmaes
     // update of the mean
     dVec xmean = dVec::Zero(parameters._dim);
     for (int i=0;i<parameters._mu;i++)
-      xmean += parameters._weights[i] * solutions._candidates.at(i).get_x_dvec(); //TODO: beware
+      xmean += parameters._weights[i] * solutions._candidates.at(i).get_x_dvec();
 
     // reusable variables.
     dVec diffxmean = 1.0/solutions._sigma * (xmean-solutions._xmean); // (m^{t+1}-m^t)/sigma^t
@@ -54,10 +54,12 @@ namespace libcmaes
     
     // update pc
     solutions._hsig = 0;
+    solutions._pc = (1.0-parameters._cc) * solutions._pc;
     double val_for_hsig = sqrt(1.0-pow(1.0-parameters._csigma,2.0*(solutions._niter+1)))*(1.4+2.0/(parameters._dim+1-parameters._fixed_p.size()))*parameters._chi;
     if (norm_ps < val_for_hsig)
-      solutions._hsig = 1; //TODO: simplify equation instead.
-    solutions._pc = (1.0-parameters._cc) * solutions._pc + solutions._hsig * parameters._fact_pc * diffxmean;
+      solutions._hsig = 1;
+    if (solutions._hsig)
+      solutions._pc += parameters._fact_pc * diffxmean;
     
     // compute s and t
     double normv = solutions._v.squaredNorm(); //TODO: store in solution object.
@@ -71,7 +73,7 @@ namespace libcmaes
 	double alpha = std::sqrt(normv*normv+(2-1.0/std::sqrt(gammav))*gammav / (vbarbar.maxCoeff())) / (2.0+normv); // Eq. (7)
 	alpha = std::min(1.0,alpha);
 	double b = -(1-alpha*alpha)*normv*normv/gammav + 2.0*alpha*alpha; // Lemma 3.4
-	dVec Ainv = (dVec::Constant(parameters._dim,2.0) - (b + 2*alpha*alpha) * vbarbar).cwiseInverse(); //TODO: store Ainv * vbarbar // paper has alpha, code has alpha^2
+	dVec Ainv = (dVec::Constant(parameters._dim,2.0) - (b + 2*alpha*alpha) * vbarbar).cwiseInverse(); // paper has alpha, code has alpha^2
 	dVec Ainvbb = Ainv.cwiseProduct(vbarbar);
 	
 	dMat y(parameters._dim,parameters._mu);
