@@ -95,9 +95,12 @@ namespace libcmaes
 	return 0;
       };
     _esolver = EigenMultivariateNormal<double>(false,eostrat<TGenoPheno>::_parameters._seed); // seeding the multivariate normal generator.
-    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / lazy_update=" << eostrat<TGenoPheno>::_parameters._lazy_update << std::endl;
+    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / lazy_update=" << eostrat<TGenoPheno>::_parameters._lazy_update << " / threads=" << Eigen::nbThreads() << std::endl;
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
-      _fplotstream = new std::ofstream(eostrat<TGenoPheno>::_parameters._fplot);
+      {
+	_fplotstream = new std::ofstream(eostrat<TGenoPheno>::_parameters._fplot);
+	_fplotstream->precision(std::numeric_limits<double>::digits10);
+      }
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -214,7 +217,7 @@ namespace libcmaes
     //DLOG(INFO) << "tell()\n";
     //debug
 
-#ifdef DEBUG
+#ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
 #endif
     
@@ -233,7 +236,7 @@ namespace libcmaes
 						    _esolver._eigenSolver.eigenvectors());
     else eostrat<TGenoPheno>::_solutions.update_eigenv(eostrat<TGenoPheno>::_solutions._sepcov,
 						       dMat::Constant(eostrat<TGenoPheno>::_parameters._dim,1,1.0));
-#ifdef DEBUG
+#ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
     eostrat<TGenoPheno>::_solutions._elapsed_tell = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 #endif

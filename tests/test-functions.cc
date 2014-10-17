@@ -495,6 +495,7 @@ CMASolutions cmaes_opt()
 	  return 0;
 	};
     }
+  std::cout.precision(std::numeric_limits<double>::digits10);
   cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,gfunc,pffunc);
   if (cmasols.run_status() < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
