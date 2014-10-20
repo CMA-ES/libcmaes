@@ -184,7 +184,7 @@ FitFunc nn_of = [](const double *x, const int N)
     mgn.forward_pass(gbatchfeatures,gbatchlabels); // gbatchfeatures set in progress function.
       
   //debug
-  //std::cout << "net loss= " << gmnistnn._loss << std::endl;
+  //std::cout << "net loss=" << gmnistnn._loss << std::endl;
   //debug
   
   return mgn._loss;
@@ -196,14 +196,22 @@ bool gdrop = false;
 FitFunc nn_dof = [](const double *x, const int N)
 {
   nn mgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,gl1reg,gl2reg);
-  mgn._allparams = gallparams;
-  int i = 0;
-  auto mit = gndropdims.begin();
-  while(mit!=gndropdims.end())
+  if (gdrop)
     {
-      mgn._allparams.at((*mit).first) = x[i];
-      ++mit;
-      ++i;
+      mgn._allparams = gallparams;
+      int i = 0;
+      auto mit = gndropdims.begin();
+      while(mit!=gndropdims.end())
+	{
+	  mgn._allparams.at((*mit).first) = x[i];
+	  ++mit;
+	  ++i;
+	}
+    }
+  else
+    {
+      for (int i=0;i<N;i++)
+	mgn._allparams.push_back(x[i]);
     }
 
   dMat ggbatchfeatures;
@@ -225,6 +233,8 @@ FitFunc nn_dof = [](const double *x, const int N)
   if (gbatches < 0)
     mgn.forward_pass(gfeatures,glabels);
   else mgn.forward_pass(ggbatchfeatures,ggbatchlabels);
+
+  //std::cout << "net loss=" << mgn._loss << std::endl;
   
   return mgn._loss;
 };
@@ -255,7 +265,7 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       gtrainacc = testing(cmasols.best_candidate().get_x_dvec(),true,false);
       gtestacc = testing(cmasols.best_candidate().get_x_dvec(),false,false);
     }
-  std::cout << "epoch=" << ceil(cmasols.niter() / gnpasses) << " / iter=" << cmasols.niter() << " / evals=" << cmaparams.lambda() * cmasols.niter() << " / f-value=" << cmasols.best_candidate().get_fvalue() << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols.sigma() << " / maha=" << cmasols.maha() << " / iter=" << cmasols.elapsed_last_iter() << std::endl;
+  std::cout << "epoch=" << ceil(cmasols.niter() / gnpasses) << " / iter=" << cmasols.niter() << " / evals=" << cmaparams.lambda() * cmasols.niter() << " / f-value=" << cmasols.best_candidate().get_fvalue() << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols.sigma() /*<< " / maha=" << cmasols.maha() */ << " / iter=" << cmasols.elapsed_last_iter() << std::endl;
   
   /*if (gbatches > 0)
     {
@@ -517,16 +527,16 @@ int main(int argc, char *argv[])
 		    }
 		}
 	      
-	      CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front()/*gmnistnn._allparams.front()*/,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
+	      CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front()/*gmnistnn._allparams.front()*/,FLAGS_sigma0,FLAGS_mbatch > 0 ? gnpasses : FLAGS_lambda,FLAGS_seed);
 	      cmaparams.set_max_iter(FLAGS_maxsolveiter);
 	      cmaparams.set_fplot(FLAGS_fplot);
 	      cmaparams.set_algo(sepaCMAES);
 	      cmaparams.set_ftarget(1e-2);
-	      cmaparams.set_mt_feval(true);
+	      //cmaparams.set_mt_feval(true);
 	      /*if (FLAGS_mbatch)
 		cmaparams.set_noisy();*/
 	      if (FLAGS_nmbatch)
-		cmaparams.set_quiet(true);
+		cmaparams.set_quiet(false);//true);
 	      if (FLAGS_nmbatch)
 		{
 		  if (!FLAGS_with_gradient)
@@ -536,8 +546,8 @@ int main(int argc, char *argv[])
 	      else
 		{
 		  if (!FLAGS_with_gradient)
-		    cmasols = cmaes<>(nn_of,cmaparams,mpfunc,nullptr,cmasols,mpffunc);
-		  else cmasols = cmaes<>(nn_of,cmaparams,mpfunc,gnn,cmasols,mpffunc);
+		    cmasols = cmaes<>(nn_dof,cmaparams,mpfunc,nullptr,cmasols,mpffunc); // was nn_of
+		  else cmasols = cmaes<>(nn_dof,cmaparams,mpfunc,gnn,cmasols,mpffunc); // was nn_of
 		}
 	      
 	      sigma0[i] = cmasols.sigma();
