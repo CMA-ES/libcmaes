@@ -318,6 +318,17 @@ namespace libcmaes
 	      return bipop.get_solutions();
 	    }
 	}
+	case VD_CMAES:
+	{
+	  parameters.set_vd();
+	  ESOptimizer<CMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> vdcma(func,parameters);
+	  if (gfunc != nullptr)
+	    vdcma.set_gradient_func(gfunc);
+	  vdcma.set_progress_func(pfunc);
+	  vdcma.set_plot_func(pffunc);
+	  vdcma.optimize();
+	  return vdcma.get_solutions();
+	}
 	default:
 	return CMASolutions();
 	}

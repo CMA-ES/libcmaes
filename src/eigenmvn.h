@@ -155,6 +155,12 @@ namespace Eigen {
 	  }
 	return pop;
       }
+
+    Matrix<Scalar,Dynamic,-1> samples_ind(int nn)
+      {
+	return (Matrix<Scalar,Dynamic,-1>::NullaryExpr(_covar.rows(),nn,randN));
+      }
+    
   }; // end class EigenMultivariateNormal
 } // end namespace Eigen
 #endif

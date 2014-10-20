@@ -48,6 +48,7 @@ namespace libcmaes
     template <class U> friend class errstats;
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
+    friend class VDCMAUpdate;
     
   public:
     /**
@@ -363,6 +364,8 @@ namespace libcmaes
     double _kl_approx_trace_det = 0.0; /**< KL limited to covariance elements. */
     double _sigma_divergence = 0.0; /**< simple sigma 'divergence'. */
     double _maha = 0.0; /**< Mahalanobis distance for two steps of cov. */
+
+    dVec _v; /**< complementary vector for use in vdcma. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

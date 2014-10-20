@@ -53,7 +53,9 @@ enum {
   /* Active sep-IPOP-CMA-ES */
   sepaIPOP_CMAES = 10,
   /* Active sep-BIPOP-CMA-ES */
-  sepaBIPOP_CMAES = 11
+  sepaBIPOP_CMAES = 11,
+  /* VD-CMA-ES */
+  VD_CMAES = 12
 };
 
 namespace libcmaes
