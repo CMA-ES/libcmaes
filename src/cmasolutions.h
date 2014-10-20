@@ -241,13 +241,22 @@ namespace libcmaes
       return _max_eigenv;
     }
 
-    /**                                                                                                         
-     * \brief returns current number of objective function evaluations                                          
-     * @return number of objective function evaluations                                                         
+    /**
+     * \brief returns current number of objective function evaluations
+     * @return number of objective function evaluations
      */
     inline int fevals() const
     {
       return _nevals;
+    }
+
+    /**
+     * \brief returns last computed eigenvalues
+     * @return last computed eigenvalues
+     */
+    inline dVec eigenvalues() const
+    {
+      return _leigenvalues;
     }
     
     /**

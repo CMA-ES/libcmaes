@@ -36,11 +36,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
   {
-    LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmasols._nevals << " / f-value=" << cmasols._best_candidates_hist.back().get_fvalue() <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " / last_iter=" << cmasols._elapsed_last_iter
-#ifdef HAVE_DEBUG
-    << " / eval=" << cmasols._elapsed_eval << " / ask=" << cmasols._elapsed_ask << " / tell=" << cmasols._elapsed_tell << " / stop=" << cmasols._elapsed_stop
-#endif
-    << std::endl;
+    LOG_IF(INFO,!cmaparams.quiet()) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / last_iter=" << cmasols.elapsed_last_iter() << std::endl;
     return 0;
   };
 
@@ -48,13 +44,13 @@ namespace libcmaes
   PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultFPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
   {
     std::string sep = " ";
-    fplotstream << fabs(cmasols._best_candidates_hist.back().get_fvalue()) << sep << cmasols._nevals << sep << cmasols._sigma << sep << sqrt(cmasols._max_eigenv/cmasols._min_eigenv) << sep;
-    fplotstream << cmasols._leigenvalues.transpose() << sep;
-    if (!cmaparams._sep && !cmaparams._vd)
-      fplotstream << cmasols._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-    else fplotstream << cmasols._sepcov.cwiseSqrt().transpose() << sep;
-    fplotstream << cmaparams._gp.pheno(cmasols._xmean).transpose();
-    fplotstream << sep << cmasols._elapsed_last_iter;
+    fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
+    fplotstream << cmasols.eigenvalues().transpose() << sep;
+    if (!cmaparams.is_sep())
+      fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
+    else fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+    fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
+    fplotstream << sep << cmasols.elapsed_last_iter();
 #ifdef HAVE_DEBUG
     fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
 #endif
@@ -75,19 +71,19 @@ namespace libcmaes
   {
     eostrat<TGenoPheno>::_pfunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
       {
-	LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmasols._nevals << " / f-value=" << cmasols._best_candidates_hist.back().get_fvalue() <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " / last_iter=" << cmasols._elapsed_last_iter << std::endl;
+	LOG_IF(INFO,!cmaparams.quiet()) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / last_iter=" << cmasols.elapsed_last_iter() << std::endl;
 	return 0;
       };
     eostrat<TGenoPheno>::_pffunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
       {
 	std::string sep = " ";
-	fplotstream << fabs(cmasols._best_candidates_hist.back().get_fvalue()) << sep << cmasols._nevals << sep << cmasols._sigma << sep << sqrt(cmasols._max_eigenv/cmasols._min_eigenv) << sep;
-	fplotstream << cmasols._leigenvalues.transpose() << sep;
-	if (!cmaparams._sep && !cmaparams._vd)
-	  fplotstream << cmasols._cov.sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-	else fplotstream << cmasols._sepcov.cwiseSqrt().transpose() << sep;
-	fplotstream << cmaparams._gp.pheno(cmasols._xmean).transpose();
-	fplotstream << sep << cmasols._elapsed_last_iter;
+	fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
+	fplotstream << cmasols.eigenvalues().transpose() << sep;
+	if (!cmaparams.is_sep())
+	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
+	else fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+	fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
+	fplotstream << sep << cmasols.elapsed_last_iter();
 #ifdef HAVE_DEBUG
 	fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
 #endif
