@@ -530,9 +530,9 @@ int main(int argc, char *argv[])
 	      CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front()/*gmnistnn._allparams.front()*/,FLAGS_sigma0,FLAGS_mbatch > 0 ? gnpasses : FLAGS_lambda,FLAGS_seed);
 	      cmaparams.set_max_iter(FLAGS_maxsolveiter);
 	      cmaparams.set_fplot(FLAGS_fplot);
-	      cmaparams.set_algo(sepaCMAES);
+	      cmaparams.set_algo(VD_CMAES);//sepaCMAES);
 	      cmaparams.set_ftarget(1e-2);
-	      //cmaparams.set_mt_feval(true);
+	      cmaparams.set_mt_feval(true);
 	      /*if (FLAGS_mbatch)
 		cmaparams.set_noisy();*/
 	      if (FLAGS_nmbatch)
