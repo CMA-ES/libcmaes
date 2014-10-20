@@ -112,7 +112,8 @@ namespace libcmaes
 	solutions._v += ngv;
 	solutions._sepcov += ngd;
       }
-    
+
+    // update sigma.
     solutions._sigma *= exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0));
     
     // set mean.
