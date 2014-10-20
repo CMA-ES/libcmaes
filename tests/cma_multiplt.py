@@ -73,6 +73,7 @@ if dim == 0:
     pylab.show();
     msg = '  --- press return to continue --- '
     raw_input(msg) if sys.version < '3' else input(msg)
+    sys.exit(1)
     
 # plot xmean
 subplot(222)
