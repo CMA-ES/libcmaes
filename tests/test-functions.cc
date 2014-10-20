@@ -417,6 +417,10 @@ DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
 DEFINE_int32(max_hist,-1,"maximum stored history, helps mitigate the memory usage though preventing the 'stagnation' criteria to trigger");
+DEFINE_bool(no_stagnation,false,"deactivate stagnation stopping criteria");
+DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
+DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
+DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -481,6 +485,15 @@ CMASolutions cmaes_opt()
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
       exit(-1);
     }
+  if (FLAGS_no_automaxiter)
+    cmaparams.set_stopping_criteria(AUTOMAXITER,false);
+  if (FLAGS_no_stagnation)
+    cmaparams.set_stopping_criteria(STAGNATION,false);
+  if (FLAGS_no_tolx)
+    cmaparams.set_stopping_criteria(TOLX,false);
+  if (FLAGS_no_tolupsigma)
+    cmaparams.set_stopping_criteria(TOLUPSIGMA,false);
+  
   CMASolutions cmasols;
   GradFunc gfunc = nullptr;
   if (FLAGS_with_gradient)

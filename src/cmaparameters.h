@@ -146,13 +146,6 @@ namespace libcmaes
       bool is_vd() const { return _vd; }
       
       /**
-       * \brief turns stopping criteria MaxIter that automatically stops optimization after a 
-       *        number of steps on or off.
-       * @param b true or false for turning criteria on or off (on is default in constructor).
-       */
-      inline void set_automaxiter(const bool &b) { _has_max_iter = b; }
-      
-      /**
        * \brief freezes a parameter to a given value during optimization.
        *        Adapts some generic parameters as well.
        * @param index dimension index of the parameter to be frozen
@@ -189,7 +182,19 @@ namespace libcmaes
        * @param whether lazy update is activated
        */
       inline bool get_lazy_update() { return _lazy_update; }
-      
+
+      /**
+       * \brief all stopping criteria are active by default, this allows to control
+       *        them
+       * @param criteria stopping criteria CMAStopCritType, see cmastopcriteria.h
+       * @param active whether to activate this criteria
+       */
+      inline void set_stopping_criteria(const int &criteria,
+					const bool &active)
+      {
+	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
+      }
+
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
       dVec _weights; /**< offsprings weighting scheme. */
@@ -224,7 +229,7 @@ namespace libcmaes
       bool _vd = false;
       
       // stopping criteria.
-      bool _has_max_iter = true; /**< MaxIter criteria: automatically stop running after 100+50*((D+2)^2)/lambda iterations. */
+      std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
     };
 
   template<class TGenoPheno>

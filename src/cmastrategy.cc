@@ -97,6 +97,12 @@ namespace libcmaes
 	_fplotstream = new std::ofstream(eostrat<TGenoPheno>::_parameters._fplot);
 	_fplotstream->precision(std::numeric_limits<double>::digits10);
       }
+    auto mit=eostrat<TGenoPheno>::_parameters._stoppingcrit.begin();
+    while(mit!=eostrat<TGenoPheno>::_parameters._stoppingcrit.end())
+      {
+	_stopcriteria.set_criteria_active((*mit).first,(*mit).second);
+	++mit;
+      }
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
