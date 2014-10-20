@@ -72,7 +72,7 @@ namespace libcmaes
     _pc = dVec::Zero(p._dim);
     _candidates.resize(p._lambda);
     _kcand = std::min(p._lambda-1,static_cast<int>(1.0+ceil(0.1+p._lambda/4.0)));
-    _max_hist = p._max_hist;
+    _max_hist = (p._max_hist > 0) ? p._max_hist : static_cast<int>(10+ceil(30*p._dim/p._lambda));
   }
 
   CMASolutions::~CMASolutions()
@@ -89,7 +89,7 @@ namespace libcmaes
 	_k_best_candidates_hist.erase(_k_best_candidates_hist.begin());
       }
     
-    _bfvalues.push_back(_candidates.at(0)._fvalue);
+    _bfvalues.push_back(_candidates.at(0).get_fvalue());
     if (_bfvalues.size() > 20)
       _bfvalues.erase(_bfvalues.begin());
 
@@ -97,19 +97,11 @@ namespace libcmaes
     double median = 0.0;
     size_t csize = _candidates.size();
     if (csize % 2 == 0)
-      median = (_candidates[csize/2-1]._fvalue + _candidates[csize/2]._fvalue)/2.0;
-    else median = _candidates[csize/2]._fvalue;
+      median = (_candidates[csize/2-1].get_fvalue() + _candidates[csize/2].get_fvalue())/2.0;
+    else median = _candidates[csize/2].get_fvalue();
     _median_fvalues.push_back(median);
     if (_median_fvalues.size() > static_cast<size_t>(ceil(0.2*_niter+120+30*_xmean.size()/static_cast<double>(_candidates.size()))))
       _median_fvalues.erase(_median_fvalues.begin());
-    
-    //debug
-    /*std::cerr << "ordered candidates:\n";
-    for (size_t i=0;i<_candidates.size();i++)
-      {
-	std::cerr << _candidates.at(i)._fvalue << " / " << _candidates.at(i)._x.transpose() << std::endl;
-	}*/
-    //debug
   }
 
   void CMASolutions::update_eigenv(const dVec &eigenvalues,
@@ -172,15 +164,17 @@ namespace libcmaes
 #endif
   }
   
+  template <class TGenoPheno>
   std::ostream& CMASolutions::print(std::ostream &out,
-				    const int &verb_level) const
+				    const int &verb_level,
+				    const TGenoPheno &gp) const
   {
     if (_candidates.empty())
       {
 	out << "empth solution set\n";
 	return out;
       }
-    out << "best solution => f-value=" << best_candidate()._fvalue << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << best_candidate()._x.transpose(); //TODO: print pheno(x).
+    out << "best solution => f-value=" << best_candidate().get_fvalue() << " / fevals=" << _nevals << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << gp.pheno(best_candidate().get_x_dvec()).transpose();
     if (verb_level)
       {
 	out << "\ncovdiag=" << _cov.diagonal().transpose() << std::endl;
@@ -204,11 +198,16 @@ namespace libcmaes
   std::ostream& operator<<(std::ostream &out, const CMASolutions &cmas)
   {
     cmas.print(out,0);
-    return out;
+        return out;
   }
-
+  
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&);
+
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy,linScalingStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy,linScalingStrategy>&) const;
 }

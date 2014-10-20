@@ -61,7 +61,7 @@ namespace libcmaes
 	  }
 	else return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXFEVALS,maxFEvals));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(MAXFEVALS,StopCriteria<TGenoPheno>(maxFEvals)));
     StopCriteriaFunc<TGenoPheno> maxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	if (cmap._max_iter == -1)
@@ -73,12 +73,10 @@ namespace libcmaes
 	  }
 	else return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(MAXITER,maxIter));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(MAXITER,StopCriteria<TGenoPheno>(maxIter)));
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	double thresh = 100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda);
-	if (!cmap._has_max_iter) // this criteria is deactivated
-	  return CONT;
 	if (cmas._niter >= thresh)
 	  {
 	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria autoMaxIter => thresh=" << thresh << std::endl;
@@ -86,32 +84,32 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(AUTOMAXITER,autoMaxIter));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(AUTOMAXITER,StopCriteria<TGenoPheno>(autoMaxIter)));
     StopCriteriaFunc<TGenoPheno> fTarget = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	if (cmap._ftarget != std::numeric_limits<double>::infinity())
 	  {
-	    if (cmas.best_candidate()._fvalue <= cmap._ftarget)
+	    if (cmas.best_candidate().get_fvalue() <= cmap._ftarget)
 	      {
-		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate()._fvalue << " / ftarget=" << cmap._ftarget << std::endl;
+		LOG_IF(INFO,!cmap._quiet) << "stopping criteria fTarget => fvalue=" << cmas.best_candidate().get_fvalue() << " / ftarget=" << cmap._ftarget << std::endl;
 		return FTARGET;
 	      }
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(FTARGET,fTarget));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(FTARGET,StopCriteria<TGenoPheno>(fTarget)));
     StopCriteriaFunc<TGenoPheno> tolHistFun = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	double threshold = std::max(cmap._ftolerance,1e-12);
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
-	int histthresh = static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda));
+	int histthresh = std::min(cmas._max_hist,static_cast<int>(10+ceil(30*cmap._dim/cmap._lambda)));
 	int histlength = std::min(histthresh,histsize);
 	if (histlength < histthresh) // not enough data
 	  return CONT;
 	std::pair<double,double> frange(std::numeric_limits<double>::max(),-std::numeric_limits<double>::max());
 	for (int i=0;i<histlength;i++)
 	  {
-	    double val = cmas._best_candidates_hist.at(histsize-1-i)._fvalue;
+	    double val = cmas._best_candidates_hist.at(histsize-1-i).get_fvalue();
 	    frange.first = std::min(val,frange.first);
 	    frange.second = std::max(val,frange.second);
 	  }
@@ -123,19 +121,21 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(TOLHISTFUN,tolHistFun));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(TOLHISTFUN,StopCriteria<TGenoPheno>(tolHistFun)));
     StopCriteriaFunc<TGenoPheno> equalFunVals = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	int histsize = static_cast<int>(cmas._best_candidates_hist.size());
 	int histlength = std::min(cmap._dim,histsize);
-	if (histlength < cmas._max_hist)//cmap._dim) // not enough data
+	if (histlength < cmas._max_hist) // not enough data
 	  return CONT;
 
 	int c = 0;
 	for (int i=0;i<histlength;i++)
 	  {
-	    if (fabs(cmas._best_candidates_hist.at(histsize-1-i)._fvalue
-		     -cmas._k_best_candidates_hist.at(histsize-1-i)._fvalue) < cmap._ftolerance)
+	    /*if (fabs(cmas._best_candidates_hist.at(histsize-1-i)._fvalue
+	      -cmas._k_best_candidates_hist.at(histsize-1-i)._fvalue) < cmap._ftolerance)*/
+	    if (cmas._best_candidates_hist.at(histsize-1-i).get_fvalue()
+		== cmas._k_best_candidates_hist.at(histsize-1-i).get_fvalue())
 	      c++;
 	  }
 	if (c > histlength / 3.0)
@@ -145,7 +145,7 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(EQUALFUNVALS,equalFunVals));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(EQUALFUNVALS,StopCriteria<TGenoPheno>(equalFunVals)));
     StopCriteriaFunc<TGenoPheno> tolX = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	double tolx = std::max(cmap._xtol,1e-12);
@@ -156,14 +156,15 @@ namespace libcmaes
 	  if (cmas._pc[i]>=tfactor)
 	    return CONT;
 	//test 2: all square root components of cov . factor < tolx.
-	for (int i=0;i<cmas._cov.rows();i++)
+	int covrows = std::max(cmas._cov.rows(),cmas._sepcov.rows());
+	for (int i=0;i<covrows;i++)
 	  if ((!cmap._sep && sqrt(cmas._cov(i,i))>=tfactor)
-	      || (cmap._sep && sqrt(cmas._sepcov(i))>=tfactor))
+		|| (cmap._sep && sqrt(cmas._sepcov(i))>=tfactor))
 	    return CONT;
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria tolX\n";
 	return TOLX;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(TOLX,tolX));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(TOLX,StopCriteria<TGenoPheno>(tolX)));
     StopCriteriaFunc<TGenoPheno> tolUpSigma = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	static double tolupsigma = 1e20;
@@ -176,7 +177,7 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(TOLUPSIGMA,tolUpSigma));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(TOLUPSIGMA,StopCriteria<TGenoPheno>(tolUpSigma)));
     StopCriteriaFunc<TGenoPheno> stagnation = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	if (cmas._bfvalues.size() < 20 || cmas._median_fvalues.size() < 20)
@@ -192,7 +193,7 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(STAGNATION,stagnation));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(STAGNATION,StopCriteria<TGenoPheno>(stagnation)));
     StopCriteriaFunc<TGenoPheno> conditionCov = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	static double bound = 1e14;
@@ -204,7 +205,7 @@ namespace libcmaes
 	  }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(CONDITIONCOV,conditionCov));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(CONDITIONCOV,StopCriteria<TGenoPheno>(conditionCov)));
     StopCriteriaFunc<TGenoPheno> noEffectAxis = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	double fact = 0.1*cmas._sigma;
@@ -219,7 +220,7 @@ namespace libcmaes
 	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectAxis\n";
 	return NOEFFECTAXIS;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(NOEFFECTAXIS,noEffectAxis));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(NOEFFECTAXIS,StopCriteria<TGenoPheno>(noEffectAxis)));
     StopCriteriaFunc<TGenoPheno> noEffectCoor = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	double fact = 0.2*cmas._sigma;
@@ -232,7 +233,7 @@ namespace libcmaes
 	    }
 	return CONT;
       };
-    _scriteria.insert(std::pair<int,StopCriteriaFunc<TGenoPheno>>(NOEFFECTCOOR,noEffectCoor));
+    _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(NOEFFECTCOOR,StopCriteria<TGenoPheno>(noEffectCoor)));
   }
 
   template <class TGenoPheno>
@@ -251,7 +252,7 @@ namespace libcmaes
     int r = 0;
     for (auto imap : _scriteria)
       {
-	if ((r=imap.second(cmap,cmas))!=0)
+	if (imap.second.active() && (r=imap.second._sfunc(cmap,cmas))!=0)
 	  {
 #ifdef HAVE_DEBUG
 	    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
@@ -267,6 +268,16 @@ namespace libcmaes
     return CONT;
   }
 
+  template <class TGenoPheno>
+  int CMAStopCriteria<TGenoPheno>::set_criteria_active(const int &c, const bool &active)
+  {
+    auto mit = _scriteria.find(c);
+    if (mit == _scriteria.end())
+      return 1;
+    (*mit).second._active = active;
+    return 0;
+  }
+  
   template class CMAStopCriteria<GenoPheno<NoBoundStrategy>>;
   template class CMAStopCriteria<GenoPheno<pwqBoundStrategy>>;
   template class CMAStopCriteria<GenoPheno<NoBoundStrategy,linScalingStrategy>>;

@@ -85,9 +85,9 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   cmaparams.set_max_fevals(maxfunevals);
   cmaparams.set_ftarget(ftarget);
   //cmaparams.set_x0(-5.0,5.0);
-  cmaparams._algo = alg;
-  cmaparams._quiet = true;
-  cmaparams._with_gradient = withnumgradient;
+  cmaparams.set_algo(alg);
+  cmaparams.set_quiet(true);
+  cmaparams.set_gradient(withnumgradient);
   if (noisy)
     cmaparams.set_noisy();
   cmaes(ff,cmaparams);

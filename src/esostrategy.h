@@ -122,7 +122,11 @@ namespace libcmaes
      * @param evals increment to the current consumed budget
      */
     void update_fevals(const int &evals);
-
+    
+    /**
+     * \brief sets gradient function
+     * @param gfunc gradient function
+     */
     void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
     
     /**
@@ -140,7 +144,7 @@ namespace libcmaes
      */
     void start_from_solution(const TSolutions &sol)
     {
-      _parameters.set_x0(sol.best_candidate()._x);
+      _parameters.set_x0(sol.best_candidate().get_x());
       _solutions = sol;
       _solutions.reset();
     }
@@ -155,21 +159,48 @@ namespace libcmaes
     
     /**
      * \brief returns numerical gradient of objective function at x.
+     * @param x point at which to compute the gradient
      * @return vector of numerical gradient of the objective function at x.
      */
     dVec gradf(const dVec &x);
-    
+
+    /**
+     * \brief returns the numerical gradient of the objective function in phenotype space
+     * @param x point in genotype coordinates at which to compute the gradient
+     * @return vector of numerical gradient computed in phenotype space
+     */
     dVec gradgp(const dVec &x) const;
-    
+
     /**
      * \brief computes expected distance to minimum (EDM).
      * @return EDM
      */
     double edm();
+
+    /**
+     * \brief returns reference to current solution object
+     * @return current solution object
+     */
+    TSolutions& get_solutions() { return _solutions; }
+
+    /**
+     * \brief returns reference to current optimization parameters object
+     * @return current optimization parameters object
+     */
+    TParameters& get_parameters() { return _parameters; }
+
+    /**
+     * \brief execute objective function
+     * @param x point at which to execute the function
+     * @param N dimension of array x
+     * @return objective function value at x
+     */
+    double fitfunc(const double *x, const int N) { return _func(x,N); }
     
     // deprecated.
     Candidate best_solution() const;
-    
+
+  protected:
     FitFunc _func; /**< the objective function. */
     int _nevals;  /**< number of function evaluations. */
     int _niter;  /**< number of iterations. */
@@ -178,6 +209,7 @@ namespace libcmaes
     ProgressFunc<TParameters,TSolutions> _pfunc; /**< possibly custom progress function. */
     GradFunc _gfunc = nullptr; /**< gradient function, when available. */
     PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
+    FitFunc _funcaux;
   };
   
 }

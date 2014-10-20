@@ -51,5 +51,5 @@ int main(int argc, char *argv[])
   ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> cmaes(cigtab,cmaparams);
   cmaes.optimize();
   double edm = cmaes.edm();
-  std::cerr << "EDM=" << edm << " / EDM/fm=" << edm / cmaes._solutions.best_candidate()._fvalue << std::endl;
+  std::cerr << "EDM=" << edm << " / EDM/fm=" << edm / cmaes.get_solutions().best_candidate().get_fvalue() << std::endl;
 }

@@ -38,6 +38,11 @@ namespace libcmaes
 								 TParameters &parameters)
     :_func(func),_nevals(0),_niter(0),_parameters(parameters)
   {
+    if (parameters._maximize)
+      {
+	_funcaux = _func;
+	_func = [&](const double *x, const int N) { return -1.0*_funcaux(x,N); };
+      }
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
   }
@@ -69,10 +74,10 @@ namespace libcmaes
 #pragma omp parallel for if (_parameters._mt_feval)
     for (int r=0;r<candidates.cols();r++)
       {
-	_solutions._candidates.at(r)._x = candidates.col(r);
+	_solutions._candidates.at(r).set_x(candidates.col(r));
 	if (phenocandidates.size())
-	  _solutions._candidates.at(r)._fvalue = _func(phenocandidates.col(r).data(),candidates.rows());
-	else _solutions._candidates.at(r)._fvalue = _func(candidates.col(r).data(),candidates.rows());
+	  _solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
+	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
@@ -110,7 +115,8 @@ namespace libcmaes
     for (int i=0;i<_parameters._dim;i++)
       {
 	dVec ei1 = x;
-	ei1(i,0) += epsilon(i);
+	ei1(i,0) += epsilon(i); //TODO: beware of bounds ?
+	ei1(i,0) = std::min(ei1(i,0),_parameters.get_gp().get_boundstrategy().getUBound(i));
 	double gradi = (_func(ei1.data(),_parameters._dim) - fx)/epsilon(i);
 	vgradf(i,0) = gradi;
       }

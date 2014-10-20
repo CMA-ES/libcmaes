@@ -33,7 +33,7 @@ namespace libcmaes
     // compute mean, Eq. (2)
     dVec xmean = dVec::Zero(parameters._dim);
     for (int i=0;i<parameters._mu;i++)
-      xmean += parameters._weights[i] * (solutions._candidates.at(i)._x - solutions._xmean);
+      xmean += parameters._weights[i] * (solutions._candidates.at(i).get_x_dvec() - solutions._xmean);
     xmean *= parameters._cm;
     xmean += solutions._xmean;
   
@@ -70,7 +70,7 @@ namespace libcmaes
     else cmuplus = dMat::Zero(parameters._dim,1);
     for (int i=0;i<parameters._mu;i++)
       {
-	dVec difftmp = solutions._candidates.at(i)._x - solutions._xmean;
+	dVec difftmp = solutions._candidates.at(i).get_x_dvec() - solutions._xmean;
 	if (!parameters._sep)
 	  cmuplus += parameters._weights[i] * (difftmp*difftmp.transpose());
 	else cmuplus += parameters._weights[i] * (difftmp.cwiseProduct(difftmp));
@@ -84,7 +84,7 @@ namespace libcmaes
     else cmuminus = dMat::Zero(parameters._dim,1);
     for (int i=0;i<parameters._mu;i++)
       {
-	dVec ytmp = solutions._candidates.at(parameters._lambda-i-1)._x-solutions._xmean;
+	dVec ytmp = solutions._candidates.at(parameters._lambda-i-1).get_x_dvec()-solutions._xmean;
 	//dVec yl = (solutions._csqinv * (solutions._candidates.at(parameters._lambda-parameters._mu+i)._x-solutions._xmean)).norm() / (solutions._csqinv * ytmp).norm() * ytmp * 1.0/solutions._sigma;
 	dVec yl = ytmp * 1.0/solutions._sigma; // NH says this is a good enough value.
 	if (!parameters._sep)

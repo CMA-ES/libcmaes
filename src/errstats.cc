@@ -36,16 +36,16 @@ namespace libcmaes
 					       const double &fup,
 					       const double &delta)
   {
-    dVec x = cmasol.best_candidate()._x;
-    double minfvalue = cmasol.best_candidate()._fvalue;
-    dVec phenox = parameters._gp.pheno(x);
+    dVec x = cmasol.best_candidate().get_x_dvec();
+    double minfvalue = cmasol.best_candidate().get_fvalue();
+    dVec phenox = parameters.get_gp().pheno(x);
     
     //debug
     //std::cout << "xk=" << x[k] << " / minfvalue=" << minfvalue << std::endl;
     //std::cout << "phenox=" << phenox << std::endl;
     //debug
 
-    pli le(k,samplesize,parameters._dim,parameters._gp.pheno(x),minfvalue,fup,delta);
+    pli le(k,samplesize,parameters.dim(),parameters.get_gp().pheno(x),minfvalue,fup,delta);
 
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,false,samplesize,fup,delta,curve); // positive direction
     errstats<TGenoPheno>::profile_likelihood_search(func,parameters,le,cmasol,k,true,samplesize,fup,delta,curve);  // negative direction
@@ -68,9 +68,9 @@ namespace libcmaes
 						       const bool &curve)
   {
     int sign = neg ? -1 : 1;
-    dVec x = cmasol.best_candidate()._x;
+    dVec x = cmasol.best_candidate().get_x_dvec();
     double xk = x[k];
-    double minfvalue = cmasol.best_candidate()._fvalue;
+    double minfvalue = cmasol.best_candidate().get_fvalue();
     CMASolutions citsol = cmasol;
     double dxk = sign * xk * 0.1;
     for (int i=0;i<samplesize;i++)
@@ -98,13 +98,13 @@ namespace libcmaes
 	else // update current point and solution.
 	  {
 	    citsol = ncitsol;
-	    x = citsol.best_candidate()._x;
-	    minfvalue = citsol.best_candidate()._fvalue;
+	    x = citsol.best_candidate().get_x_dvec();
+	    minfvalue = citsol.best_candidate().get_fvalue();
 	  }
 	
 	// store points.
-	dVec phenobx = parameters._gp.pheno(citsol.best_candidate()._x);
-	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate()._fvalue;
+	dVec phenobx = parameters.get_gp().pheno(citsol.best_candidate().get_x_dvec());
+	le._fvaluem[samplesize+sign*(1+i)] = citsol.best_candidate().get_fvalue();
 	le._xm.row(samplesize+sign*(1+i)) = phenobx.transpose();
 	le._err[samplesize+sign*(1+i)] = ncitsol._run_status;
 	
@@ -113,7 +113,7 @@ namespace libcmaes
 	    // pad and return.
 	    for (int j=i+1;j<samplesize;j++)
 	      {
-		le._fvaluem[samplesize+sign*(1+j)] = citsol.best_candidate()._fvalue;
+		le._fvaluem[samplesize+sign*(1+j)] = citsol.best_candidate().get_fvalue();
 		le._xm.row(samplesize+sign*(1+j)) = phenobx.transpose();
 		le._err[samplesize+sign*(1+j)] = ncitsol._run_status;
 	      }
@@ -137,9 +137,9 @@ namespace libcmaes
     double threshold = minfvalue + fup;
     dVec xtmp = x;
     xtmp[k] += dxk;
-    double fvalue = func(parameters._gp.pheno(xtmp).data(),xtmp.size());
+    double fvalue = func(parameters.get_gp().pheno(xtmp).data(),xtmp.size());
     double fdiff = fvalue - minfvalue;
-    dVec phenoxtmp = parameters._gp.pheno(xtmp);
+    dVec phenoxtmp = parameters.get_gp().pheno(xtmp);
     
     //debug
     /*std::cout << "xtmp=" << xtmp.transpose() << std::endl;
@@ -151,12 +151,12 @@ namespace libcmaes
       {
 	while((curve || fabs(fvalue-fup)>fdelta)
 	      && fdiff > threshold * fdiff_relative_increase
-	      && phenoxtmp[k] >= parameters._gp._boundstrategy.getPhenoLBound(k))
+	      && phenoxtmp[k] >= parameters.get_gp().get_boundstrategy_const().getPhenoLBound(k))
 	  {
-	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << phenoxtmp[k] << " / lbound=" << parameters._gp._boundstrategy.getLBound(k) << std::endl;
+	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << phenoxtmp[k] << " / lbound=" << parameters.get_gp()._boundstrategy.getLBound(k) << std::endl;
 	    dxk /= 2.0;
 	    xtmp[k] = x[k] + dxk;
-	    phenoxtmp = parameters._gp.pheno(xtmp);
+	    phenoxtmp = parameters.get_gp().pheno(xtmp);
 	    fvalue = func(phenoxtmp.data(),xtmp.size());
 	    fdiff = fvalue - minfvalue;
 	  }
@@ -165,20 +165,20 @@ namespace libcmaes
       {
 	while ((curve || fabs(fvalue-fup)>fdelta)
 	       && fdiff < threshold * fdiff_relative_increase
-	       && phenoxtmp[k] <= parameters._gp._boundstrategy.getPhenoUBound(k))
+	       && phenoxtmp[k] <= parameters.get_gp().get_boundstrategy_const().getPhenoUBound(k))
 	  {
-	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << phenoxtmp[k] << " / ubound=" << parameters._gp._boundstrategy.getUBound(k) << std::endl;
+	    //std::cerr << "fvalue=" << fvalue << " / xtmpk=" << phenoxtmp[k] << " / ubound=" << parameters.get_gp()._boundstrategy.getUBound(k) << std::endl;
 	    dxk *= 2.0;
 	    xtmp[k] = x[k] + dxk;
-	    phenoxtmp =parameters._gp.pheno(xtmp);
+	    phenoxtmp =parameters.get_gp().pheno(xtmp);
 	    fvalue = func(phenoxtmp.data(),xtmp.size());
 	    fdiff = fvalue - minfvalue;
 	  }
 	dxk /= 2.0;
       }
     x[k] = xtmp[k]; // set value.
-    dVec phenox = parameters._gp.pheno(x);
-    return (fabs(fvalue-fup) < fdelta || phenox[k] < parameters._gp._boundstrategy.getPhenoLBound(k) || phenox[k] > parameters._gp._boundstrategy.getPhenoUBound(k));
+    dVec phenox = parameters.get_gp().pheno(x);
+    return (fabs(fvalue-fup) < fdelta || phenox[k] < parameters.get_gp().get_boundstrategy_const().getPhenoLBound(k) || phenox[k] > parameters.get_gp().get_boundstrategy_const().getPhenoUBound(k));
   }
 
   template <class TGenoPheno>
@@ -190,9 +190,10 @@ namespace libcmaes
   {
     CMASolutions ncmasol = cmasol;
     CMAParameters<TGenoPheno> nparameters = parameters;
-    nparameters._quiet = true; //TODO: option.
+    nparameters.set_quiet(true); //TODO: option.
     nparameters.set_fixed_p(k,vk);
-    nparameters._sigma_init = ncmasol._sigma = fabs(cmasol.best_candidate()._x[k]-vk);
+    ncmasol.set_sigma(fabs(cmasol.best_candidate().get_x()[k]-vk));
+    nparameters.set_sigma_init(ncmasol.sigma());
     return cmaes(func,nparameters,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,nullptr,ncmasol); //TODO: explicitely set the initial covariance.
   }
     
@@ -249,8 +250,8 @@ namespace libcmaes
 	cmasol.get_pli(py,ply);
       }
 
-    double valx = cmasol.best_candidate()._x[px];
-    double valy = cmasol.best_candidate()._x[py];
+    double valx = cmasol.best_candidate().get_x()[px];
+    double valy = cmasol.best_candidate().get_x()[py];
     
     // find upper y value for x parameter.
     CMAParameters<TGenoPheno> nparameters = parameters;
@@ -273,10 +274,10 @@ namespace libcmaes
     CMASolutions eyx_lo = cmaes(func,nparameters);
 
     contour c;
-    c.add_point(valx+plx._errmin,exy_lo.best_candidate()._x[py]);
-    c.add_point(eyx_lo.best_candidate()._x[px],valy+ply._errmin); 
-    c.add_point(valx+plx._errmax,exy_up.best_candidate()._x[py]);
-    c.add_point(eyx_up.best_candidate()._x[px],valy+ply._errmax);
+    c.add_point(valx+plx._errmin,exy_lo.best_candidate().get_x()[py]);
+    c.add_point(eyx_lo.best_candidate().get_x()[px],valy+ply._errmin); 
+    c.add_point(valx+plx._errmax,exy_up.best_candidate().get_x()[py]);
+    c.add_point(eyx_up.best_candidate().get_x()[px],valy+ply._errmax);
     
     //TODO: more than 4 points.
     

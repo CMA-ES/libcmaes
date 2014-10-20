@@ -32,29 +32,13 @@ FitFunc fsphere = [](const double *x, const int N)
   return val;
 };
 
-// dummy genotype / phenotype transform functions.
-TransFunc genof = [](const double *ext, double *in, const int &dim)
-{
-  for (int i=0;i<dim;i++)
-    in[i] = 2.0*ext[i];
-};
-
-TransFunc phenof = [](const double *in, double *ext, const int &dim)
-{
-  for (int i=0;i<dim;i++)
-    ext[i] = 0.5*in[i];
-};
-
 int main(int argc, char *argv[])
 {
-  int dim = 10; // problem dimensions.
-  std::vector<double> x0(dim,1.0);
-  double sigma = 0.1;
-  //int lambda = 100; // offsprings at each generation.
-  GenoPheno<> gp(genof,phenof);
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma,-1,0,gp); // -1 for automatically decided lambda.
-  //cmaparams._algo = BIPOP_CMAES;
-  CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
+  std::vector<double> x0 = {1.0,2.7,400.0};
+  std::vector<double> sigmas = {1e-3,0.57,2.3};
+  CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>> cmaparams(x0,sigmas);
+  cmaparams.set_algo(aCMAES);
+  CMASolutions cmasols = cmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
   std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   return cmasols.run_status();

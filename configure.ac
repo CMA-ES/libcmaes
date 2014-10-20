@@ -1,9 +1,10 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.8)
+AC_INIT(libcmaes,0.9.1)
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([libcmaes_config.h])
+AC_CONFIG_FILES(libcmaes.pc)
 
 #ac_default_prefix=`pwd`
 #bindir=$ac_default_prefix/bin/$host
@@ -63,6 +64,7 @@ else
   GFLAGS_LIBS=
 fi
 AC_SUBST(GFLAGS_LIBS)
+AM_CONDITIONAL(HAVE_GFLAGS, test x"$ac_cv_have_libgflags" = x"1")
 
 # Check if there is google-glog library installed.
 AC_ARG_ENABLE(gglog,
@@ -108,6 +110,23 @@ AC_HELP_STRING([--enable-bbob],[Enable support for BBOB'2013 benchmark (default 
 esac],[bbob=false])
 AM_CONDITIONAL(HAVE_BBOB, test x$bbob = xtrue)
 
+# Whether to compile with python wrapper support
+AC_ARG_ENABLE(python,
+AC_HELP_STRING([--enable-python],[Enable support for python wrapper (default is NO)]),
+[case "${enableval}" in 
+	yes) python=true ;;
+	no) python=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-python) ;;
+esac],[python=false])
+AM_CONDITIONAL(HAVE_PYTHON, test x$python = xtrue)
+if test x"$python" = x"true"; then
+#   AC_DEFINE(HAVE_PYTHON, 1, [python boost])
+    AX_BOOST_PYTHON()
+    if test "$BOOST_PYTHON_LIB" == ""; then
+       AC_MSG_ERROR(boost python required for building the python wrapper,1)
+    fi
+fi
+
 # Whether to only compile the library, without exe (e.g. tests and examples).
 AC_ARG_ENABLE(onlylib,
 AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and examples (default is NO)]),
@@ -131,5 +150,5 @@ if test x"$debug" = x"true"; then
 fi
 #AM_CONDITIONAL(HAVE_DEBUG, test x$debug = xtrue)
 
-AC_OUTPUT(Makefile src/Makefile tests/Makefile examples/Makefile)
+AC_OUTPUT(Makefile src/Makefile tests/Makefile examples/Makefile python/Makefile)
 

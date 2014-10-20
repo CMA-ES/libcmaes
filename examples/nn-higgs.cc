@@ -293,7 +293,7 @@ ProgressFunc<CMAParameters<>,CMASolutions> hpfunc = [](const CMAParameters<> &cm
     hgn._allparams.push_back(cmasols.best_candidate()._x(i));
   hgn.forward_pass(gfeatures,glabels);
   double cams = ams(hgn,gtraining ? gweights : gtweights, gtraining ? glabels : gtlabels);*/
-  std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << -cmasols._best_candidates_hist.back()._fvalue << " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols._updated_eigen) : "") << " " << cmasols._elapsed_last_iter << std::endl;
+  std::cout << "epoch=" << ceil(cmasols.niter() / gnpasses) << " / iter=" << cmasols.niter() << " / evals=" << cmaparams.lambda() * cmasols.niter() << " / f-value=" << -cmasols.best_candidate().get_fvalue() << " / sigma=" << cmasols.sigma() << " " << cmasols.elapsed_last_iter() << std::endl;
 
   if (gbatches > 0)
     {
@@ -464,7 +464,7 @@ int main(int argc, char *argv[])
 		{
 		  
 		  Candidate bcand = cmasols.best_candidate();
-		  std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(x0));
+		  std::copy(bcand.get_x(),bcand.get_x()+bcand.get_x_size(),std::back_inserter(x0));
 		  nn hgn = nn(glsizes,gsigmoid);
 		  for (int i=0;i<(int)x0.size();i++)
 		    hgn._allparams.push_back(x0[i]);
@@ -487,10 +487,11 @@ int main(int argc, char *argv[])
 	      gweights = ggweights.block(0,beg,ggweights.rows(),bsize);
 	      CMAParameters<> cmaparams(ghiggsnn._allparams_dim,&x0.front(),sigma0[i],FLAGS_lambda);//,0,gp);
 	      cmaparams.set_max_iter(FLAGS_maxsolveiter);
-	      cmaparams._fplot = FLAGS_fplot;
-	      cmaparams._with_gradient = FLAGS_with_num_gradient;
+	      cmaparams.set_fplot(FLAGS_fplot);
+	      cmaparams.set_gradient(FLAGS_with_num_gradient);
+	      cmaparams.set_str_algo(FLAGS_alg);
 	      //cmaparams._lazy_update = true;
-	      if (FLAGS_alg == "cmaes")
+	      /*if (FLAGS_alg == "cmaes")
 		cmaparams._algo = CMAES_DEFAULT;
 	      else if (FLAGS_alg == "ipop")
 		cmaparams._algo = IPOP_CMAES;
@@ -518,16 +519,16 @@ int main(int argc, char *argv[])
 		{
 		  std::cout << "unknown algorithm flavor " << FLAGS_alg << std::endl;
 		  exit(-1);
-		}
+		  }*/
 	      //cmaparams.set_ftarget(1e-8);
-	      cmaparams._mt_feval = true;
+	      cmaparams.set_mt_feval(true);
 	      if (FLAGS_mbatch)
-		cmaparams._quiet = true;
+		cmaparams.set_quiet(true);
 	      //if (!FLAGS_with_gradient)
 	      cmasols = cmaes<>(nn_of,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols);
-	      sigma0[i] = cmasols._sigma;
-	      nevals += cmasols._nevals;
-	      elapsed += cmasols._elapsed_time;
+	      sigma0[i] = cmasols.sigma();
+	      nevals += cmasols.fevals();
+	      elapsed += cmasols.elapsed_time();
 	      //else cmasols = cmaes<>(nn_of,cmaparams,hpfunc,gnn);
 	      //std::cout << "status: " << cmasols._run_status << std::endl;
 	    }
@@ -554,26 +555,26 @@ int main(int argc, char *argv[])
 	  // optimize network until convergence or maxiter etc...
 	  CMAParameters<> cmaparams(FLAGS_dropdim,&vndropdims.front(),FLAGS_sigma0,FLAGS_lambda);
 	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
-	  cmaparams._fplot = FLAGS_fplot;
-	  cmaparams._algo = aCMAES;
-	  cmaparams._mt_feval = true;
-	  cmaparams._quiet = false;
+	  cmaparams.set_fplot(FLAGS_fplot);
+	  cmaparams.set_algo(aCMAES);
+	  cmaparams.set_mt_feval(true);
+	  cmaparams.set_quiet(false);
 	  cmaparams.set_ftolerance(FLAGS_ftolerance);
 	  cmasols = cmaes<>(nn_dof,cmaparams,hpfunc);
-	  nevals += cmasols._nevals;
+	  nevals += cmasols.fevals();
 	  
 	  // update state.
 	  int p = 0;
 	  auto mit = gndropdims.begin();
 	  while(mit!=gndropdims.end())
 	    {
-	      gallparams.at((*mit).first) = cmasols.best_candidate()._x(p);
+	      gallparams.at((*mit).first) = cmasols.best_candidate().get_x_dvec()(p);
 	      ++mit;
 	      ++p;
 	    }
 	  
 	  // loop / break.
-	  std::cout << "iter=" << droppasses + 1 << " / ams=" << -cmasols.best_candidate()._fvalue << " / fevals=" << nevals;
+	  std::cout << "iter=" << droppasses + 1 << " / ams=" << -cmasols.best_candidate().get_fvalue() << " / fevals=" << nevals;
 	  //dVec bx = Map<dVec>(&gallparams.front(),gallparams.size());
 	  nn hgn = nn(glsizes,gsigmoid);
 	  hgn._allparams = gallparams;
@@ -595,7 +596,7 @@ int main(int argc, char *argv[])
   // testing on training set
   dVec bx;
   if (!FLAGS_drop)
-    bx = cmasols.best_candidate()._x;
+    bx = cmasols.best_candidate().get_x_dvec();
   else bx = Map<dVec>(&gallparams.front(),gallparams.size());
   testing(bx,true);
   

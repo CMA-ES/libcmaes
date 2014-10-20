@@ -252,10 +252,10 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
 {
   if (!gdrop)
     {
-      gtrainacc = testing(cmasols.best_candidate()._x,true,false);
-      gtestacc = testing(cmasols.best_candidate()._x,false,false);
+      gtrainacc = testing(cmasols.best_candidate().get_x_dvec(),true,false);
+      gtestacc = testing(cmasols.best_candidate().get_x_dvec(),false,false);
     }
-  std::cout << "epoch=" << ceil(cmasols._niter / gnpasses) << " / iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back()._fvalue << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols._sigma << " / maha=" << cmasols._maha << " / iter=" << cmasols._elapsed_last_iter << std::endl;
+  std::cout << "epoch=" << ceil(cmasols.niter() / gnpasses) << " / iter=" << cmasols.niter() << " / evals=" << cmaparams.lambda() * cmasols.niter() << " / f-value=" << cmasols.best_candidate().get_fvalue() << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols.sigma() << " / maha=" << cmasols.maha() << " / iter=" << cmasols.elapsed_last_iter() << std::endl;
   
   /*if (gbatches > 0)
     {
@@ -271,9 +271,9 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       gbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
       }*/
 
-  if (cmasols._maha > gmaxmaha)
-    gmaxmaha = cmasols._maha;
-  if (cmasols._maha < gmaxmaha / 10.0)
+  if (cmasols.maha() > gmaxmaha)
+    gmaxmaha = cmasols.maha();
+  if (cmasols.maha() < gmaxmaha / 10.0)
     {
       std::cout << "Mahalanobis drop to 1/10th of its max, stopping optimization\n";
       return 1;
@@ -285,7 +285,7 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
 PlotFunc<CMAParameters<>,CMASolutions> mpffunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
 {
   std::string sep = " ";
-  fplotstream << cmasols.best_candidate()._fvalue << sep << cmasols._nevals << sep << cmasols._sigma << sep << sqrt(cmasols._max_eigenv/cmasols._min_eigenv) << sep << cmasols._max_eigenv << sep << gtrainacc << sep << gtestacc << std::endl;
+  fplotstream << cmasols.best_candidate().get_fvalue() << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep << cmasols.max_eigenv() << sep << gtrainacc << sep << gtestacc << std::endl;
   return 0;
 };
 
@@ -475,7 +475,7 @@ int main(int argc, char *argv[])
 		{
 		  Candidate bcand = cmasols.best_candidate();
 		  x0.clear();
-		  std::copy(bcand._x.data(),bcand._x.data()+bcand._x.size(),std::back_inserter(x0));
+		  std::copy(bcand.get_x(),bcand.get_x()+bcand.get_x_size(),std::back_inserter(x0));
 		  nn hgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,FLAGS_l1reg,FLAGS_l2reg);
 		  for (int i=0;i<(int)x0.size();i++)
 		    hgn._allparams.push_back(x0[i]);
@@ -484,9 +484,9 @@ int main(int argc, char *argv[])
 		}
 	      
 	      double trainacc=0.0,testacc = 0.0;
-	      if (cmasols._sepcov.size())
+	      if (cmasols.sepcov().size())
 		{
-		  dVec bx = cmasols.best_candidate()._x;
+		  dVec bx = cmasols.best_candidate().get_x_dvec();
 		  trainacc = testing(bx,true,false);
 		  testacc = testing(bx,false,false);
 		}
@@ -519,14 +519,14 @@ int main(int argc, char *argv[])
 	      
 	      CMAParameters<> cmaparams(gmnistnn._allparams_dim,&x0.front()/*gmnistnn._allparams.front()*/,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
 	      cmaparams.set_max_iter(FLAGS_maxsolveiter);
-	      cmaparams._fplot = FLAGS_fplot;
-	      cmaparams._algo = sepaCMAES;
+	      cmaparams.set_fplot(FLAGS_fplot);
+	      cmaparams.set_algo(sepaCMAES);
 	      cmaparams.set_ftarget(1e-2);
-	      cmaparams._mt_feval = true;
+	      cmaparams.set_mt_feval(true);
 	      /*if (FLAGS_mbatch)
 		cmaparams.set_noisy();*/
 	      if (FLAGS_nmbatch)
-		cmaparams._quiet = true;
+		cmaparams.set_quiet(true);
 	      if (FLAGS_nmbatch)
 		{
 		  if (!FLAGS_with_gradient)
@@ -540,9 +540,9 @@ int main(int argc, char *argv[])
 		  else cmasols = cmaes<>(nn_of,cmaparams,mpfunc,gnn,cmasols,mpffunc);
 		}
 	      
-	      sigma0[i] = cmasols._sigma;
-	      nevals += cmasols._nevals;
-	      elapsed += cmasols._elapsed_time;
+	      sigma0[i] = cmasols.sigma();
+	      nevals += cmasols.fevals();
+	      elapsed += cmasols.elapsed_time();
 	      if (FLAGS_mbatch > 0)
 		break;
 	    }
@@ -575,8 +575,8 @@ int main(int argc, char *argv[])
 	    {
 	      factor = 2.0;
 	      std::map<double,int,std::greater<double>> bdims;
-	      for (int v=0;v<cmasols._leigenvalues.size();v++)
-		bdims.insert(std::pair<double,int>(cmasols._leigenvalues(v),v));
+	      for (int v=0;v<cmasols.eigenvalues().size();v++)
+		bdims.insert(std::pair<double,int>(cmasols.eigenvalues()(v),v));
 	      int ulim = ceil(FLAGS_dropdim / factor);
 	      int p = 0;
 	      std::map<double,int,std::greater<double>>::const_iterator bdmit = bdims.begin();
@@ -632,29 +632,29 @@ int main(int argc, char *argv[])
 	  double lambda = gnpasses;
 	  CMAParameters<> cmaparams(FLAGS_dropdim,&vndropdims.front(),FLAGS_sigma0,lambda,FLAGS_seed);
 	  cmaparams.set_max_iter(FLAGS_maxsolveiter);
-	  cmaparams._fplot = FLAGS_fplot;
-	  cmaparams._algo = aCMAES;
+	  cmaparams.set_fplot(FLAGS_fplot);
+	  cmaparams.set_algo(aCMAES);
 	  cmaparams.set_ftarget(1e-2);
-	  cmaparams._mt_feval = true;
-	  cmaparams._quiet = false;
-	  cmaparams._kl = true;
+	  cmaparams.set_mt_feval(true);
+	  cmaparams.set_quiet(false);
+	  cmaparams.set_kl(true);
 	  cmaparams.set_ftolerance(FLAGS_ftolerance);
 	  cmasols = cmaes<>(nn_dof,cmaparams,mpfunc);
-	  nevals += cmasols._nevals;
+	  nevals += cmasols.fevals();
 	  
 	  // update state.
 	  int p = 0;
 	  auto mit = gndropdims.begin();
 	  while(mit!=gndropdims.end())
 	    {
-	      gallparams.at((*mit).first) = cmasols.best_candidate()._x(p);
+	      gallparams.at((*mit).first) = cmasols.best_candidate().get_x_dvec()(p);
 	      ++mit;
 	      ++p;
 	    }
 	  
 	  // loop / break.
 	  //double acc = 0.0;
-	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate()._fvalue << " / fevals=" << nevals;
+	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate().get_fvalue() << " / fevals=" << nevals;
 	  if (FLAGS_testp || FLAGS_testf != "")
 	    {
 	      dVec bx = Map<dVec>(&gallparams.front(),gallparams.size());
@@ -716,7 +716,7 @@ int main(int argc, char *argv[])
   // testing on training set.
   dVec bx;
   if (!FLAGS_drop && !FLAGS_sgd && FLAGS_mbatch <= 0)
-    bx = cmasols.best_candidate()._x;
+    bx = cmasols.best_candidate().get_x_dvec();
   else bx = Map<dVec>(&gallparams.front(),gallparams.size());
   testing(bx,true);
     
