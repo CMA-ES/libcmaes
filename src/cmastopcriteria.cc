@@ -77,8 +77,6 @@ namespace libcmaes
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	double thresh = 100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda);
-	if (!cmap._has_max_iter) // this criteria is deactivated
-	  return CONT;
 	if (cmas._niter >= thresh)
 	  {
 	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria autoMaxIter => thresh=" << thresh << std::endl;
