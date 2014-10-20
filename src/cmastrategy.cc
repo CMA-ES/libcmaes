@@ -46,7 +46,7 @@ namespace libcmaes
     std::string sep = " ";
     fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
     fplotstream << cmasols.eigenvalues().transpose() << sep;
-    if (!cmaparams.is_sep())
+    if (!cmaparams.is_sep() && !cmaparams.is_vd())
       fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
     else fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
     fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
@@ -79,7 +79,7 @@ namespace libcmaes
 	std::string sep = " ";
 	fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
 	fplotstream << cmasols.eigenvalues().transpose() << sep;
-	if (!cmaparams.is_sep())
+	if (!cmaparams.is_sep() && !cmaparams.is_vd())
 	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
 	else fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
 	fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();

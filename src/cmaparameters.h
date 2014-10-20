@@ -138,6 +138,12 @@ namespace libcmaes
        * \brief activates VD decomposition.
        */
       void set_vd();
+
+      /**
+       * \brief whether algorithm uses vd update.
+       * @return vd status
+       */
+      bool is_vd() const { return _vd; }
       
       /**
        * \brief turns stopping criteria MaxIter that automatically stops optimization after a 
