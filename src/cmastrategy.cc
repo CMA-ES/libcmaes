@@ -48,7 +48,10 @@ namespace libcmaes
     fplotstream << cmasols.eigenvalues().transpose() << sep;
     if (!cmaparams.is_sep() && !cmaparams.is_vd())
       fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-    else fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+    else if (cmaparams.is_sep())
+      fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+    else if (cmaparams.is_vd())
+      fplotstream << cmasols.sepcov().transpose() << sep; // C = D(I+vv')D, and we print out D^2 as an approx
     fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
     fplotstream << sep << cmasols.elapsed_last_iter();
 #ifdef HAVE_DEBUG
@@ -81,7 +84,10 @@ namespace libcmaes
 	fplotstream << cmasols.eigenvalues().transpose() << sep;
 	if (!cmaparams.is_sep() && !cmaparams.is_vd())
 	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-	else fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+	else if (cmaparams.is_sep())
+	  fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+	else if (cmaparams.is_vd())
+	fplotstream << cmasols.sepcov().transpose() << sep; // C = D(I+vv')D, and we print out D^2 as an approx
 	fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
 	fplotstream << sep << cmasols.elapsed_last_iter();
 #ifdef HAVE_DEBUG
