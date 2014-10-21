@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
   cmaparams.set_fplot(FLAGS_fplot);
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
-  ESOptimizer<RSVMSurrogateStrategy<>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+  ESOptimizer<RSVMSurrogateStrategy<ACovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
   if (FLAGS_no_exploit)
     optim.set_exploit(!FLAGS_no_exploit);
   optim.set_prelambda(FLAGS_prelambda);

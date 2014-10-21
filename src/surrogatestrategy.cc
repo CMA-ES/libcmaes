@@ -55,9 +55,12 @@ namespace libcmaes
 	std::string sep = " ";
 	fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
 	fplotstream << cmasols.eigenvalues().transpose() << sep;
-	if (!cmaparams.is_sep())
+	if (!cmaparams.is_sep() && !cmaparams.is_vd())
 	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-	else fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+	else if (cmaparams.is_sep())
+	  fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
+	else if (cmaparams.is_vd())
+	  fplotstream << cmasols.sepcov().transpose() << sep;
 	fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
 	fplotstream << sep << cmasols.elapsed_last_iter();
 	fplotstream << sep << _train_err << sep << _test_err << sep << _smooth_test_err;
@@ -144,7 +147,7 @@ namespace libcmaes
 	// compute test error if needed.
 	if (this->_niter != 0 && (int)this->_tset.size() >= this->_l)
 	  {
-	    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
 	      this->set_test_error(this->compute_error(eostrat<TGenoPheno>::_solutions._candidates,
 						       eostrat<TGenoPheno>::_solutions._csqinv));
 	    else this->set_test_error(this->compute_error(eostrat<TGenoPheno>::_solutions._candidates,
@@ -167,7 +170,7 @@ namespace libcmaes
 	for (int r=0;r<candidates.cols();r++)
 	  {
 	    eostrat<TGenoPheno>::get_solutions().get_candidate(r).set_x(candidates.col(r));
-	    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
 	      this->predict(eostrat<TGenoPheno>::get_solutions().candidates(),
 			    eostrat<TGenoPheno>::get_solutions().csqinv());
 	    else this->predict(eostrat<TGenoPheno>::get_solutions().candidates(),
@@ -257,7 +260,7 @@ namespace libcmaes
 	// compute test error if needed.
 	if (this->_niter != 0 && (int)this->_tset.size() >= this->_l)
 	  {
-	    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
 	      this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
 						       eostrat<TGenoPheno>::_solutions._csqinv));
 	    else this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
@@ -284,7 +287,7 @@ namespace libcmaes
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,this->_esolver,eostrat<TGenoPheno>::_solutions);
     
     // other stuff.
-    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
       eostrat<TGenoPheno>::_solutions.update_eigenv(this->_esolver._eigenSolver.eigenvalues(),
 						    this->_esolver._eigenSolver.eigenvectors());
     else eostrat<TGenoPheno>::_solutions.update_eigenv(eostrat<TGenoPheno>::_solutions._sepcov,
@@ -293,7 +296,7 @@ namespace libcmaes
     // train surrogate as required.
     if (do_train())
       {
-	if (!eostrat<TGenoPheno>::_parameters.is_sep())
+	if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
 	  this->train(this->_tset,eostrat<TGenoPheno>::_solutions._csqinv);
 	else this->train(this->_tset,eostrat<TGenoPheno>::_solutions._sepcsqinv);
       }
@@ -308,7 +311,7 @@ namespace libcmaes
       {
 	eostrat<TGenoPheno>::_solutions._candidates.push_back(Candidate(0.0,candidates.col(r)));
       }
-    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
       this->predict(eostrat<TGenoPheno>::_solutions._candidates,eostrat<TGenoPheno>::_solutions._csqinv);
     else this->predict(eostrat<TGenoPheno>::_solutions._candidates,eostrat<TGenoPheno>::_solutions._sepcsqinv);
     eostrat<TGenoPheno>::_solutions.sort_candidates();
@@ -355,7 +358,7 @@ namespace libcmaes
       }
 
     // test error.
-    if (!eostrat<TGenoPheno>::_parameters.is_sep())
+    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
       this->set_test_error(this->compute_error(test_set,eostrat<TGenoPheno>::_solutions._csqinv));
     else this->set_test_error(this->compute_error(test_set,eostrat<TGenoPheno>::_solutions._sepcsqinv));
     
@@ -365,20 +368,27 @@ namespace libcmaes
   
   template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
   template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
   template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
   template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
   
   template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
   template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
   template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
   template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
-  
+  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

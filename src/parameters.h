@@ -48,6 +48,7 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      friend class VDCMAUpdate;
       friend class Candidate;
       template <class U, class V> friend class SimpleSurrogateStrategy;
       template <class U, class V> friend class ACMSurrogateStrategy;
@@ -496,10 +497,9 @@ namespace libcmaes
       TGenoPheno _gp; /**< genotype / phenotype object. */
       
       bool _mt_feval = false; /**< whether to force multithreaded (i.e. parallel) function evaluations. */ 
-      int _max_hist = 100; /**< max size of the history, keeps memory requirements fixed. */
+      int _max_hist = -1; /**< max size of the history, keeps memory requirements fixed. */
 
       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
-      
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
     };
 }

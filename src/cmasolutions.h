@@ -47,6 +47,7 @@ namespace libcmaes
     friend class ACovarianceUpdate;
     template <class U, class V> friend class SimpleSurrogateStrategy;
     template <class U, class V> friend class ACMSurrogateStrategy;
+    friend class VDCMAUpdate;
     
   public:
     /**
@@ -300,8 +301,10 @@ namespace libcmaes
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
      */
+    template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
     std::ostream& print(std::ostream &out,
-			const int &verb_level=0) const;
+			const int &verb_level=0,
+			const TGenoPheno &gp=GenoPheno<NoBoundStrategy>()) const;
 
   private:
     dMat _cov; /**< covariance matrix. */
@@ -315,7 +318,7 @@ namespace libcmaes
     double _sigma; /**< step size. */
     std::vector<Candidate> _candidates; /**< current set of candidate solutions. */
     std::vector<Candidate> _best_candidates_hist; /**< history of best candidate solutions. */
-    int _max_hist = 100; /**< max size of the history, keeps memory requirements fixed. */
+    int _max_hist = -1; /**< max size of the history, keeps memory requirements fixed. */
     
     double _max_eigenv = 0.0; /**< max eigenvalue, for termination criteria. */
     double _min_eigenv = 0.0; /**< min eigenvalue, for termination criteria. */
@@ -342,6 +345,8 @@ namespace libcmaes
     int _elapsed_stop = 0;
 #endif
     double _edm = 0.0; /**< expected vertical distance to the minimum. */
+
+    dVec _v; /**< complementary vector for use in vdcma. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

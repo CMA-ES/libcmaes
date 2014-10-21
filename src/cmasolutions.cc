@@ -21,6 +21,7 @@
 
 #include "cmasolutions.h"
 #include "opti_err.h"
+#include "eigenmvn.h"
 #include <limits>
 #include <iostream>
 
@@ -32,7 +33,7 @@ namespace libcmaes
   {
     try
       {
-	if (!static_cast<CMAParameters<TGenoPheno>&>(p)._sep)
+	if (!static_cast<CMAParameters<TGenoPheno>&>(p)._sep && !static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
 	  _cov = dMat::Identity(p._dim,p._dim);
 	else _sepcov = dMat::Constant(p._dim,1,1.0);
       }
@@ -72,7 +73,14 @@ namespace libcmaes
     _pc = dVec::Zero(p._dim);
     _candidates.resize(p._lambda);
     _kcand = std::min(p._lambda-1,static_cast<int>(1.0+ceil(0.1+p._lambda/4.0)));
-    _max_hist = p._max_hist;
+    _max_hist = (p._max_hist > 0) ? p._max_hist : static_cast<int>(10+ceil(30*p._dim/p._lambda));
+    
+    if (static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
+      {
+	EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
+	esolver.set_covar(_sepcov);
+	_v = esolver.samples_ind(1) / std::sqrt(p._dim);
+      }
   }
 
   CMASolutions::~CMASolutions()
@@ -112,16 +120,18 @@ namespace libcmaes
     _leigenvalues = eigenvalues;
     _leigenvectors = eigenvectors;
   }
-  
+
+  template <class TGenoPheno>
   std::ostream& CMASolutions::print(std::ostream &out,
-				    const int &verb_level) const
+				    const int &verb_level,
+				    const TGenoPheno &gp) const
   {
     if (_candidates.empty())
       {
 	out << "empth solution set\n";
 	return out;
       }
-    out << "best solution => f-value=" << best_candidate().get_fvalue() << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << best_candidate().get_x_dvec().transpose(); //TODO: print pheno(x), but it requires access to the genopheno object.
+    out << "best solution => f-value=" << best_candidate().get_fvalue() << " / fevals=" << _nevals << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << gp.pheno(best_candidate().get_x_dvec()).transpose();
     if (verb_level)
       {
 	out << "\ncovdiag=" << _cov.diagonal().transpose() << std::endl;
@@ -134,11 +144,16 @@ namespace libcmaes
   std::ostream& operator<<(std::ostream &out, const CMASolutions &cmas)
   {
     cmas.print(out,0);
-    return out;
+        return out;
   }
-
+  
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&);
   template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&);
+
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy,linScalingStrategy>&) const;
+  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy,linScalingStrategy>&) const;
 }
