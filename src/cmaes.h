@@ -175,6 +175,28 @@ namespace libcmaes
 	  vdcma.optimize();
 	  return vdcma.get_solutions();
 	}
+	case VD_IPOP_CMAES:
+	{
+	  parameters.set_vd();
+	  ESOptimizer<IPOPCMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
+	  if (gfunc != nullptr)
+	    ipop.set_gradient_func(gfunc);
+	  ipop.set_progress_func(pfunc);
+	  ipop.set_plot_func(pffunc);
+	  ipop.optimize();
+	  return ipop.get_solutions();
+	}
+	case VD_BIPOP_CMAES:
+	{
+	  parameters.set_vd();
+	  ESOptimizer<BIPOPCMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
+	  if (gfunc != nullptr)
+	    bipop.set_gradient_func(gfunc);
+	  bipop.set_progress_func(pfunc);
+	  bipop.set_plot_func(pffunc);
+	  bipop.optimize();
+	  return bipop.get_solutions();
+	}
 	default:
 	return CMASolutions();
 	}
