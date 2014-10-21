@@ -3,7 +3,7 @@ libcmaes is a multithreaded C++ implementation (with Python bindings) of the CMA
 
 Over the past decade, both the original CMA-ES and its improved flavors have proven very effective in optimizing functions when no gradient is available. Typically, the algorithm does find the minimum value of an objective function in a minimal number of function calls, compared to other methods. For a full report of recent results, see (3).
 
-CMA-ES is mostly the work of Nikolaus Hansen (4) and a few others. Other implementations can be found in (5).
+CMA-ES is mostly the work of Nikolaus Hansen (4) and a few others (8). Other implementations can be found in (5).
 
 Main functionalities:
 At the moment, the library implements a vanilla version of CMA-ES (1).
@@ -199,3 +199,4 @@ See (7) for more information and details.
 - (5) https://www.lri.fr/~hansen/cmaes_inmatlab.html
 - (6) Hansen, N., R. Ros (2010). Benchmarking a Weighted Negative Covariance Matrix Update on the BBOB-2010 Noiseless Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM, pp. 1673-1680, https://www.lri.fr/~hansen/ws1p32-hansen.pdf
 - (7) http://coco.gforge.inria.fr/doku.php?id=bbob-2013
+- (8) Y. Akimoto, A. Auger and N. Hansen (2014). Comparison-Based Natural Gradient Optimization in High Dimension. In Proceedings of Genetic and Evolutionary Computation Conference 2014
