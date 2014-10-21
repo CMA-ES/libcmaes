@@ -45,6 +45,7 @@ namespace libcmaes
     template <class U, class V> friend class BIPOPCMAStrategy;
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
+    friend class VDCMAUpdate;
     
   public:
     /**
@@ -307,6 +308,8 @@ namespace libcmaes
     int _elapsed_stop = 0;
 #endif
     double _edm = 0.0; /**< expected vertical distance to the minimum. */
+
+    dVec _v; /**< complementary vector for use in vdcma. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

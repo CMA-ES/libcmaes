@@ -42,6 +42,7 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      friend class VDCMAUpdate;
       
     public:
       CMAParameters() {} //TODO: var init even if this constructor is not supposed to be used for now.
@@ -118,6 +119,8 @@ namespace libcmaes
 	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
 	if (algo.find("sep")!=std::string::npos)
 	  set_sep();
+	if (algo.find("vd")!=std::string::npos)
+	  _vd = true;
       }
       
       /**
@@ -130,6 +133,17 @@ namespace libcmaes
        * @return separability status
        */
       bool is_sep() const { return _sep; }
+
+      /**
+       * \brief activates VD decomposition.
+       */
+      void set_vd();
+
+      /**
+       * \brief whether algorithm uses vd update.
+       * @return vd status
+       */
+      bool is_vd() const { return _vd; }
       
       /**
        * \brief freezes a parameter to a given value during optimization.
@@ -212,13 +226,14 @@ namespace libcmaes
       
       // sep cma (diagonal cov).
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
+      bool _vd = false;
       
       // stopping criteria.
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
     };
 
   template<class TGenoPheno>
-    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11}};
+    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11},{"vdcma",12}};
 }
 
 #endif

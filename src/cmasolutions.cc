@@ -21,6 +21,7 @@
 
 #include "cmasolutions.h"
 #include "opti_err.h"
+#include "eigenmvn.h"
 #include <limits>
 #include <iostream>
 
@@ -32,7 +33,7 @@ namespace libcmaes
   {
     try
       {
-	if (!static_cast<CMAParameters<TGenoPheno>&>(p)._sep)
+	if (!static_cast<CMAParameters<TGenoPheno>&>(p)._sep && !static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
 	  _cov = dMat::Identity(p._dim,p._dim);
 	else _sepcov = dMat::Constant(p._dim,1,1.0);
       }
@@ -73,6 +74,13 @@ namespace libcmaes
     _candidates.resize(p._lambda);
     _kcand = std::min(p._lambda-1,static_cast<int>(1.0+ceil(0.1+p._lambda/4.0)));
     _max_hist = (p._max_hist > 0) ? p._max_hist : static_cast<int>(10+ceil(30*p._dim/p._lambda));
+    
+    if (static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
+      {
+	EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
+	esolver.set_covar(_sepcov);
+	_v = esolver.samples_ind(1) / std::sqrt(p._dim);
+      }
   }
 
   CMASolutions::~CMASolutions()

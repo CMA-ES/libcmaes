@@ -425,14 +425,18 @@ DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
 {
-  double lbounds[FLAGS_dim];
-  double ubounds[FLAGS_dim];
-  for (int i=0;i<FLAGS_dim;i++)
+  std::vector<double> lbounds = {FLAGS_lbound},ubounds = {FLAGS_ubound};
+  if (FLAGS_lbound != std::numeric_limits<double>::max()/-1e2 || FLAGS_ubound != std::numeric_limits<double>::max()/1e2)
     {
-      lbounds[i] = FLAGS_lbound;
-      ubounds[i] = FLAGS_ubound;
+      lbounds = std::vector<double>(FLAGS_dim);
+      ubounds = std::vector<double>(FLAGS_dim);
+      for (int i=0;i<FLAGS_dim;i++)
+	{
+	  lbounds[i] = FLAGS_lbound;
+	  ubounds[i] = FLAGS_ubound;
+	}
     }
-  TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
+  TGenoPheno gp(&lbounds.at(0),&ubounds.at(0),FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
   CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
   cmaparams.set_max_iter(FLAGS_max_iter);
@@ -444,10 +448,12 @@ CMASolutions cmaes_opt()
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
+  cmaparams.set_max_hist(FLAGS_max_hist);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
     cmaparams.set_noisy();
+  //cmaparams.set_str_algo(FLAGS_alg);
   if (FLAGS_alg == "cmaes")
     cmaparams.set_algo(CMAES_DEFAULT);
   else if (FLAGS_alg == "ipop")
@@ -472,6 +478,8 @@ CMASolutions cmaes_opt()
     cmaparams.set_algo(sepaIPOP_CMAES);
   else if (FLAGS_alg == "sepabipop")
     cmaparams.set_algo(sepaBIPOP_CMAES);
+  else if (FLAGS_alg == "vdcma")
+    cmaparams.set_algo(VD_CMAES);
   else
     {
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
@@ -487,12 +495,21 @@ CMASolutions cmaes_opt()
     cmaparams.set_stopping_criteria(TOLUPSIGMA,false);
   
   CMASolutions cmasols;
-  if (!FLAGS_with_gradient)
-    cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
-  else
+  GradFunc gfunc = nullptr;
+  if (FLAGS_with_gradient)
+    gfunc = mgfuncs[FLAGS_fname];
+  PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> pffunc = CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultFPFunc;
+  if (cmaparams.dim() > 300)
     {
-      cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
+      pffunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+	{
+	  std::string sep = " ";
+	  fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep << cmasols.elapsed_last_iter() << std::endl;
+	  return 0;
+	};
     }
+  std::cout.precision(std::numeric_limits<double>::digits10);
+  cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,gfunc,pffunc);
   if (cmasols.run_status() < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
   LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
@@ -589,4 +606,3 @@ int main(int argc, char *argv[])
       exit(-1);
     }
 }
-
