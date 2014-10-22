@@ -46,17 +46,12 @@ void to_mat_vec(std::vector<Candidate> &cp,
 template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
 
 template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-  class RSVMSurrogateStrategy : public ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>
+  class RSVMSurrogateStrategy : public ACMSurrogateStrategy<CMAStrategy,TCovarianceUpdate,TGenoPheno>
   {
   public:
-    RSVMSurrogateStrategy()
-      :ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>()
-    {
-    }
-
     RSVMSurrogateStrategy(FitFunc &func,
 			  CMAParameters<TGenoPheno> &parameters)
-      :ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
+      :ACMSurrogateStrategy<CMAStrategy,TCovarianceUpdate,TGenoPheno>(func,parameters)
     {
       this->_train = [this](const std::vector<Candidate> &c, const dMat &cov)
 	{
@@ -178,13 +173,6 @@ int main(int argc, char *argv[])
   optim._rsvm_iter = FLAGS_rsvm_iter;
   if (FLAGS_l > 0)
     optim.set_l(FLAGS_l);
-
-  while(!optim.stop())
-    {
-      dMat candidates = optim.ask();
-      optim.eval(candidates);
-      optim.tell();
-      optim.inc_iter(); // important step: signals next iteration.
-    }
+  optim.optimize();
   std::cout << optim.get_solutions() << std::endl;
 }

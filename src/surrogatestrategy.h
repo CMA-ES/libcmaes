@@ -24,6 +24,7 @@
 
 #include "eo_matrix.h"
 #include "cmastrategy.h"
+#include <typeinfo>
 #include <random>
 
 namespace libcmaes
@@ -44,18 +45,19 @@ namespace libcmaes
    */
   typedef std::function<int (std::vector<Candidate>&, const dMat&)> SurrFunc; //TODO: a signature closer to the objective function signature ?
 
+
   /**
    * \brief Surrogate base class, to be derived in order to create strategy
    *        to be used along with CMA-ES.
    */
-  template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-    class SurrogateStrategy : public CMAStrategy<TCovarianceUpdate,TGenoPheno>
-    {
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
+  class SurrogateStrategy : public TStrategy<TCovarianceUpdate,TGenoPheno>
+  {
     public:
     /**
      * \brief dummy constructor for new Surrogate strategy
      */
-    SurrogateStrategy();
+    //SurrogateStrategy();
 
     /**
      * \brief constructor
@@ -204,14 +206,14 @@ namespace libcmaes
    *        mostly as an example and for testing / debugging surrogates.
    *        This strategy overrides the ask/eval/tell functions of the base optimization strategy
    */
-  template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-    class SimpleSurrogateStrategy : public SurrogateStrategy<TCovarianceUpdate,TGenoPheno>
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
+    class SimpleSurrogateStrategy : public SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>
     {
     public:
     /**
      * \brief dummy constructor
      */
-    SimpleSurrogateStrategy();
+    //SimpleSurrogateStrategy();
 
     /**
      * \brief constructor
@@ -256,7 +258,7 @@ namespace libcmaes
      */
     inline bool do_train() const
     {
-      if (!SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::_exploit && (int)this->_tset.size() >= this->_l)
+      if (!SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::_exploit && (int)this->_tset.size() >= this->_l)
 	return true;
       return ((this->_niter == 0 || this->_niter % this->_nsteps == 0) && (int)this->_tset.size() >= this->_l);
     }
@@ -279,15 +281,10 @@ namespace libcmaes
    *
    *        This strategy overrides the ask/eval/tell functions of the base optimization strategy
    */
-  template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-    class ACMSurrogateStrategy : public SurrogateStrategy<TCovarianceUpdate,TGenoPheno>
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
+    class ACMSurrogateStrategy : public SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>
     {
     public:
-    /**
-     * \brief dummy constructor
-     */
-    ACMSurrogateStrategy();
-
     /**
      * \brief constructor
      * @param func objective function to minimize
@@ -347,9 +344,9 @@ namespace libcmaes
      */
     inline bool do_train() const
     {
-      if (!SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::_exploit && (int)this->_tset.size() >= this->_l)
+      if (!SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::_exploit && (int)this->_tset.size() >= this->_l)
 	return true;
-      else if (SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::_exploit && (int)this->_tset.size() >= this->_l)
+      else if (SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::_exploit && (int)this->_tset.size() >= this->_l)
 	return true;
       return ((this->_niter == 0 || this->_niter % this->_nsteps == 0) && (int)this->_tset.size() >= this->_l);
     }

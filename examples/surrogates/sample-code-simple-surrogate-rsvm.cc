@@ -45,17 +45,12 @@ void to_mat_vec(std::vector<Candidate> &cp,
 template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
 
 template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-  class RSVMSimpleSurrogateStrategy : public SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>
+  class RSVMSimpleSurrogateStrategy : public SimpleSurrogateStrategy<CMAStrategy,TCovarianceUpdate,TGenoPheno>
   {
   public:
-    RSVMSimpleSurrogateStrategy()
-      :SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>()
-    {
-    }
-
     RSVMSimpleSurrogateStrategy(FitFunc &func,
 				CMAParameters<TGenoPheno> &parameters)
-      :SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
+      :SimpleSurrogateStrategy<CMAStrategy,TCovarianceUpdate,TGenoPheno>(func,parameters)
     {
       this->_train = [this](const std::vector<Candidate> &c, const dMat &cov)
 	{

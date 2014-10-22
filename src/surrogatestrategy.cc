@@ -20,6 +20,8 @@
  */
 
 #include "surrogatestrategy.h"
+#include "ipopcmastrategy.h"
+#include "bipopcmastrategy.h"
 #include <unordered_set>
 
 namespace libcmaes
@@ -28,21 +30,9 @@ namespace libcmaes
   template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
   
   /*- SurrogateStrategy -*/
-  template<class TCovarianceUpdate, class TGenoPheno>
-  SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::SurrogateStrategy()
-    :CMAStrategy<TCovarianceUpdate,TGenoPheno>()
-  {
-    _l = std::floor(30*std::sqrt(eostrat<TGenoPheno>::_parameters.dim()));
-    eostrat<TGenoPheno>::_pfunc = [this](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
-      {
-	LOG_IF(INFO,!cmaparams.quiet()) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / trainerr=" << _train_err << " / testerr=" << _test_err << " / smtesterr=" << _smooth_test_err << std::endl;
-	return 0;
-      };
-  }
-
-  template<class TCovarianceUpdate, class TGenoPheno>
-  SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::SurrogateStrategy(FitFunc &func, CMAParameters<TGenoPheno> &parameters)
-    :CMAStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::SurrogateStrategy(FitFunc &func, CMAParameters<TGenoPheno> &parameters)
+    :TStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
   {
     _l = std::floor(30*std::sqrt(eostrat<TGenoPheno>::_parameters.dim()));
     eostrat<TGenoPheno>::_pfunc = [this](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
@@ -69,21 +59,21 @@ namespace libcmaes
       };
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::~SurrogateStrategy()
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::~SurrogateStrategy()
   {
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::add_to_training_set(const Candidate &c)
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::add_to_training_set(const Candidate &c)
   {
     _tset.push_back(c);
     if ((int)_tset.size() > _l)
       _tset.erase(_tset.begin());
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  double SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::compute_error(const std::vector<Candidate> &test_set,
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  double SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::compute_error(const std::vector<Candidate> &test_set,
 									const dMat &cov)
   {
     double test_set_size = test_set.size();
@@ -105,26 +95,18 @@ namespace libcmaes
     return err;
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void SurrogateStrategy<TCovarianceUpdate,TGenoPheno>::set_test_error(const double &err)
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::set_test_error(const double &err)
   {
     _test_err = err;
     _smooth_test_err = (1.0-_beta_err)*_smooth_test_err + _beta_err*err;
   }
   
   /*- SimpleSurrogateStrategy -*/
-  template<class TCovarianceUpdate, class TGenoPheno>
-  SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::SimpleSurrogateStrategy()
-    :SurrogateStrategy<TCovarianceUpdate,TGenoPheno>()
-  {
-    this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
-    this->_stopcriteria.set_criteria_active(AUTOMAXITER,false);
-  }
-
-  template<class TCovarianceUpdate, class TGenoPheno>
-  SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::SimpleSurrogateStrategy(FitFunc &func,
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::SimpleSurrogateStrategy(FitFunc &func,
 										 CMAParameters<TGenoPheno> &parameters)
-    :SurrogateStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
+    :SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>(func,parameters)
   {
     eostrat<TGenoPheno>::_pfunc = [this](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
       {
@@ -135,8 +117,8 @@ namespace libcmaes
     this->_stopcriteria.set_criteria_active(AUTOMAXITER,false);
   }
   
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::eval(const dMat &candidates,
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::eval(const dMat &candidates,
 								   const dMat &phenocandidates)
   {
     if (!this->_exploit || this->_niter % this->_nsteps == 0 || (int)this->_tset.size() < this->_l)
@@ -179,8 +161,8 @@ namespace libcmaes
       }
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::tell()
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::tell()
   {
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::tell();
 
@@ -192,47 +174,38 @@ namespace libcmaes
       }
   }  
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  int SimpleSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::compute_lifelength()
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  int SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::compute_lifelength()
   {
     int nsteps = std::max(1,static_cast<int>(std::floor((_terr - this->_smooth_test_err)/_terr * _nmax)));
     return nsteps+1;
   }
-  
+
   /*- ACMSurrogateStrategy -*/
-  template<class TCovarianceUpdate, class TGenoPheno>
-  ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::ACMSurrogateStrategy()
-    :SurrogateStrategy<TCovarianceUpdate,TGenoPheno>()
-  {
-    _lambdaprime = std::floor(eostrat<TGenoPheno>::_parameters.lambda()/3.0);
-    init_rd();
-    this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
-  }
-
-  template<class TCovarianceUpdate, class TGenoPheno>
-  ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::ACMSurrogateStrategy(FitFunc &func, CMAParameters<TGenoPheno> &parameters)
-    :SurrogateStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters)
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::ACMSurrogateStrategy(FitFunc &func, CMAParameters<TGenoPheno> &parameters)
+    :SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>(func,parameters)
   {
     _lambdaprime = std::floor(eostrat<TGenoPheno>::_parameters.lambda()/3.0);
     init_rd();
     this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
   }
   
-  template<class TCovarianceUpdate, class TGenoPheno>
-  ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::~ACMSurrogateStrategy()
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::~ACMSurrogateStrategy()
   {
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::init_rd()
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::init_rd()
   {
     _gen = std::mt19937(_rd());
     _norm_sel0 = std::normal_distribution<double>(0.0,_theta_sel0*_theta_sel0);
     _norm_sel1 = std::normal_distribution<double>(0.0,_theta_sel1*_theta_sel1);
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  dMat ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::ask()
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  dMat ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::ask()
   {
     if (this->_exploit && (int)this->_tset.size() >= this->_l)
       {
@@ -245,8 +218,8 @@ namespace libcmaes
     else return CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask();
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::eval(const dMat &candidates,
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::eval(const dMat &candidates,
 								const dMat &phenocandidates)
   {
     // use pre selection eval only if surrogate is ready.
@@ -274,8 +247,8 @@ namespace libcmaes
       }
   }
 
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::tell()
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::tell()
   {
     if (!this->_exploit || (int)this->_tset.size() < this->_l)
       eostrat<TGenoPheno>::_solutions.sort_candidates();
@@ -302,8 +275,8 @@ namespace libcmaes
       }
   }
   
-  template<class TCovarianceUpdate, class TGenoPheno>
-  void ACMSurrogateStrategy<TCovarianceUpdate,TGenoPheno>::pre_selection_eval(const dMat &candidates)
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  void ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::pre_selection_eval(const dMat &candidates)
   {
     // - rank all candidates according to surrogate.
     eostrat<TGenoPheno>::_solutions._candidates.clear();
@@ -366,29 +339,81 @@ namespace libcmaes
     eostrat<TGenoPheno>::_solutions._candidates = ncandidates;
   }
   
-  template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
-  template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class SimpleSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
-  template class SimpleSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
-  template class SimpleSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class SimpleSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
   
-  template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
-  template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class ACMSurrogateStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
-  template class ACMSurrogateStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
-  template class ACMSurrogateStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<CMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<IPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class ACMSurrogateStrategy<BIPOPCMAStrategy,VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

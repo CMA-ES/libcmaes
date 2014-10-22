@@ -54,9 +54,7 @@ int main(int argc, char *argv[])
   double sigma = 0.1;
 
   CMAParameters<> cmaparams(dim,&x0.front(),sigma);
-  //ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> optim(fsphere,cmaparams);
-  //ESOptimizer<customCMAStrategy,CMAParameters<>> optim(fsphere,cmaparams);
-  ESOptimizer<SimpleSurrogateStrategy<>,CMAParameters<>> optim(fsphere,cmaparams);
+  ESOptimizer<SimpleSurrogateStrategy<CMAStrategy>,CMAParameters<>> optim(fsphere,cmaparams);
   optim.set_ftrain(ftrain);
   optim.set_fpredict(fpredict);
   optim.set_exploit(false); // test mode.

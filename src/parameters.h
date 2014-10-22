@@ -50,8 +50,8 @@ namespace libcmaes
       friend class ACovarianceUpdate;
       friend class VDCMAUpdate;
       friend class Candidate;
-      template <class U, class V> friend class SimpleSurrogateStrategy;
-      template <class U, class V> friend class ACMSurrogateStrategy;
+      template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
+      template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
       
     public:
       /**

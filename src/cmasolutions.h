@@ -45,8 +45,8 @@ namespace libcmaes
     template <class U, class V> friend class BIPOPCMAStrategy;
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
-    template <class U, class V> friend class SimpleSurrogateStrategy;
-    template <class U, class V> friend class ACMSurrogateStrategy;
+    template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
+    template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
     friend class VDCMAUpdate;
     
   public:
