@@ -480,6 +480,10 @@ CMASolutions cmaes_opt()
     cmaparams.set_algo(sepaBIPOP_CMAES);
   else if (FLAGS_alg == "vdcma")
     cmaparams.set_algo(VD_CMAES);
+  else if (FLAGS_alg == "vdipopcma")
+    cmaparams.set_algo(VD_IPOP_CMAES);
+  else if (FLAGS_alg == "vdbipopcma")
+    cmaparams.set_algo(VD_BIPOP_CMAES);
   else
     {
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
