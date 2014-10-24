@@ -55,11 +55,6 @@ namespace libcmaes
   {
     public:
     /**
-     * \brief dummy constructor for new Surrogate strategy
-     */
-    //SurrogateStrategy();
-
-    /**
      * \brief constructor
      * @param func objective function to minimize
      * @param parameters optimization parameters
@@ -211,11 +206,6 @@ namespace libcmaes
     {
     public:
     /**
-     * \brief dummy constructor
-     */
-    //SimpleSurrogateStrategy();
-
-    /**
      * \brief constructor
      * @param func objective function to minimize
      * @param parameters optimization parameters
@@ -246,6 +236,8 @@ namespace libcmaes
      */
     void tell();
 
+    int optimize();
+    
     /**
      * \brief estimates surrogate lifelength
      * @return estimated surrogate lifelength
@@ -326,6 +318,8 @@ namespace libcmaes
      */
     void tell();
 
+    int optimize();
+    
     protected:
     /**
      * \brief pre-selection + candidate evaluation scheme.

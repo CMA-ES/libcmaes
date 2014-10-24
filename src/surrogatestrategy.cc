@@ -164,7 +164,7 @@ namespace libcmaes
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
   void SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::tell()
   {
-    CMAStrategy<TCovarianceUpdate,TGenoPheno>::tell();
+    TStrategy<TCovarianceUpdate,TGenoPheno>::tell();
 
     // train surrogate as required.
     if (do_train())
@@ -172,8 +172,17 @@ namespace libcmaes
 	this->train(this->_tset,
 		    eostrat<TGenoPheno>::_solutions._csqinv);
       }
-  }  
-
+  }
+  
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  int SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::optimize()
+  {
+    return TStrategy<TCovarianceUpdate,TGenoPheno>::optimize(std::bind(&SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::eval,this,std::placeholders::_1,std::placeholders::_2),
+							     std::bind(&CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask,this),
+							     std::bind(&SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::tell,this));
+    //return TStrategy<TCovarianceUpdate,TGenoPheno>::template optimize<SimpleSurrogateStrategy>(*this);
+  }
+  
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
   int SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::compute_lifelength()
   {
@@ -211,16 +220,16 @@ namespace libcmaes
       {
 	double lambda = eostrat<TGenoPheno>::_parameters._lambda; // XXX: hacky.
 	eostrat<TGenoPheno>::_parameters._lambda = _prelambda;
-	dMat pop = CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask();
+	dMat pop = TStrategy<TCovarianceUpdate,TGenoPheno>::ask();
 	eostrat<TGenoPheno>::_parameters._lambda = lambda;
 	return pop;
       }
-    else return CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask();
+    else return TStrategy<TCovarianceUpdate,TGenoPheno>::ask();
   }
 
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
   void ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::eval(const dMat &candidates,
-								const dMat &phenocandidates)
+									  const dMat &phenocandidates)
   {
     // use pre selection eval only if surrogate is ready.
     if (this->_exploit && (int)this->_tset.size() >= this->_l)
@@ -273,6 +282,14 @@ namespace libcmaes
 	  this->train(this->_tset,eostrat<TGenoPheno>::_solutions._csqinv);
 	else this->train(this->_tset,eostrat<TGenoPheno>::_solutions._sepcsqinv);
       }
+  }
+
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  int ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::optimize()
+  {
+    return TStrategy<TCovarianceUpdate,TGenoPheno>::optimize(std::bind(&ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::eval,this,std::placeholders::_1,std::placeholders::_2),
+							     std::bind(&ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::ask,this),
+							     std::bind(&ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::tell,this));
   }
   
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>

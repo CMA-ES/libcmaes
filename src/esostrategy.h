@@ -29,6 +29,10 @@ namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
   typedef std::function<dVec (const double*, const int &n)> GradFunc;
+
+  typedef std::function<void(const dMat&, const dMat&)> EvalFunc;
+  typedef std::function<dMat(void)> AskFunc;
+  typedef std::function<void(void)> TellFunc;
   
   template<class TParameters,class TSolutions>
     using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
@@ -71,7 +75,7 @@ namespace libcmaes
     dMat ask();
 
     /**
-     * \brief Evaluates a set of candiates against the objective function.
+     * \brief Evaluates a set of candidates against the objective function.
      *        The procedure is multithreaded and stores both the candidates
      *        and their f-value into the _solutions object that bears the 
      *        current set of potential solutions to the optimization problem.
@@ -100,8 +104,9 @@ namespace libcmaes
      *        one of the termination criteria triggers.
      * @return success or error code, as defined in opti_err.h
      */
-    int optimize();
-
+    //int optimize(ESOStrategy<TParameters,TSolutions,TStopCriteria> &strat);
+    int optimize(const EvalFunc &evalf, const AskFunc &askf, const TellFunc &tellf);
+    
     /**
      * \brief increment iteration count.
      */

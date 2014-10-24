@@ -21,6 +21,7 @@
 
 #include "cmaes.h"
 #include "surrogatestrategy.h"
+#include "opti_err.h"
 #include "rankingsvm.hpp"
 #include <map>
 #include <iostream>
@@ -45,13 +46,13 @@ void to_mat_vec(std::vector<Candidate> &cp,
 
 template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
 
-template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-  class RSVMSurrogateStrategy : public ACMSurrogateStrategy<CMAStrategy,TCovarianceUpdate,TGenoPheno>
+template<template <class U, class V> class TStrategy, class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
+  class RSVMSurrogateStrategy : public ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>
   {
   public:
     RSVMSurrogateStrategy(FitFunc &func,
 			  CMAParameters<TGenoPheno> &parameters)
-      :ACMSurrogateStrategy<CMAStrategy,TCovarianceUpdate,TGenoPheno>(func,parameters)
+      :ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>(func,parameters)
     {
       this->_train = [this](const std::vector<Candidate> &c, const dMat &cov)
 	{
@@ -148,6 +149,19 @@ DEFINE_int32(lambdaprime,-1,"true objective function calls per iteration");
 DEFINE_int32(prelambda,500,"number of pre-screened offprings sampled at every iteration");
 DEFINE_int32(rsvm_iter,1e6,"number of iterations for optimizing the ranking SVM");
 
+template<template <class U, class V> class TStrategy, class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
+  void set_optim_options(ESOptimizer<RSVMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> &optim)
+{
+  if (FLAGS_no_exploit)
+    optim.set_exploit(!FLAGS_no_exploit);
+  optim.set_prelambda(FLAGS_prelambda);
+  if (FLAGS_lambdaprime > 0)
+    optim.set_lambdaprime(FLAGS_lambdaprime);
+  optim._rsvm_iter = FLAGS_rsvm_iter;
+  if (FLAGS_l > 0)
+    optim.set_l(FLAGS_l);
+}
+
 int main(int argc, char *argv[])
 {
   mfuncs["fsphere"]=fsphere;
@@ -164,15 +178,52 @@ int main(int argc, char *argv[])
   cmaparams.set_fplot(FLAGS_fplot);
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
-  ESOptimizer<RSVMSurrogateStrategy<ACovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
-  if (FLAGS_no_exploit)
-    optim.set_exploit(!FLAGS_no_exploit);
-  optim.set_prelambda(FLAGS_prelambda);
-  if (FLAGS_lambdaprime > 0)
-    optim.set_lambdaprime(FLAGS_lambdaprime);
-  optim._rsvm_iter = FLAGS_rsvm_iter;
-  if (FLAGS_l > 0)
-    optim.set_l(FLAGS_l);
-  optim.optimize();
-  std::cout << optim.get_solutions() << std::endl;
+  CMASolutions cmasols;
+  
+  // below is a set of arrangements, not all combinations of algorithms and covariance updates are instanciated in this example.
+  if (cmaparams.get_algo() == CMAES_DEFAULT)
+    {
+      ESOptimizer<RSVMSurrogateStrategy<CMAStrategy,CovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+      set_optim_options(optim);
+      optim.optimize();
+      cmasols = optim.get_solutions();
+    }
+  else if (cmaparams.get_algo() == aCMAES)
+    {
+      ESOptimizer<RSVMSurrogateStrategy<CMAStrategy,ACovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+      set_optim_options(optim);
+      optim.optimize();
+      cmasols = optim.get_solutions();    
+    }
+  else if (cmaparams.get_algo() == aIPOP_CMAES)
+    {
+      ESOptimizer<RSVMSurrogateStrategy<IPOPCMAStrategy,ACovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+      set_optim_options(optim);
+      optim.optimize();
+      cmasols = optim.get_solutions();
+    }
+  else if (cmaparams.get_algo() == aBIPOP_CMAES)
+    {
+      ESOptimizer<RSVMSurrogateStrategy<BIPOPCMAStrategy,ACovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+      set_optim_options(optim);
+      optim.optimize();
+      cmasols = optim.get_solutions();
+    }
+  else if (cmaparams.get_algo() == sepaCMAES)
+    {
+      cmaparams.set_sep();
+      ESOptimizer<RSVMSurrogateStrategy<CMAStrategy,ACovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+      set_optim_options(optim);
+      optim.optimize();
+      cmasols = optim.get_solutions();
+    }
+  else if (cmaparams.get_algo() == VD_CMAES)
+    {
+      cmaparams.set_vd();
+      ESOptimizer<RSVMSurrogateStrategy<CMAStrategy,VDCMAUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+      set_optim_options(optim);
+      optim.optimize();
+      cmasols = optim.get_solutions();
+    }
+  std::cout << cmasols << std::endl;
 }
