@@ -196,6 +196,7 @@ namespace libcmaes
     :SurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>(func,parameters)
   {
     _lambdaprime = std::floor(eostrat<TGenoPheno>::_parameters.lambda()/3.0);
+    _prelambda = 50 * eostrat<TGenoPheno>::_parameters.lambda();
     init_rd();
     this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
   }
@@ -218,8 +219,11 @@ namespace libcmaes
   {
     // when starting or restarting, make sure the training set is reset.
     if (this->_niter == 0)
-      this->reset_training_set();
-    
+      {
+	this->reset_training_set();
+	_prelambda = 50 * eostrat<TGenoPheno>::_parameters._lambda; // rescale pre-lambda, in case this is the first step of a restart with different population
+      }
+	
     if (this->_exploit && (int)this->_tset.size() >= this->_l)
       {
 	double lambda = eostrat<TGenoPheno>::_parameters._lambda; // XXX: hacky.
