@@ -216,6 +216,10 @@ namespace libcmaes
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
   dMat ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::ask()
   {
+    // when starting or restarting, make sure the training set is reset.
+    if (this->_niter == 0)
+      this->reset_training_set();
+    
     if (this->_exploit && (int)this->_tset.size() >= this->_l)
       {
 	double lambda = eostrat<TGenoPheno>::_parameters._lambda; // XXX: hacky.

@@ -177,6 +177,16 @@ namespace libcmaes
     }
 
     /**
+     * \brief resets training set and related information, useful when using algorithms with restarts
+     */
+    inline void reset_training_set()
+    {
+      _tset.clear();
+      _train_err = _test_err = 0.0;
+      _smooth_test_err = 0.5;
+    }
+    
+    /**
      * \brief returns the current surrogate lifelength
      * @return current surrogate lifelength
      */
