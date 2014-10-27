@@ -110,7 +110,7 @@ namespace libcmaes
   {
     eostrat<TGenoPheno>::_pfunc = [this](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
       {
-	LOG_IF(INFO,!cmaparams.quiet()) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / trainerr=" << this->_train_err << " / testerr=" << this->_test_err << " / smtesterr=" << this->_smooth_test_err << " / slifel=" << this->_nsteps << std::endl;//compute_lifelength() << std::endl;
+	LOG_IF(INFO,!cmaparams.quiet()) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / trainerr=" << this->_train_err << " / testerr=" << this->_test_err << " / smtesterr=" << this->_smooth_test_err << " / slifel=" << this->_nsteps << std::endl;
 	return 0;
       };
     this->_stopcriteria.set_criteria_active(STAGNATION,false); // deactivate stagnation check due to the presence of ranks as median objective function values
@@ -180,7 +180,6 @@ namespace libcmaes
     return TStrategy<TCovarianceUpdate,TGenoPheno>::optimize(std::bind(&SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::eval,this,std::placeholders::_1,std::placeholders::_2),
 							     std::bind(&CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask,this),
 							     std::bind(&SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::tell,this));
-    //return TStrategy<TCovarianceUpdate,TGenoPheno>::template optimize<SimpleSurrogateStrategy>(*this);
   }
   
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>

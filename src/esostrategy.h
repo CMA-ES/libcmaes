@@ -102,9 +102,11 @@ namespace libcmaes
      * \brief Finds the minimum of the objective function. It makes
      *        alternative calls to ask(), tell() and stop() until 
      *        one of the termination criteria triggers.
+     * @param evalf custom eval function
+     * @param askf custom ask function
+     * @param tellf custom tell function
      * @return success or error code, as defined in opti_err.h
      */
-    //int optimize(ESOStrategy<TParameters,TSolutions,TStopCriteria> &strat);
     int optimize(const EvalFunc &evalf, const AskFunc &askf, const TellFunc &tellf);
     
     /**
