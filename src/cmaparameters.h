@@ -120,7 +120,7 @@ namespace libcmaes
 	if (algo.find("sep")!=std::string::npos)
 	  set_sep();
 	if (algo.find("vd")!=std::string::npos)
-	  _vd = true;
+	  set_vd();
       }
       
       /**
