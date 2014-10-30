@@ -88,6 +88,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   cmaparams.set_algo(alg);
   cmaparams.set_quiet(true);
   cmaparams.set_gradient(withnumgradient);
+  cmaparams.set_mt_feval(true);
   if (noisy)
     cmaparams.set_noisy();
   cmaes(ff,cmaparams);
@@ -96,7 +97,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
     std::cerr << "solution: " << cmasols << std::endl;*/
 }
 
-DEFINE_string(alg,"cmaes","comma separated list of algorithms, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop");
+DEFINE_string(alg,"cmaes","comma separated list of algorithms, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, vdcma");
 DEFINE_bool(noisy,false,"whether to benchmark noisy functions");
 DEFINE_string(comment,"","comment for the experiment. If using multiple algorithms, the comment will apply to all experiments");
 DEFINE_double(maxfunevals,1e6,"maximum number of function evaluations");
@@ -138,6 +139,8 @@ int main(int argc, char *argv[])
 	flavors.insert(std::pair<int,std::string>(sepaIPOP_CMAES,algs.at(i)));
       else if (algs.at(i) == "sepabipop")
 	flavors.insert(std::pair<int,std::string>(sepaBIPOP_CMAES,algs.at(i)));
+      else if (algs.at(i) == "vdcma")
+	flavors.insert(std::pair<int,std::string>(VD_CMAES,algs.at(i)));
     }
   
   for (auto mit=flavors.begin();mit!=flavors.end();++mit)
