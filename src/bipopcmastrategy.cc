@@ -127,10 +127,14 @@ namespace libcmaes
 
   template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
   template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
   template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
   template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

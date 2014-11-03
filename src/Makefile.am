@@ -4,9 +4,10 @@ libcmaesdatadir = $(datadir)
 libcmaesincludedir = $(includedir)/libcmaes
 
 libcmaes_LTLIBRARIES=libcmaes.la
-libcmaes_la_SOURCES=libcmaes_config.h cmaes.h eo_matrix.h cmastrategy.cc esoptimizer.h esostrategy.h esostrategy.cc cmasolutions.h cmasolutions.cc parameters.h cmaparameters.h cmaparameters.cc cmastopcriteria.h cmastopcriteria.cc ipopcmastrategy.h ipopcmastrategy.cc bipopcmastrategy.h bipopcmastrategy.cc covarianceupdate.h covarianceupdate.cc acovarianceupdate.h acovarianceupdate.cc pwq_bound_strategy.h pwq_bound_strategy.cc errstats.h errstats.cc eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h pli.h contour.h llogging.h
 
-libcmaesinclude_HEADERS = cmaes.h eo_matrix.h cmastrategy.h esoptimizer.h esostrategy.h cmasolutions.h parameters.h cmaparameters.h cmastopcriteria.h ipopcmastrategy.h bipopcmastrategy.h covarianceupdate.h acovarianceupdate.h pwq_bound_strategy.h errstats.h eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h pli.h contour.h llogging.h
+libcmaes_la_SOURCES=libcmaes_config.h cmaes.h eo_matrix.h cmastrategy.cc esoptimizer.h esostrategy.h esostrategy.cc cmasolutions.h cmasolutions.cc parameters.h cmaparameters.h cmaparameters.cc cmastopcriteria.h cmastopcriteria.cc ipopcmastrategy.h ipopcmastrategy.cc bipopcmastrategy.h bipopcmastrategy.cc covarianceupdate.h covarianceupdate.cc acovarianceupdate.h acovarianceupdate.cc vdcmaupdate.h vdcmaupdate.cc pwq_bound_strategy.h pwq_bound_strategy.cc errstats.cc errstats.h eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h llogging.h
+
+libcmaesinclude_HEADERS = cmaes.h eo_matrix.h cmastrategy.h esoptimizer.h esostrategy.h cmasolutions.h parameters.h cmaparameters.h cmastopcriteria.h ipopcmastrategy.h bipopcmastrategy.h covarianceupdate.h acovarianceupdate.h vdcmaupdate.h pwq_bound_strategy.h errstats.h eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h llogging.h
 
 AM_CPPFLAGS=-I$(EIGEN3_INC)
 AM_CXXFLAGS=-Wall -Wextra -g -fopenmp
