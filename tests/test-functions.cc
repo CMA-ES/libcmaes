@@ -522,9 +522,20 @@ CMASolutions cmaes_opt()
     cmaparams.set_stopping_criteria(TOLUPSIGMA,false);
   
   CMASolutions cmasols;
-  if (!FLAGS_with_gradient)
-    cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
-  else cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
+  GradFunc gfunc = nullptr;
+  if (FLAGS_with_gradient)
+    gfunc = mgfuncs[FLAGS_fname];
+  PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> pffunc = CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultFPFunc;
+  if (cmaparams.dim() > 300)
+    {
+      pffunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+	{
+	  std::string sep = " ";
+	  fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep << cmasols.elapsed_last_iter() << std::endl;
+	  return 0;
+	};
+    }
+  cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,gfunc,cmasols,pffunc);
   std::cout << "Minimization completed in " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   if (cmasols.run_status() >= 0 && FLAGS_le)
     {
@@ -546,21 +557,6 @@ CMASolutions cmaes_opt()
       std::cout << ct << std::endl;
     }
   std::cout << "Done!\n";
-  GradFunc gfunc = nullptr;
-  if (FLAGS_with_gradient)
-    gfunc = mgfuncs[FLAGS_fname];
-  PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> pffunc = CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultFPFunc;
-  if (cmaparams.dim() > 300)
-    {
-      pffunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
-	{
-	  std::string sep = " ";
-	  fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep << cmasols.elapsed_last_iter() << std::endl;
-	  return 0;
-	};
-    }
-  std::cout.precision(std::numeric_limits<double>::digits10);
-  cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,gfunc,cmasols,pffunc);
   if (cmasols.run_status() < 0)
     LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
   LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
