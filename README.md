@@ -11,7 +11,7 @@ Current features include:
 
 - high-level API for simple use in external applications;
 - implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES and VD-CMA (linear time & space complexity) along with support for IPOP and BIPOP flavors as well;
-- some operations benefit from multicores;
+- high performances, the fastest implementation (9), some operations benefit from multicores;
 - support for objective function gradient, when available;
 - support for [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model);
 - a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
@@ -201,3 +201,4 @@ See (7) for more information and details.
 - (6) Hansen, N., R. Ros (2010). Benchmarking a Weighted Negative Covariance Matrix Update on the BBOB-2010 Noiseless Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference 2010, ACM, pp. 1673-1680, https://www.lri.fr/~hansen/ws1p32-hansen.pdf
 - (7) http://coco.gforge.inria.fr/doku.php?id=bbob-2013
 - (8) Y. Akimoto, A. Auger and N. Hansen (2014). Comparison-Based Natural Gradient Optimization in High Dimension. In Proceedings of Genetic and Evolutionary Computation Conference 2014
+- (9) https://github.com/beniz/libcmaes/issues/82
