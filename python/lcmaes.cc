@@ -157,7 +157,9 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   CMASolutions surrpcmaes(boost::function<double(const boost::python::list&,const int&)>& fitfunc_bf,
 			  boost::function<int(const boost::python::list&,boost::python::object&)> &csurrfunc_bf,
 			  boost::function<int(boost::python::list&,boost::python::object&)> &surrfunc_bf,
-			  CMAParameters<TGenoPheno> &parameters)
+			  CMAParameters<TGenoPheno> &parameters,
+			  const bool &exploit,
+			  const int &l)
   {
     FitFunc fpython = [fitfunc_bf](const double *x, const int N)
       {
@@ -166,7 +168,7 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 	  plx.append(x[i]);
 	return fitfunc_bf(plx,N);
       };
-    ESOptimizer<ACMSurrogateStrategy<CMAStrategy,CovarianceUpdate>,CMAParameters<>> optim(fpython,parameters);
+    ESOptimizer<ACMSurrogateStrategy<CMAStrategy,CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> optim(fpython,parameters);
     CSurrFunc csurrfpython = [csurrfunc_bf](const std::vector<Candidate> &c, const dMat &m)
       {
 	boost::python::list plc;
@@ -178,7 +180,7 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 	return csurrfunc_bf(plc,boost::ref(boostobj));
       };
     optim.set_ftrain(csurrfpython);
-    SurrFunc surrfpython = [surrfunc_bf](const std::vector<Candidate> &c, const dMat &m)
+    SurrFunc surrfpython = [surrfunc_bf](std::vector<Candidate> &c, const dMat &m)
       {
 	boost::python::list plc;
 	for (size_t i=0;i<c.size();i++)
@@ -186,9 +188,14 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 	npy_intp shape[2] = {m.rows(),m.cols()};
 	PyObject *pyArray = PyArray_SimpleNewFromData(2, shape, NPY_DOUBLE, (double*)m.data());
 	boost::python::object boostobj(boost::python::handle<>((PyObject*)pyArray));
-	return surrfunc_bf(boost::ref(plc),boost::ref(boostobj));
+	surrfunc_bf(boost::ref(plc),boost::ref(boostobj));
+	for (size_t i=0;i<c.size();i++)
+	  c.at(i) = boost::python::extract<Candidate>(plc[i]);
+	return 0;
       };
       optim.set_fpredict(surrfpython);
+      optim.set_exploit(exploit);
+      optim.set_l(l);
     optim.optimize();
     return optim.get_solutions();
   }
@@ -369,6 +376,7 @@ BOOST_PYTHON_MODULE(lcmaes)
   /*- solution candidate object -*/
   class_<Candidate>("Candidate")
     .def("get_fvalue",&Candidate::get_fvalue)
+    .def("set_fvalue",&Candidate::set_fvalue)
     ;
   def("get_candidate_x",get_candidate_x,args("cand"));
 
@@ -385,14 +393,7 @@ BOOST_PYTHON_MODULE(lcmaes)
   class_<GenoPheno<pwqBoundStrategy,linScalingStrategy>>("GenoPhenoPWQBLS")
     ;
   def("make_genopheno_pwqb_ls",make_genopheno<pwqBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"));
-  //TODO: geno/pheno custom transforms.
-
-  
-  /* esoptimizer object -*/
-  //class_<ESOptimizer<CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>,CMAParameters<GenoPheno<NoBoundStrategy>>>>("ESOptimizer",init<FitFunc&,CMAParameters<GenoPheno<NoBoundStrategy>>&>())
-	 //.def("optimize",&ESOptimizer::optimize)
-  //;
-
+    
   /*- cmaes header -*/
   def("pcmaes",pcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","parameters"));
   def("pcmaes_pwqb",pcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","parameters"));
@@ -406,6 +407,9 @@ BOOST_PYTHON_MODULE(lcmaes)
   def_function<int(boost::python::list&,boost::python::object&)>("surrfunc_pbf","prediction function for python");
   scope().attr("surrfunc_bf") = surrfunc_bf;
 
-  def("surrpcmaes",surrpcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters"));
+  def("surrpcmaes",surrpcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+  def("surrpcmaes_pwqb",surrpcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+  def("surrpcmaes_ls",surrpcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+  def("surrpcmaes_pwqb_ls",surrpcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
   
 } // end boost
