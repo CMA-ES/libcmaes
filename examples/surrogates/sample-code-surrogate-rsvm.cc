@@ -67,8 +67,6 @@ template<template <class U, class V> class TStrategy, class TCovarianceUpdate=Co
 	  _rsvm._encode = true;
 	  _rsvm.train(x,_rsvm_iter,cov,xmean);
 	  
-          this->set_train_error(this->compute_error(cp,cov));
-	  
 	  //debug
 	  //std::cout << "training error=" << _rsvm.error(x,x,fvalues,cov,xmean) << std::endl;
 	  //std::cout << "train error=" << this->get_train_error() << std::endl;

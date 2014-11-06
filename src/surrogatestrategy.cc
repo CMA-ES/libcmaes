@@ -140,8 +140,8 @@ namespace libcmaes
 	
 	// use original objective function and collect points.
 	eostrat<TGenoPheno>::eval(candidates,phenocandidates);
-	for (int i=0;i<eostrat<TGenoPheno>::get_solutions().size();i++)
-	  this->add_to_training_set(eostrat<TGenoPheno>::get_solutions().candidates().at(i)); // XXX: not very efficient update when test size already filled up.
+	for (int i=0;i<eostrat<TGenoPheno>::_solutions.size();i++)
+	  this->add_to_training_set(eostrat<TGenoPheno>::_solutions.candidates().at(i)); // XXX: not very efficient update when test size already filled up.
       }
     else
       {
@@ -151,12 +151,12 @@ namespace libcmaes
 	// exploit surrogate
 	for (int r=0;r<candidates.cols();r++)
 	  {
-	    eostrat<TGenoPheno>::get_solutions().get_candidate(r).set_x(candidates.col(r));
+	    eostrat<TGenoPheno>::_solutions.get_candidate(r).set_x(candidates.col(r));
 	    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
-	      this->predict(eostrat<TGenoPheno>::get_solutions().candidates(),
-			    eostrat<TGenoPheno>::get_solutions().csqinv());
-	    else this->predict(eostrat<TGenoPheno>::get_solutions().candidates(),
-			       eostrat<TGenoPheno>::get_solutions().sepcsqinv());
+	      this->predict(eostrat<TGenoPheno>::_solutions.candidates(),
+			    eostrat<TGenoPheno>::_solutions.csqinv());
+	    else this->predict(eostrat<TGenoPheno>::_solutions.candidates(),
+			       eostrat<TGenoPheno>::_solutions.sepcsqinv());
 	  }
       }
   }
@@ -250,16 +250,16 @@ namespace libcmaes
 	if (this->_niter != 0 && (int)this->_tset.size() >= this->_l)
 	  {
 	    if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
-	      this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
+	      this->set_test_error(this->compute_error(eostrat<TGenoPheno>::_solutions.candidates(),
 						       eostrat<TGenoPheno>::_solutions._csqinv));
-	    else this->set_test_error(this->compute_error(eostrat<TGenoPheno>::get_solutions().candidates(),
+	    else this->set_test_error(this->compute_error(eostrat<TGenoPheno>::_solutions.candidates(),
 							  eostrat<TGenoPheno>::_solutions._sepcsqinv));
 	  }
 	
 	// use original objective function and collect points.
 	eostrat<TGenoPheno>::eval(candidates,phenocandidates);
-	for (int i=0;i<eostrat<TGenoPheno>::get_solutions().size();i++)
-	  this->add_to_training_set(eostrat<TGenoPheno>::get_solutions().candidates().at(i)); // XXX: not very efficient update when test size already filled up.
+	for (int i=0;i<eostrat<TGenoPheno>::_solutions.size();i++)
+	  this->add_to_training_set(eostrat<TGenoPheno>::_solutions.candidates().at(i)); // XXX: not very efficient update when test size already filled up.
       }
   }
 
@@ -286,8 +286,15 @@ namespace libcmaes
     if (do_train())
       {
 	if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
-	  this->train(this->_tset,eostrat<TGenoPheno>::_solutions._csqinv);
-	else this->train(this->_tset,eostrat<TGenoPheno>::_solutions._sepcsqinv);
+	  {
+	    this->train(this->_tset,eostrat<TGenoPheno>::_solutions._csqinv);
+	    this->set_train_error(this->compute_error(this->_tset,eostrat<TGenoPheno>::_solutions._csqinv));
+	  }
+	else 
+	  {
+	    this->train(this->_tset,eostrat<TGenoPheno>::_solutions._sepcsqinv);
+	    this->set_train_error(this->compute_error(this->_tset,eostrat<TGenoPheno>::_solutions._sepcsqinv));
+	  }
       }
   }
 
@@ -312,6 +319,12 @@ namespace libcmaes
       this->predict(eostrat<TGenoPheno>::_solutions._candidates,eostrat<TGenoPheno>::_solutions._csqinv);
     else this->predict(eostrat<TGenoPheno>::_solutions._candidates,eostrat<TGenoPheno>::_solutions._sepcsqinv);
     eostrat<TGenoPheno>::_solutions.sort_candidates();
+
+    /*std::vector<Candidate> &vc = eostrat<TGenoPheno>::_solutions.candidates();
+    for (size_t i=0;i<vc.size();i++)
+      {
+	std::cout << vc.at(i).get_fvalue() << " / x=" << vc.at(i).get_x_dvec().transpose() << std::endl;
+	}*/
 
     // - draw 'a'<lambda_pre samples according to lambda_pre*N(0,theta_sel0^2) and retain each sample from initial population, with rank r < floor(a)
     std::vector<Candidate> ncandidates;
