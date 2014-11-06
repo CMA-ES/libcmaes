@@ -234,7 +234,7 @@ class RankingSVM
   void compute_training_kernel(dMat &x)
   {
     _kernel.init(x);
-    _K = dMat(x.cols(),x.cols());
+    _K = dMat::Zero(x.cols(),x.cols());
 #pragma omp parallel for
       for (int i=0;i<_K.rows();i++)
 	for (int j=i;j<_K.cols();j++)
