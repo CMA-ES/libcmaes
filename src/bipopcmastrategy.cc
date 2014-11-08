@@ -56,7 +56,9 @@ namespace libcmaes
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
-  int BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
+  int BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(const EvalFunc &evalf,
+							       const AskFunc &askf,
+							       const TellFunc &tellf)
   {
     std::array<int,2> budgets = {{0,0}}; // 0: r1, 1: r2
     CMASolutions best_run;
@@ -67,7 +69,7 @@ namespace libcmaes
 	    r2();
 	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(0.5*budgets[0]);
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
-	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
+	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
 	    budgets[1] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::capture_best_solution(best_run);
 	  }
@@ -77,7 +79,7 @@ namespace libcmaes
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	  }
 	CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(_max_fevals); // resets the budget
-	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
+	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
 	budgets[0] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
 	IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::capture_best_solution(best_run);
       }

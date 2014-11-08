@@ -53,11 +53,28 @@ namespace libcmaes
      * \brief Finds the minimum of the objective function. It makes
      *        alternate calls to ask(), tell() and stop() until 
      *        one of the termination criteria triggers.
+     * @param evalf custom eval function
+     * @param askf custom ask function
+     * @param tellf custom tell function
      * @return success or error code, as defined in opti_err.h
      * Note: the termination criteria code is held by _solutions._run_status
      */
-    int optimize();
+    int optimize(const EvalFunc &evalf, const AskFunc &askf,const TellFunc &tellf);
 
+    /**
+     * \brief Finds the minimum of the objective function. It makes
+     *        alternate calls to ask(), tell() and stop() until 
+     *        one of the termination criteria triggers.
+     * @return success or error code, as defined in opti_err.h
+     * Note: the termination criteria code is held by _solutions._run_status
+     */
+    int optimize()
+    {
+      return optimize(std::bind(&IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::eval,this,std::placeholders::_1,std::placeholders::_2),
+		      std::bind(&IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::ask,this),
+		      std::bind(&IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::tell,this));
+    }
+    
   protected:
     void lambda_inc();
     void reset_search_state();

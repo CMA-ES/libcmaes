@@ -271,7 +271,7 @@ namespace libcmaes
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
-  int CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
+  int CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(const EvalFunc &evalf, const AskFunc &askf, const TellFunc &tellf)
   {
     //debug
     //DLOG(INFO) << "optimize()\n";
@@ -286,9 +286,9 @@ namespace libcmaes
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
     while(!stop())
       {
-	dMat candidates = ask();
-	this->eval(candidates,eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
-	tell();
+	dMat candidates = askf();
+	evalf(candidates,eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
+	tellf();
 	eostrat<TGenoPheno>::inc_iter();
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
 	eostrat<TGenoPheno>::_solutions._elapsed_last_iter = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
