@@ -30,6 +30,7 @@
 namespace libcmaes
 {
 
+  // Interfacing candidates with an Eigen matrix of double x and a vector of objective function value.
   void to_mat_vec(std::vector<Candidate> &cp,
 		  dMat &x, dVec &fvalues)
   {
