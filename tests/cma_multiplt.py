@@ -37,35 +37,44 @@ fvalue = np.absolute(dat[:,0])
 fevals = dat[:,1]
 sigma = dat[:,2]
 kappa = dat[:,3]
-eigenvc = []
-for c in range(single_values,single_values+dim):
-    eigenvc.append(c)
-eigenv = dat[:,eigenvc]
-stdsc = []
-for c in range(single_values+dim,single_values+2*dim):
-    stdsc.append(c)
-stds = dat[:,stdsc]
-minstds = np.amin(stds,axis=1)
-maxstds = np.amax(stds,axis=1)
-xmeanc = []
-for c in range(single_values+2*dim,single_values+3*dim):
-    xmeanc.append(c)
-xmean = dat[:,xmeanc]
+if dim > 0:
+    eigenvc = []
+    for c in range(single_values,single_values+dim):
+        eigenvc.append(c)
+    eigenv = dat[:,eigenvc]
+    stdsc = []
+    for c in range(single_values+dim,single_values+2*dim):
+        stdsc.append(c)
+    stds = dat[:,stdsc]
+    minstds = np.amin(stds,axis=1)
+    maxstds = np.amax(stds,axis=1)
+    xmeanc = []
+    for c in range(single_values+2*dim,single_values+3*dim):
+        xmeanc.append(c)
+    xmean = dat[:,xmeanc]
 
 # plot data.
 pylab.rcParams['font.size'] = 10
 xlab = "function evaluations"
 
 # plot fvalue, sigma, kappa
-subplot(221)
+if dim > 0:
+    subplot(221)
 semilogy(fevals,fvalue,'b')
 semilogy(fevals,sigma,'g')
 semilogy(fevals,kappa,'r')
-semilogy(fevals,sigma*minstds,'y')
-semilogy(fevals,sigma*maxstds,'y')
+if dim > 0:
+    semilogy(fevals,sigma*minstds,'y')
+    semilogy(fevals,sigma*maxstds,'y')
 title('f-value (blue), sigma (green), kappa (red)')
 grid(True)
 
+if dim == 0:
+    pylab.show();
+    msg = '  --- press return to continue --- '
+    raw_input(msg) if sys.version < '3' else input(msg)
+    sys.exit(1)
+    
 # plot xmean
 subplot(222)
 plot(fevals,xmean)

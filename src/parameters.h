@@ -26,11 +26,11 @@
 #include "genopheno.h"
 #include "llogging.h"
 #include <string>
-#include <ctime>
 #include <cmath>
 #include <limits>
 #include <unordered_map>
 #include <map>
+#include <chrono>
 
 namespace libcmaes
 {
@@ -48,6 +48,7 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      friend class VDCMAUpdate;
       friend class Candidate;
       
     public:
@@ -72,7 +73,7 @@ namespace libcmaes
 	if (_lambda == -1) // lambda is unspecified
 	  _lambda = 4 + floor(3.0*log(_dim));
 	if (_seed == 0) // seed is not forced.
-	  _seed = static_cast<uint64_t>(time(nullptr));
+	  _seed = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 	set_x0(x0);
       }
       
@@ -497,7 +498,6 @@ namespace libcmaes
       int _max_hist = -1; /**< max size of the history, keeps memory requirements fixed. */
 
       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
-      
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
     };
 }

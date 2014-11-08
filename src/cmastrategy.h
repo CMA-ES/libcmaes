@@ -28,6 +28,7 @@
 #include "cmastopcriteria.h"
 #include "covarianceupdate.h"
 #include "acovarianceupdate.h"
+#include "vdcmaupdate.h"
 #include "eigenmvn.h"
 #include <fstream>
 

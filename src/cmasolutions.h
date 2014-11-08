@@ -45,6 +45,7 @@ namespace libcmaes
     template <class U, class V> friend class BIPOPCMAStrategy;
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
+    friend class VDCMAUpdate;
     
   public:
     /**
@@ -239,6 +240,24 @@ namespace libcmaes
     {
       return _max_eigenv;
     }
+
+    /**
+     * \brief returns current number of objective function evaluations
+     * @return number of objective function evaluations
+     */
+    inline int fevals() const
+    {
+      return _nevals;
+    }
+
+    /**
+     * \brief returns last computed eigenvalues
+     * @return last computed eigenvalues
+     */
+    inline dVec eigenvalues() const
+    {
+      return _leigenvalues;
+    }
     
     /**
      * \brief print the solution object out.
@@ -293,6 +312,8 @@ namespace libcmaes
     Candidate _best_seen_candidate; /**< best seen candidate along the run. */
     int _best_seen_iter;
     Candidate _initial_candidate;
+    
+    dVec _v; /**< complementary vector for use in vdcma. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);
