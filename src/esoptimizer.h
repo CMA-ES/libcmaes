@@ -112,7 +112,7 @@ namespace libcmaes
       int optimize()
       {
 	std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
-	bool opt = TESOStrategy::optimize();
+	int opt = TESOStrategy::optimize();
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
 	TESOStrategy::_solutions._elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 	return opt;

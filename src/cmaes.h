@@ -27,6 +27,8 @@
 #include "ipopcmastrategy.h"
 #include "bipopcmastrategy.h"
 
+namespace cma = libcmaes;
+
 namespace libcmaes
 {
   template <class TGenoPheno=GenoPheno<NoBoundStrategy>>

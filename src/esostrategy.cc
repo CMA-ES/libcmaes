@@ -81,6 +81,24 @@ namespace libcmaes
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
+
+    // if initial elitist, reinject initial solution as needed.
+    if (_initial_elitist)
+      {
+	// reinject intial solution if half or more points have value above that of the initial point candidate.
+	int count = 0;
+	for (int r=0;r<candidates.cols();r++)
+	  if (_solutions._candidates.at(r).get_fvalue() < _solutions._initial_candidate.get_fvalue())
+	    ++count;
+	if (count/2.0 < candidates.cols()/2)
+	  {
+#ifdef HAVE_DEBUG
+	    std::cout << "reinjecting initial solution\n";
+#endif
+	    _solutions._candidates.at(1) = _solutions._initial_candidate;
+	  }
+      }
+    
     update_fevals(candidates.cols());
     
 #ifdef HAVE_DEBUG

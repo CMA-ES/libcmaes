@@ -45,7 +45,7 @@ namespace libcmaes
      */
     template <class TGenoPheno>
     static void update(const CMAParameters<TGenoPheno> &parameters,
-		       EigenMultivariateNormal<double> &esolver,
+		       Eigen::EigenMultivariateNormal<double> &esolver,
 		       CMASolutions &solutions);
   };
   

@@ -37,7 +37,7 @@ namespace libcmaes
   }
   
   pwqBoundStrategy::pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim)
-    :_lbounds(Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Map<dVec>(const_cast<double*>(ubounds),dim)),
+    :_lbounds(Eigen::Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Eigen::Map<dVec>(const_cast<double*>(ubounds),dim)),
      _phenolbounds(_lbounds),_phenoubounds(_ubounds)
   {
     // init al & ul.
@@ -57,8 +57,8 @@ namespace libcmaes
 
   pwqBoundStrategy::pwqBoundStrategy(const double *lbounds, const double *ubounds,
 				     const double *plbounds, const double *pubounds, const int &dim)
-    :_lbounds(Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Map<dVec>(const_cast<double*>(ubounds),dim)),
-     _phenolbounds(Map<dVec>(const_cast<double*>(plbounds),dim)),_phenoubounds(Map<dVec>(const_cast<double*>(pubounds),dim))
+    :_lbounds(Eigen::Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Eigen::Map<dVec>(const_cast<double*>(ubounds),dim)),
+     _phenolbounds(Eigen::Map<dVec>(const_cast<double*>(plbounds),dim)),_phenoubounds(Eigen::Map<dVec>(const_cast<double*>(pubounds),dim))
   {
     // init al & ul.
     dVec tmpdiff1 = _ubounds - _lbounds;

@@ -342,8 +342,8 @@ namespace libcmaes
       _scalingstrategy = linScalingStrategy(scaling,shift);
       if (lbounds == nullptr || ubounds == nullptr)
 	return;
-      dVec vlbounds = Map<dVec>(const_cast<double*>(lbounds),scaling.size());
-      dVec vubounds = Map<dVec>(const_cast<double*>(ubounds),scaling.size());
+      dVec vlbounds = Eigen::Map<dVec>(const_cast<double*>(lbounds),scaling.size());
+      dVec vubounds = Eigen::Map<dVec>(const_cast<double*>(ubounds),scaling.size());
       dVec nlbounds, nubounds;
       _scalingstrategy.scale_to_internal(nlbounds,vlbounds);
       _scalingstrategy.scale_to_internal(nubounds,vubounds);

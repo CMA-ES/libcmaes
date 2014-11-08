@@ -188,6 +188,14 @@ namespace libcmaes
       inline bool get_lazy_update() { return _lazy_update; }
 
       /**
+       * \brief sets initial elitist scheme: restart if best encountered solution is not
+       *        the final solution and reinjects the best solution until the population
+       *        has better fitness, in its majority
+       * @param e whether to activate the initial elitist scheme
+       */
+      inline void set_elitist(const bool &e) { _elitist = e; }
+
+      /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
        * @param criteria stopping criteria CMAStopCritType, see cmastopcriteria.h
@@ -198,7 +206,7 @@ namespace libcmaes
       {
 	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
       }
-
+      
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
       dVec _weights; /**< offsprings weighting scheme. */
@@ -232,7 +240,9 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
-      // stopping criteria.
+      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      
+      // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
     };
 
