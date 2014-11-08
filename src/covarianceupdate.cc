@@ -27,7 +27,7 @@ namespace libcmaes
 
   template <class TGenoPheno>
   void CovarianceUpdate::update(const CMAParameters<TGenoPheno> &parameters,
-				EigenMultivariateNormal<double> &esolver,
+				Eigen::EigenMultivariateNormal<double> &esolver,
 				CMASolutions &solutions)
   {
     // compute mean, Eq. (2)
@@ -88,8 +88,8 @@ namespace libcmaes
     solutions._xmean = xmean;
   }
 
-  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void CovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
 }

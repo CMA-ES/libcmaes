@@ -37,7 +37,7 @@ namespace libcmaes
   }
   
   pwqBoundStrategy::pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim)
-    :_lbounds(Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Map<dVec>(const_cast<double*>(ubounds),dim))
+    :_lbounds(Eigen::Map<dVec>(const_cast<double*>(lbounds),dim)),_ubounds(Eigen::Map<dVec>(const_cast<double*>(ubounds),dim))
   {
     // init al & ul.
     dVec tmpdiff1 = _ubounds - _lbounds;

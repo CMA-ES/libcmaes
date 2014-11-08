@@ -77,7 +77,7 @@ namespace libcmaes
     
     if (static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
       {
-	EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
+	Eigen::EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
 	esolver.set_covar(_sepcov);
 	_v = esolver.samples_ind(1) / std::sqrt(p._dim);
       }
