@@ -192,14 +192,6 @@ namespace libcmaes
       inline void set_elitist(const bool &e) { _elitist = e; }
 
       /**
-       * \brief sets the optima hoppping scheme: restart while best encountered solution is not
-       *        the final solution and reinects the best solution during each run until the population
-       *        has better fitness, in its majority
-       * @param oh whether to activate the optimal hopping scheme
-       */
-      inline void set_optima_hopping(const bool &oh) { _optima_hopping = oh; }
-      
-      /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
        * @param criteria stopping criteria CMAStopCritType, see cmastopcriteria.h
@@ -245,8 +237,7 @@ namespace libcmaes
       bool _vd = false;
       
       bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
-      bool _optima_hopping = false; /**< activates a form of elistism that always restart from the best seen solution. */
-
+      
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
     };
