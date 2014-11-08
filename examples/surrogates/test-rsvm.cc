@@ -19,7 +19,7 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "rankingsvm.hpp"
+#include "surrogates/rankingsvm.hpp"
 #include "cmaes.h"
 #include <chrono>
 

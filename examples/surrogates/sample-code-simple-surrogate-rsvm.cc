@@ -21,7 +21,7 @@
 
 #include "cmaes.h"
 #include "surrogatestrategy.h"
-#include "rankingsvm.hpp"
+#include "surrogates/rankingsvm.hpp"
 #include <iostream>
 
 #include <gflags/gflags.h>
