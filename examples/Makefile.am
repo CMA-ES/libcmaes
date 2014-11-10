@@ -14,7 +14,7 @@ sample_code_surrogate_rsvm_SOURCES=surrogates/sample-code-surrogate-rsvm.cc
 test_rsvm_SOURCES=surrogates/test-rsvm.cc
 
 if HAVE_GFLAGS
-bin_programs += lorentzpeakbench
+bin_PROGRAMS += lorentzpeakbench
 lorentzpeakbench_SOURCES=lorentzpeakbench.cc
 endif
 
