@@ -561,7 +561,8 @@ CMASolutions cmaes_opt()
     }
   std::cout << "Done!\n";
   if (cmasols.run_status() < 0)
-    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
+    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << " -- " << cmasols.status_msg() << std::endl;
+  else LOG(INFO) << "optimization succeeded with termination criteria " << cmasols.run_status() << " -- " << cmasols.status_msg() << std::endl;
   LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   if (cmasols.best_candidate().get_x_size() <= 1000)
     {

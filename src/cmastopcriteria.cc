@@ -21,7 +21,7 @@
 
 #include "libcmaes_config.h"
 #include "cmastopcriteria.h"
-//#include "opti_err.h"
+#include "cmasolutions.h"
 #include <cmath>
 #include <iterator>
 #include "llogging.h"
@@ -226,13 +226,11 @@ namespace libcmaes
       {
 	double fact = 0.2*cmas._sigma;
 	for (int i=0;i<cmap._dim;i++)
-	  if ((!cmap._sep && !cmap._vd && cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
-	      || ((cmap._sep || cmap._vd) && cmas._xmean[i] == fact * sqrt(cmas._sepcov(i))))
-	    {
-	      LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
-	      return NOEFFECTCOOR;
-	    }
-	return CONT;
+	  if ((!cmap._sep && !cmap._vd && cmas._xmean[i] != cmas._xmean[i] + fact * sqrt(cmas._cov(i,i)))
+	      || ((cmap._sep || cmap._vd) && cmas._xmean[i] != cmas._xmean[i] + fact * sqrt(cmas._sepcov(i))))
+	    return CONT;
+	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
+	return NOEFFECTCOOR;
       };
     _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(NOEFFECTCOOR,StopCriteria<TGenoPheno>(noEffectCoor)));
   }

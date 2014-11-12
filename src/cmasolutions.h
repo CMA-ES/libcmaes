@@ -26,6 +26,7 @@
 #include "candidate.h"
 #include "eo_matrix.h"
 #include "cmaparameters.h"
+#include "cmastopcriteria.h"
 #include "pli.h"
 #include <vector>
 #include <algorithm>
@@ -280,6 +281,15 @@ namespace libcmaes
     {
       return _run_status;
     }
+
+    /**
+     * \brief returns current optimization status' message.
+     * @return status message
+     */
+    inline std::string status_msg() const
+      {
+	return CMAStopCriteria<>::_scriterias[_run_status];
+      }
 
     /**
      * \brief returns currently elapsed time spent on optimization
