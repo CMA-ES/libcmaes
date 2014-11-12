@@ -11,12 +11,12 @@
 
 namespace libcmaes
 {
-#define INFO "INFO"
-#define WARNING "WARNING"
-#define ERROR "ERROR"
-#define FATAL "FATAL"
+  static std::string INFO="INFO";
+  static std::string WARNING="WARNING";
+  static std::string ERROR="ERROR";
+  static std::string FATAL="FATAL";
 
-static std::ostream nullstream(0);
+  static std::ostream nullstream(0);
 
 inline std::ostream& LOG(const std::string &severity,std::ostream &out=std::cout)
 {

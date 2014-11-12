@@ -64,6 +64,16 @@ namespace libcmaes
     ESOStrategy(FitFunc &func,
 		TParameters &parameters);
 
+    /**
+     * \brief constructor for starting from an existing solution.
+     * @param func objective function to minimize
+     * @param parameters stochastic search parameters
+     * @param solution solution object to start from
+     */
+    ESOStrategy(FitFunc &func,
+		TParameters &parameters,
+		const TSolutions &solutions);
+    
   protected:
     ~ESOStrategy();
 
@@ -119,9 +129,9 @@ namespace libcmaes
      * @param evals increment to the current consumed budget
      */
     void update_fevals(const int &evals);
-    
+
     /**
-     * \brief sets gradient function
+     * \brief sets the gradient function, if available.
      * @param gfunc gradient function
      */
     void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
@@ -134,6 +144,17 @@ namespace libcmaes
      * @param pfunc a progress function
      */
     void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
+
+    /**
+     * \brief starts optimization from a given solution object.
+     * @param sol the solution object to start search from.
+     */
+    void start_from_solution(const TSolutions &sol)
+    {
+      _parameters.set_x0(sol.best_candidate().get_x());
+      _solutions = sol;
+      _solutions.reset();
+    }
 
     /**
      * \brief Sets the possibly custom plot to file function,

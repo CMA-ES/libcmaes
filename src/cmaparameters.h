@@ -42,6 +42,7 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      template <class U> friend class errstats;
       friend class VDCMAUpdate;
       
     public:
@@ -101,6 +102,9 @@ namespace libcmaes
        * \brief initialize required parameters based on dim, lambda, x0 and sigma.
        */
       void initialize_parameters();
+
+      
+      void reset_as_fixed(const int &k);
       
       /**
        * \brief adapt parameters for noisy objective function.

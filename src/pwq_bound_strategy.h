@@ -31,6 +31,8 @@ namespace libcmaes
   public:
     pwqBoundStrategy(); // dummy constructor, required for non-pointer default object in GenoPheno.
     pwqBoundStrategy(const double *lbounds, const double *ubounds, const int &dim);
+    pwqBoundStrategy(const double *lbounds, const double *ubounds,
+		     const double *plbounds, const double *pubounds, const int &dim);
     ~pwqBoundStrategy();
 
     void to_f_representation(const dVec &x,
@@ -43,6 +45,8 @@ namespace libcmaes
 
     double getLBound(const int &k) const { return _lbounds[k]; }
     double getUBound(const int &k) const { return _ubounds[k]; }
+    double getPhenoLBound(const int &k) const { return _phenolbounds[k]; }
+    double getPhenoUBound(const int &k) const { return _phenoubounds[k]; }
 
     double getAL(const int &k) const { return _al[k]; }
     double getAU(const int &k) const { return _au[k]; }
@@ -55,6 +59,8 @@ namespace libcmaes
     dVec _xlow;
     dVec _xup;
     dVec _r;
+    dVec _phenolbounds; /**< differ from _lbounds when another geno/pheno transform applies before bounds. */
+    dVec _phenoubounds; /**< differ from _ubounds when another geno/pheno transform applies before bounds. */
   };
 }
 

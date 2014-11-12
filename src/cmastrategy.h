@@ -57,6 +57,16 @@ namespace libcmaes
        */
       CMAStrategy(FitFunc &func,
 		  CMAParameters<TGenoPheno> &parameters);
+
+      /**
+       * \brief constructor for starting from an existing solution.
+       * @param func objective function to minimize
+       * @param parameters stochastic search parameters
+       * @param cmasols solution object to start from
+       */
+      CMAStrategy(FitFunc &func,
+		  CMAParameters<TGenoPheno> &parameters,
+		  const CMASolutions &cmasols);
     
       ~CMAStrategy();
 

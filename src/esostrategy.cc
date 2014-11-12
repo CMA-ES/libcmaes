@@ -46,6 +46,16 @@ namespace libcmaes
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
   }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  ESOStrategy<TParameters,TSolutions,TStopCriteria>::ESOStrategy(FitFunc &func,
+								 TParameters &parameters,
+								 const TSolutions &solutions)
+    :_func(func),_nevals(0),_niter(0),_parameters(parameters)
+  {
+    _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
+    start_from_solution(solutions);
+  }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
   ESOStrategy<TParameters,TSolutions,TStopCriteria>::~ESOStrategy()
@@ -123,8 +133,8 @@ namespace libcmaes
     for (int i=0;i<_parameters._dim;i++)
       {
 	dVec ei1 = x;
-	ei1(i,0) += epsilon(i); //TODO: beware of bounds ?
-	ei1(i,0) = std::min(ei1(i,0),_parameters.get_gp().get_boundstrategy().getUBound(i));
+	ei1(i,0) += epsilon(i);
+	ei1(i,0) = std::min(ei1(i,0),_parameters.get_gp().get_boundstrategy_ref().getUBound(i));
 	double gradi = (_func(ei1.data(),_parameters._dim) - fx)/epsilon(i);
 	vgradf(i,0) = gradi;
       }

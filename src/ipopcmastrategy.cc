@@ -34,6 +34,14 @@ namespace libcmaes
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
+  IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::IPOPCMAStrategy(FitFunc &func,
+								 CMAParameters<TGenoPheno> &parameters,
+								 const CMASolutions &solutions)
+    :CMAStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters,solutions)
+  {
+  }
+
+  template <class TCovarianceUpdate, class TGenoPheno>
   IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::~IPOPCMAStrategy()
   {
   }

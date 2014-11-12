@@ -42,6 +42,17 @@ namespace libcmaes
      */
     IPOPCMAStrategy(FitFunc &func,
 		    CMAParameters<TGenoPheno> &parameters);
+
+    /**
+     * \brief constructor.
+     * @param func objective function to minimize
+     * @param parameters stochastic search parameters
+     * @param solutions solution to start search from
+     */
+    IPOPCMAStrategy(FitFunc &func,
+		    CMAParameters<TGenoPheno> &parameters,
+		    const CMASolutions &solutions);
+    
     ~IPOPCMAStrategy();
 
     /**

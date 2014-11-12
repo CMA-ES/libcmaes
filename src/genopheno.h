@@ -53,7 +53,7 @@ namespace libcmaes
 	{
 	  std::vector<double> lb(dim,_scalingstrategy._intmin);
 	  std::vector<double> ub(dim,_scalingstrategy._intmax);
-	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),dim);
+	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),lbounds,ubounds,dim);
 	}
     }
 
@@ -67,7 +67,7 @@ namespace libcmaes
 	{
 	  std::vector<double> lb(dim,_scalingstrategy._intmin);
 	  std::vector<double> ub(dim,_scalingstrategy._intmax);
-	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),dim);
+	  _boundstrategy = TBoundStrategy(&lb.front(),&ub.front(),lbounds,ubounds,dim);
 	}
     }
 
@@ -237,7 +237,9 @@ namespace libcmaes
       else return gen;
     }
 
-    TBoundStrategy& get_boundstrategy() { return _boundstrategy; }
+    TBoundStrategy get_boundstrategy() const { return _boundstrategy; }
+      
+    TBoundStrategy& get_boundstrategy_ref() { return _boundstrategy; }
       
     private:
     TBoundStrategy _boundstrategy;
