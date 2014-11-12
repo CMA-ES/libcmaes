@@ -91,7 +91,7 @@ boost::python::list get_candidate_x(const Candidate &c)
 {
   boost::python::list x;
   for (int i=0;i<(int)c.get_x_size();i++)
-    x.append(c.get_x()[i]);
+    x.append(c.get_x_ptr()[i]);
   return x;
 }
 

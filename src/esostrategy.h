@@ -151,7 +151,7 @@ namespace libcmaes
      */
     void start_from_solution(const TSolutions &sol)
     {
-      _parameters.set_x0(sol.best_candidate().get_x());
+      _parameters.set_x0(sol.best_candidate().get_x_dvec());
       _solutions = sol;
       _solutions.reset();
     }

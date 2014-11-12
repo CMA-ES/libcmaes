@@ -326,7 +326,7 @@ namespace libcmaes
 	    this->set_initial_elitist(true);
 
 	    // reinit solution and re-optimize.
-	    eostrat<TGenoPheno>::_parameters.set_x0(eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_x());
+	    eostrat<TGenoPheno>::_parameters.set_x0(eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_x_dvec_ref());
 	    eostrat<TGenoPheno>::_solutions = CMASolutions(eostrat<TGenoPheno>::_parameters);
 	    eostrat<TGenoPheno>::_solutions._nevals = eostrat<TGenoPheno>::_nevals;
 	    eostrat<TGenoPheno>::_niter = 0;

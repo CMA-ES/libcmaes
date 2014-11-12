@@ -43,7 +43,7 @@ SurrFunc fpredict = [](std::vector<Candidate> &c, const dMat &cov)
 {
   // fill up with real fvalue.
   for (size_t i=0;i<c.size();i++)
-    c.at(i).set_fvalue(fsphere(c.at(i).get_x(),c.at(i).get_x_size()));
+    c.at(i).set_fvalue(fsphere(c.at(i).get_x_ptr(),c.at(i).get_x_size()));
   return 0;
 };
 
