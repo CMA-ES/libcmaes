@@ -39,9 +39,9 @@ namespace libcmaes
     {};
     ~fcross() {};
 
-    double _fvalue = 0.0;
-    int _nevals = 0.0;
-    dVec _x;
+    double _fvalue = 0.0; /**< objective value function. */
+    int _nevals = 0.0; /**< number of evaluations. */
+    dVec _x; /**< parameter vector at objective function value. */
   };
   
   /**

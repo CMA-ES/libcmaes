@@ -28,7 +28,7 @@ namespace libcmaes
 {
 
   /**
-   * \brief profile likelihood as a set of points and values. 
+   * \brief profile likelihood object holder as a set of points and values.
    */
   class pli
   {
@@ -36,7 +36,18 @@ namespace libcmaes
     template <class U> friend class errstats;
     
   public:
-  pli() {}
+    pli() {}
+    
+    /**
+     * \brief profile likelihood constructor
+     * @param k dimension in which the profile likelihood was computed
+     * @param samplesize number of steps of the linesearch direction
+     * @param dim dimension of the objective function parameter space
+     * @param xm vector of parameters at fvalue
+     * @param fvalue the function minima around which the profile likelihood was computed
+     * @param fup the function deviation for which the profile likelihood was computed
+     * @param delta tolerance around fvalue + fup for which the profile likelihood was computed
+     */
   pli(const int &k, const int &samplesize, const int &dim,
       const dVec &xm, const double &fvalue, const double &fup, const double &delta)
     :_k(k),_samplesize(samplesize),_fvaluem(dVec::Zero(2*samplesize+1)),_xm(dMat::Zero(2*samplesize+1,dim)),_min(0.0),_max(0.0),_err(2*samplesize+1),_fup(fup),_delta(delta)
@@ -45,8 +56,16 @@ namespace libcmaes
 	_xm.row(samplesize) = xm.transpose();
 	_err[samplesize] = 1; // should be current sol status...
       }
+    
     ~pli() {};
-
+    
+    /**
+     * \brief find bounds around the objective function parameters for a given value of f,
+     *        base on pre-computed profile likelihood points.
+     * @param fvalue function value
+     * @param minindex index of the profile likelihood point that is the lower bound
+     * @param maxindex index of the profile likelihood point that is the upper bound
+     */
     std::pair<double,double> getMinMax(const double &fvalue,
 				       int &minindex, int &maxindex)
     {
@@ -59,6 +78,9 @@ namespace libcmaes
       return std::pair<double,double>(min,max);
     }
 
+    /**
+     * \brie sets the bounds for this profile likelihood object based on original function value + fup
+     */
     void setMinMax()
     {
       std::pair<double,double> mm = getMinMax(_fvaluem[_samplesize]+_fup,_minindex,_maxindex);
@@ -66,6 +88,9 @@ namespace libcmaes
       _max = mm.second;
     }
 
+    /**
+     * \brief sets the errors bounds for this profile likelihood.
+     */
     void setErrMinMax()
     {
       setMinMax();
@@ -73,11 +98,19 @@ namespace libcmaes
       _errmax = _max - _xm(_samplesize,_k);
     }
 
+    /**
+     * \brief get lower error bound
+     * @return lower error bound
+     */
     inline double getErrMin() const
     {
       return _errmin;
     }
 
+    /**
+     * \brief get upper error bound
+     * @return upper error bound
+     */
     inline double getErrMax() const
     {
       return _errmax;

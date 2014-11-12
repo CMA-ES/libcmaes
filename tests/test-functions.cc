@@ -428,6 +428,7 @@ DEFINE_bool(le,false,"whether to return profile likelihood error bounds around t
 DEFINE_double(le_fup,0.1,"deviation from the minimum as the size of the confidence interval for profile likelihood computation");
 DEFINE_double(le_delta,0.1,"tolerance factor around the fup confidence interval for profile likelihood computation");
 DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing the profile likelihood in every direction");
+DEFINE_int32(le_maxiters,1e4,"max number of iterations in search for profile likelihood points");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
 DEFINE_int32(contour_p,4,"number of contour points, must be >= 4");
@@ -544,7 +545,7 @@ CMASolutions cmaes_opt()
       std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate().get_fvalue() + FLAGS_le_fup << ")\n";
       for (int k=0;k<FLAGS_dim;k++)
 	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
-						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta);
+						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta,FLAGS_le_maxiters);
     }
   if (!FLAGS_contour.empty())
     {
