@@ -93,7 +93,7 @@ namespace libcmaes
 	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k]);
 	if (ncitsol._run_status < 0)
 	  {
-	    LOG(ERROR) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << std::endl;
+	    LOG(ERROR) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << " -- " << ncitsol.status_msg() << std::endl;
 	    // pad and return.
 	    for (int j=0;j<samplesize;j++)
 	      {
@@ -263,21 +263,23 @@ namespace libcmaes
   template <class TGenoPheno>
   contour errstats<TGenoPheno>::contour_points(FitFunc & func, const int &px, const int &py, const int &npoints, const double &fup,
 					       const CMAParameters<TGenoPheno> &parameters,
-					       CMASolutions &cmasol)
+					       CMASolutions &cmasol,
+					       const double &delta,
+					       const int &maxiters)
   {
     // find first two points.
     int samplesize = 10;
     pli plx,ply;
     if (!cmasol.get_pli(px,plx))
       {
-	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,px,false,samplesize,fup);
+	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,px,false,samplesize,fup,delta,maxiters);
 	cmasol.get_pli(px,plx);
       }
     
     // find second two points.
     if (!cmasol.get_pli(py,ply))
       {
-	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,py,false,samplesize,fup);
+	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,py,false,samplesize,fup,delta,maxiters);
 	cmasol.get_pli(py,ply);
       }
 

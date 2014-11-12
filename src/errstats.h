@@ -150,11 +150,15 @@ namespace libcmaes
      * @param fup the function deviation for which to compute the contour
      * @param parameters stochastic search parameters
      * @param cmasol solution object that contains the previously found optima
+     * @param delta tolerance around fvalue + fup for which to compute the profile likelihood
+     * @param maxiters maximum number of linesearch tentatives for computing the profile likelihood
      * @return contour object that contains the contour points
      */
     static contour contour_points(FitFunc & func, const int &px, const int &py, const int &npoints, const double &fup,
 				  const CMAParameters<TGenoPheno> &parameters,
-				  CMASolutions &cmasol);
+				  CMASolutions &cmasol,
+				  const double &delta=0.1,
+				  const int &maxiters=1e4);
 
     private:
     /**

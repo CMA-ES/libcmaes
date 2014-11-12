@@ -556,7 +556,7 @@ CMASolutions cmaes_opt()
       contour_indexes.second = atoi(contour_indexes_str.at(1).c_str());
       std::cout << "Now computing contour passing through point (" << contour_indexes.first << "," << contour_indexes.second << ")\n";
       contour ct = errstats<TGenoPheno>::contour_points(mfuncs[FLAGS_fname],contour_indexes.first,contour_indexes.second,
-							FLAGS_contour_p,FLAGS_contour_fup,cmaparams,cmasols);
+							FLAGS_contour_p,FLAGS_contour_fup,cmaparams,cmasols,FLAGS_le_delta,FLAGS_le_maxiters);
       std::cout << ct << std::endl;
     }
   std::cout << "Done!\n";
