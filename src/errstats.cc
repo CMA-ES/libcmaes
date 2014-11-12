@@ -261,39 +261,6 @@ namespace libcmaes
   }
 
   template <class TGenoPheno>
-  CMASolutions errstats<TGenoPheno>::optimize_reduced_pk(FitFunc &func,
-							 CMAParameters<TGenoPheno> &parameters,
-							 const CMASolutions &cmasol,
-							 const int &k,
-							 const double &vk)
-  {
-    // set re-arranged solution as starting point of the new optimization problem.
-    CMASolutions ncmasol = cmasol;
-    ncmasol.reset_as_fixed(k);
-
-    // re-arrange function
-    FitFunc nfunc = [func,k,vk](const double *x, const int N)
-      {
-	std::vector<double> nx;
-	nx.reserve(N+1);
-	for (int i=0;i<N+1;i++)
-	  {
-	    if (i < k)
-	      nx.push_back(x[i]);
-	    else if (i == k)
-	      nx.push_back(vk);
-	    else nx.push_back(x[i-1]);
-	  }
-	return func(&nx.front(),N+1);
-      };
-    
-    // optimize and return result.
-    CMAParameters<TGenoPheno> nparameters = parameters;
-    nparameters.reset_as_fixed(k);
-    return cmaes(nfunc,nparameters);
-  }
-
-  template <class TGenoPheno>
   contour errstats<TGenoPheno>::contour_points(FitFunc & func, const int &px, const int &py, const int &npoints, const double &fup,
 					       const CMAParameters<TGenoPheno> &parameters,
 					       CMASolutions &cmasol)

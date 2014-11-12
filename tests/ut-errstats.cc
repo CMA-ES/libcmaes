@@ -52,30 +52,6 @@ TEST(rearrangecmasol,reset_as_fixed)
   
 }
 
-TEST(optimize,optimize_pk)
-{
-  FitFunc fsphere = [](const double *x, const int N)
-    {
-      double val = 0.0;
-      for (int i=0;i<N;i++)
-	val += x[i]*x[i];
-      return val;
-    };
-  int dim = 10;
-  double sigma = 0.1;
-  std::vector<double> x0(dim,1.0);
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
-  cmaparams.set_quiet(true);
-  CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
-  CMASolutions cmaksols = errstats<>::optimize_reduced_pk(fsphere,cmaparams,cmasols,6,0.1);
-  std::cout << "iter: " << cmaksols.niter() << std::endl;
-  std::cout << "run status: " << cmaksols.run_status() << std::endl;
-  ASSERT_EQ(TOLHISTFUN,cmaksols.run_status());
-  ASSERT_EQ(9,cmaksols.best_candidate().get_x_dvec().size());
-  std::cout << "fvalue: " << cmaksols.best_candidate().get_fvalue() << std::endl;
-  std::cout << "x: " << cmaksols.best_candidate().get_x_dvec().transpose() << std::endl;
-}
-
 TEST(optimize,optimize_fixed_p)
 {
   FitFunc fsphere = [](const double *x, const int N)
@@ -122,10 +98,10 @@ TEST(pl,profile_likelihood_nocurve)
    double fup = 0.1;
    int samplesize = 20;
    pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,false,samplesize,fup);
-   std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
-   std::cout << "le xm: " << le._xm << std::endl;
-   EXPECT_FLOAT_EQ(-0.31699193,le._min);
-   EXPECT_FLOAT_EQ(0.31699193,le._max);
+   std::cout << "le fvalue: " << le.get_fvaluem().transpose() << std::endl;
+   std::cout << "le xm: " << le.get_xm() << std::endl;
+   EXPECT_FLOAT_EQ(-0.31640971,le.get_min());
+   EXPECT_FLOAT_EQ(0.31640971,le.get_max());
 }
 
 TEST(pl,profile_likelihood_curve)
@@ -148,10 +124,10 @@ TEST(pl,profile_likelihood_curve)
   double fup = 0.1;
   int samplesize = 20;
   pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,true,samplesize,fup);
-  std::cout << "le fvalue: " << le._fvaluem.transpose() << std::endl;
-  std::cout << "le xm: " << le._xm << std::endl;
+  std::cout << "le fvalue: " << le.get_fvaluem().transpose() << std::endl;
+  std::cout << "le xm: " << le.get_xm() << std::endl;
   int mini, maxi;
   std::pair<double,double> mm = le.getMinMax(0.1,mini,maxi);
-  EXPECT_FLOAT_EQ(-0.31213182,mm.first);
-  EXPECT_FLOAT_EQ(0.31213182,mm.second);
+  EXPECT_FLOAT_EQ(-0.311827,mm.first);
+  EXPECT_FLOAT_EQ(0.311827,mm.second);
 }

@@ -108,6 +108,7 @@ namespace libcmaes
 				 double &d,
 				 dVec &x);
 
+    public:
     /**
      * \brief optimizes an objective function while fixing the value of parameters in several dimensions
      * @param func objective function
@@ -138,14 +139,6 @@ namespace libcmaes
 				    const int &k,
 				    const double &vk);
     
-    // DEPRECATED
-    static CMASolutions optimize_reduced_pk(FitFunc &func,
-					    CMAParameters<TGenoPheno> &parameters,
-					    const CMASolutions &cmasol,
-					    const int &k,
-					    const double &vk);
-
-
     /*- contour -*/
     public:
     /**

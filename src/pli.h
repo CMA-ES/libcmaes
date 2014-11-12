@@ -102,7 +102,7 @@ namespace libcmaes
      * \brief get lower error bound
      * @return lower error bound
      */
-    inline double getErrMin() const
+    inline double get_err_min() const
     {
       return _errmin;
     }
@@ -111,12 +111,43 @@ namespace libcmaes
      * \brief get upper error bound
      * @return upper error bound
      */
-    inline double getErrMax() const
+    inline double get_err_max() const
     {
       return _errmax;
     }
     
-  private:
+    // accessors
+    inline int get_k() const
+    {
+      return _k;
+    }
+
+    inline int get_samplesize() const
+    {
+      return _samplesize;
+    }
+    
+    inline dVec get_fvaluem() const
+    {
+      return _fvaluem;
+    }
+
+    inline dMat get_xm() const
+    {
+      return _xm;
+    }
+
+    inline double get_min() const
+    {
+      return this->_min;
+    }
+
+    inline double get_max() const
+    {
+      return _max;
+    }
+
+    private:
     int _k = -1;
     int _samplesize = 0;
     dVec _fvaluem;
