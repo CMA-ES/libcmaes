@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -102,15 +102,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ae7625c0bc9d335b85c89588d77edec77"><td class="memTemplParams" colspan="2">template&lt;class TGenoPheno &gt; </td></tr>
-<tr class="memitem:ae7625c0bc9d335b85c89588d77edec77"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CovarianceUpdate.html#ae7625c0bc9d335b85c89588d77edec77">update</a> (const <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;parameters, <a class="el" href="classEigen_1_1EigenMultivariateNormal.html">EigenMultivariateNormal</a>&lt; double &gt; &amp;esolver, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;solutions)</td></tr>
-<tr class="memdesc:ae7625c0bc9d335b85c89588d77edec77"><td class="mdescLeft">&#160;</td><td class="mdescRight">update the covariance matrix.  <a href="#ae7625c0bc9d335b85c89588d77edec77">More...</a><br/></td></tr>
-<tr class="separator:ae7625c0bc9d335b85c89588d77edec77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39f58b771690547822ad54b8e89201cd"><td class="memTemplParams" colspan="2">template&lt;class TGenoPheno &gt; </td></tr>
+<tr class="memitem:a39f58b771690547822ad54b8e89201cd"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CovarianceUpdate.html#a39f58b771690547822ad54b8e89201cd">update</a> (const <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;parameters, <a class="el" href="classEigen_1_1EigenMultivariateNormal.html">Eigen::EigenMultivariateNormal</a>&lt; double &gt; &amp;esolver, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;solutions)</td></tr>
+<tr class="memdesc:a39f58b771690547822ad54b8e89201cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">update the covariance matrix.  <a href="#a39f58b771690547822ad54b8e89201cd">More...</a><br/></td></tr>
+<tr class="separator:a39f58b771690547822ad54b8e89201cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Covariance Matrix update. This is an implementation closely follows: Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="ae7625c0bc9d335b85c89588d77edec77"></a>
+<a class="anchor" id="a39f58b771690547822ad54b8e89201cd"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -128,7 +128,7 @@ template&lt;class TGenoPheno &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classEigen_1_1EigenMultivariateNormal.html">EigenMultivariateNormal</a>&lt; double &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classEigen_1_1EigenMultivariateNormal.html">Eigen::EigenMultivariateNormal</a>&lt; double &gt; &amp;&#160;</td>
           <td class="paramname"><em>esolver</em>, </td>
         </tr>
         <tr>
@@ -169,7 +169,7 @@ template&lt;class TGenoPheno &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

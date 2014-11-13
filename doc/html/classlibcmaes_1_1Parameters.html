@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,8 +89,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pro-static-attribs">Static Protected Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classlibcmaes_1_1Parameters-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">libcmaes::Parameters&lt; TGenoPheno &gt; Class Template Reference</div>  </div>
@@ -126,6 +127,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a50056ec90bc1b89295f8363eb566b8ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a50056ec90bc1b89295f8363eb566b8ce">set_x0</a> (const double *x0)</td></tr>
 <tr class="memdesc:a50056ec90bc1b89295f8363eb566b8ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets initial objective function parameter values to array x0  <a href="#a50056ec90bc1b89295f8363eb566b8ce">More...</a><br/></td></tr>
 <tr class="separator:a50056ec90bc1b89295f8363eb566b8ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77985cc81f856083a63d85ebc11db0ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a77985cc81f856083a63d85ebc11db0ae">set_x0</a> (const dVec &amp;x0)</td></tr>
+<tr class="memdesc:a77985cc81f856083a63d85ebc11db0ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets initial objective function parameter values from <a class="el" href="namespaceEigen.html">Eigen</a> vector  <a href="#a77985cc81f856083a63d85ebc11db0ae">More...</a><br/></td></tr>
+<tr class="separator:a77985cc81f856083a63d85ebc11db0ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2db4deff995719566b86bfc0c2df4e91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a2db4deff995719566b86bfc0c2df4e91">set_x0</a> (const double &amp;x0min, const double &amp;x0max)</td></tr>
 <tr class="memdesc:a2db4deff995719566b86bfc0c2df4e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets bounds on initial objective function parameter values. Bounds are the same across all dimensions, and initial value is sampled uniformly within these bounds.  <a href="#a2db4deff995719566b86bfc0c2df4e91">More...</a><br/></td></tr>
 <tr class="separator:a2db4deff995719566b86bfc0c2df4e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,9 +206,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:aeb869d18fa0c987f56216d9bfa1f1a0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#aeb869d18fa0c987f56216d9bfa1f1a0d">set_algo</a> (const int &amp;algo)</td></tr>
 <tr class="memdesc:aeb869d18fa0c987f56216d9bfa1f1a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the optimization algorithm.  <a href="#aeb869d18fa0c987f56216d9bfa1f1a0d">More...</a><br/></td></tr>
 <tr class="separator:aeb869d18fa0c987f56216d9bfa1f1a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d8d58e5d69795804a1a22768c78134d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a3d8d58e5d69795804a1a22768c78134d">set_str_algo</a> (const std::string &amp;algo)</td></tr>
-<tr class="memdesc:a3d8d58e5d69795804a1a22768c78134d"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the optimization algorithm.  <a href="#a3d8d58e5d69795804a1a22768c78134d">More...</a><br/></td></tr>
-<tr class="separator:a3d8d58e5d69795804a1a22768c78134d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39697cd6cfb705a970223f8e95894545"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a39697cd6cfb705a970223f8e95894545">get_algo</a> () const </td></tr>
 <tr class="memdesc:a39697cd6cfb705a970223f8e95894545"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns which algorithm is set for the optimization at hand.  <a href="#a39697cd6cfb705a970223f8e95894545">More...</a><br/></td></tr>
 <tr class="separator:a39697cd6cfb705a970223f8e95894545"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,11 +237,20 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a72995fb64587e6401d8b751343750c65"><td class="mdescLeft">&#160;</td><td class="mdescRight">activate / deactivate the parallel evaluation of objective function  <a href="#a72995fb64587e6401d8b751343750c65">More...</a><br/></td></tr>
 <tr class="separator:a72995fb64587e6401d8b751343750c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac3914b24de6312e6d1fe3d493bb42f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#aac3914b24de6312e6d1fe3d493bb42f5">get_mt_feval</a> () const </td></tr>
-<tr class="memdesc:aac3914b24de6312e6d1fe3d493bb42f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">resturns whether the parallel evaluation of objective function is activated  <a href="#aac3914b24de6312e6d1fe3d493bb42f5">More...</a><br/></td></tr>
+<tr class="memdesc:aac3914b24de6312e6d1fe3d493bb42f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether the parallel evaluation of objective function is activated  <a href="#aac3914b24de6312e6d1fe3d493bb42f5">More...</a><br/></td></tr>
 <tr class="separator:aac3914b24de6312e6d1fe3d493bb42f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1226eeecac97019c183a9a85185efcc8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a1226eeecac97019c183a9a85185efcc8">set_max_hist</a> (const int &amp;m)</td></tr>
+<tr class="memdesc:a1226eeecac97019c183a9a85185efcc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets maximum history size, allows to keep memory requirements fixed.  <a href="#a1226eeecac97019c183a9a85185efcc8">More...</a><br/></td></tr>
+<tr class="separator:a1226eeecac97019c183a9a85185efcc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a676f84fbe8726abf5ce88e117b159867"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a676f84fbe8726abf5ce88e117b159867">set_maximize</a> (const bool &amp;maximize)</td></tr>
+<tr class="memdesc:a676f84fbe8726abf5ce88e117b159867"><td class="mdescLeft">&#160;</td><td class="mdescRight">active internal maximization scheme (simply returns -f instead of f)  <a href="#a676f84fbe8726abf5ce88e117b159867">More...</a><br/></td></tr>
+<tr class="separator:a676f84fbe8726abf5ce88e117b159867"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afec66b0ca5465b81498189e2cc8a14dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#afec66b0ca5465b81498189e2cc8a14dc">get_maximize</a> () const </td></tr>
+<tr class="memdesc:afec66b0ca5465b81498189e2cc8a14dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns whether the maximization mode is enabled  <a href="#afec66b0ca5465b81498189e2cc8a14dc">More...</a><br/></td></tr>
+<tr class="separator:afec66b0ca5465b81498189e2cc8a14dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
 <tr class="memitem:affc62ae5c5f1db4f88e4c2dc96387af6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#affc62ae5c5f1db4f88e4c2dc96387af6">_dim</a></td></tr>
 <tr class="separator:affc62ae5c5f1db4f88e4c2dc96387af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af732f7206f23cbd6ec2bbd4e217a9a2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#af732f7206f23cbd6ec2bbd4e217a9a2b">_lambda</a> = -1</td></tr>
@@ -249,7 +259,7 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a60abfc730c5aa46e42ebd1598b59caa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad316488121bd51f62b28e8183d591c9e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#ad316488121bd51f62b28e8183d591c9e">_max_fevals</a> = -1</td></tr>
 <tr class="separator:ad316488121bd51f62b28e8183d591c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f6dad55c02a23891e3280cad288295a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a6f6dad55c02a23891e3280cad288295a">_quiet</a> = false</td></tr>
+<tr class="memitem:a6f6dad55c02a23891e3280cad288295a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a6f6dad55c02a23891e3280cad288295a">_quiet</a> = true</td></tr>
 <tr class="separator:a6f6dad55c02a23891e3280cad288295a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa49511ea00199348ea94f1aa53fe5bc1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#aa49511ea00199348ea94f1aa53fe5bc1">_fplot</a> = &quot;&quot;</td></tr>
 <tr class="separator:aa49511ea00199348ea94f1aa53fe5bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -277,12 +287,65 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ab8e153b4785de9358599caa840b94ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78a3b97b4119776b661c1be4fc283069"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a78a3b97b4119776b661c1be4fc283069">_mt_feval</a> = false</td></tr>
 <tr class="separator:a78a3b97b4119776b661c1be4fc283069"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ecc091e7e10b30c067f28e5be05faff"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a6ecc091e7e10b30c067f28e5be05faff">_max_hist</a> = -1</td></tr>
+<tr class="separator:a6ecc091e7e10b30c067f28e5be05faff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c65760fc2d97303d9881c2a945d1d7b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a8c65760fc2d97303d9881c2a945d1d7b">_maximize</a> = false</td></tr>
+<tr class="separator:a8c65760fc2d97303d9881c2a945d1d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a5d2fd0ca871efd0f4f4b223515544204"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d2fd0ca871efd0f4f4b223515544204"></a>
-static std::map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_algos</b> = {{&quot;cmaes&quot;,0},{&quot;ipop&quot;,1},{&quot;bipop&quot;,2},{&quot;acmaes&quot;,3},{&quot;aipop&quot;,4},{&quot;abipop&quot;,5},{&quot;sepcmaes&quot;,6},{&quot;sepipop&quot;,7},{&quot;sepbipop&quot;,8},{&quot;sepacmaes&quot;,9},{&quot;sepipop&quot;,10},{&quot;sepbipop&quot;,11}}</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+Static Protected Attributes</h2></td></tr>
+<tr class="memitem:a5d2fd0ca871efd0f4f4b223515544204"><td class="memItemLeft" align="right" valign="top">static std::map&lt; std::string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html#a5d2fd0ca871efd0f4f4b223515544204">_algos</a> = {{&quot;cmaes&quot;,0},{&quot;ipop&quot;,1},{&quot;bipop&quot;,2},{&quot;acmaes&quot;,3},{&quot;aipop&quot;,4},{&quot;abipop&quot;,5},{&quot;sepcmaes&quot;,6},{&quot;sepipop&quot;,7},{&quot;sepbipop&quot;,8},{&quot;sepacmaes&quot;,9},{&quot;sepipop&quot;,10},{&quot;sepbipop&quot;,11},{&quot;vdcma&quot;,12},{&quot;vdipopcma&quot;,13},{&quot;vdbipopcma&quot;,14}}</td></tr>
 <tr class="separator:a5d2fd0ca871efd0f4f4b223515544204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a78b1b9910ebce544de9b54b998e77879"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a78b1b9910ebce544de9b54b998e77879"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>CMASolutions</b></td></tr>
+<tr class="separator:a78b1b9910ebce544de9b54b998e77879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07488b7628d12135de0243eb796e53a9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a07488b7628d12135de0243eb796e53a9"></a>
+template&lt;class U , class V &gt; </td></tr>
+<tr class="memitem:a07488b7628d12135de0243eb796e53a9"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>CMAStrategy</b></td></tr>
+<tr class="separator:a07488b7628d12135de0243eb796e53a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6ebfad69a17421ae398d90c542aea13"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad6ebfad69a17421ae398d90c542aea13"></a>
+template&lt;class U , class V , class W &gt; </td></tr>
+<tr class="memitem:ad6ebfad69a17421ae398d90c542aea13"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ESOStrategy</b></td></tr>
+<tr class="separator:ad6ebfad69a17421ae398d90c542aea13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff56187b22ef0b3164ed7711dc0c82c3"><td class="memTemplParams" colspan="2"><a class="anchor" id="aff56187b22ef0b3164ed7711dc0c82c3"></a>
+template&lt;class U &gt; </td></tr>
+<tr class="memitem:aff56187b22ef0b3164ed7711dc0c82c3"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>CMAStopCriteria</b></td></tr>
+<tr class="separator:aff56187b22ef0b3164ed7711dc0c82c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a083272459c67810fd3e8b1702c7d67c2"><td class="memTemplParams" colspan="2"><a class="anchor" id="a083272459c67810fd3e8b1702c7d67c2"></a>
+template&lt;class U , class V &gt; </td></tr>
+<tr class="memitem:a083272459c67810fd3e8b1702c7d67c2"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>IPOPCMAStrategy</b></td></tr>
+<tr class="separator:a083272459c67810fd3e8b1702c7d67c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae97315b6fb514c42e8c3973f362ef2a2"><td class="memTemplParams" colspan="2"><a class="anchor" id="ae97315b6fb514c42e8c3973f362ef2a2"></a>
+template&lt;class U , class V &gt; </td></tr>
+<tr class="memitem:ae97315b6fb514c42e8c3973f362ef2a2"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>BIPOPCMAStrategy</b></td></tr>
+<tr class="separator:ae97315b6fb514c42e8c3973f362ef2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa62543a4caa6d6b288bb58ca5411539c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa62543a4caa6d6b288bb58ca5411539c"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>CovarianceUpdate</b></td></tr>
+<tr class="separator:aa62543a4caa6d6b288bb58ca5411539c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81af003765a6521a192e5a37612c2fb5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81af003765a6521a192e5a37612c2fb5"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>ACovarianceUpdate</b></td></tr>
+<tr class="separator:a81af003765a6521a192e5a37612c2fb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a867bde5f83097a4db1f667a3911efbae"><td class="memTemplParams" colspan="2"><a class="anchor" id="a867bde5f83097a4db1f667a3911efbae"></a>
+template&lt;class U &gt; </td></tr>
+<tr class="memitem:a867bde5f83097a4db1f667a3911efbae"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>errstats</b></td></tr>
+<tr class="separator:a867bde5f83097a4db1f667a3911efbae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fceefe6a1e378ff9fef5d97117e5f47"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3fceefe6a1e378ff9fef5d97117e5f47"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>VDCMAUpdate</b></td></tr>
+<tr class="separator:a3fceefe6a1e378ff9fef5d97117e5f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb3142edf2def9ad64b319487505f2eb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb3142edf2def9ad64b319487505f2eb"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Candidate</b></td></tr>
+<tr class="separator:afb3142edf2def9ad64b319487505f2eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25db0dd344a7c35115d952760c5f18b9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a25db0dd344a7c35115d952760c5f18b9"></a>
+template&lt;template&lt; class X, class Y &gt; class U, class V , class W &gt; </td></tr>
+<tr class="memitem:a25db0dd344a7c35115d952760c5f18b9"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>SimpleSurrogateStrategy</b></td></tr>
+<tr class="separator:a25db0dd344a7c35115d952760c5f18b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b77ea4bdc16988504a45aead303d863"><td class="memTemplParams" colspan="2"><a class="anchor" id="a5b77ea4bdc16988504a45aead303d863"></a>
+template&lt;template&lt; class X, class Y &gt; class U, class V , class W &gt; </td></tr>
+<tr class="memitem:a5b77ea4bdc16988504a45aead303d863"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ACMSurrogateStrategy</b></td></tr>
+<tr class="separator:a5b77ea4bdc16988504a45aead303d863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt;<br/>
@@ -637,6 +700,34 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="afec66b0ca5465b81498189e2cc8a14dc"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::get_maximize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns whether the maximization mode is enabled </p>
+<dl class="section return"><dt>Returns</dt><dd>true if maximizing </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="aac3914b24de6312e6d1fe3d493bb42f5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -660,7 +751,7 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>resturns whether the parallel evaluation of objective function is activated </p>
+<p>returns whether the parallel evaluation of objective function is activated </p>
 <dl class="section return"><dt>Returns</dt><dd>activation status </dd></dl>
 
 </div>
@@ -1150,6 +1241,40 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="a1226eeecac97019c183a9a85185efcc8"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::set_max_hist </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>m</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>sets maximum history size, allows to keep memory requirements fixed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>number of steps of candidate history that are kept into memory (for stopping criteria equalfunvals mostly). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="acefab965b50d45c6609e4f3267785ace"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1178,6 +1303,40 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">maxiter</td><td>maximum number of allowed iterations </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a676f84fbe8726abf5ce88e117b159867"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::set_maximize </td>
+          <td>(</td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>maximize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>active internal maximization scheme (simply returns -f instead of f) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">maximize</td><td>whether to maximize instead of minimizing </td></tr>
   </table>
   </dd>
 </dl>
@@ -1286,40 +1445,6 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3d8d58e5d69795804a1a22768c78134d"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::set_str_algo </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>algo</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>sets the optimization algorithm. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">algo</td><td>as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a class="anchor" id="a61660152146a78000b5cc59a0298a8f0"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1382,6 +1507,40 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x0</td><td>array of initial parameter values </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a77985cc81f856083a63d85ebc11db0ae"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::set_x0 </td>
+          <td>(</td>
+          <td class="paramtype">const dVec &amp;&#160;</td>
+          <td class="paramname"><em>x0</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>sets initial objective function parameter values from <a class="el" href="namespaceEigen.html">Eigen</a> vector </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x0</td><td><a class="el" href="namespaceEigen.html">Eigen</a> vector of initial parameter values </td></tr>
   </table>
   </dd>
 </dl>
@@ -1597,13 +1756,44 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_algo = 0</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>selected algorithm. </p>
+
+</div>
+</div>
+<a class="anchor" id="a5d2fd0ca871efd0f4f4b223515544204"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt; std::string, int &gt; <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_algos = {{&quot;cmaes&quot;,0},{&quot;ipop&quot;,1},{&quot;bipop&quot;,2},{&quot;acmaes&quot;,3},{&quot;aipop&quot;,4},{&quot;abipop&quot;,5},{&quot;sepcmaes&quot;,6},{&quot;sepipop&quot;,7},{&quot;sepbipop&quot;,8},{&quot;sepacmaes&quot;,9},{&quot;sepipop&quot;,10},{&quot;sepbipop&quot;,11},{&quot;vdcma&quot;,12},{&quot;vdipopcma&quot;,13},{&quot;vdbipopcma&quot;,14}}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>of the form { {"cmaes",0}, {"ipop",1}, ...} </p>
 
 </div>
 </div>
@@ -1612,11 +1802,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_dim</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>function space dimensions. </p>
 
@@ -1627,11 +1825,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::unordered_map&lt;int,double&gt; <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_fixed_p</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>fixed parameters and values. </p>
 
@@ -1642,11 +1848,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::string <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_fplot = &quot;&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>plotting file, if specified. </p>
 
@@ -1657,11 +1871,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">double <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_ftarget = -std::numeric_limits&lt;double&gt;::infinity()</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>optional objective function target value. </p>
 
@@ -1672,11 +1894,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">double <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_ftolerance = 1e-12</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>tolerance of the best function values during the last 10+(30*dim/lambda) steps (TolHistFun). </p>
 
@@ -1687,11 +1917,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">TGenoPheno <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_gp</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>genotype / phenotype object. </p>
 
@@ -1702,11 +1940,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_lambda = -1</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>number of offsprings. </p>
 
@@ -1717,13 +1963,44 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_max_fevals = -1</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>max budget as number of function evaluations. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6ecc091e7e10b30c067f28e5be05faff"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_max_hist = -1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>max size of the history, keeps memory requirements fixed. </p>
 
 </div>
 </div>
@@ -1732,13 +2009,44 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">int <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_max_iter = -1</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>max iterations. </p>
+
+</div>
+</div>
+<a class="anchor" id="a8c65760fc2d97303d9881c2a945d1d7b"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_maximize = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>convenience option of maximizing -f instead of minimizing f. </p>
 
 </div>
 </div>
@@ -1747,11 +2055,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_mt_feval = false</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>whether to force multithreaded (i.e. parallel) function evaluations. </p>
 
@@ -1762,11 +2078,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_quiet = false</td>
+          <td class="memname">bool <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_quiet = true</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>quiet all outputs. </p>
 
@@ -1777,11 +2101,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">uint64_t <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_seed = 0</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>seed for random generator. </p>
 
@@ -1792,11 +2124,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_with_edm =false</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>whether to compute expected distance to minimum when optimization has completed. </p>
 
@@ -1807,11 +2147,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_with_gradient =false</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>whether to use injected gradient. </p>
 
@@ -1822,11 +2170,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">dVec <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_x0max</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>initial mean vector max bound value for all components. </p>
 
@@ -1837,11 +2193,19 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">dVec <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_x0min</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>initial mean vector min bound value for all components. </p>
 
@@ -1852,23 +2216,32 @@ template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TGenoPheno = GenoPheno&lt;NoBoundStrategy&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">double <a class="el" href="classlibcmaes_1_1Parameters.html">libcmaes::Parameters</a>&lt; TGenoPheno &gt;::_xtol = 1e-12</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>tolerance on parameters error. </p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="parameters_8h_source.html">parameters.h</a></li>
+<li>src/<a class="el" href="cmaparameters_8h_source.html">cmaparameters.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

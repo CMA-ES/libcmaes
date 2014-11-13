@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -88,19 +88,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt; Member List</div>  </div>
+<div class="title">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt; Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;</a>, including all inherited members.</p>
+<p>This is the complete list of members for <a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a7c58536329acf5c33e11b882130629d9">ESOptimizer</a>(FitFunc &amp;func, TParameters &amp;parameters)</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a175e487b798d7a748c28c784256b51c8">optimize</a>()</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~ESOptimizer</b>() (defined in <a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;</a>)</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a6a2cdd5a168a2ffb8ce0689d16c364e6">ESOptimizer</a>()</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a72c6ef297e29b6f85a410dbbdc0fa93e">ESOptimizer</a>(FitFunc &amp;func, TParameters &amp;parameters)</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#aab16f590ab683f4c4dd6f618c5e831a9">ESOptimizer</a>(FitFunc &amp;func, TParameters &amp;parameters, const TSolutions &amp;solution)</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#ad14d01c88f05a536d18be2277766a715">optimize</a>()</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~ESOptimizer</b>() (defined in <a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</a>)</td><td class="entry"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

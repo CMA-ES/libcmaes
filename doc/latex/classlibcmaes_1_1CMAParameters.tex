@@ -23,73 +23,77 @@ Inheritance diagram for libcmaes\-:\-:C\-M\-A\-Parameters$<$ T\-Geno\-Pheno $>$\
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 \hyperlink{classlibcmaes_1_1CMAParameters_a676e688fd58f9244886270f32cbad47e}{C\-M\-A\-Parameters} (const std\-::vector$<$ double $>$ \&x0, const double \&sigma, const int \&\hyperlink{classlibcmaes_1_1Parameters_a3d569987e9a5eb61bc781ee75b2ab18a}{lambda}=-\/1, const uint64\-\_\-t \&seed=0, const T\-Geno\-Pheno \&gp=\hyperlink{classlibcmaes_1_1GenoPheno}{Geno\-Pheno}$<$ \hyperlink{classlibcmaes_1_1NoBoundStrategy}{No\-Bound\-Strategy} $>$())
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classlibcmaes_1_1CMAParameters_aef4446010825fd81710a820743b31bd5}{C\-M\-A\-Parameters} (const std\-::vector$<$ double $>$ \&x0, const std\-::vector$<$ double $>$ \&sigma, const int \&\hyperlink{classlibcmaes_1_1Parameters_a3d569987e9a5eb61bc781ee75b2ab18a}{lambda}=-\/1, const std\-::vector$<$ double $>$ \&lbounds=std\-::vector$<$ double $>$(), const std\-::vector$<$ double $>$ \&ubounds=std\-::vector$<$ double $>$(), const uint64\-\_\-t \&seed=0)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 \hypertarget{classlibcmaes_1_1CMAParameters_a0d963d4719d9b6447cddeeca542167a1}{void \hyperlink{classlibcmaes_1_1CMAParameters_a0d963d4719d9b6447cddeeca542167a1}{initialize\-\_\-parameters} ()}\label{classlibcmaes_1_1CMAParameters_a0d963d4719d9b6447cddeeca542167a1}
 
 \begin{DoxyCompactList}\small\item\em initialize required parameters based on dim, lambda, x0 and sigma. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMAParameters_aaa8bf42c3ba2a0f2aa0c2878fa0c1d82}{void {\bfseries reset\-\_\-as\-\_\-fixed} (const int \&k)}\label{classlibcmaes_1_1CMAParameters_aaa8bf42c3ba2a0f2aa0c2878fa0c1d82}
+
+\item 
 \hypertarget{classlibcmaes_1_1CMAParameters_aa6dc1bafcff83e082db9146a923949d3}{void \hyperlink{classlibcmaes_1_1CMAParameters_aa6dc1bafcff83e082db9146a923949d3}{set\-\_\-noisy} ()}\label{classlibcmaes_1_1CMAParameters_aa6dc1bafcff83e082db9146a923949d3}
 
 \begin{DoxyCompactList}\small\item\em adapt parameters for noisy objective function. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1CMAParameters_aa4cfa45b55bbebb90b316af6d613900c}{set\-\_\-str\-\_\-algo} (const std\-::string \&algo)
+\begin{DoxyCompactList}\small\item\em sets the optimization algorithm. \end{DoxyCompactList}\item 
 \hypertarget{classlibcmaes_1_1CMAParameters_a1f2115c14728278a946c358d8d26f30c}{void \hyperlink{classlibcmaes_1_1CMAParameters_a1f2115c14728278a946c358d8d26f30c}{set\-\_\-sep} ()}\label{classlibcmaes_1_1CMAParameters_a1f2115c14728278a946c358d8d26f30c}
 
 \begin{DoxyCompactList}\small\item\em fix parameters for sep-\/\-C\-M\-A-\/\-E\-S, using only the diagonal of covariance matrix. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1CMAParameters_a7fcd592c259dca6716fdbe735fd1b837}{set\-\_\-automaxiter} (const bool \&b)
-\begin{DoxyCompactList}\small\item\em turns stopping criteria Max\-Iter that automatically stops optimization after a number of steps on or off. \end{DoxyCompactList}\item 
+bool \hyperlink{classlibcmaes_1_1CMAParameters_acf7d4eeada5c0ddc16f46d8788777737}{is\-\_\-sep} () const 
+\begin{DoxyCompactList}\small\item\em whether algorithm leverages separability. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMAParameters_a49e06e1f62b551db3bc8d8e6e21ea9c2}{void \hyperlink{classlibcmaes_1_1CMAParameters_a49e06e1f62b551db3bc8d8e6e21ea9c2}{set\-\_\-vd} ()}\label{classlibcmaes_1_1CMAParameters_a49e06e1f62b551db3bc8d8e6e21ea9c2}
+
+\begin{DoxyCompactList}\small\item\em activates V\-D decomposition. \end{DoxyCompactList}\item 
+bool \hyperlink{classlibcmaes_1_1CMAParameters_a9890c37acc093a449fa36750241f22fd}{is\-\_\-vd} () const 
+\begin{DoxyCompactList}\small\item\em whether algorithm uses vd update. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1CMAParameters_a73af8cdc07dc3388c40a27ddbdea96b4}{set\-\_\-fixed\-\_\-p} (const int \&index, const double \&value)
 \begin{DoxyCompactList}\small\item\em freezes a parameter to a given value during optimization. Adapts some generic parameters as well. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1CMAParameters_adb4f043e62081a8910d54f87db3b6ef4}{unset\-\_\-fixed\-\_\-p} (const int \&index)
 \begin{DoxyCompactList}\small\item\em unfreezes a parameter. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1CMAParameters_a105789bdd00467411107db57302028f2}{set\-\_\-restarts} (const int \&nrestarts)
-\begin{DoxyCompactList}\small\item\em sets the maximum number of restarts (applies to I\-P\-O\-P and B\-I\-P\-O\-P). \end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Public Attributes}
+\begin{DoxyCompactList}\small\item\em sets the maximum number of restarts (applies to I\-P\-O\-P and B\-I\-P\-O\-P). \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMAParameters_aee2680a27ebcf7f9129e3254a70b356a}{get\-\_\-restarts} () const 
+\begin{DoxyCompactList}\small\item\em get the number of restarts (applies to I\-P\-O\-P and B\-I\-P\-O\-P). \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1CMAParameters_a0633711fb573b719cf698a9844d9d4f6}{set\-\_\-lazy\-\_\-update} (const bool \&lz)
+\begin{DoxyCompactList}\small\item\em sets the lazy update (i.\-e. updates the eigenvalues every few steps). \end{DoxyCompactList}\item 
+bool \hyperlink{classlibcmaes_1_1CMAParameters_ab3e15fdeb9362807a5c27be66d284065}{get\-\_\-lazy\-\_\-update} ()
+\begin{DoxyCompactList}\small\item\em get lazy update status. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1CMAParameters_acd0837374b53bc4ee430fa796e8f677c}{set\-\_\-elitist} (const bool \&e)
+\begin{DoxyCompactList}\small\item\em sets initial elitist scheme\-: restart if best encountered solution is not the final solution and reinjects the best solution until the population has better fitness, in its majority \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1CMAParameters_a3418542ed2b440079cb3d9def7dcb25e}{set\-\_\-stopping\-\_\-criteria} (const int \&criteria, const bool \&active)
+\begin{DoxyCompactList}\small\item\em all stopping criteria are active by default, this allows to control them \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
 \begin{DoxyCompactItemize}
 \item 
-int \hyperlink{classlibcmaes_1_1CMAParameters_a102a49af5856035c4568178f4847e2e8}{\-\_\-mu}
-\item 
-d\-Vec \hyperlink{classlibcmaes_1_1CMAParameters_aa8eeb4ea2a91da73f1d53fa74d950049}{\-\_\-weights}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a9fc0879daeaeeb882192feddb0efecfc}{\-\_\-csigma}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_ad6c921f865fc7fc344e8e1408baca772}{\-\_\-c1}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a0d4da3faa7fba9eb555d7dbfee7a6402}{\-\_\-cmu}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_af85bfd2cef329712654fc697f50d5b4a}{\-\_\-cc}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_afc24dfb50427ae6963515f8508f5759d}{\-\_\-muw}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a87f2b165fab84e65672361e5d6ac7f3d}{\-\_\-dsigma}
-\item 
-\hypertarget{classlibcmaes_1_1CMAParameters_abe4513aa9d69895e267c0ecde3bf5508}{double {\bfseries \-\_\-fact\-\_\-ps}}\label{classlibcmaes_1_1CMAParameters_abe4513aa9d69895e267c0ecde3bf5508}
+\hypertarget{classlibcmaes_1_1CMAParameters_a78b1b9910ebce544de9b54b998e77879}{class {\bfseries C\-M\-A\-Solutions}}\label{classlibcmaes_1_1CMAParameters_a78b1b9910ebce544de9b54b998e77879}
 
 \item 
-\hypertarget{classlibcmaes_1_1CMAParameters_a24700ad95612d4a5d926b832ae02bcdf}{double {\bfseries \-\_\-fact\-\_\-pc}}\label{classlibcmaes_1_1CMAParameters_a24700ad95612d4a5d926b832ae02bcdf}
+\hypertarget{classlibcmaes_1_1CMAParameters_a07488b7628d12135de0243eb796e53a9}{{\footnotesize template$<$class U , class V $>$ }\\class {\bfseries C\-M\-A\-Strategy}}\label{classlibcmaes_1_1CMAParameters_a07488b7628d12135de0243eb796e53a9}
 
 \item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_ab63f8f5d707242ec981945df88a573db}{\-\_\-chi}
+\hypertarget{classlibcmaes_1_1CMAParameters_ad6ebfad69a17421ae398d90c542aea13}{{\footnotesize template$<$class U , class V , class W $>$ }\\class {\bfseries E\-S\-O\-Strategy}}\label{classlibcmaes_1_1CMAParameters_ad6ebfad69a17421ae398d90c542aea13}
+
 \item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a8ad9eb52bd8ffcfc4ea175fef21c8f96}{\-\_\-sigma\-\_\-init}
+\hypertarget{classlibcmaes_1_1CMAParameters_aff56187b22ef0b3164ed7711dc0c82c3}{{\footnotesize template$<$class U $>$ }\\class {\bfseries C\-M\-A\-Stop\-Criteria}}\label{classlibcmaes_1_1CMAParameters_aff56187b22ef0b3164ed7711dc0c82c3}
+
 \item 
-int \hyperlink{classlibcmaes_1_1CMAParameters_a2ccf2865600fe20d965af9bdf9c6ab60}{\-\_\-nrestarts} = 9
+\hypertarget{classlibcmaes_1_1CMAParameters_a083272459c67810fd3e8b1702c7d67c2}{{\footnotesize template$<$class U , class V $>$ }\\class {\bfseries I\-P\-O\-P\-C\-M\-A\-Strategy}}\label{classlibcmaes_1_1CMAParameters_a083272459c67810fd3e8b1702c7d67c2}
+
 \item 
-bool \hyperlink{classlibcmaes_1_1CMAParameters_ac65bf2bb1b20461cfe8bd58175727ccc}{\-\_\-lazy\-\_\-update}
+\hypertarget{classlibcmaes_1_1CMAParameters_ae97315b6fb514c42e8c3973f362ef2a2}{{\footnotesize template$<$class U , class V $>$ }\\class {\bfseries B\-I\-P\-O\-P\-C\-M\-A\-Strategy}}\label{classlibcmaes_1_1CMAParameters_ae97315b6fb514c42e8c3973f362ef2a2}
+
 \item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_ae00e6b49bd99e1aa316bec03da96e95b}{\-\_\-lazy\-\_\-value}
+\hypertarget{classlibcmaes_1_1CMAParameters_aa62543a4caa6d6b288bb58ca5411539c}{class {\bfseries Covariance\-Update}}\label{classlibcmaes_1_1CMAParameters_aa62543a4caa6d6b288bb58ca5411539c}
+
 \item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a34e3414332daf15d81b353c7de803e1d}{\-\_\-cm}
+\hypertarget{classlibcmaes_1_1CMAParameters_a81af003765a6521a192e5a37612c2fb5}{class {\bfseries A\-Covariance\-Update}}\label{classlibcmaes_1_1CMAParameters_a81af003765a6521a192e5a37612c2fb5}
+
 \item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_ae13b411e5035c574e1521afa4b6d734b}{\-\_\-alphacov}
+\hypertarget{classlibcmaes_1_1CMAParameters_a867bde5f83097a4db1f667a3911efbae}{{\footnotesize template$<$class U $>$ }\\class {\bfseries errstats}}\label{classlibcmaes_1_1CMAParameters_a867bde5f83097a4db1f667a3911efbae}
+
 \item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a3dfb7a180cb3746a4bc3a2d82b8a8f35}{\-\_\-alphaminusold}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a011a9f790bc21c6bea155066a26f5181}{\-\_\-deltamaxsigma}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_afc8800d362e2b25074610b883684156b}{\-\_\-lambdamintarget}
-\item 
-double \hyperlink{classlibcmaes_1_1CMAParameters_a8d4e4afdbdb72635241846562fc37a04}{\-\_\-alphaminusmin}
-\item 
-bool \hyperlink{classlibcmaes_1_1CMAParameters_ad7f26f864149ce4d62169e15daa530fa}{\-\_\-sep} = false
-\item 
-bool \hyperlink{classlibcmaes_1_1CMAParameters_a9a66e6d8cf1e1c67cd9c43d5c87a71d1}{\-\_\-has\-\_\-max\-\_\-iter} = true
+\hypertarget{classlibcmaes_1_1CMAParameters_a3fceefe6a1e378ff9fef5d97117e5f47}{class {\bfseries V\-D\-C\-M\-A\-Update}}\label{classlibcmaes_1_1CMAParameters_a3fceefe6a1e378ff9fef5d97117e5f47}
+
 \end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
@@ -163,23 +167,112 @@ Constructor.
 {\em sep} & whether to use sep-\/\-C\-M\-A-\/\-E\-S, using diagonal covariance matrix (modifies covariance default learning rate) \\
 \hline
 \end{DoxyParams}
-
-
-\subsection{Member Function Documentation}
-\hypertarget{classlibcmaes_1_1CMAParameters_a7fcd592c259dca6716fdbe735fd1b837}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!set\-\_\-automaxiter@{set\-\_\-automaxiter}}
-\index{set\-\_\-automaxiter@{set\-\_\-automaxiter}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{set\-\_\-automaxiter}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-automaxiter (
+\hypertarget{classlibcmaes_1_1CMAParameters_aef4446010825fd81710a820743b31bd5}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!C\-M\-A\-Parameters@{C\-M\-A\-Parameters}}
+\index{C\-M\-A\-Parameters@{C\-M\-A\-Parameters}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{C\-M\-A\-Parameters}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno$>$ {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::{\bf C\-M\-A\-Parameters} (
 \begin{DoxyParamCaption}
-\item[{const bool \&}]{b}
+\item[{const std\-::vector$<$ double $>$ \&}]{x0, }
+\item[{const std\-::vector$<$ double $>$ \&}]{sigma, }
+\item[{const int \&}]{lambda = {\ttfamily -\/1}, }
+\item[{const std\-::vector$<$ double $>$ \&}]{lbounds = {\ttfamily std\-:\-:vector$<$double$>$()}, }
+\item[{const std\-::vector$<$ double $>$ \&}]{ubounds = {\ttfamily std\-:\-:vector$<$double$>$()}, }
+\item[{const uint64\-\_\-t \&}]{seed = {\ttfamily 0}}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_a7fcd592c259dca6716fdbe735fd1b837}
+)}}\label{classlibcmaes_1_1CMAParameters_aef4446010825fd81710a820743b31bd5}
 
 
-turns stopping criteria Max\-Iter that automatically stops optimization after a number of steps on or off. 
+Constructor. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em b} & true or false for turning criteria on or off (on is default in constructor). \\
+{\em x0} & initial search point as vector of problem dimension \\
+\hline
+{\em sigma} & vector of initial distribution step sizes (positive, otherwise automatically set) \\
+\hline
+{\em lambda} & number of offsprings sampled at each step \\
+\hline
+{\em seed} & initial random seed, useful for reproducing results (if unspecified, automatically generated from current time) \\
+\hline
+{\em gp} & genotype / phenotype object \\
+\hline
+{\em sep} & whether to use sep-\/\-C\-M\-A-\/\-E\-S, using diagonal covariance matrix (modifies covariance default learning rate) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classlibcmaes_1_1CMAParameters_ab3e15fdeb9362807a5c27be66d284065}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!get\-\_\-lazy\-\_\-update@{get\-\_\-lazy\-\_\-update}}
+\index{get\-\_\-lazy\-\_\-update@{get\-\_\-lazy\-\_\-update}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{get\-\_\-lazy\-\_\-update}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ bool {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::get\-\_\-lazy\-\_\-update (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_ab3e15fdeb9362807a5c27be66d284065}
+
+
+get lazy update status. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em whether} & lazy update is activated \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMAParameters_aee2680a27ebcf7f9129e3254a70b356a}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!get\-\_\-restarts@{get\-\_\-restarts}}
+\index{get\-\_\-restarts@{get\-\_\-restarts}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{get\-\_\-restarts}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ int {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::get\-\_\-restarts (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_aee2680a27ebcf7f9129e3254a70b356a}
+
+
+get the number of restarts (applies to I\-P\-O\-P and B\-I\-P\-O\-P). 
+
+\begin{DoxyReturn}{Returns}
+number of restarts 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMAParameters_acf7d4eeada5c0ddc16f46d8788777737}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!is\-\_\-sep@{is\-\_\-sep}}
+\index{is\-\_\-sep@{is\-\_\-sep}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{is\-\_\-sep}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ bool {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::is\-\_\-sep (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_acf7d4eeada5c0ddc16f46d8788777737}
+
+
+whether algorithm leverages separability. 
+
+\begin{DoxyReturn}{Returns}
+separability status 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMAParameters_a9890c37acc093a449fa36750241f22fd}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!is\-\_\-vd@{is\-\_\-vd}}
+\index{is\-\_\-vd@{is\-\_\-vd}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{is\-\_\-vd}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ bool {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::is\-\_\-vd (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_a9890c37acc093a449fa36750241f22fd}
+
+
+whether algorithm uses vd update. 
+
+\begin{DoxyReturn}{Returns}
+vd status 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMAParameters_acd0837374b53bc4ee430fa796e8f677c}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!set\-\_\-elitist@{set\-\_\-elitist}}
+\index{set\-\_\-elitist@{set\-\_\-elitist}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{set\-\_\-elitist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-elitist (
+\begin{DoxyParamCaption}
+\item[{const bool \&}]{e}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_acd0837374b53bc4ee430fa796e8f677c}
+
+
+sets initial elitist scheme\-: restart if best encountered solution is not the final solution and reinjects the best solution until the population has better fitness, in its majority 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e} & whether to activate the initial elitist scheme \\
 \hline
 \end{DoxyParams}
 \hypertarget{classlibcmaes_1_1CMAParameters_a73af8cdc07dc3388c40a27ddbdea96b4}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!set\-\_\-fixed\-\_\-p@{set\-\_\-fixed\-\_\-p}}
@@ -201,6 +294,22 @@ freezes a parameter to a given value during optimization. Adapts some generic pa
 {\em value} & frozen value of the parameter \\
 \hline
 \end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMAParameters_a0633711fb573b719cf698a9844d9d4f6}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!set\-\_\-lazy\-\_\-update@{set\-\_\-lazy\-\_\-update}}
+\index{set\-\_\-lazy\-\_\-update@{set\-\_\-lazy\-\_\-update}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{set\-\_\-lazy\-\_\-update}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-lazy\-\_\-update (
+\begin{DoxyParamCaption}
+\item[{const bool \&}]{lz}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_a0633711fb573b719cf698a9844d9d4f6}
+
+
+sets the lazy update (i.\-e. updates the eigenvalues every few steps). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lz} & whether to activate the lazy update \\
+\hline
+\end{DoxyParams}
 \hypertarget{classlibcmaes_1_1CMAParameters_a105789bdd00467411107db57302028f2}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!set\-\_\-restarts@{set\-\_\-restarts}}
 \index{set\-\_\-restarts@{set\-\_\-restarts}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
 \subsubsection[{set\-\_\-restarts}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-restarts (
@@ -215,6 +324,41 @@ sets the maximum number of restarts (applies to I\-P\-O\-P and B\-I\-P\-O\-P).
 
 \begin{DoxyParams}{Parameters}
 {\em nrestarts} & maximum number of restarts \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMAParameters_a3418542ed2b440079cb3d9def7dcb25e}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!set\-\_\-stopping\-\_\-criteria@{set\-\_\-stopping\-\_\-criteria}}
+\index{set\-\_\-stopping\-\_\-criteria@{set\-\_\-stopping\-\_\-criteria}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{set\-\_\-stopping\-\_\-criteria}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-stopping\-\_\-criteria (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{criteria, }
+\item[{const bool \&}]{active}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_a3418542ed2b440079cb3d9def7dcb25e}
+
+
+all stopping criteria are active by default, this allows to control them 
+
+
+\begin{DoxyParams}{Parameters}
+{\em criteria} & stopping criteria C\-M\-A\-Stop\-Crit\-Type, see \hyperlink{cmastopcriteria_8h_source}{cmastopcriteria.\-h} \\
+\hline
+{\em active} & whether to activate this criteria \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMAParameters_aa4cfa45b55bbebb90b316af6d613900c}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!set\-\_\-str\-\_\-algo@{set\-\_\-str\-\_\-algo}}
+\index{set\-\_\-str\-\_\-algo@{set\-\_\-str\-\_\-algo}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
+\subsubsection[{set\-\_\-str\-\_\-algo}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ void {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-str\-\_\-algo (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{algo}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMAParameters_aa4cfa45b55bbebb90b316af6d613900c}
+
+
+sets the optimization algorithm. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em algo} & as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop \\
 \hline
 \end{DoxyParams}
 \hypertarget{classlibcmaes_1_1CMAParameters_adb4f043e62081a8910d54f87db3b6ef4}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!unset\-\_\-fixed\-\_\-p@{unset\-\_\-fixed\-\_\-p}}
@@ -234,72 +378,6 @@ unfreezes a parameter.
 \hline
 \end{DoxyParams}
 
-
-\subsection{Member Data Documentation}
-\hypertarget{classlibcmaes_1_1CMAParameters_ae13b411e5035c574e1521afa4b6d734b}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-alphacov@{\-\_\-alphacov}}
-\index{\-\_\-alphacov@{\-\_\-alphacov}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-alphacov}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-alphacov}}\label{classlibcmaes_1_1CMAParameters_ae13b411e5035c574e1521afa4b6d734b}
-= 2 (active C\-M\-A only) \hypertarget{classlibcmaes_1_1CMAParameters_a8d4e4afdbdb72635241846562fc37a04}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-alphaminusmin@{\-\_\-alphaminusmin}}
-\index{\-\_\-alphaminusmin@{\-\_\-alphaminusmin}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-alphaminusmin}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-alphaminusmin}}\label{classlibcmaes_1_1CMAParameters_a8d4e4afdbdb72635241846562fc37a04}
-= 1 (active C\-M\-A only) \hypertarget{classlibcmaes_1_1CMAParameters_a3dfb7a180cb3746a4bc3a2d82b8a8f35}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-alphaminusold@{\-\_\-alphaminusold}}
-\index{\-\_\-alphaminusold@{\-\_\-alphaminusold}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-alphaminusold}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-alphaminusold}}\label{classlibcmaes_1_1CMAParameters_a3dfb7a180cb3746a4bc3a2d82b8a8f35}
-in \mbox{[}0,1\mbox{]} (active C\-M\-A only) \hypertarget{classlibcmaes_1_1CMAParameters_ad6c921f865fc7fc344e8e1408baca772}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-c1@{\-\_\-c1}}
-\index{\-\_\-c1@{\-\_\-c1}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-c1}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-c1}}\label{classlibcmaes_1_1CMAParameters_ad6c921f865fc7fc344e8e1408baca772}
-covariance matrix learning rate for the rank one update using pc. \hypertarget{classlibcmaes_1_1CMAParameters_af85bfd2cef329712654fc697f50d5b4a}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-cc@{\-\_\-cc}}
-\index{\-\_\-cc@{\-\_\-cc}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-cc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-cc}}\label{classlibcmaes_1_1CMAParameters_af85bfd2cef329712654fc697f50d5b4a}
-cumulation constant for pc. \hypertarget{classlibcmaes_1_1CMAParameters_ab63f8f5d707242ec981945df88a573db}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-chi@{\-\_\-chi}}
-\index{\-\_\-chi@{\-\_\-chi}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-chi}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-chi}}\label{classlibcmaes_1_1CMAParameters_ab63f8f5d707242ec981945df88a573db}
-norm of N(0,\-I) \hypertarget{classlibcmaes_1_1CMAParameters_a34e3414332daf15d81b353c7de803e1d}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-cm@{\-\_\-cm}}
-\index{\-\_\-cm@{\-\_\-cm}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-cm}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-cm}}\label{classlibcmaes_1_1CMAParameters_a34e3414332daf15d81b353c7de803e1d}
-learning rate for the mean. \hypertarget{classlibcmaes_1_1CMAParameters_a0d4da3faa7fba9eb555d7dbfee7a6402}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-cmu@{\-\_\-cmu}}
-\index{\-\_\-cmu@{\-\_\-cmu}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-cmu}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-cmu}}\label{classlibcmaes_1_1CMAParameters_a0d4da3faa7fba9eb555d7dbfee7a6402}
-covariance matrix learning reate for the rank mu update. \hypertarget{classlibcmaes_1_1CMAParameters_a9fc0879daeaeeb882192feddb0efecfc}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-csigma@{\-\_\-csigma}}
-\index{\-\_\-csigma@{\-\_\-csigma}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-csigma}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-csigma}}\label{classlibcmaes_1_1CMAParameters_a9fc0879daeaeeb882192feddb0efecfc}
-cumulation constant for step size. \hypertarget{classlibcmaes_1_1CMAParameters_a011a9f790bc21c6bea155066a26f5181}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-deltamaxsigma@{\-\_\-deltamaxsigma}}
-\index{\-\_\-deltamaxsigma@{\-\_\-deltamaxsigma}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-deltamaxsigma}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-deltamaxsigma}}\label{classlibcmaes_1_1CMAParameters_a011a9f790bc21c6bea155066a26f5181}
-infinite (active C\-M\-A only) \hypertarget{classlibcmaes_1_1CMAParameters_a87f2b165fab84e65672361e5d6ac7f3d}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-dsigma@{\-\_\-dsigma}}
-\index{\-\_\-dsigma@{\-\_\-dsigma}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-dsigma}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-dsigma}}\label{classlibcmaes_1_1CMAParameters_a87f2b165fab84e65672361e5d6ac7f3d}
-step size damping factor. \hypertarget{classlibcmaes_1_1CMAParameters_a9a66e6d8cf1e1c67cd9c43d5c87a71d1}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-has\-\_\-max\-\_\-iter@{\-\_\-has\-\_\-max\-\_\-iter}}
-\index{\-\_\-has\-\_\-max\-\_\-iter@{\-\_\-has\-\_\-max\-\_\-iter}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-has\-\_\-max\-\_\-iter}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ bool {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-has\-\_\-max\-\_\-iter = true}}\label{classlibcmaes_1_1CMAParameters_a9a66e6d8cf1e1c67cd9c43d5c87a71d1}
-Max\-Iter criteria\-: automatically stop running after 100+50$\ast$((D+2)$^\wedge$2)/lambda iterations. \hypertarget{classlibcmaes_1_1CMAParameters_afc8800d362e2b25074610b883684156b}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-lambdamintarget@{\-\_\-lambdamintarget}}
-\index{\-\_\-lambdamintarget@{\-\_\-lambdamintarget}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-lambdamintarget}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-lambdamintarget}}\label{classlibcmaes_1_1CMAParameters_afc8800d362e2b25074610b883684156b}
-= 0.\-66 (active C\-M\-A only) \hypertarget{classlibcmaes_1_1CMAParameters_ac65bf2bb1b20461cfe8bd58175727ccc}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-lazy\-\_\-update@{\-\_\-lazy\-\_\-update}}
-\index{\-\_\-lazy\-\_\-update@{\-\_\-lazy\-\_\-update}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-lazy\-\_\-update}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ bool {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-lazy\-\_\-update}}\label{classlibcmaes_1_1CMAParameters_ac65bf2bb1b20461cfe8bd58175727ccc}
-covariance lazy update. \hypertarget{classlibcmaes_1_1CMAParameters_ae00e6b49bd99e1aa316bec03da96e95b}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-lazy\-\_\-value@{\-\_\-lazy\-\_\-value}}
-\index{\-\_\-lazy\-\_\-value@{\-\_\-lazy\-\_\-value}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-lazy\-\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-lazy\-\_\-value}}\label{classlibcmaes_1_1CMAParameters_ae00e6b49bd99e1aa316bec03da96e95b}
-reference trigger for lazy update. \hypertarget{classlibcmaes_1_1CMAParameters_a102a49af5856035c4568178f4847e2e8}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-mu@{\-\_\-mu}}
-\index{\-\_\-mu@{\-\_\-mu}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-mu}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ int {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-mu}}\label{classlibcmaes_1_1CMAParameters_a102a49af5856035c4568178f4847e2e8}
-number of candidate solutions used to update the distribution parameters. \hypertarget{classlibcmaes_1_1CMAParameters_afc24dfb50427ae6963515f8508f5759d}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-muw@{\-\_\-muw}}
-\index{\-\_\-muw@{\-\_\-muw}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-muw}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-muw}}\label{classlibcmaes_1_1CMAParameters_afc24dfb50427ae6963515f8508f5759d}
-$^\wedge$ \-\_\-weights . \hypertarget{classlibcmaes_1_1CMAParameters_a2ccf2865600fe20d965af9bdf9c6ab60}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-nrestarts@{\-\_\-nrestarts}}
-\index{\-\_\-nrestarts@{\-\_\-nrestarts}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-nrestarts}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ int {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-nrestarts = 9}}\label{classlibcmaes_1_1CMAParameters_a2ccf2865600fe20d965af9bdf9c6ab60}
-maximum number of restart, when applicable. \hypertarget{classlibcmaes_1_1CMAParameters_ad7f26f864149ce4d62169e15daa530fa}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-sep@{\-\_\-sep}}
-\index{\-\_\-sep@{\-\_\-sep}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-sep}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ bool {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-sep = false}}\label{classlibcmaes_1_1CMAParameters_ad7f26f864149ce4d62169e15daa530fa}
-whether to use diagonal covariance matrix. \hypertarget{classlibcmaes_1_1CMAParameters_a8ad9eb52bd8ffcfc4ea175fef21c8f96}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-sigma\-\_\-init@{\-\_\-sigma\-\_\-init}}
-\index{\-\_\-sigma\-\_\-init@{\-\_\-sigma\-\_\-init}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-sigma\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ double {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-sigma\-\_\-init}}\label{classlibcmaes_1_1CMAParameters_a8ad9eb52bd8ffcfc4ea175fef21c8f96}
-initial sigma value. \hypertarget{classlibcmaes_1_1CMAParameters_aa8eeb4ea2a91da73f1d53fa74d950049}{\index{libcmaes\-::\-C\-M\-A\-Parameters@{libcmaes\-::\-C\-M\-A\-Parameters}!\-\_\-weights@{\-\_\-weights}}
-\index{\-\_\-weights@{\-\_\-weights}!libcmaes::CMAParameters@{libcmaes\-::\-C\-M\-A\-Parameters}}
-\subsubsection[{\-\_\-weights}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ d\-Vec {\bf libcmaes\-::\-C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$\-::\-\_\-weights}}\label{classlibcmaes_1_1CMAParameters_aa8eeb4ea2a91da73f1d53fa74d950049}
-offsprings weighting scheme. 
 
 The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
 \item 

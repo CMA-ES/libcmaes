@@ -1,5 +1,5 @@
-\hypertarget{classlibcmaes_1_1ESOptimizer}{\section{libcmaes\-:\-:E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters $>$ Class Template Reference}
-\label{classlibcmaes_1_1ESOptimizer}\index{libcmaes\-::\-E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters $>$@{libcmaes\-::\-E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters $>$}}
+\hypertarget{classlibcmaes_1_1ESOptimizer}{\section{libcmaes\-:\-:E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters, T\-Solutions $>$ Class Template Reference}
+\label{classlibcmaes_1_1ESOptimizer}\index{libcmaes\-::\-E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters, T\-Solutions $>$@{libcmaes\-::\-E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters, T\-Solutions $>$}}
 }
 
 
@@ -10,7 +10,7 @@ an optimizer main class.
 
 {\ttfamily \#include $<$esoptimizer.\-h$>$}
 
-Inheritance diagram for libcmaes\-:\-:E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters $>$\-:\begin{figure}[H]
+Inheritance diagram for libcmaes\-:\-:E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters, T\-Solutions $>$\-:\begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=2.000000cm]{classlibcmaes_1_1ESOptimizer}
@@ -19,27 +19,32 @@ Inheritance diagram for libcmaes\-:\-:E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classlibcmaes_1_1ESOptimizer_a7c58536329acf5c33e11b882130629d9}{E\-S\-Optimizer} (Fit\-Func \&func, T\-Parameters \&parameters)
+\hypertarget{classlibcmaes_1_1ESOptimizer_a6a2cdd5a168a2ffb8ce0689d16c364e6}{\hyperlink{classlibcmaes_1_1ESOptimizer_a6a2cdd5a168a2ffb8ce0689d16c364e6}{E\-S\-Optimizer} ()}\label{classlibcmaes_1_1ESOptimizer_a6a2cdd5a168a2ffb8ce0689d16c364e6}
+
+\begin{DoxyCompactList}\small\item\em dummy constructor \end{DoxyCompactList}\item 
+\hyperlink{classlibcmaes_1_1ESOptimizer_a72c6ef297e29b6f85a410dbbdc0fa93e}{E\-S\-Optimizer} (Fit\-Func \&func, T\-Parameters \&parameters)
 \begin{DoxyCompactList}\small\item\em constructor \end{DoxyCompactList}\item 
-\hypertarget{classlibcmaes_1_1ESOptimizer_a175e487b798d7a748c28c784256b51c8}{int \hyperlink{classlibcmaes_1_1ESOptimizer_a175e487b798d7a748c28c784256b51c8}{optimize} ()}\label{classlibcmaes_1_1ESOptimizer_a175e487b798d7a748c28c784256b51c8}
+\hyperlink{classlibcmaes_1_1ESOptimizer_aab16f590ab683f4c4dd6f618c5e831a9}{E\-S\-Optimizer} (Fit\-Func \&func, T\-Parameters \&parameters, const T\-Solutions \&solution)
+\begin{DoxyCompactList}\small\item\em constructor for starting from an existing solution \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1ESOptimizer_ad14d01c88f05a536d18be2277766a715}{int \hyperlink{classlibcmaes_1_1ESOptimizer_ad14d01c88f05a536d18be2277766a715}{optimize} ()}\label{classlibcmaes_1_1ESOptimizer_ad14d01c88f05a536d18be2277766a715}
 
 \begin{DoxyCompactList}\small\item\em finds the minimum of a function, by calling on the underlying procedure of the E\-O\-S\-Optimizer object, like a variety of flavor of C\-M\-A-\/\-E\-S. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-\subsubsection*{template$<$class T\-E\-S\-O\-Strategy, class T\-Parameters$>$class libcmaes\-::\-E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters $>$}
+\subsubsection*{template$<$class T\-E\-S\-O\-Strategy, class T\-Parameters, class T\-Solutions = C\-M\-A\-Solutions$>$class libcmaes\-::\-E\-S\-Optimizer$<$ T\-E\-S\-O\-Strategy, T\-Parameters, T\-Solutions $>$}
 
 an optimizer main class. 
 
 \subsection{Constructor \& Destructor Documentation}
-\hypertarget{classlibcmaes_1_1ESOptimizer_a7c58536329acf5c33e11b882130629d9}{\index{libcmaes\-::\-E\-S\-Optimizer@{libcmaes\-::\-E\-S\-Optimizer}!E\-S\-Optimizer@{E\-S\-Optimizer}}
+\hypertarget{classlibcmaes_1_1ESOptimizer_a72c6ef297e29b6f85a410dbbdc0fa93e}{\index{libcmaes\-::\-E\-S\-Optimizer@{libcmaes\-::\-E\-S\-Optimizer}!E\-S\-Optimizer@{E\-S\-Optimizer}}
 \index{E\-S\-Optimizer@{E\-S\-Optimizer}!libcmaes::ESOptimizer@{libcmaes\-::\-E\-S\-Optimizer}}
-\subsubsection[{E\-S\-Optimizer}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-E\-S\-O\-Strategy , class T\-Parameters $>$ {\bf libcmaes\-::\-E\-S\-Optimizer}$<$ T\-E\-S\-O\-Strategy, T\-Parameters $>$\-::{\bf E\-S\-Optimizer} (
+\subsubsection[{E\-S\-Optimizer}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-E\-S\-O\-Strategy , class T\-Parameters , class T\-Solutions  = C\-M\-A\-Solutions$>$ {\bf libcmaes\-::\-E\-S\-Optimizer}$<$ T\-E\-S\-O\-Strategy, T\-Parameters, T\-Solutions $>$\-::{\bf E\-S\-Optimizer} (
 \begin{DoxyParamCaption}
 \item[{Fit\-Func \&}]{func, }
 \item[{T\-Parameters \&}]{parameters}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOptimizer_a7c58536329acf5c33e11b882130629d9}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOptimizer_a72c6ef297e29b6f85a410dbbdc0fa93e}
 
 
 constructor 
@@ -49,6 +54,28 @@ constructor
 {\em func} & function to minimize \\
 \hline
 {\em parameters} & optimization parameters \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1ESOptimizer_aab16f590ab683f4c4dd6f618c5e831a9}{\index{libcmaes\-::\-E\-S\-Optimizer@{libcmaes\-::\-E\-S\-Optimizer}!E\-S\-Optimizer@{E\-S\-Optimizer}}
+\index{E\-S\-Optimizer@{E\-S\-Optimizer}!libcmaes::ESOptimizer@{libcmaes\-::\-E\-S\-Optimizer}}
+\subsubsection[{E\-S\-Optimizer}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-E\-S\-O\-Strategy , class T\-Parameters , class T\-Solutions  = C\-M\-A\-Solutions$>$ {\bf libcmaes\-::\-E\-S\-Optimizer}$<$ T\-E\-S\-O\-Strategy, T\-Parameters, T\-Solutions $>$\-::{\bf E\-S\-Optimizer} (
+\begin{DoxyParamCaption}
+\item[{Fit\-Func \&}]{func, }
+\item[{T\-Parameters \&}]{parameters, }
+\item[{const T\-Solutions \&}]{solution}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOptimizer_aab16f590ab683f4c4dd6f618c5e831a9}
+
+
+constructor for starting from an existing solution 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & function to minimize \\
+\hline
+{\em parameters} & optimization parameters \\
+\hline
+{\em solution} & solution to start from \\
 \hline
 \end{DoxyParams}
 

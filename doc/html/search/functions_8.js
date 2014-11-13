@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['niter',['niter',['../classlibcmaes_1_1CMASolutions.html#aceb58df5ee91f159e626b51ee788c381',1,'libcmaes::CMASolutions']]]
+  ['lambda',['lambda',['../classlibcmaes_1_1Parameters.html#a3d569987e9a5eb61bc781ee75b2ab18a',1,'libcmaes::Parameters']]]
 ];

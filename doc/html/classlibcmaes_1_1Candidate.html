@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,7 +89,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classlibcmaes_1_1Candidate-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">libcmaes::Candidate Class Reference</div>  </div>
@@ -110,26 +109,34 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa15c585a460bcc7e0537b8f8defea205"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#aa15c585a460bcc7e0537b8f8defea205">Candidate</a> (const double &amp;fvalue, const dVec &amp;x)</td></tr>
 <tr class="memdesc:aa15c585a460bcc7e0537b8f8defea205"><td class="mdescLeft">&#160;</td><td class="mdescRight">constructor.  <a href="#aa15c585a460bcc7e0537b8f8defea205">More...</a><br/></td></tr>
 <tr class="separator:aa15c585a460bcc7e0537b8f8defea205"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeca2ab3de5182036093745ec7f82834d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeca2ab3de5182036093745ec7f82834d"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>get_fvalue</b> () const </td></tr>
+<tr class="memitem:abdd1a7661c05f4cf236925bcf2b7f0cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#abdd1a7661c05f4cf236925bcf2b7f0cc">set_fvalue</a> (const double &amp;fval)</td></tr>
+<tr class="memdesc:abdd1a7661c05f4cf236925bcf2b7f0cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">set candidate's function value.  <a href="#abdd1a7661c05f4cf236925bcf2b7f0cc">More...</a><br/></td></tr>
+<tr class="separator:abdd1a7661c05f4cf236925bcf2b7f0cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeca2ab3de5182036093745ec7f82834d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#aeca2ab3de5182036093745ec7f82834d">get_fvalue</a> () const </td></tr>
+<tr class="memdesc:aeca2ab3de5182036093745ec7f82834d"><td class="mdescLeft">&#160;</td><td class="mdescRight">get function value of this candidate.  <a href="#aeca2ab3de5182036093745ec7f82834d">More...</a><br/></td></tr>
 <tr class="separator:aeca2ab3de5182036093745ec7f82834d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6155af392159bfc4d10722a7a0abf420"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6155af392159bfc4d10722a7a0abf420"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>get_x_dvec</b> () const </td></tr>
+<tr class="memitem:a4a668920522fa13235fd7feb64aae6b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#a4a668920522fa13235fd7feb64aae6b8">set_x</a> (const dVec &amp;x)</td></tr>
+<tr class="memdesc:a4a668920522fa13235fd7feb64aae6b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets parameter vector of this candidate.  <a href="#a4a668920522fa13235fd7feb64aae6b8">More...</a><br/></td></tr>
+<tr class="separator:a4a668920522fa13235fd7feb64aae6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6155af392159bfc4d10722a7a0abf420"><td class="memItemLeft" align="right" valign="top">dVec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#a6155af392159bfc4d10722a7a0abf420">get_x_dvec</a> () const </td></tr>
+<tr class="memdesc:a6155af392159bfc4d10722a7a0abf420"><td class="mdescLeft">&#160;</td><td class="mdescRight">get parameter vector of this candidate in <a class="el" href="namespaceEigen.html">Eigen</a> vector format.  <a href="#a6155af392159bfc4d10722a7a0abf420">More...</a><br/></td></tr>
 <tr class="separator:a6155af392159bfc4d10722a7a0abf420"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22455c702f36ca4ea8c389477f8a7d1e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a22455c702f36ca4ea8c389477f8a7d1e"></a>
-const double *&#160;</td><td class="memItemRight" valign="bottom"><b>get_x</b> () const </td></tr>
-<tr class="separator:a22455c702f36ca4ea8c389477f8a7d1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08ca200644dcfe1faab23dd933f10598"><td class="memTemplParams" colspan="2"><a class="anchor" id="a08ca200644dcfe1faab23dd933f10598"></a>
-template&lt;class TGenoPheno &gt; </td></tr>
-<tr class="memitem:a08ca200644dcfe1faab23dd933f10598"><td class="memTemplItemLeft" align="right" valign="top">dVec&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_x_pheno</b> (const <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;p) const </td></tr>
-<tr class="separator:a08ca200644dcfe1faab23dd933f10598"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:af8797627514ae7e137317337372fb67d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#af8797627514ae7e137317337372fb67d">_fvalue</a></td></tr>
-<tr class="separator:af8797627514ae7e137317337372fb67d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cded1d38ec7288e8064414c78023fe4"><td class="memItemLeft" align="right" valign="top">dVec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#a0cded1d38ec7288e8064414c78023fe4">_x</a></td></tr>
-<tr class="separator:a0cded1d38ec7288e8064414c78023fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d007a084655a3d0f3176293f929bfdb"><td class="memItemLeft" align="right" valign="top">dVec &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#a2d007a084655a3d0f3176293f929bfdb">get_x_dvec_ref</a> ()</td></tr>
+<tr class="memdesc:a2d007a084655a3d0f3176293f929bfdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">get reference parameter vector of this candidate in <a class="el" href="namespaceEigen.html">Eigen</a> vector format.  <a href="#a2d007a084655a3d0f3176293f929bfdb">More...</a><br/></td></tr>
+<tr class="separator:a2d007a084655a3d0f3176293f929bfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace56d764d7d88d5f11f96e9ee6cb775d"><td class="memItemLeft" align="right" valign="top">const double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#ace56d764d7d88d5f11f96e9ee6cb775d">get_x_ptr</a> () const </td></tr>
+<tr class="memdesc:ace56d764d7d88d5f11f96e9ee6cb775d"><td class="mdescLeft">&#160;</td><td class="mdescRight">get parameter vector pointer of this candidate as array. DO NOT USE from temporary candidate object.  <a href="#ace56d764d7d88d5f11f96e9ee6cb775d">More...</a><br/></td></tr>
+<tr class="separator:ace56d764d7d88d5f11f96e9ee6cb775d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6374f304455c3245913d03cfac221b7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#af6374f304455c3245913d03cfac221b7">get_x</a> () const </td></tr>
+<tr class="memdesc:af6374f304455c3245913d03cfac221b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">get parameter vector copy for this candidate.  <a href="#af6374f304455c3245913d03cfac221b7">More...</a><br/></td></tr>
+<tr class="separator:af6374f304455c3245913d03cfac221b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acafc0cd2e517e0edea82b3af7dea885f"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#acafc0cd2e517e0edea82b3af7dea885f">get_x_size</a> () const </td></tr>
+<tr class="memdesc:acafc0cd2e517e0edea82b3af7dea885f"><td class="mdescLeft">&#160;</td><td class="mdescRight">get x vector size  <a href="#acafc0cd2e517e0edea82b3af7dea885f">More...</a><br/></td></tr>
+<tr class="separator:acafc0cd2e517e0edea82b3af7dea885f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99fac12003c21735f384322743c4dbf1"><td class="memTemplParams" colspan="2">template&lt;class TGenoPheno &gt; </td></tr>
+<tr class="memitem:a99fac12003c21735f384322743c4dbf1"><td class="memTemplItemLeft" align="right" valign="top">dVec&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Candidate.html#a99fac12003c21735f384322743c4dbf1">get_x_pheno_dvec</a> (const <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;p) const </td></tr>
+<tr class="memdesc:a99fac12003c21735f384322743c4dbf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">get pheno transform of parameter vector of this candidate in <a class="el" href="namespaceEigen.html">Eigen</a> vector format.  <a href="#a99fac12003c21735f384322743c4dbf1">More...</a><br/></td></tr>
+<tr class="separator:a99fac12003c21735f384322743c4dbf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>candidate solution point, in function parameter space. </p>
@@ -177,30 +184,253 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="af8797627514ae7e137317337372fb67d"></a>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="aeca2ab3de5182036093745ec7f82834d"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">double libcmaes::Candidate::_fvalue</td>
+          <td class="memname">double libcmaes::Candidate::get_fvalue </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>function value. </p>
+
+<p>get function value of this candidate. </p>
+<dl class="section return"><dt>Returns</dt><dd>function value </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a0cded1d38ec7288e8064414c78023fe4"></a>
+<a class="anchor" id="af6374f304455c3245913d03cfac221b7"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">dVec libcmaes::Candidate::_x</td>
+          <td class="memname">std::vector&lt;double&gt; libcmaes::Candidate::get_x </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>function parameter vector. </p>
+
+<p>get parameter vector copy for this candidate. </p>
+<dl class="section return"><dt>Returns</dt><dd>parameter vector copy </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a6155af392159bfc4d10722a7a0abf420"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dVec libcmaes::Candidate::get_x_dvec </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get parameter vector of this candidate in <a class="el" href="namespaceEigen.html">Eigen</a> vector format. </p>
+<dl class="section return"><dt>Returns</dt><dd>parameter vector in <a class="el" href="namespaceEigen.html">Eigen</a> vector format </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2d007a084655a3d0f3176293f929bfdb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dVec&amp; libcmaes::Candidate::get_x_dvec_ref </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get reference parameter vector of this candidate in <a class="el" href="namespaceEigen.html">Eigen</a> vector format. </p>
+<dl class="section return"><dt>Returns</dt><dd>reference to parameter vector in <a class="el" href="namespaceEigen.html">Eigen</a> vector format </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a99fac12003c21735f384322743c4dbf1"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">dVec libcmaes::Candidate::get_x_pheno_dvec </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get pheno transform of parameter vector of this candidate in <a class="el" href="namespaceEigen.html">Eigen</a> vector format. </p>
+<dl class="section return"><dt>Returns</dt><dd>pheno transform of parameter vector in <a class="el" href="namespaceEigen.html">Eigen</a> vector format </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ace56d764d7d88d5f11f96e9ee6cb775d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double* libcmaes::Candidate::get_x_ptr </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get parameter vector pointer of this candidate as array. DO NOT USE from temporary candidate object. </p>
+<dl class="section return"><dt>Returns</dt><dd>parameter vector pointer </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="acafc0cd2e517e0edea82b3af7dea885f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int libcmaes::Candidate::get_x_size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get x vector size </p>
+<dl class="section return"><dt>Returns</dt><dd>x vector size </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="abdd1a7661c05f4cf236925bcf2b7f0cc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void libcmaes::Candidate::set_fvalue </td>
+          <td>(</td>
+          <td class="paramtype">const double &amp;&#160;</td>
+          <td class="paramname"><em>fval</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>set candidate's function value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fval</td><td>function value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a4a668920522fa13235fd7feb64aae6b8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void libcmaes::Candidate::set_x </td>
+          <td>(</td>
+          <td class="paramtype">const dVec &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>sets parameter vector of this candidate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>parameter vector </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -210,7 +440,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -62,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="namespaces.html"><span>Namespace&#160;List</span></a></li>
+      <li><a href="namespacemembers.html"><span>Namespace&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -69,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -111,14 +112,24 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holder of the set of evolving solutions from running an instance of CMA-ES.  <a href="classlibcmaes_1_1CMASolutions.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1StopCriteria.html">StopCriteria</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStopCriteria.html">CMAStopCriteria</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CMA-ES termination criteria, see reference paper in <a class="el" href="cmastrategy_8h_source.html">cmastrategy.h</a>.  <a href="classlibcmaes_1_1CMAStopCriteria.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an implementation of CMA-ES. It uses the reference algorithm and termination criteria of the following paper: Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395 See <a href="https://www.lri.fr/~hansen/publications.html">https://www.lri.fr/~hansen/publications.html</a> for more information.  <a href="classlibcmaes_1_1CMAStrategy.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1fcross.html">fcross</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">function crossing as point.  <a href="classlibcmaes_1_1fcross.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1contour.html">contour</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">function contour as a set of points and values.  <a href="classlibcmaes_1_1contour.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Covariance Matrix update. This is an implementation closely follows: Hansen, N. (2009). Benchmarking a BI-Population CMA-ES on the BBOB-2009 Function Testbed. Workshop Proceedings of the GECCO Genetic and Evolutionary Computation Conference, ACM, pp. 2389-2395.  <a href="classlibcmaes_1_1CovarianceUpdate.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1errstats.html">errstats</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">ESOptimizer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">an optimizer main class.  <a href="classlibcmaes_1_1ESOptimizer.html#details">More...</a><br/></td></tr>
@@ -133,14 +144,31 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1NoBoundStrategy.html">NoBoundStrategy</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1OptHopStrategy.html">OptHopStrategy</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1Parameters.html">Parameters</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic class for Evolution Strategy parameters.  <a href="classlibcmaes_1_1Parameters.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1pli.html">pli</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">profile likelihood object holder as a set of points and values.  <a href="classlibcmaes_1_1pli.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1pwqBoundStrategy.html">pwqBoundStrategy</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1NoScalingStrategy.html">NoScalingStrategy</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1linScalingStrategy.html">linScalingStrategy</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1SurrogateStrategy.html">SurrogateStrategy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Surrogate base class, to be derived in order to create strategy to be used along with CMA-ES.  <a href="classlibcmaes_1_1SurrogateStrategy.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1SimpleSurrogateStrategy.html">SimpleSurrogateStrategy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple surrogate strategy: trains every n steps, and exploits in between, mostly as an example and for testing / debugging surrogates. This strategy overrides the ask/eval/tell functions of the base optimization strategy.  <a href="classlibcmaes_1_1SimpleSurrogateStrategy.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ACMSurrogateStrategy.html">ACMSurrogateStrategy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ACM Surrogate strategy for CMA-ES, follows: 'Surrogate-Assisted Evolutionary Algorithms', Ilya Loshchilov, PhD Thesis, Universite Paris-Sud 11, 2013. <a href="http://www.loshchilov.com/phd.html">http://www.loshchilov.com/phd.html</a> see Chapter 4.  <a href="classlibcmaes_1_1ACMSurrogateStrategy.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1VDCMAUpdate.html">VDCMAUpdate</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">VD-CMA update that is a linear time/space variant of CMA-ES This is an implementation that closely follows: Y. Akimoto, <a class="el" href="classA.html">A</a>. Auger and N. Hansen: Comparison-Based Natural Gradient Optimization in High Dimension. In Proceedings of Genetic and Evolutionary Computation Conference (2014)  <a href="classlibcmaes_1_1VDCMAUpdate.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -161,6 +189,16 @@ double *, const int &amp;n)&gt;&#160;</td><td class="memItemRight" valign="botto
 typedef std::function&lt; dVec(const <br class="typebreak"/>
 double *, const int &amp;n)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GradFunc</b></td></tr>
 <tr class="separator:ae29f09cdf8b5322ac32dc9ccddecd9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2265af293af05f3bb2015aa9a4d3bb5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa2265af293af05f3bb2015aa9a4d3bb5"></a>
+typedef std::function&lt; void(const <br class="typebreak"/>
+dMat &amp;, const dMat &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>EvalFunc</b></td></tr>
+<tr class="separator:aa2265af293af05f3bb2015aa9a4d3bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97fc2a1efe35f5985451a770507c991f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97fc2a1efe35f5985451a770507c991f"></a>
+typedef std::function&lt; dMat(void)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>AskFunc</b></td></tr>
+<tr class="separator:a97fc2a1efe35f5985451a770507c991f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acee23101cbc8d94c127b10f3c04a595e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acee23101cbc8d94c127b10f3c04a595e"></a>
+typedef std::function&lt; void(void)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TellFunc</b></td></tr>
+<tr class="separator:acee23101cbc8d94c127b10f3c04a595e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d4db4c2a1758fd5964499aba7cf8a9f"><td class="memTemplParams" colspan="2"><a class="anchor" id="a8d4db4c2a1758fd5964499aba7cf8a9f"></a>
 template&lt;class TParameters , class TSolutions &gt; </td></tr>
 <tr class="memitem:a8d4db4c2a1758fd5964499aba7cf8a9f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>ProgressFunc</b> = std::function&lt; int(const TParameters &amp;, const TSolutions &amp;)&gt;</td></tr>
@@ -173,6 +211,15 @@ template&lt;class TParameters , class TSolutions &gt; </td></tr>
 typedef std::function&lt; void(const <br class="typebreak"/>
 double *, double *, const int &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TransFunc</b></td></tr>
 <tr class="separator:a05b1e5e516cec9483ccdb964284ef82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7e88b4dfdaf94d6fa1e831ed5d9437e"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; int(const <br class="typebreak"/>
+std::vector&lt; <a class="el" href="classlibcmaes_1_1Candidate.html">Candidate</a> &gt;<br class="typebreak"/>
+ &amp;, const dMat &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelibcmaes.html#ac7e88b4dfdaf94d6fa1e831ed5d9437e">CSurrFunc</a></td></tr>
+<tr class="memdesc:ac7e88b4dfdaf94d6fa1e831ed5d9437e"><td class="mdescLeft">&#160;</td><td class="mdescRight">function to train a surrogate model  <a href="#ac7e88b4dfdaf94d6fa1e831ed5d9437e">More...</a><br/></td></tr>
+<tr class="separator:ac7e88b4dfdaf94d6fa1e831ed5d9437e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7115c4ca01f7e080f5c39c076242bf00"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; int(std::vector<br class="typebreak"/>
+&lt; <a class="el" href="classlibcmaes_1_1Candidate.html">Candidate</a> &gt; &amp;, const dMat &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelibcmaes.html#a7115c4ca01f7e080f5c39c076242bf00">SurrFunc</a></td></tr>
+<tr class="memdesc:a7115c4ca01f7e080f5c39c076242bf00"><td class="mdescLeft">&#160;</td><td class="mdescRight">function to predict from a surrogate model  <a href="#a7115c4ca01f7e080f5c39c076242bf00">More...</a><br/></td></tr>
+<tr class="separator:a7115c4ca01f7e080f5c39c076242bf00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -199,39 +246,101 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6ea1009c6049caf18558816bdecac610"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6ea1009c6049caf18558816bdecac610"></a>
+<tr class="memitem:ac383e38be3f6670eddeec0918d385bd6"><td class="memTemplParams" colspan="2"><a class="anchor" id="ac383e38be3f6670eddeec0918d385bd6"></a>
 template&lt;class TGenoPheno  = GenoPheno&lt;NoBoundStrategy&gt;&gt; </td></tr>
-<tr class="memitem:a6ea1009c6049caf18558816bdecac610"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>cmaes</b> (FitFunc &amp;func, <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;parameters, ProgressFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pfunc=<a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a>&lt; <a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a>, TGenoPheno &gt;::_defaultPFunc, GradFunc gfunc=nullptr, PlotFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pffunc=<a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a>&lt; <a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a>, TGenoPheno &gt;::_defaultFPFunc)</td></tr>
-<tr class="separator:a6ea1009c6049caf18558816bdecac610"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac383e38be3f6670eddeec0918d385bd6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>cmaes</b> (FitFunc &amp;func, <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;parameters, ProgressFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pfunc=<a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a>&lt; <a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a>, TGenoPheno &gt;::_defaultPFunc, GradFunc gfunc=nullptr, const <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;solutions=<a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a>(), PlotFunc&lt; <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt;, <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &gt; &amp;pffunc=<a class="el" href="classlibcmaes_1_1CMAStrategy.html">CMAStrategy</a>&lt; <a class="el" href="classlibcmaes_1_1CovarianceUpdate.html">CovarianceUpdate</a>, TGenoPheno &gt;::_defaultFPFunc)</td></tr>
+<tr class="separator:ac383e38be3f6670eddeec0918d385bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1922020e8d2259dd870ccd7893c3ea24"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1922020e8d2259dd870ccd7893c3ea24"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;out, const <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;cmas)</td></tr>
 <tr class="separator:a1922020e8d2259dd870ccd7893c3ea24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b344b982de59b91af2f0c317f234f17"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b344b982de59b91af2f0c317f234f17"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>median</b> (std::vector&lt; double &gt; scores)</td></tr>
 <tr class="separator:a5b344b982de59b91af2f0c317f234f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0560798efe85d285c3b84dae8ebbab32"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0560798efe85d285c3b84dae8ebbab32"></a>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;&lt;</b> (std::ostream &amp;out, const <a class="el" href="classlibcmaes_1_1contour.html">contour</a> &amp;c)</td></tr>
+<tr class="separator:a0560798efe85d285c3b84dae8ebbab32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16d45e47c7b936252e380cfbe6809c99"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16d45e47c7b936252e380cfbe6809c99"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>LOG</b> (const std::string &amp;severity, std::ostream &amp;out=std::cout)</td></tr>
 <tr class="separator:a16d45e47c7b936252e380cfbe6809c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3209b3dbcdada9d81d357dedf066b975"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3209b3dbcdada9d81d357dedf066b975"></a>
 std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_IF</b> (const std::string &amp;severity, const bool &amp;condition, std::ostream &amp;out=std::cout)</td></tr>
 <tr class="separator:a3209b3dbcdada9d81d357dedf066b975"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad56249a36fb0f4458e2dba6b9294d79c"><td class="memTemplParams" colspan="2"><a class="anchor" id="ad56249a36fb0f4458e2dba6b9294d79c"></a>
+template&lt;class TGenoPheno  = GenoPheno&lt;NoBoundStrategy&gt;&gt; </td></tr>
+<tr class="memitem:ad56249a36fb0f4458e2dba6b9294d79c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>surrcmaes</b> (FitFunc &amp;func, <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;parameters)</td></tr>
+<tr class="separator:ad56249a36fb0f4458e2dba6b9294d79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear scaling of the parameter space to achieve similar sensitivity across all components. </p>
 <p>CMA-ES, Covariance Matrix Adaptation Evolution Strategy Copyright (c) 2014 Inria Author: Emmanuel Benazera <a href="#" onclick="location.href='mai'+'lto:'+'emm'+'an'+'uel'+'.b'+'ena'+'ze'+'ra@'+'lr'+'i.f'+'r'; return false;">emman<span style="display: none;">.nosp@m.</span>uel.<span style="display: none;">.nosp@m.</span>benaz<span style="display: none;">.nosp@m.</span>era@<span style="display: none;">.nosp@m.</span>lri.f<span style="display: none;">.nosp@m.</span>r</a></p>
 <p>This file is part of libcmaes.</p>
 <p>libcmaes is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
-<p>libcmaes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
+<p>libcmaes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR <a class="el" href="classA.html">A</a> PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
+<p>You should have received a copy of the GNU Lesser General Public License along with libcmaes. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+<p>CMA-ES, Covariance Matrix Adaptation Evolution Strategy Copyright (c) 2014 INRIA Author: Emmanuel Benazera <a href="#" onclick="location.href='mai'+'lto:'+'emm'+'an'+'uel'+'.b'+'ena'+'ze'+'ra@'+'lr'+'i.f'+'r'; return false;">emman<span style="display: none;">.nosp@m.</span>uel.<span style="display: none;">.nosp@m.</span>benaz<span style="display: none;">.nosp@m.</span>era@<span style="display: none;">.nosp@m.</span>lri.f<span style="display: none;">.nosp@m.</span>r</a></p>
+<p>This file is part of libcmaes.</p>
+<p>libcmaes is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+<p>libcmaes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR <a class="el" href="classA.html">A</a> PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
 <p>You should have received a copy of the GNU Lesser General Public License along with libcmaes. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 <p>CMA-ES, Covariance Matrix Adaptation Evolution Strategy Copyright (c) 2014 Inria Author: Emmanuel Benazera <a href="#" onclick="location.href='mai'+'lto:'+'emm'+'an'+'uel'+'.b'+'ena'+'ze'+'ra@'+'lr'+'i.f'+'r'; return false;">emman<span style="display: none;">.nosp@m.</span>uel.<span style="display: none;">.nosp@m.</span>benaz<span style="display: none;">.nosp@m.</span>era@<span style="display: none;">.nosp@m.</span>lri.f<span style="display: none;">.nosp@m.</span>r</a></p>
 <p>This file is part of libcmaes.</p>
 <p>libcmaes is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
-<p>libcmaes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
-<p>You should have received a copy of the GNU Lesser General Public License along with libcmaes. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>. This is based on Nikolaus Hansen's code from the C version of CMA-ES, see boundary_transformation.c from the package available from <a href="https://www.lri.fr/~hansen/cmaes_inmatlab.html#C">https://www.lri.fr/~hansen/cmaes_inmatlab.html#C</a> </p>
-</div></div><!-- contents -->
+<p>libcmaes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR <a class="el" href="classA.html">A</a> PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
+<p>You should have received a copy of the GNU Lesser General Public License along with libcmaes. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>. This is based on Nikolaus Hansen's code from the C version of CMA-ES, see boundary_transformation.c from the package available from <a href="https://www.lri.fr/~hansen/cmaes_inmatlab.html#C">https://www.lri.fr/~hansen/cmaes_inmatlab.html#C</a></p>
+<p>CMA-ES, Covariance Matrix Adaptation Evolution Strategy Copyright (c) 2014 Inria Author: Emmanuel Benazera <a href="#" onclick="location.href='mai'+'lto:'+'emm'+'an'+'uel'+'.b'+'ena'+'ze'+'ra@'+'lr'+'i.f'+'r'; return false;">emman<span style="display: none;">.nosp@m.</span>uel.<span style="display: none;">.nosp@m.</span>benaz<span style="display: none;">.nosp@m.</span>era@<span style="display: none;">.nosp@m.</span>lri.f<span style="display: none;">.nosp@m.</span>r</a></p>
+<p>This file is part of libcmaes.</p>
+<p>libcmaes is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+<p>libcmaes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR <a class="el" href="classA.html">A</a> PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.</p>
+<p>You should have received a copy of the GNU Lesser General Public License along with libcmaes. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>. Parts of this code are rewrittent from Y. Akimoto original code for Y. Akimoto, <a class="el" href="classA.html">A</a>. Auger and N. Hansen, Comparison-Based Natural Gradient Optimization in High Dimension, GECCO-2014. </p>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="ac7e88b4dfdaf94d6fa1e831ed5d9437e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::function&lt;int (const std::vector&lt;<a class="el" href="classlibcmaes_1_1Candidate.html">Candidate</a>&gt;&amp;, const dMat&amp;)&gt; <a class="el" href="namespacelibcmaes.html#ac7e88b4dfdaf94d6fa1e831ed5d9437e">libcmaes::CSurrFunc</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>function to train a surrogate model </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">candidates</td><td>set of points along with objective function value </td></tr>
+    <tr><td class="paramname">cov</td><td>a possibly empty covariance matrix in order to re-scale points before training </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>training status </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7115c4ca01f7e080f5c39c076242bf00"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::function&lt;int (std::vector&lt;<a class="el" href="classlibcmaes_1_1Candidate.html">Candidate</a>&gt;&amp;, const dMat&amp;)&gt; <a class="el" href="namespacelibcmaes.html#a7115c4ca01f7e080f5c39c076242bf00">libcmaes::SurrFunc</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>function to predict from a surrogate model </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">candidates</td><td>set of points for which value is to be predicted </td></tr>
+    <tr><td class="paramname">cov</td><td>a possibly empty covariance matrix in order to re-scale points before predicting </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>prediction status </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

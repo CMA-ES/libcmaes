@@ -69,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -104,21 +104,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TGenoPheno&gt;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> update(<span class="keyword">const</span> <a class="code" href="classlibcmaes_1_1CMAParameters.html">CMAParameters&lt;TGenoPheno&gt;</a> &amp;parameters,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;               <a class="code" href="classEigen_1_1EigenMultivariateNormal.html">EigenMultivariateNormal&lt;double&gt;</a> &amp;esolver,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;               <a class="code" href="classEigen_1_1EigenMultivariateNormal.html">Eigen::EigenMultivariateNormal&lt;double&gt;</a> &amp;esolver,</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;               <a class="code" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;solutions);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  };</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="classlibcmaes_1_1CMASolutions_html"><div class="ttname"><a href="classlibcmaes_1_1CMASolutions.html">libcmaes::CMASolutions</a></div><div class="ttdoc">Holder of the set of evolving solutions from running an instance of CMA-ES. </div><div class="ttdef"><b>Definition:</b> cmasolutions.h:38</div></div>
+<div class="ttc" id="classlibcmaes_1_1CMASolutions_html"><div class="ttname"><a href="classlibcmaes_1_1CMASolutions.html">libcmaes::CMASolutions</a></div><div class="ttdoc">Holder of the set of evolving solutions from running an instance of CMA-ES. </div><div class="ttdef"><b>Definition:</b> cmasolutions.h:41</div></div>
 <div class="ttc" id="classEigen_1_1EigenMultivariateNormal_html"><div class="ttname"><a href="classEigen_1_1EigenMultivariateNormal.html">Eigen::EigenMultivariateNormal&lt; double &gt;</a></div></div>
 <div class="ttc" id="classlibcmaes_1_1CMAParameters_html"><div class="ttname"><a href="classlibcmaes_1_1CMAParameters.html">libcmaes::CMAParameters</a></div><div class="ttdoc">Parameters for various flavors of the CMA-ES algorithm. </div><div class="ttdef"><b>Definition:</b> cmaparameters.h:35</div></div>
 <div class="ttc" id="classlibcmaes_1_1ACovarianceUpdate_html"><div class="ttname"><a href="classlibcmaes_1_1ACovarianceUpdate.html">libcmaes::ACovarianceUpdate</a></div><div class="ttdoc">Active Covariance Matrix update. This implementation closely follows N. Hansen, R. Ros, &quot;Benchmarking a Weighted Negative Covariance Matrix                             Update on the BBOB-2010 Noiseless Testbed&quot;, GECCO&#39;10, 2010. </div><div class="ttdef"><b>Definition:</b> acovarianceupdate.h:38</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -69,7 +69,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -93,59 +93,99 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define CMASTOPCRITERIA_H</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &quot;cmaparameters.h&quot;</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;cmasolutions.h&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">namespace </span>libcmaes</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> TGenoPheno&gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">using</span> StopCriteriaFunc = std::function&lt;int (const CMAParameters&lt;TGenoPheno&gt; &amp;cmap, <span class="keyword">const</span> CMASolutions &amp;cmas)&gt;;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keyword">enum</span> CMAStopCritType</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    CONT = 0,</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    AUTOMAXITER = 7,</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    TOLHISTFUN = 1, <span class="comment">// convergence</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    EQUALFUNVALS = 5, <span class="comment">// partial success, user error</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    TOLX = 2, <span class="comment">// partial success</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    TOLUPSIGMA = -13,</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    STAGNATION = 6, <span class="comment">// partial success</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    CONDITIONCOV = -15, <span class="comment">// error, user action needed</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    NOEFFECTAXIS = 3, <span class="comment">// partial success</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    NOEFFECTCOOR = 4, <span class="comment">// partial success</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    MAXFEVALS = 8,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    MAXITER = 9,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    FTARGET = 10 <span class="comment">// success</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  };</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> TGenoPheno=NoBoundStrategy&gt;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classlibcmaes_1_1CMAStopCriteria.html">   56</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classlibcmaes_1_1CMAStopCriteria.html">CMAStopCriteria</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html#a8b7795af41cba9122799e221d3b95b7b">CMAStopCriteria</a>();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    ~<a class="code" href="classlibcmaes_1_1CMAStopCriteria.html">CMAStopCriteria</a>();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html#a6049e6ee663be2aa8781e9bd3cf9cba8">stop</a>(<span class="keyword">const</span> <a class="code" href="classlibcmaes_1_1CMAParameters.html">CMAParameters&lt;TGenoPheno&gt;</a> &amp;cmap, <span class="keyword">const</span> <a class="code" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;cmas) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classlibcmaes_1_1CMAStopCriteria.html#a28799c079f8bccfdbe0df124722dbfa2">   74</a></span>&#160;    std::map&lt;int,StopCriteriaFunc&lt;TGenoPheno&gt; &gt; <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html#a28799c079f8bccfdbe0df124722dbfa2">_scriteria</a>; </div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="classlibcmaes_1_1CMAStopCriteria.html#a09534d620cfe4c35c03d8a80205346ba">   75</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html#a09534d620cfe4c35c03d8a80205346ba">_active</a>; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  };</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="classlibcmaes_1_1CMASolutions_html"><div class="ttname"><a href="classlibcmaes_1_1CMASolutions.html">libcmaes::CMASolutions</a></div><div class="ttdoc">Holder of the set of evolving solutions from running an instance of CMA-ES. </div><div class="ttdef"><b>Definition:</b> cmasolutions.h:38</div></div>
-<div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html_a8b7795af41cba9122799e221d3b95b7b"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html#a8b7795af41cba9122799e221d3b95b7b">libcmaes::CMAStopCriteria::CMAStopCriteria</a></div><div class="ttdeci">CMAStopCriteria()</div><div class="ttdoc">Constructor: instanciates a predefined set of termination criteria tests, see reference paper in cmas...</div><div class="ttdef"><b>Definition:</b> cmastopcriteria.cc:50</div></div>
-<div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html_a28799c079f8bccfdbe0df124722dbfa2"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html#a28799c079f8bccfdbe0df124722dbfa2">libcmaes::CMAStopCriteria::_scriteria</a></div><div class="ttdeci">std::map&lt; int, StopCriteriaFunc&lt; TGenoPheno &gt; &gt; _scriteria</div><div class="ttdef"><b>Definition:</b> cmastopcriteria.h:74</div></div>
-<div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html_a09534d620cfe4c35c03d8a80205346ba"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html#a09534d620cfe4c35c03d8a80205346ba">libcmaes::CMAStopCriteria::_active</a></div><div class="ttdeci">bool _active</div><div class="ttdef"><b>Definition:</b> cmastopcriteria.h:75</div></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keyword">class </span>CMASolutions;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> TGenoPheno&gt;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">using</span> StopCriteriaFunc = std::function&lt;int (const CMAParameters&lt;TGenoPheno&gt; &amp;cmap, <span class="keyword">const</span> CMASolutions &amp;cmas)&gt;;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keyword">enum</span> CMAStopCritType</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    CONT = 0,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    AUTOMAXITER = 7,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    TOLHISTFUN = 1, <span class="comment">// convergence</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    EQUALFUNVALS = 5, <span class="comment">// partial success, user error</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    TOLX = 2, <span class="comment">// partial success</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    TOLUPSIGMA = -13,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    STAGNATION = 6, <span class="comment">// partial success</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    CONDITIONCOV = -15, <span class="comment">// error, user action needed</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    NOEFFECTAXIS = 3, <span class="comment">// partial success</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    NOEFFECTCOOR = 4, <span class="comment">// partial success</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    MAXFEVALS = 8,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    MAXITER = 9,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    FTARGET = 10 <span class="comment">// success</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  };</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> TGenoPheno=NoBoundStrategy&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="classlibcmaes_1_1StopCriteria.html">   55</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classlibcmaes_1_1StopCriteria.html">StopCriteria</a></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="classlibcmaes_1_1StopCriteria.html">StopCriteria</a>(<span class="keyword">const</span> StopCriteriaFunc&lt;TGenoPheno&gt; &amp;sfunc)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      :_sfunc(sfunc)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    {}</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    ~<a class="code" href="classlibcmaes_1_1StopCriteria.html">StopCriteria</a>() {}</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> active()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _active; }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> set_active(<span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;a) { _active = a; }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    StopCriteriaFunc&lt;TGenoPheno&gt; _sfunc;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">bool</span> _active = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  };</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> TGenoPheno=NoBoundStrategy&gt;</div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="classlibcmaes_1_1CMAStopCriteria.html">   75</a></span>&#160;  <span class="keyword">class </span><a class="code" href="classlibcmaes_1_1CMAStopCriteria.html">CMAStopCriteria</a></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html#a8b7795af41cba9122799e221d3b95b7b">CMAStopCriteria</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    ~<a class="code" href="classlibcmaes_1_1CMAStopCriteria.html">CMAStopCriteria</a>();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html#a6049e6ee663be2aa8781e9bd3cf9cba8">stop</a>(<span class="keyword">const</span> <a class="code" href="classlibcmaes_1_1CMAParameters.html">CMAParameters&lt;TGenoPheno&gt;</a> &amp;cmap, <span class="keyword">const</span> <a class="code" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;cmas) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html#a3c49ee85e48d2104fc47eb5fe0886f55">set_criteria_active</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;c, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;active);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    std::map&lt;int,StopCriteria&lt;TGenoPheno&gt; &gt; _scriteria; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">bool</span> _active; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keyword">static</span> std::map&lt;int,std::string&gt; _scriterias;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  };</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> TGenoPheno&gt;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    std::map&lt;int,std::string&gt; <a class="code" href="classlibcmaes_1_1CMAStopCriteria.html">CMAStopCriteria&lt;TGenoPheno&gt;::_scriterias</a> = {{CONT,<span class="stringliteral">&quot;OK&quot;</span>},</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                                      {AUTOMAXITER,<span class="stringliteral">&quot;The automatically set maximal number of iterations per run has been reached&quot;</span>},</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                                      {TOLHISTFUN,<span class="stringliteral">&quot;[Success] The optimization has converved&quot;</span>},</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                                      {EQUALFUNVALS,<span class="stringliteral">&quot;[Partial Success] The objective function values are the same over too many iterations, check the formulation of your objective function&quot;</span>},</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                                      {TOLX,<span class="stringliteral">&quot;[Partial Success] All components of covariance matrix are very small (e.g. &lt; 1e-12)&quot;</span>},</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                                      {TOLUPSIGMA,<span class="stringliteral">&quot;[Error] Mismatch between step size increase and decrease of all eigenvalues in covariance matrix. Try to restart the optimization.&quot;</span>},</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                                      {STAGNATION,<span class="stringliteral">&quot;[Partial Success] Median of newest values is not smaller than the median of older values&quot;</span>},</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                                      {CONDITIONCOV,<span class="stringliteral">&quot;[Error] The covariance matrix&#39;s condition number exceeds 1e14. Check out the formulation of your problem&quot;</span>},</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                                      {NOEFFECTAXIS,<span class="stringliteral">&quot;[Partial Success] Mean remains constant along search axes&quot;</span>},</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                                      {NOEFFECTCOOR,<span class="stringliteral">&quot;[Partial Success] Mean remains constant in coordinates&quot;</span>},</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                                      {MAXFEVALS,<span class="stringliteral">&quot;The maximum number of function evaluations allowed for optimization has been reached&quot;</span>},</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                                      {MAXITER,<span class="stringliteral">&quot;The maximum number of iterations specified for optimization has been reached&quot;</span>},</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                                      {FTARGET,<span class="stringliteral">&quot;[Success] The objective function target value has been reached&quot;</span>}};</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="classlibcmaes_1_1CMASolutions_html"><div class="ttname"><a href="classlibcmaes_1_1CMASolutions.html">libcmaes::CMASolutions</a></div><div class="ttdoc">Holder of the set of evolving solutions from running an instance of CMA-ES. </div><div class="ttdef"><b>Definition:</b> cmasolutions.h:41</div></div>
+<div class="ttc" id="classlibcmaes_1_1StopCriteria_html"><div class="ttname"><a href="classlibcmaes_1_1StopCriteria.html">libcmaes::StopCriteria</a></div><div class="ttdef"><b>Definition:</b> cmastopcriteria.h:55</div></div>
+<div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html_a8b7795af41cba9122799e221d3b95b7b"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html#a8b7795af41cba9122799e221d3b95b7b">libcmaes::CMAStopCriteria::CMAStopCriteria</a></div><div class="ttdeci">CMAStopCriteria()</div><div class="ttdoc">Constructor: instanciates a predefined set of termination criteria tests, see reference paper in cmas...</div><div class="ttdef"><b>Definition:</b> cmastopcriteria.cc:51</div></div>
 <div class="ttc" id="classlibcmaes_1_1CMAParameters_html"><div class="ttname"><a href="classlibcmaes_1_1CMAParameters.html">libcmaes::CMAParameters</a></div><div class="ttdoc">Parameters for various flavors of the CMA-ES algorithm. </div><div class="ttdef"><b>Definition:</b> cmaparameters.h:35</div></div>
 <div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html_a6049e6ee663be2aa8781e9bd3cf9cba8"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html#a6049e6ee663be2aa8781e9bd3cf9cba8">libcmaes::CMAStopCriteria::stop</a></div><div class="ttdeci">int stop(const CMAParameters&lt; TGenoPheno &gt; &amp;cmap, const CMASolutions &amp;cmas) const </div><div class="ttdoc">Termination criteria evaluation: the function iterates and evaluates the predefined criteria...</div><div class="ttdef"><b>Definition:</b> cmastopcriteria.cc:244</div></div>
-<div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html">libcmaes::CMAStopCriteria</a></div><div class="ttdoc">CMA-ES termination criteria, see reference paper in cmastrategy.h. </div><div class="ttdef"><b>Definition:</b> cmastopcriteria.h:56</div></div>
+<div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html">libcmaes::CMAStopCriteria</a></div><div class="ttdoc">CMA-ES termination criteria, see reference paper in cmastrategy.h. </div><div class="ttdef"><b>Definition:</b> cmastopcriteria.h:75</div></div>
+<div class="ttc" id="classlibcmaes_1_1CMAStopCriteria_html_a3c49ee85e48d2104fc47eb5fe0886f55"><div class="ttname"><a href="classlibcmaes_1_1CMAStopCriteria.html#a3c49ee85e48d2104fc47eb5fe0886f55">libcmaes::CMAStopCriteria::set_criteria_active</a></div><div class="ttdeci">int set_criteria_active(const int &amp;c, const bool &amp;active)</div><div class="ttdoc">activates / deactivates a stopping criteria </div><div class="ttdef"><b>Definition:</b> cmastopcriteria.cc:267</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,7 +89,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classlibcmaes_1_1CMAStopCriteria-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">libcmaes::CMAStopCriteria&lt; TGenoPheno &gt; Class Template Reference</div>  </div>
@@ -110,14 +110,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6049e6ee663be2aa8781e9bd3cf9cba8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStopCriteria.html#a6049e6ee663be2aa8781e9bd3cf9cba8">stop</a> (const <a class="el" href="classlibcmaes_1_1CMAParameters.html">CMAParameters</a>&lt; TGenoPheno &gt; &amp;cmap, const <a class="el" href="classlibcmaes_1_1CMASolutions.html">CMASolutions</a> &amp;cmas) const </td></tr>
 <tr class="memdesc:a6049e6ee663be2aa8781e9bd3cf9cba8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Termination criteria evaluation: the function iterates and evaluates the predefined criteria.  <a href="#a6049e6ee663be2aa8781e9bd3cf9cba8">More...</a><br/></td></tr>
 <tr class="separator:a6049e6ee663be2aa8781e9bd3cf9cba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c49ee85e48d2104fc47eb5fe0886f55"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStopCriteria.html#a3c49ee85e48d2104fc47eb5fe0886f55">set_criteria_active</a> (const int &amp;c, const bool &amp;active)</td></tr>
+<tr class="memdesc:a3c49ee85e48d2104fc47eb5fe0886f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">activates / deactivates a stopping criteria  <a href="#a3c49ee85e48d2104fc47eb5fe0886f55">More...</a><br/></td></tr>
+<tr class="separator:a3c49ee85e48d2104fc47eb5fe0886f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a28799c079f8bccfdbe0df124722dbfa2"><td class="memItemLeft" align="right" valign="top">std::map&lt; int, <br class="typebreak"/>
-StopCriteriaFunc&lt; TGenoPheno &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStopCriteria.html#a28799c079f8bccfdbe0df124722dbfa2">_scriteria</a></td></tr>
-<tr class="separator:a28799c079f8bccfdbe0df124722dbfa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09534d620cfe4c35c03d8a80205346ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1CMAStopCriteria.html#a09534d620cfe4c35c03d8a80205346ba">_active</a></td></tr>
-<tr class="separator:a09534d620cfe4c35c03d8a80205346ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a78b1b9910ebce544de9b54b998e77879"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a78b1b9910ebce544de9b54b998e77879"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>CMASolutions</b></td></tr>
+<tr class="separator:a78b1b9910ebce544de9b54b998e77879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class TGenoPheno = NoBoundStrategy&gt;<br/>
@@ -125,6 +126,44 @@ class libcmaes::CMAStopCriteria&lt; TGenoPheno &gt;</h3>
 
 <p>CMA-ES termination criteria, see reference paper in <a class="el" href="cmastrategy_8h_source.html">cmastrategy.h</a>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a3c49ee85e48d2104fc47eb5fe0886f55"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TGenoPheno &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classlibcmaes_1_1CMAStopCriteria.html">libcmaes::CMAStopCriteria</a>&lt; TGenoPheno &gt;::set_criteria_active </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;&#160;</td>
+          <td class="paramname"><em>active</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>activates / deactivates a stopping criteria </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td>the criteria to modify </td></tr>
+    <tr><td class="paramname">true</td><td>to activate, false to deactivate </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if criteria cannot be found, 0 otherwise </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a6049e6ee663be2aa8781e9bd3cf9cba8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -156,37 +195,6 @@ template&lt;class TGenoPheno&gt; </div>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a09534d620cfe4c35c03d8a80205346ba"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TGenoPheno = NoBoundStrategy&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classlibcmaes_1_1CMAStopCriteria.html">libcmaes::CMAStopCriteria</a>&lt; TGenoPheno &gt;::_active</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>whether these termination criteria are active. </p>
-
-</div>
-</div>
-<a class="anchor" id="a28799c079f8bccfdbe0df124722dbfa2"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TGenoPheno = NoBoundStrategy&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">std::map&lt;int,StopCriteriaFunc&lt;TGenoPheno&gt; &gt; <a class="el" href="classlibcmaes_1_1CMAStopCriteria.html">libcmaes::CMAStopCriteria</a>&lt; TGenoPheno &gt;::_scriteria</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>the set of predefined criteria, with priorities. </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="cmastopcriteria_8h_source.html">cmastopcriteria.h</a></li>
 <li>src/cmastopcriteria.cc</li>
@@ -194,7 +202,7 @@ template&lt;class TGenoPheno = NoBoundStrategy&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

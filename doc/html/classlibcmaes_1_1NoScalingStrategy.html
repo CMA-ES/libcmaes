@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,7 +89,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classlibcmaes_1_1NoScalingStrategy-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">libcmaes::NoScalingStrategy Class Reference</div>  </div>
@@ -101,9 +101,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa32ee30796e0daa71dacf0b39a24038"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afa32ee30796e0daa71dacf0b39a24038"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>NoScalingStrategy</b> (const double *lbounds, const double *ubounds, const int &amp;dim)</td></tr>
 <tr class="separator:afa32ee30796e0daa71dacf0b39a24038"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbbef835d75cc1d490e70e3e32be977c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acbbef835d75cc1d490e70e3e32be977c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>NoScalingStrategy</b> (const dVec &amp;scaling, const dVec &amp;shift)</td></tr>
-<tr class="separator:acbbef835d75cc1d490e70e3e32be977c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cec97ec77df54410a5218d0fa24913c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2cec97ec77df54410a5218d0fa24913c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scale_to_internal</b> (dVec &amp;x, const dVec &amp;y) const </td></tr>
 <tr class="separator:a2cec97ec77df54410a5218d0fa24913c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,50 +108,23 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scale_to_internal</b>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scale_to_f</b> (const dVec &amp;x, dVec &amp;y) const </td></tr>
 <tr class="separator:ae7c21e6a62a97a9fe4426923440750fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a69a76fd22f86dfc2fe25093d0b52b051"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1NoScalingStrategy.html#a69a76fd22f86dfc2fe25093d0b52b051">_intmin</a> = -std::numeric_limits&lt;double&gt;::max()</td></tr>
-<tr class="separator:a69a76fd22f86dfc2fe25093d0b52b051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aafe4553f1cd6c78e28b7a5f0992bf9b1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1NoScalingStrategy.html#aafe4553f1cd6c78e28b7a5f0992bf9b1">_intmax</a> = std::numeric_limits&lt;double&gt;::max()</td></tr>
-<tr class="separator:aafe4553f1cd6c78e28b7a5f0992bf9b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51ad637db3e8495df119169f32b23701"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a51ad637db3e8495df119169f32b23701"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>_id</b> = true</td></tr>
-<tr class="separator:a51ad637db3e8495df119169f32b23701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a78b1b9910ebce544de9b54b998e77879"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a78b1b9910ebce544de9b54b998e77879"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>CMASolutions</b></td></tr>
+<tr class="separator:a78b1b9910ebce544de9b54b998e77879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30b6df18a1c8899440f1ca1273b26bb9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a30b6df18a1c8899440f1ca1273b26bb9"></a>
+template&lt;class U , class V &gt; </td></tr>
+<tr class="memitem:a30b6df18a1c8899440f1ca1273b26bb9"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>GenoPheno</b></td></tr>
+<tr class="separator:a30b6df18a1c8899440f1ca1273b26bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="aafe4553f1cd6c78e28b7a5f0992bf9b1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double libcmaes::NoScalingStrategy::_intmax = std::numeric_limits&lt;double&gt;::max()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>default internal max bound. </p>
-
-</div>
-</div>
-<a class="anchor" id="a69a76fd22f86dfc2fe25093d0b52b051"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double libcmaes::NoScalingStrategy::_intmin = -std::numeric_limits&lt;double&gt;::max()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>default internal min bound. </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="scaling_8h_source.html">scaling.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

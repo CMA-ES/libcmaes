@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,7 +89,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classlibcmaes_1_1linScalingStrategy-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">libcmaes::linScalingStrategy Class Reference</div>  </div>
@@ -113,57 +113,27 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>scale_to_internal</b>
 <tr class="memitem:a9ea06cf4d10c3015a154c763f88b862b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ea06cf4d10c3015a154c763f88b862b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>scale_to_f</b> (const dVec &amp;x, dVec &amp;y) const </td></tr>
 <tr class="separator:a9ea06cf4d10c3015a154c763f88b862b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a806b86273ed2ef3c4412ffc5d53662"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a806b86273ed2ef3c4412ffc5d53662"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_id</b> () const </td></tr>
+<tr class="separator:a6a806b86273ed2ef3c4412ffc5d53662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:ab5cf302d085ee302ed180a4c29c25bf2"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1linScalingStrategy.html#ab5cf302d085ee302ed180a4c29c25bf2">_intmin</a> = 0.0</td></tr>
-<tr class="separator:ab5cf302d085ee302ed180a4c29c25bf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d25d3fd0d901c010e925cf786b78d04"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1linScalingStrategy.html#a8d25d3fd0d901c010e925cf786b78d04">_intmax</a> = 10.0</td></tr>
-<tr class="separator:a8d25d3fd0d901c010e925cf786b78d04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a483cfaf8bceb634977c9cfd4683766b5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a483cfaf8bceb634977c9cfd4683766b5"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_scaling</b></td></tr>
-<tr class="separator:a483cfaf8bceb634977c9cfd4683766b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42023d6a68d1efecb1d8ec3bc6261a9b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42023d6a68d1efecb1d8ec3bc6261a9b"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_shift</b></td></tr>
-<tr class="separator:a42023d6a68d1efecb1d8ec3bc6261a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61536bec2c52d4649663bb76e82af1b9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61536bec2c52d4649663bb76e82af1b9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>_id</b> = true</td></tr>
-<tr class="separator:a61536bec2c52d4649663bb76e82af1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a78b1b9910ebce544de9b54b998e77879"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a78b1b9910ebce544de9b54b998e77879"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>CMASolutions</b></td></tr>
+<tr class="separator:a78b1b9910ebce544de9b54b998e77879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30b6df18a1c8899440f1ca1273b26bb9"><td class="memTemplParams" colspan="2"><a class="anchor" id="a30b6df18a1c8899440f1ca1273b26bb9"></a>
+template&lt;class U , class V &gt; </td></tr>
+<tr class="memitem:a30b6df18a1c8899440f1ca1273b26bb9"><td class="memTemplItemLeft" align="right" valign="top">class&#160;</td><td class="memTemplItemRight" valign="bottom"><b>GenoPheno</b></td></tr>
+<tr class="separator:a30b6df18a1c8899440f1ca1273b26bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a8d25d3fd0d901c010e925cf786b78d04"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double libcmaes::linScalingStrategy::_intmax = 10.0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>default internal max bound. </p>
-
-</div>
-</div>
-<a class="anchor" id="ab5cf302d085ee302ed180a4c29c25bf2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double libcmaes::linScalingStrategy::_intmin = 0.0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>default internal min bound. </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="scaling_8h_source.html">scaling.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

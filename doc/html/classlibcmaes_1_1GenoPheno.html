@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,7 +89,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classlibcmaes_1_1GenoPheno-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">libcmaes::GenoPheno&lt; TBoundStrategy, TScalingStrategy &gt; Class Template Reference</div>  </div>
@@ -122,6 +122,12 @@ dVec&#160;</td><td class="memItemRight" valign="bottom"><b>pheno</b> (const dVec
 <tr class="memitem:a8a82e0e53e09403637f9f085b07fa08b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a82e0e53e09403637f9f085b07fa08b"></a>
 dVec&#160;</td><td class="memItemRight" valign="bottom"><b>geno</b> (const dVec &amp;candidate) const </td></tr>
 <tr class="separator:a8a82e0e53e09403637f9f085b07fa08b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40b42ee0fa775d76400e11d77f2ff651"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a40b42ee0fa775d76400e11d77f2ff651"></a>
+TBoundStrategy&#160;</td><td class="memItemRight" valign="bottom"><b>get_boundstrategy</b> () const </td></tr>
+<tr class="separator:a40b42ee0fa775d76400e11d77f2ff651"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b4ac739cd4ca680c3d14077e4e10bb4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9b4ac739cd4ca680c3d14077e4e10bb4"></a>
+TBoundStrategy &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_boundstrategy_ref</b> ()</td></tr>
+<tr class="separator:a9b4ac739cd4ca680c3d14077e4e10bb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f4c3ea1900be14cb8fa11c306562790"><td class="memTemplParams" colspan="2"><a class="anchor" id="a3f4c3ea1900be14cb8fa11c306562790"></a>
 template&lt;&gt; </td></tr>
 <tr class="memitem:a3f4c3ea1900be14cb8fa11c306562790"><td class="memTemplItemLeft" align="right" valign="top">dMat&#160;</td><td class="memTemplItemRight" valign="bottom"><b>pheno</b> (const dMat &amp;candidates) const</td></tr>
@@ -155,22 +161,11 @@ template&lt;&gt; </td></tr>
 <tr class="memitem:a290b5770f19f5fe1f70cb60280c8a5b3"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>GenoPheno</b> (const dVec &amp;scaling, const dVec &amp;shift, const double *lbounds, const double *ubounds)</td></tr>
 <tr class="separator:a290b5770f19f5fe1f70cb60280c8a5b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:adea08b723e8e45cd0272ac7e9a8f10b7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adea08b723e8e45cd0272ac7e9a8f10b7"></a>
-TBoundStrategy&#160;</td><td class="memItemRight" valign="bottom"><b>_boundstrategy</b></td></tr>
-<tr class="separator:adea08b723e8e45cd0272ac7e9a8f10b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f9e0d81e14f19cd3aaa7e899197af06"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f9e0d81e14f19cd3aaa7e899197af06"></a>
-TransFunc&#160;</td><td class="memItemRight" valign="bottom"><b>_genof</b></td></tr>
-<tr class="separator:a0f9e0d81e14f19cd3aaa7e899197af06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a25e83891a647965b05a1f785b79a0d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3a25e83891a647965b05a1f785b79a0d"></a>
-TransFunc&#160;</td><td class="memItemRight" valign="bottom"><b>_phenof</b></td></tr>
-<tr class="separator:a3a25e83891a647965b05a1f785b79a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44ec792f07e3457773e72a3d389d393c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1GenoPheno.html#a44ec792f07e3457773e72a3d389d393c">_id</a> = false</td></tr>
-<tr class="separator:a44ec792f07e3457773e72a3d389d393c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61c4ac8416aee38f824aded267ca0268"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61c4ac8416aee38f824aded267ca0268"></a>
-TScalingStrategy&#160;</td><td class="memItemRight" valign="bottom"><b>_scalingstrategy</b></td></tr>
-<tr class="separator:a61c4ac8416aee38f824aded267ca0268"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a78b1b9910ebce544de9b54b998e77879"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a78b1b9910ebce544de9b54b998e77879"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>CMASolutions</b></td></tr>
+<tr class="separator:a78b1b9910ebce544de9b54b998e77879"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a33c22441a0688582c5aa723d8336d3c6"></a>
@@ -229,29 +224,13 @@ template&lt;class TBoundStrategy = NoBoundStrategy, class TScalingStrategy = NoS
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a44ec792f07e3457773e72a3d389d393c"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TBoundStrategy = NoBoundStrategy, class TScalingStrategy = NoScalingStrategy&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classlibcmaes_1_1GenoPheno.html">libcmaes::GenoPheno</a>&lt; TBoundStrategy, TScalingStrategy &gt;::_id = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>geno/pheno transform is identity. </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="genopheno_8h_source.html">genopheno.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

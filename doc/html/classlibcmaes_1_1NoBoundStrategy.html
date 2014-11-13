@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -100,6 +100,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a726bc7b1e9f5dbde5ad97757ed94e470"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a726bc7b1e9f5dbde5ad97757ed94e470"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>NoBoundStrategy</b> (const double *lbounds=nullptr, const double *ubounds=nullptr, const int dim=0)</td></tr>
 <tr class="separator:a726bc7b1e9f5dbde5ad97757ed94e470"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0c440259f9f29e384a671dc00dd1edc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab0c440259f9f29e384a671dc00dd1edc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>NoBoundStrategy</b> (const double *lbounds, const double *ubounds, const double *plbounds, const double *pubounds, const int dim=0)</td></tr>
+<tr class="separator:ab0c440259f9f29e384a671dc00dd1edc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a766c30a177076c46b89be463ce1f3062"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a766c30a177076c46b89be463ce1f3062"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>to_f_representation</b> (const dVec &amp;x, dVec &amp;y) const </td></tr>
 <tr class="separator:a766c30a177076c46b89be463ce1f3062"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,6 +112,12 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>getLBound</b> (cons
 <tr class="memitem:a2a0a9467aeb6b57749cc73499bf40620"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a0a9467aeb6b57749cc73499bf40620"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getUBound</b> (const int &amp;k) const </td></tr>
 <tr class="separator:a2a0a9467aeb6b57749cc73499bf40620"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b2514ff34ef3e7a5392a615cbdb2b45"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b2514ff34ef3e7a5392a615cbdb2b45"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getPhenoLBound</b> (const int &amp;k) const </td></tr>
+<tr class="separator:a5b2514ff34ef3e7a5392a615cbdb2b45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a324683037bd85f4e03c2fc2d5ea624ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a324683037bd85f4e03c2fc2d5ea624ff"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getPhenoUBound</b> (const int &amp;k) const </td></tr>
+<tr class="separator:a324683037bd85f4e03c2fc2d5ea624ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="noboundstrategy_8h_source.html">noboundstrategy.h</a></li>
@@ -116,7 +125,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>getUBound</b> (cons
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

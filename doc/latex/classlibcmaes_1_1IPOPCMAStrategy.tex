@@ -21,9 +21,13 @@ Inheritance diagram for libcmaes\-:\-:I\-P\-O\-P\-C\-M\-A\-Strategy$<$ T\-Covari
 \item 
 \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a0fad3e1160695878d2d8075a4cddf786}{I\-P\-O\-P\-C\-M\-A\-Strategy} (Fit\-Func \&func, \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&parameters)
 \begin{DoxyCompactList}\small\item\em constructor. \end{DoxyCompactList}\item 
+\hyperlink{classlibcmaes_1_1IPOPCMAStrategy_aa904db73802865f6a83d3ad05710bc67}{I\-P\-O\-P\-C\-M\-A\-Strategy} (Fit\-Func \&func, \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&parameters, const \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} \&solutions)
+\begin{DoxyCompactList}\small\item\em constructor. \end{DoxyCompactList}\item 
 \hypertarget{classlibcmaes_1_1IPOPCMAStrategy_a9b3b59e7caf752f48b37500d84736137}{void \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a9b3b59e7caf752f48b37500d84736137}{tell} ()}\label{classlibcmaes_1_1IPOPCMAStrategy_a9b3b59e7caf752f48b37500d84736137}
 
 \begin{DoxyCompactList}\small\item\em Updates the covariance matrix and prepares for the next iteration. \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a50555839c736d8189704d5d6d8e87553}{optimize} (const Eval\-Func \&evalf, const Ask\-Func \&askf, const Tell\-Func \&tellf)
+\begin{DoxyCompactList}\small\item\em Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a9b3b59e7caf752f48b37500d84736137}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a9c4f8ae0a8cbf600ba8fe7270e63172a}{optimize} ()
 \begin{DoxyCompactList}\small\item\em Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a9b3b59e7caf752f48b37500d84736137}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Protected Member Functions}
@@ -66,16 +70,63 @@ constructor.
 {\em parameters} & stochastic search parameters \\
 \hline
 \end{DoxyParams}
+\hypertarget{classlibcmaes_1_1IPOPCMAStrategy_aa904db73802865f6a83d3ad05710bc67}{\index{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy@{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}!I\-P\-O\-P\-C\-M\-A\-Strategy@{I\-P\-O\-P\-C\-M\-A\-Strategy}}
+\index{I\-P\-O\-P\-C\-M\-A\-Strategy@{I\-P\-O\-P\-C\-M\-A\-Strategy}!libcmaes::IPOPCMAStrategy@{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}}
+\subsubsection[{I\-P\-O\-P\-C\-M\-A\-Strategy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno $>$ {\bf libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::{\bf I\-P\-O\-P\-C\-M\-A\-Strategy} (
+\begin{DoxyParamCaption}
+\item[{Fit\-Func \&}]{func, }
+\item[{{\bf C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&}]{parameters, }
+\item[{const {\bf C\-M\-A\-Solutions} \&}]{solutions}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1IPOPCMAStrategy_aa904db73802865f6a83d3ad05710bc67}
+
+
+constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & objective function to minimize \\
+\hline
+{\em parameters} & stochastic search parameters \\
+\hline
+{\em solutions} & solution to start search from \\
+\hline
+\end{DoxyParams}
 
 
 \subsection{Member Function Documentation}
+\hypertarget{classlibcmaes_1_1IPOPCMAStrategy_a50555839c736d8189704d5d6d8e87553}{\index{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy@{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}!optimize@{optimize}}
+\index{optimize@{optimize}!libcmaes::IPOPCMAStrategy@{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}}
+\subsubsection[{optimize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno $>$ int {\bf libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::optimize (
+\begin{DoxyParamCaption}
+\item[{const Eval\-Func \&}]{evalf, }
+\item[{const Ask\-Func \&}]{askf, }
+\item[{const Tell\-Func \&}]{tellf}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1IPOPCMAStrategy_a50555839c736d8189704d5d6d8e87553}
+
+
+Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a9b3b59e7caf752f48b37500d84736137}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em evalf} & custom eval function \\
+\hline
+{\em askf} & custom ask function \\
+\hline
+{\em tellf} & custom tell function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success or error code, as defined in \hyperlink{opti__err_8h_source}{opti\-\_\-err.\-h} Note\-: the termination criteria code is held by \-\_\-solutions.\-\_\-run\-\_\-status 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1IPOPCMAStrategy_a9c4f8ae0a8cbf600ba8fe7270e63172a}{\index{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy@{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}!optimize@{optimize}}
 \index{optimize@{optimize}!libcmaes::IPOPCMAStrategy@{libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}}
 \subsubsection[{optimize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Covariance\-Update , class T\-Geno\-Pheno $>$ int {\bf libcmaes\-::\-I\-P\-O\-P\-C\-M\-A\-Strategy}$<$ T\-Covariance\-Update, T\-Geno\-Pheno $>$\-::optimize (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{classlibcmaes_1_1IPOPCMAStrategy_a9c4f8ae0a8cbf600ba8fe7270e63172a}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1IPOPCMAStrategy_a9c4f8ae0a8cbf600ba8fe7270e63172a}
 
 
 Finds the minimum of the objective function. It makes alternate calls to \hyperlink{classlibcmaes_1_1CMAStrategy_ab7266bc50732458ffcab690bc26380e6}{ask()}, \hyperlink{classlibcmaes_1_1IPOPCMAStrategy_a9b3b59e7caf752f48b37500d84736137}{tell()} and \hyperlink{classlibcmaes_1_1CMAStrategy_adc87b9c500959c800b6bc93d89432ecc}{stop()} until one of the termination criteria triggers. 

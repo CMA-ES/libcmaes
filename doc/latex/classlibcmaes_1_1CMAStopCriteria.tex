@@ -17,14 +17,14 @@ C\-M\-A-\/\-E\-S termination criteria, see reference paper in \hyperlink{cmastra
 
 \begin{DoxyCompactList}\small\item\em Constructor\-: instanciates a predefined set of termination criteria tests, see reference paper in \hyperlink{cmastrategy_8h_source}{cmastrategy.\-h}. \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1CMAStopCriteria_a6049e6ee663be2aa8781e9bd3cf9cba8}{stop} (const \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&cmap, const \hyperlink{classlibcmaes_1_1CMASolutions}{C\-M\-A\-Solutions} \&cmas) const 
-\begin{DoxyCompactList}\small\item\em Termination criteria evaluation\-: the function iterates and evaluates the predefined criteria. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Public Attributes}
+\begin{DoxyCompactList}\small\item\em Termination criteria evaluation\-: the function iterates and evaluates the predefined criteria. \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMAStopCriteria_a3c49ee85e48d2104fc47eb5fe0886f55}{set\-\_\-criteria\-\_\-active} (const int \&c, const bool \&active)
+\begin{DoxyCompactList}\small\item\em activates / deactivates a stopping criteria \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
 \begin{DoxyCompactItemize}
 \item 
-std\-::map$<$ int, \\*
-Stop\-Criteria\-Func$<$ T\-Geno\-Pheno $>$ $>$ \hyperlink{classlibcmaes_1_1CMAStopCriteria_a28799c079f8bccfdbe0df124722dbfa2}{\-\_\-scriteria}
-\item 
-bool \hyperlink{classlibcmaes_1_1CMAStopCriteria_a09534d620cfe4c35c03d8a80205346ba}{\-\_\-active}
+\hypertarget{classlibcmaes_1_1CMAStopCriteria_a78b1b9910ebce544de9b54b998e77879}{class {\bfseries C\-M\-A\-Solutions}}\label{classlibcmaes_1_1CMAStopCriteria_a78b1b9910ebce544de9b54b998e77879}
+
 \end{DoxyCompactItemize}
 
 
@@ -34,6 +34,28 @@ bool \hyperlink{classlibcmaes_1_1CMAStopCriteria_a09534d620cfe4c35c03d8a80205346
 C\-M\-A-\/\-E\-S termination criteria, see reference paper in \hyperlink{cmastrategy_8h_source}{cmastrategy.\-h}. 
 
 \subsection{Member Function Documentation}
+\hypertarget{classlibcmaes_1_1CMAStopCriteria_a3c49ee85e48d2104fc47eb5fe0886f55}{\index{libcmaes\-::\-C\-M\-A\-Stop\-Criteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}!set\-\_\-criteria\-\_\-active@{set\-\_\-criteria\-\_\-active}}
+\index{set\-\_\-criteria\-\_\-active@{set\-\_\-criteria\-\_\-active}!libcmaes::CMAStopCriteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}}
+\subsubsection[{set\-\_\-criteria\-\_\-active}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno $>$ int {\bf libcmaes\-::\-C\-M\-A\-Stop\-Criteria}$<$ T\-Geno\-Pheno $>$\-::set\-\_\-criteria\-\_\-active (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{c, }
+\item[{const bool \&}]{active}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1CMAStopCriteria_a3c49ee85e48d2104fc47eb5fe0886f55}
+
+
+activates / deactivates a stopping criteria 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & the criteria to modify \\
+\hline
+{\em true} & to activate, false to deactivate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if criteria cannot be found, 0 otherwise 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMAStopCriteria_a6049e6ee663be2aa8781e9bd3cf9cba8}{\index{libcmaes\-::\-C\-M\-A\-Stop\-Criteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}!stop@{stop}}
 \index{stop@{stop}!libcmaes::CMAStopCriteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}}
 \subsubsection[{stop}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno$>$ int {\bf libcmaes\-::\-C\-M\-A\-Stop\-Criteria}$<$ T\-Geno\-Pheno $>$\-::stop (
@@ -50,15 +72,6 @@ Termination criteria evaluation\-: the function iterates and evaluates the prede
 0 if no termination criteria triggers, the termination code otherwise ($<$ 0 for an error, $>$ 1 for a partial success). 
 \end{DoxyReturn}
 
-
-\subsection{Member Data Documentation}
-\hypertarget{classlibcmaes_1_1CMAStopCriteria_a09534d620cfe4c35c03d8a80205346ba}{\index{libcmaes\-::\-C\-M\-A\-Stop\-Criteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}!\-\_\-active@{\-\_\-active}}
-\index{\-\_\-active@{\-\_\-active}!libcmaes::CMAStopCriteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}}
-\subsubsection[{\-\_\-active}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = No\-Bound\-Strategy$>$ bool {\bf libcmaes\-::\-C\-M\-A\-Stop\-Criteria}$<$ T\-Geno\-Pheno $>$\-::\-\_\-active}}\label{classlibcmaes_1_1CMAStopCriteria_a09534d620cfe4c35c03d8a80205346ba}
-whether these termination criteria are active. \hypertarget{classlibcmaes_1_1CMAStopCriteria_a28799c079f8bccfdbe0df124722dbfa2}{\index{libcmaes\-::\-C\-M\-A\-Stop\-Criteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}!\-\_\-scriteria@{\-\_\-scriteria}}
-\index{\-\_\-scriteria@{\-\_\-scriteria}!libcmaes::CMAStopCriteria@{libcmaes\-::\-C\-M\-A\-Stop\-Criteria}}
-\subsubsection[{\-\_\-scriteria}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno = No\-Bound\-Strategy$>$ std\-::map$<$int,Stop\-Criteria\-Func$<$T\-Geno\-Pheno$>$ $>$ {\bf libcmaes\-::\-C\-M\-A\-Stop\-Criteria}$<$ T\-Geno\-Pheno $>$\-::\-\_\-scriteria}}\label{classlibcmaes_1_1CMAStopCriteria_a28799c079f8bccfdbe0df124722dbfa2}
-the set of predefined criteria, with priorities. 
 
 The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
 \item 

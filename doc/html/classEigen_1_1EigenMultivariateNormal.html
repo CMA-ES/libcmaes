@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -100,6 +100,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a5c226d14c6597ad2314a2730f9b2e402"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c226d14c6597ad2314a2730f9b2e402"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_covar</b> (const Matrix&lt; Scalar, Dynamic, Dynamic &gt; &amp;covar)</td></tr>
+<tr class="separator:a5c226d14c6597ad2314a2730f9b2e402"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fa9ab49cb21d677c7ed84a276964a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a05fa9ab49cb21d677c7ed84a276964a7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_transform</b> (const Matrix&lt; Scalar, Dynamic, Dynamic &gt; &amp;transform)</td></tr>
+<tr class="separator:a05fa9ab49cb21d677c7ed84a276964a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8dc1c371b98d343741f144a3babef91"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad8dc1c371b98d343741f144a3babef91"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>EigenMultivariateNormal</b> (const bool &amp;use_cholesky=false, const uint64_t &amp;seed=std::mt19937::default_seed)</td></tr>
 <tr class="separator:ad8dc1c371b98d343741f144a3babef91"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,15 +123,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setCovar</b> (const M
 <tr class="memitem:a957ca8e363a84616c1cb235d595fbfcd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a957ca8e363a84616c1cb235d595fbfcd"></a>
 Matrix&lt; Scalar, Dynamic,-1 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>samples_ind</b> (int nn, double factor)</td></tr>
 <tr class="separator:a957ca8e363a84616c1cb235d595fbfcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac81198e693bee0a5b350cec5c8293897"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac81198e693bee0a5b350cec5c8293897"></a>
+Matrix&lt; Scalar, Dynamic,-1 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>samples_ind</b> (int nn)</td></tr>
+<tr class="separator:ac81198e693bee0a5b350cec5c8293897"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0d7fcab2013f2073d1f9ceae83d2648e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d7fcab2013f2073d1f9ceae83d2648e"></a>
-Matrix&lt; Scalar, Dynamic, Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_covar</b></td></tr>
-<tr class="separator:a0d7fcab2013f2073d1f9ceae83d2648e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d2ecc245a87903ba31b390bbd983051"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d2ecc245a87903ba31b390bbd983051"></a>
-Matrix&lt; Scalar, Dynamic, Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_transform</b></td></tr>
-<tr class="separator:a7d2ecc245a87903ba31b390bbd983051"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceef5dd5ce5aee926fab9f051cd8904b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aceef5dd5ce5aee926fab9f051cd8904b"></a>
 SelfAdjointEigenSolver&lt; Matrix<br class="typebreak"/>
 &lt; Scalar, Dynamic, Dynamic &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_eigenSolver</b></td></tr>
@@ -180,7 +183,7 @@ template&lt;typename Scalar&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:43 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

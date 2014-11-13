@@ -23,89 +23,113 @@ Holder of the set of evolving solutions from running an instance of C\-M\-A-\/\-
 \begin{DoxyCompactList}\small\item\em sorts the current internal set of solution candidates. \end{DoxyCompactList}\item 
 void \hyperlink{classlibcmaes_1_1CMASolutions_a207c159be5f8668f018d564a1adb8dc8}{update\-\_\-best\-\_\-candidates} ()
 \begin{DoxyCompactList}\small\item\em updates the history of best candidates, as well as other meaningful values, typically used in termination criteria. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1CMASolutions_a28a20c0a90712e4f28038af2a4bd320b}{update\-\_\-eigenv} (const d\-Vec \&eigenvalues, const d\-Mat \&eigenvectors)
+void \hyperlink{classlibcmaes_1_1CMASolutions_a28a20c0a90712e4f28038af2a4bd320b}{update\-\_\-eigenv} (const d\-Vec \&\hyperlink{classlibcmaes_1_1CMASolutions_add38348a9496b9559e72a020b952a262}{eigenvalues}, const d\-Mat \&eigenvectors)
 \begin{DoxyCompactList}\small\item\em updates reference eigenvalue and eigenvectors, for use in termination criteria. \end{DoxyCompactList}\item 
 \hyperlink{classlibcmaes_1_1Candidate}{Candidate} \hyperlink{classlibcmaes_1_1CMASolutions_a218f2ee7bbd91d385f23082bfe18b1d9}{best\-\_\-candidate} () const 
 \begin{DoxyCompactList}\small\item\em returns current best solution candidate. N\-O\-T\-E\-: candidates M\-U\-S\-T be sorted \end{DoxyCompactList}\item 
+\hyperlink{classlibcmaes_1_1Candidate}{Candidate} \& \hyperlink{classlibcmaes_1_1CMASolutions_afd3a88bc8d118c0b72f916025ca9c65b}{get\-\_\-candidate} (const int \&r)
+\begin{DoxyCompactList}\small\item\em get a reference to the r-\/th candidate in current set \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMASolutions_a47b162f936193f0f80322503a469a6aa}{std\-::vector$<$ \hyperlink{classlibcmaes_1_1Candidate}{Candidate} $>$ \& \hyperlink{classlibcmaes_1_1CMASolutions_a47b162f936193f0f80322503a469a6aa}{candidates} ()}\label{classlibcmaes_1_1CMASolutions_a47b162f936193f0f80322503a469a6aa}
+
+\begin{DoxyCompactList}\small\item\em get a reference to the full candidate set \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1CMASolutions_a7a7e71c54967613717d2928a38715429}{size} () const 
 \begin{DoxyCompactList}\small\item\em number of candidate solutions. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMASolutions_ab825c9198ee6f7bd9a9b244e567c8624}{void \hyperlink{classlibcmaes_1_1CMASolutions_ab825c9198ee6f7bd9a9b244e567c8624}{reset} ()}\label{classlibcmaes_1_1CMASolutions_ab825c9198ee6f7bd9a9b244e567c8624}
+
+\begin{DoxyCompactList}\small\item\em resets the solution object in order to restart from the current solution with fresh covariance matrix. Note\-: experimental. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1CMASolutions_a036e5542869da8d603388543f8cc9f86}{reset\-\_\-as\-\_\-fixed} (const int \&k)
+\begin{DoxyCompactList}\small\item\em re-\/arrange solution object such that parameter 'k' is fixed (i.\-e. removed). \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1CMASolutions_abdd25e16cb0745e33652d0b3f09a77d1}{bool \hyperlink{classlibcmaes_1_1CMASolutions_abdd25e16cb0745e33652d0b3f09a77d1}{get\-\_\-pli} (const int \&k, \hyperlink{classlibcmaes_1_1pli}{pli} \&p) const }\label{classlibcmaes_1_1CMASolutions_abdd25e16cb0745e33652d0b3f09a77d1}
+
+\begin{DoxyCompactList}\small\item\em get profile likelihood if previously computed. \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMASolutions_ac8d07f19d5e4cdbab456ef9d00acb16e}{dim} () const 
+\begin{DoxyCompactList}\small\item\em return problem dimension. \end{DoxyCompactList}\item 
 double \hyperlink{classlibcmaes_1_1CMASolutions_a33a5f2f6bc03c9b459d58f079a1a2d38}{edm} () const 
 \begin{DoxyCompactList}\small\item\em returns expected distance to minimum. \end{DoxyCompactList}\item 
 d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_a8b3cd4f1b85c820190eedbf81f49a441}{cov} () const 
 \begin{DoxyCompactList}\small\item\em returns error covariance matrix \end{DoxyCompactList}\item 
+const d\-Mat \& \hyperlink{classlibcmaes_1_1CMASolutions_a853dc543b4d2845df451ec112d00d311}{cov\-\_\-ref} () const 
+\begin{DoxyCompactList}\small\item\em returns reference to error covariance matrix \end{DoxyCompactList}\item 
+const double $\ast$ \hyperlink{classlibcmaes_1_1CMASolutions_a1db02206c1f0b90b935a47c923c5373d}{cov\-\_\-data} () const 
+\begin{DoxyCompactList}\small\item\em returns pointer to covariance matrix array \end{DoxyCompactList}\item 
 d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_ab79973d3d76c8ffb810608252ba72df9}{sepcov} () const 
-\begin{DoxyCompactList}\small\item\em returns separable covariance diagonal vector, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em returns separable covariance diagonal matrix, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. \end{DoxyCompactList}\item 
+const d\-Mat \& \hyperlink{classlibcmaes_1_1CMASolutions_a21617b6ff54abd57a1b18667d8eb1724}{sepcov\-\_\-ref} () const 
+\begin{DoxyCompactList}\small\item\em returns reference to separable covariance diagonal vector, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. \end{DoxyCompactList}\item 
+const double $\ast$ \hyperlink{classlibcmaes_1_1CMASolutions_a66c5167b418f84fbdfc91735bf573bdb}{sepcov\-\_\-data} () const 
+\begin{DoxyCompactList}\small\item\em returns pointer to covariance diagnoal vector \end{DoxyCompactList}\item 
+d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_a702e38431816384b0378e7b9b198e3f3}{csqinv} () const 
+\begin{DoxyCompactList}\small\item\em returns inverse root square of covariance matrix \end{DoxyCompactList}\item 
+d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_afc21a4719c268edd6a67a28c5a7f16ff}{sepcsqinv} () const 
+\begin{DoxyCompactList}\small\item\em returns inverse root square of separable covariance diagonal matrix, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. \end{DoxyCompactList}\item 
 double \hyperlink{classlibcmaes_1_1CMASolutions_a8790ac429e629856d2295e953cbe2324}{sigma} () const 
 \begin{DoxyCompactList}\small\item\em returns current value of step-\/size sigma \end{DoxyCompactList}\item 
 d\-Vec \hyperlink{classlibcmaes_1_1CMASolutions_ab8d63d0079eff716421f82a8ec874ca4}{xmean} () const 
 \begin{DoxyCompactList}\small\item\em returns current distribution's mean in parameter space \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1CMASolutions_a743993dedaaf9adc7cb60cb65e584721}{set\-\_\-xmean} (const d\-Vec \&\hyperlink{classlibcmaes_1_1CMASolutions_ab8d63d0079eff716421f82a8ec874ca4}{xmean})
+\begin{DoxyCompactList}\small\item\em sets the current distributions' mean in parameter space \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1CMASolutions_a4215c5baf357d23ef893eb52b4766eea}{run\-\_\-status} () const 
 \begin{DoxyCompactList}\small\item\em returns current optimization status. \end{DoxyCompactList}\item 
+std\-::string \hyperlink{classlibcmaes_1_1CMASolutions_a2a255d59c7e139109781cef8f5d94c38}{status\-\_\-msg} () const 
+\begin{DoxyCompactList}\small\item\em returns current optimization status' message. \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1CMASolutions_add680b4437a6a2786b7a6228fa73023e}{elapsed\-\_\-time} () const 
 \begin{DoxyCompactList}\small\item\em returns currently elapsed time spent on optimization \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMASolutions_a5b6c88e6f490f9135bd0795ee9062f4a}{elapsed\-\_\-last\-\_\-iter} () const 
+\begin{DoxyCompactList}\small\item\em returns time spent on last iteration \end{DoxyCompactList}\item 
 int \hyperlink{classlibcmaes_1_1CMASolutions_aceb58df5ee91f159e626b51ee788c381}{niter} () const 
 \begin{DoxyCompactList}\small\item\em returns current number of iterations \end{DoxyCompactList}\item 
-std\-::ostream \& \hyperlink{classlibcmaes_1_1CMASolutions_a6efb92b35de0ffa6cbe5918c82469db2}{print} (std\-::ostream \&out, const int \&verb\-\_\-level=0) const 
+int \hyperlink{classlibcmaes_1_1CMASolutions_a225f3f00557469d3cf7567d0dd301fc0}{nevals} () const 
+\begin{DoxyCompactList}\small\item\em returns current budget (number of objective function calls) \end{DoxyCompactList}\item 
+double \hyperlink{classlibcmaes_1_1CMASolutions_af0b9acecd0f092ce781d4bb1119f5844}{min\-\_\-eigenv} () const 
+\begin{DoxyCompactList}\small\item\em returns current minimal eigen value \end{DoxyCompactList}\item 
+double \hyperlink{classlibcmaes_1_1CMASolutions_a600c62ab2769f9eab18951c49846e003}{max\-\_\-eigenv} () const 
+\begin{DoxyCompactList}\small\item\em returns current maximal eigen value \end{DoxyCompactList}\item 
+bool \hyperlink{classlibcmaes_1_1CMASolutions_a82171a1285713a228bce32c923fc65fd}{updated\-\_\-eigen} () const 
+\begin{DoxyCompactList}\small\item\em returns whether the last update is lazy \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1CMASolutions_a8b19ae50312e62c7feb810e8ff0d9dfd}{fevals} () const 
+\begin{DoxyCompactList}\small\item\em returns current number of objective function evaluations \end{DoxyCompactList}\item 
+d\-Vec \hyperlink{classlibcmaes_1_1CMASolutions_add38348a9496b9559e72a020b952a262}{eigenvalues} () const 
+\begin{DoxyCompactList}\small\item\em returns last computed eigenvalues \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T\-Geno\-Pheno  = Geno\-Pheno$<$\-No\-Bound\-Strategy$>$$>$ }\\std\-::ostream \& \hyperlink{classlibcmaes_1_1CMASolutions_ae07d8d902185611f8b14533c425ab6e4}{print} (std\-::ostream \&out, const int \&verb\-\_\-level=0, const T\-Geno\-Pheno \&gp=\hyperlink{classlibcmaes_1_1GenoPheno}{Geno\-Pheno}$<$ \hyperlink{classlibcmaes_1_1NoBoundStrategy}{No\-Bound\-Strategy} $>$()) const 
 \begin{DoxyCompactList}\small\item\em print the solution object out. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Public Attributes}
+\subsection*{Friends}
 \begin{DoxyCompactItemize}
 \item 
-d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_aa3699ac23ef9be0bc60be0a6417891fe}{\-\_\-cov}
-\item 
-\hypertarget{classlibcmaes_1_1CMASolutions_ac6e9412377ee1a808b70e578e22ffb20}{d\-Mat {\bfseries \-\_\-csqinv}}\label{classlibcmaes_1_1CMASolutions_ac6e9412377ee1a808b70e578e22ffb20}
+\hypertarget{classlibcmaes_1_1CMASolutions_a07488b7628d12135de0243eb796e53a9}{{\footnotesize template$<$class U , class V $>$ }\\class {\bfseries C\-M\-A\-Strategy}}\label{classlibcmaes_1_1CMASolutions_a07488b7628d12135de0243eb796e53a9}
 
 \item 
-d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_a2ae1e479582128f96be7a39ac6db57dd}{\-\_\-sepcov}
-\item 
-\hypertarget{classlibcmaes_1_1CMASolutions_ac7bae8542560b6d9b1b87c08d7921df1}{d\-Mat {\bfseries \-\_\-sepcsqinv}}\label{classlibcmaes_1_1CMASolutions_ac7bae8542560b6d9b1b87c08d7921df1}
+\hypertarget{classlibcmaes_1_1CMASolutions_a8a4e3d4591e726bcf197f8d006c4ec76}{{\footnotesize template$<$class U , class V , class W $>$ }\\class {\bfseries E\-S\-Optimizer}}\label{classlibcmaes_1_1CMASolutions_a8a4e3d4591e726bcf197f8d006c4ec76}
 
 \item 
-d\-Vec \hyperlink{classlibcmaes_1_1CMASolutions_a206048105c382882cb4ec3f85e3b15af}{\-\_\-xmean}
-\item 
-d\-Vec \hyperlink{classlibcmaes_1_1CMASolutions_aa39c324a7006296ee2b0c7a89713d990}{\-\_\-psigma}
-\item 
-d\-Vec \hyperlink{classlibcmaes_1_1CMASolutions_adc22e31da86db0140aefd132627fff74}{\-\_\-pc}
-\item 
-short \hyperlink{classlibcmaes_1_1CMASolutions_a41ff8dec2ff834bcf4ddf2de86ec40fe}{\-\_\-hsig} = 1
-\item 
-double \hyperlink{classlibcmaes_1_1CMASolutions_ac05a959d23279c36c0cff46f361d73e5}{\-\_\-sigma}
-\item 
-std\-::vector$<$ \hyperlink{classlibcmaes_1_1Candidate}{Candidate} $>$ \hyperlink{classlibcmaes_1_1CMASolutions_a00270b99b2b65d9f45d985e4c2802150}{\-\_\-candidates}
-\item 
-std\-::vector$<$ \hyperlink{classlibcmaes_1_1Candidate}{Candidate} $>$ \hyperlink{classlibcmaes_1_1CMASolutions_a49e8d5096b2342777b494c613f930031}{\-\_\-best\-\_\-candidates\-\_\-hist}
-\item 
-double \hyperlink{classlibcmaes_1_1CMASolutions_a6ab80259b3184af4a3d1d762643be491}{\-\_\-max\-\_\-eigenv} = 0.\-0
-\item 
-double \hyperlink{classlibcmaes_1_1CMASolutions_af504d5301c2609e71643aacd82c48742}{\-\_\-min\-\_\-eigenv} = 0.\-0
-\item 
-d\-Vec \hyperlink{classlibcmaes_1_1CMASolutions_adb95177965030857649af65126c43753}{\-\_\-leigenvalues}
-\item 
-d\-Mat \hyperlink{classlibcmaes_1_1CMASolutions_ac1f790e709f5fb3e38217954bc81615d}{\-\_\-leigenvectors}
-\item 
-int \hyperlink{classlibcmaes_1_1CMASolutions_ac4f919c1a09611ce8374edc629d3670d}{\-\_\-niter} = 0
-\item 
-int \hyperlink{classlibcmaes_1_1CMASolutions_aac5e40c86e1338aa38b3ebbdf0541299}{\-\_\-nevals} = 0
-\item 
-\hypertarget{classlibcmaes_1_1CMASolutions_a665dcdab83a9b686137b20c28eb58ee3}{int {\bfseries \-\_\-kcand} = 1}\label{classlibcmaes_1_1CMASolutions_a665dcdab83a9b686137b20c28eb58ee3}
+\hypertarget{classlibcmaes_1_1CMASolutions_ad6ebfad69a17421ae398d90c542aea13}{{\footnotesize template$<$class U , class V , class W $>$ }\\class {\bfseries E\-S\-O\-Strategy}}\label{classlibcmaes_1_1CMASolutions_ad6ebfad69a17421ae398d90c542aea13}
 
 \item 
-std\-::vector$<$ \hyperlink{classlibcmaes_1_1Candidate}{Candidate} $>$ \hyperlink{classlibcmaes_1_1CMASolutions_a2134e163fbeceaa2c31799fad7934550}{\-\_\-k\-\_\-best\-\_\-candidates\-\_\-hist}
+\hypertarget{classlibcmaes_1_1CMASolutions_aff56187b22ef0b3164ed7711dc0c82c3}{{\footnotesize template$<$class U $>$ }\\class {\bfseries C\-M\-A\-Stop\-Criteria}}\label{classlibcmaes_1_1CMASolutions_aff56187b22ef0b3164ed7711dc0c82c3}
+
 \item 
-std\-::vector$<$ double $>$ \hyperlink{classlibcmaes_1_1CMASolutions_a2ef75688ae95caea23de230f0bebc55a}{\-\_\-bfvalues}
+\hypertarget{classlibcmaes_1_1CMASolutions_a083272459c67810fd3e8b1702c7d67c2}{{\footnotesize template$<$class U , class V $>$ }\\class {\bfseries I\-P\-O\-P\-C\-M\-A\-Strategy}}\label{classlibcmaes_1_1CMASolutions_a083272459c67810fd3e8b1702c7d67c2}
+
 \item 
-std\-::vector$<$ double $>$ \hyperlink{classlibcmaes_1_1CMASolutions_aaa527a976c47c1b0d48b33fafa0a366f}{\-\_\-median\-\_\-fvalues}
+\hypertarget{classlibcmaes_1_1CMASolutions_ae97315b6fb514c42e8c3973f362ef2a2}{{\footnotesize template$<$class U , class V $>$ }\\class {\bfseries B\-I\-P\-O\-P\-C\-M\-A\-Strategy}}\label{classlibcmaes_1_1CMASolutions_ae97315b6fb514c42e8c3973f362ef2a2}
+
 \item 
-int \hyperlink{classlibcmaes_1_1CMASolutions_ac042ad718b7fba94a733329228991c4e}{\-\_\-eigeniter} = 0
+\hypertarget{classlibcmaes_1_1CMASolutions_aa62543a4caa6d6b288bb58ca5411539c}{class {\bfseries Covariance\-Update}}\label{classlibcmaes_1_1CMASolutions_aa62543a4caa6d6b288bb58ca5411539c}
+
 \item 
-bool \hyperlink{classlibcmaes_1_1CMASolutions_a1962eb8dde999aa46d8e89689298bc3e}{\-\_\-updated\-\_\-eigen} = true
+\hypertarget{classlibcmaes_1_1CMASolutions_a81af003765a6521a192e5a37612c2fb5}{class {\bfseries A\-Covariance\-Update}}\label{classlibcmaes_1_1CMASolutions_a81af003765a6521a192e5a37612c2fb5}
+
 \item 
-int \hyperlink{classlibcmaes_1_1CMASolutions_ad5b606082a773da2d5c309b3b663352a}{\-\_\-run\-\_\-status} = 0
+\hypertarget{classlibcmaes_1_1CMASolutions_a867bde5f83097a4db1f667a3911efbae}{{\footnotesize template$<$class U $>$ }\\class {\bfseries errstats}}\label{classlibcmaes_1_1CMASolutions_a867bde5f83097a4db1f667a3911efbae}
+
 \item 
-int \hyperlink{classlibcmaes_1_1CMASolutions_af3460af057684e25829d8d367fce7ac5}{\-\_\-elapsed\-\_\-time} = 0
+\hypertarget{classlibcmaes_1_1CMASolutions_a25db0dd344a7c35115d952760c5f18b9}{{\footnotesize template$<$template$<$ class X, class Y $>$ class U, class V , class W $>$ }\\class {\bfseries Simple\-Surrogate\-Strategy}}\label{classlibcmaes_1_1CMASolutions_a25db0dd344a7c35115d952760c5f18b9}
+
 \item 
-int \hyperlink{classlibcmaes_1_1CMASolutions_afb37930765ebc9c577e17d262fb585a6}{\-\_\-elapsed\-\_\-last\-\_\-iter} = 0
+\hypertarget{classlibcmaes_1_1CMASolutions_a5b77ea4bdc16988504a45aead303d863}{{\footnotesize template$<$template$<$ class X, class Y $>$ class U, class V , class W $>$ }\\class {\bfseries A\-C\-M\-Surrogate\-Strategy}}\label{classlibcmaes_1_1CMASolutions_a5b77ea4bdc16988504a45aead303d863}
+
 \item 
-double \hyperlink{classlibcmaes_1_1CMASolutions_aac9012bc898ffa0398974178bb395a2d}{\-\_\-edm} = 0.\-0
+\hypertarget{classlibcmaes_1_1CMASolutions_a3fceefe6a1e378ff9fef5d97117e5f47}{class {\bfseries V\-D\-C\-M\-A\-Update}}\label{classlibcmaes_1_1CMASolutions_a3fceefe6a1e378ff9fef5d97117e5f47}
+
 \end{DoxyCompactItemize}
 
 
@@ -163,6 +187,62 @@ returns error covariance matrix
 \begin{DoxyReturn}{Returns}
 error covariance matrix 
 \end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a1db02206c1f0b90b935a47c923c5373d}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!cov\-\_\-data@{cov\-\_\-data}}
+\index{cov\-\_\-data@{cov\-\_\-data}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{cov\-\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}const double$\ast$ libcmaes\-::\-C\-M\-A\-Solutions\-::cov\-\_\-data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a1db02206c1f0b90b935a47c923c5373d}
+
+
+returns pointer to covariance matrix array 
+
+\begin{DoxyReturn}{Returns}
+pointer to covariance matrix array 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a853dc543b4d2845df451ec112d00d311}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!cov\-\_\-ref@{cov\-\_\-ref}}
+\index{cov\-\_\-ref@{cov\-\_\-ref}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{cov\-\_\-ref}]{\setlength{\rightskip}{0pt plus 5cm}const d\-Mat\& libcmaes\-::\-C\-M\-A\-Solutions\-::cov\-\_\-ref (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a853dc543b4d2845df451ec112d00d311}
+
+
+returns reference to error covariance matrix 
+
+\begin{DoxyReturn}{Returns}
+error covariance matrix 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a702e38431816384b0378e7b9b198e3f3}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!csqinv@{csqinv}}
+\index{csqinv@{csqinv}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{csqinv}]{\setlength{\rightskip}{0pt plus 5cm}d\-Mat libcmaes\-::\-C\-M\-A\-Solutions\-::csqinv (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a702e38431816384b0378e7b9b198e3f3}
+
+
+returns inverse root square of covariance matrix 
+
+\begin{DoxyReturn}{Returns}
+square root of error covariance matrix 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_ac8d07f19d5e4cdbab456ef9d00acb16e}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!dim@{dim}}
+\index{dim@{dim}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{dim}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::dim (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_ac8d07f19d5e4cdbab456ef9d00acb16e}
+
+
+return problem dimension. 
+
+\begin{DoxyReturn}{Returns}
+problem dimension 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_a33a5f2f6bc03c9b459d58f079a1a2d38}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!edm@{edm}}
 \index{edm@{edm}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
 \subsubsection[{edm}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::edm (
@@ -176,6 +256,34 @@ returns expected distance to minimum.
 
 \begin{DoxyReturn}{Returns}
 edm 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_add38348a9496b9559e72a020b952a262}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!eigenvalues@{eigenvalues}}
+\index{eigenvalues@{eigenvalues}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{eigenvalues}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-C\-M\-A\-Solutions\-::eigenvalues (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_add38348a9496b9559e72a020b952a262}
+
+
+returns last computed eigenvalues 
+
+\begin{DoxyReturn}{Returns}
+last computed eigenvalues 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a5b6c88e6f490f9135bd0795ee9062f4a}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!elapsed\-\_\-last\-\_\-iter@{elapsed\-\_\-last\-\_\-iter}}
+\index{elapsed\-\_\-last\-\_\-iter@{elapsed\-\_\-last\-\_\-iter}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{elapsed\-\_\-last\-\_\-iter}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::elapsed\-\_\-last\-\_\-iter (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a5b6c88e6f490f9135bd0795ee9062f4a}
+
+
+returns time spent on last iteration 
+
+\begin{DoxyReturn}{Returns}
+time spent on last iteration 
 \end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_add680b4437a6a2786b7a6228fa73023e}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!elapsed\-\_\-time@{elapsed\-\_\-time}}
 \index{elapsed\-\_\-time@{elapsed\-\_\-time}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
@@ -191,6 +299,78 @@ returns currently elapsed time spent on optimization
 \begin{DoxyReturn}{Returns}
 time spent on optimization 
 \end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a8b19ae50312e62c7feb810e8ff0d9dfd}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!fevals@{fevals}}
+\index{fevals@{fevals}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{fevals}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::fevals (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a8b19ae50312e62c7feb810e8ff0d9dfd}
+
+
+returns current number of objective function evaluations 
+
+\begin{DoxyReturn}{Returns}
+number of objective function evaluations 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_afd3a88bc8d118c0b72f916025ca9c65b}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!get\-\_\-candidate@{get\-\_\-candidate}}
+\index{get\-\_\-candidate@{get\-\_\-candidate}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{get\-\_\-candidate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Candidate}\& libcmaes\-::\-C\-M\-A\-Solutions\-::get\-\_\-candidate (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{r}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_afd3a88bc8d118c0b72f916025ca9c65b}
+
+
+get a reference to the r-\/th candidate in current set 
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & candidate position \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMASolutions_a600c62ab2769f9eab18951c49846e003}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!max\-\_\-eigenv@{max\-\_\-eigenv}}
+\index{max\-\_\-eigenv@{max\-\_\-eigenv}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{max\-\_\-eigenv}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::max\-\_\-eigenv (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a600c62ab2769f9eab18951c49846e003}
+
+
+returns current maximal eigen value 
+
+\begin{DoxyReturn}{Returns}
+maximal eigen value 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_af0b9acecd0f092ce781d4bb1119f5844}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!min\-\_\-eigenv@{min\-\_\-eigenv}}
+\index{min\-\_\-eigenv@{min\-\_\-eigenv}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{min\-\_\-eigenv}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::min\-\_\-eigenv (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_af0b9acecd0f092ce781d4bb1119f5844}
+
+
+returns current minimal eigen value 
+
+\begin{DoxyReturn}{Returns}
+minimal eigen value 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a225f3f00557469d3cf7567d0dd301fc0}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!nevals@{nevals}}
+\index{nevals@{nevals}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{nevals}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::nevals (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a225f3f00557469d3cf7567d0dd301fc0}
+
+
+returns current budget (number of objective function calls) 
+
+\begin{DoxyReturn}{Returns}
+number of objective function calls 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_aceb58df5ee91f159e626b51ee788c381}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!niter@{niter}}
 \index{niter@{niter}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
 \subsubsection[{niter}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::niter (
@@ -205,14 +385,15 @@ returns current number of iterations
 \begin{DoxyReturn}{Returns}
 number of iterations 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1CMASolutions_a6efb92b35de0ffa6cbe5918c82469db2}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!print@{print}}
+\hypertarget{classlibcmaes_1_1CMASolutions_ae07d8d902185611f8b14533c425ab6e4}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!print@{print}}
 \index{print@{print}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}std\-::ostream \& libcmaes\-::\-C\-M\-A\-Solutions\-::print (
+\subsubsection[{print}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno $>$ template std\-::ostream \& libcmaes\-::\-C\-M\-A\-Solutions\-::print (
 \begin{DoxyParamCaption}
 \item[{std\-::ostream \&}]{out, }
-\item[{const int \&}]{verb\-\_\-level = {\ttfamily 0}}
+\item[{const int \&}]{verb\-\_\-level = {\ttfamily 0}, }
+\item[{const T\-Geno\-Pheno \&}]{gp = {\ttfamily {\bf Geno\-Pheno}$<$~{\bf No\-Bound\-Strategy}~$>$()}}
 \end{DoxyParamCaption}
-) const}}\label{classlibcmaes_1_1CMASolutions_a6efb92b35de0ffa6cbe5918c82469db2}
+) const}}\label{classlibcmaes_1_1CMASolutions_ae07d8d902185611f8b14533c425ab6e4}
 
 
 print the solution object out. 
@@ -222,6 +403,22 @@ print the solution object out.
 {\em out} & output stream \\
 \hline
 {\em verb\-\_\-level} & verbosity level\-: 0 for short, 1 for debug. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1CMASolutions_a036e5542869da8d603388543f8cc9f86}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!reset\-\_\-as\-\_\-fixed@{reset\-\_\-as\-\_\-fixed}}
+\index{reset\-\_\-as\-\_\-fixed@{reset\-\_\-as\-\_\-fixed}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{reset\-\_\-as\-\_\-fixed}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\-::\-C\-M\-A\-Solutions\-::reset\-\_\-as\-\_\-fixed (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{k}
+\end{DoxyParamCaption}
+)}}\label{classlibcmaes_1_1CMASolutions_a036e5542869da8d603388543f8cc9f86}
+
+
+re-\/arrange solution object such that parameter 'k' is fixed (i.\-e. removed). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em k} & index of the parameter to remove. \\
 \hline
 \end{DoxyParams}
 \hypertarget{classlibcmaes_1_1CMASolutions_a4215c5baf357d23ef893eb52b4766eea}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!run\-\_\-status@{run\-\_\-status}}
@@ -247,11 +444,69 @@ status
 ) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_ab79973d3d76c8ffb810608252ba72df9}
 
 
-returns separable covariance diagonal vector, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. 
+returns separable covariance diagonal matrix, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. 
 
 \begin{DoxyReturn}{Returns}
 error covariance diagonal vector 
 \end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a66c5167b418f84fbdfc91735bf573bdb}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!sepcov\-\_\-data@{sepcov\-\_\-data}}
+\index{sepcov\-\_\-data@{sepcov\-\_\-data}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{sepcov\-\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}const double$\ast$ libcmaes\-::\-C\-M\-A\-Solutions\-::sepcov\-\_\-data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a66c5167b418f84fbdfc91735bf573bdb}
+
+
+returns pointer to covariance diagnoal vector 
+
+\begin{DoxyReturn}{Returns}
+pointer to covariance diagonal array 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a21617b6ff54abd57a1b18667d8eb1724}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!sepcov\-\_\-ref@{sepcov\-\_\-ref}}
+\index{sepcov\-\_\-ref@{sepcov\-\_\-ref}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{sepcov\-\_\-ref}]{\setlength{\rightskip}{0pt plus 5cm}const d\-Mat\& libcmaes\-::\-C\-M\-A\-Solutions\-::sepcov\-\_\-ref (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a21617b6ff54abd57a1b18667d8eb1724}
+
+
+returns reference to separable covariance diagonal vector, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. 
+
+\begin{DoxyReturn}{Returns}
+error covariance diagonal vector 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_afc21a4719c268edd6a67a28c5a7f16ff}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!sepcsqinv@{sepcsqinv}}
+\index{sepcsqinv@{sepcsqinv}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{sepcsqinv}]{\setlength{\rightskip}{0pt plus 5cm}d\-Mat libcmaes\-::\-C\-M\-A\-Solutions\-::sepcsqinv (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_afc21a4719c268edd6a67a28c5a7f16ff}
+
+
+returns inverse root square of separable covariance diagonal matrix, only applicable to sep-\/\-C\-M\-A-\/\-E\-S algorithms. 
+
+\begin{DoxyReturn}{Returns}
+square root of error covariance diagonal matrix 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a743993dedaaf9adc7cb60cb65e584721}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!set\-\_\-xmean@{set\-\_\-xmean}}
+\index{set\-\_\-xmean@{set\-\_\-xmean}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{set\-\_\-xmean}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\-::\-C\-M\-A\-Solutions\-::set\-\_\-xmean (
+\begin{DoxyParamCaption}
+\item[{const d\-Vec \&}]{xmean}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a743993dedaaf9adc7cb60cb65e584721}
+
+
+sets the current distributions' mean in parameter space 
+
+
+\begin{DoxyParams}{Parameters}
+{\em xmean} & mean vector \\
+\hline
+\end{DoxyParams}
 \hypertarget{classlibcmaes_1_1CMASolutions_a8790ac429e629856d2295e953cbe2324}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!sigma@{sigma}}
 \index{sigma@{sigma}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
 \subsubsection[{sigma}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::sigma (
@@ -279,6 +534,20 @@ number of candidate solutions.
 
 \begin{DoxyReturn}{Returns}
 current number of solution candidates. 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1CMASolutions_a2a255d59c7e139109781cef8f5d94c38}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!status\-\_\-msg@{status\-\_\-msg}}
+\index{status\-\_\-msg@{status\-\_\-msg}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{status\-\_\-msg}]{\setlength{\rightskip}{0pt plus 5cm}std\-::string libcmaes\-::\-C\-M\-A\-Solutions\-::status\-\_\-msg (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a2a255d59c7e139109781cef8f5d94c38}
+
+
+returns current optimization status' message. 
+
+\begin{DoxyReturn}{Returns}
+status message 
 \end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_a207c159be5f8668f018d564a1adb8dc8}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!update\-\_\-best\-\_\-candidates@{update\-\_\-best\-\_\-candidates}}
 \index{update\-\_\-best\-\_\-candidates@{update\-\_\-best\-\_\-candidates}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
@@ -309,6 +578,20 @@ updates reference eigenvalue and eigenvectors, for use in termination criteria.
 \begin{DoxySeeAlso}{See Also}
 \hyperlink{classlibcmaes_1_1CMAStopCriteria}{C\-M\-A\-Stop\-Criteria} 
 \end{DoxySeeAlso}
+\hypertarget{classlibcmaes_1_1CMASolutions_a82171a1285713a228bce32c923fc65fd}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!updated\-\_\-eigen@{updated\-\_\-eigen}}
+\index{updated\-\_\-eigen@{updated\-\_\-eigen}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
+\subsubsection[{updated\-\_\-eigen}]{\setlength{\rightskip}{0pt plus 5cm}bool libcmaes\-::\-C\-M\-A\-Solutions\-::updated\-\_\-eigen (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1CMASolutions_a82171a1285713a228bce32c923fc65fd}
+
+
+returns whether the last update is lazy 
+
+\begin{DoxyReturn}{Returns}
+whether the last update is lazy 
+\end{DoxyReturn}
 \hypertarget{classlibcmaes_1_1CMASolutions_ab8d63d0079eff716421f82a8ec874ca4}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!xmean@{xmean}}
 \index{xmean@{xmean}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
 \subsubsection[{xmean}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-C\-M\-A\-Solutions\-::xmean (
@@ -324,81 +607,6 @@ returns current distribution's mean in parameter space
 mean 
 \end{DoxyReturn}
 
-
-\subsection{Member Data Documentation}
-\hypertarget{classlibcmaes_1_1CMASolutions_a49e8d5096b2342777b494c613f930031}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-best\-\_\-candidates\-\_\-hist@{\-\_\-best\-\_\-candidates\-\_\-hist}}
-\index{\-\_\-best\-\_\-candidates\-\_\-hist@{\-\_\-best\-\_\-candidates\-\_\-hist}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-best\-\_\-candidates\-\_\-hist}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<${\bf Candidate}$>$ libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-best\-\_\-candidates\-\_\-hist}}\label{classlibcmaes_1_1CMASolutions_a49e8d5096b2342777b494c613f930031}
-history of best candidate solutions. \hypertarget{classlibcmaes_1_1CMASolutions_a2ef75688ae95caea23de230f0bebc55a}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-bfvalues@{\-\_\-bfvalues}}
-\index{\-\_\-bfvalues@{\-\_\-bfvalues}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-bfvalues}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$double$>$ libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-bfvalues}}\label{classlibcmaes_1_1CMASolutions_a2ef75688ae95caea23de230f0bebc55a}
-best function values over the past 20 steps, for termination criteria. \hypertarget{classlibcmaes_1_1CMASolutions_a00270b99b2b65d9f45d985e4c2802150}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-candidates@{\-\_\-candidates}}
-\index{\-\_\-candidates@{\-\_\-candidates}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-candidates}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<${\bf Candidate}$>$ libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-candidates}}\label{classlibcmaes_1_1CMASolutions_a00270b99b2b65d9f45d985e4c2802150}
-current set of candidate solutions. \hypertarget{classlibcmaes_1_1CMASolutions_aa3699ac23ef9be0bc60be0a6417891fe}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-cov@{\-\_\-cov}}
-\index{\-\_\-cov@{\-\_\-cov}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-cov}]{\setlength{\rightskip}{0pt plus 5cm}d\-Mat libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-cov}}\label{classlibcmaes_1_1CMASolutions_aa3699ac23ef9be0bc60be0a6417891fe}
-covariance matrix. \hypertarget{classlibcmaes_1_1CMASolutions_aac9012bc898ffa0398974178bb395a2d}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-edm@{\-\_\-edm}}
-\index{\-\_\-edm@{\-\_\-edm}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-edm}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-edm = 0.\-0}}\label{classlibcmaes_1_1CMASolutions_aac9012bc898ffa0398974178bb395a2d}
-expected vertical distance to the minimum. \hypertarget{classlibcmaes_1_1CMASolutions_ac042ad718b7fba94a733329228991c4e}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-eigeniter@{\-\_\-eigeniter}}
-\index{\-\_\-eigeniter@{\-\_\-eigeniter}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-eigeniter}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-eigeniter = 0}}\label{classlibcmaes_1_1CMASolutions_ac042ad718b7fba94a733329228991c4e}
-eigenvalues computation last step, lazy-\/update only. \hypertarget{classlibcmaes_1_1CMASolutions_afb37930765ebc9c577e17d262fb585a6}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-elapsed\-\_\-last\-\_\-iter@{\-\_\-elapsed\-\_\-last\-\_\-iter}}
-\index{\-\_\-elapsed\-\_\-last\-\_\-iter@{\-\_\-elapsed\-\_\-last\-\_\-iter}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-elapsed\-\_\-last\-\_\-iter}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-elapsed\-\_\-last\-\_\-iter = 0}}\label{classlibcmaes_1_1CMASolutions_afb37930765ebc9c577e17d262fb585a6}
-time consumed during last iteration. \hypertarget{classlibcmaes_1_1CMASolutions_af3460af057684e25829d8d367fce7ac5}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-elapsed\-\_\-time@{\-\_\-elapsed\-\_\-time}}
-\index{\-\_\-elapsed\-\_\-time@{\-\_\-elapsed\-\_\-time}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-elapsed\-\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-elapsed\-\_\-time = 0}}\label{classlibcmaes_1_1CMASolutions_af3460af057684e25829d8d367fce7ac5}
-final elapsed time of stochastic optimization. \hypertarget{classlibcmaes_1_1CMASolutions_a41ff8dec2ff834bcf4ddf2de86ec40fe}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-hsig@{\-\_\-hsig}}
-\index{\-\_\-hsig@{\-\_\-hsig}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-hsig}]{\setlength{\rightskip}{0pt plus 5cm}short libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-hsig = 1}}\label{classlibcmaes_1_1CMASolutions_a41ff8dec2ff834bcf4ddf2de86ec40fe}
-0 or 1. \hypertarget{classlibcmaes_1_1CMASolutions_a2134e163fbeceaa2c31799fad7934550}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-k\-\_\-best\-\_\-candidates\-\_\-hist@{\-\_\-k\-\_\-best\-\_\-candidates\-\_\-hist}}
-\index{\-\_\-k\-\_\-best\-\_\-candidates\-\_\-hist@{\-\_\-k\-\_\-best\-\_\-candidates\-\_\-hist}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-k\-\_\-best\-\_\-candidates\-\_\-hist}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<${\bf Candidate}$>$ libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-k\-\_\-best\-\_\-candidates\-\_\-hist}}\label{classlibcmaes_1_1CMASolutions_a2134e163fbeceaa2c31799fad7934550}
-k-\/th best candidate history, for termination criteria, k is kcand=1+floor(0.\-1+lambda/4). \hypertarget{classlibcmaes_1_1CMASolutions_adb95177965030857649af65126c43753}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-leigenvalues@{\-\_\-leigenvalues}}
-\index{\-\_\-leigenvalues@{\-\_\-leigenvalues}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-leigenvalues}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-leigenvalues}}\label{classlibcmaes_1_1CMASolutions_adb95177965030857649af65126c43753}
-last computed eigenvalues, for termination criteria. \hypertarget{classlibcmaes_1_1CMASolutions_ac1f790e709f5fb3e38217954bc81615d}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-leigenvectors@{\-\_\-leigenvectors}}
-\index{\-\_\-leigenvectors@{\-\_\-leigenvectors}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-leigenvectors}]{\setlength{\rightskip}{0pt plus 5cm}d\-Mat libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-leigenvectors}}\label{classlibcmaes_1_1CMASolutions_ac1f790e709f5fb3e38217954bc81615d}
-last computed eigenvectors, for termination criteria. \hypertarget{classlibcmaes_1_1CMASolutions_a6ab80259b3184af4a3d1d762643be491}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-max\-\_\-eigenv@{\-\_\-max\-\_\-eigenv}}
-\index{\-\_\-max\-\_\-eigenv@{\-\_\-max\-\_\-eigenv}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-max\-\_\-eigenv}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-max\-\_\-eigenv = 0.\-0}}\label{classlibcmaes_1_1CMASolutions_a6ab80259b3184af4a3d1d762643be491}
-max eigenvalue, for termination criteria. \hypertarget{classlibcmaes_1_1CMASolutions_aaa527a976c47c1b0d48b33fafa0a366f}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-median\-\_\-fvalues@{\-\_\-median\-\_\-fvalues}}
-\index{\-\_\-median\-\_\-fvalues@{\-\_\-median\-\_\-fvalues}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-median\-\_\-fvalues}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$double$>$ libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-median\-\_\-fvalues}}\label{classlibcmaes_1_1CMASolutions_aaa527a976c47c1b0d48b33fafa0a366f}
-median function values of some steps, in the past, for termination criteria. \hypertarget{classlibcmaes_1_1CMASolutions_af504d5301c2609e71643aacd82c48742}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-min\-\_\-eigenv@{\-\_\-min\-\_\-eigenv}}
-\index{\-\_\-min\-\_\-eigenv@{\-\_\-min\-\_\-eigenv}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-min\-\_\-eigenv}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-min\-\_\-eigenv = 0.\-0}}\label{classlibcmaes_1_1CMASolutions_af504d5301c2609e71643aacd82c48742}
-min eigenvalue, for termination criteria. \hypertarget{classlibcmaes_1_1CMASolutions_aac5e40c86e1338aa38b3ebbdf0541299}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-nevals@{\-\_\-nevals}}
-\index{\-\_\-nevals@{\-\_\-nevals}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-nevals}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-nevals = 0}}\label{classlibcmaes_1_1CMASolutions_aac5e40c86e1338aa38b3ebbdf0541299}
-number of function calls to reach the current solution. \hypertarget{classlibcmaes_1_1CMASolutions_ac4f919c1a09611ce8374edc629d3670d}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-niter@{\-\_\-niter}}
-\index{\-\_\-niter@{\-\_\-niter}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-niter}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-niter = 0}}\label{classlibcmaes_1_1CMASolutions_ac4f919c1a09611ce8374edc629d3670d}
-number of iterations to reach this solution, for termination criteria. \hypertarget{classlibcmaes_1_1CMASolutions_adc22e31da86db0140aefd132627fff74}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-pc@{\-\_\-pc}}
-\index{\-\_\-pc@{\-\_\-pc}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-pc}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-pc}}\label{classlibcmaes_1_1CMASolutions_adc22e31da86db0140aefd132627fff74}
-cumulation for covariance. \hypertarget{classlibcmaes_1_1CMASolutions_aa39c324a7006296ee2b0c7a89713d990}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-psigma@{\-\_\-psigma}}
-\index{\-\_\-psigma@{\-\_\-psigma}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-psigma}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-psigma}}\label{classlibcmaes_1_1CMASolutions_aa39c324a7006296ee2b0c7a89713d990}
-cummulation for sigma. \hypertarget{classlibcmaes_1_1CMASolutions_ad5b606082a773da2d5c309b3b663352a}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-run\-\_\-status@{\-\_\-run\-\_\-status}}
-\index{\-\_\-run\-\_\-status@{\-\_\-run\-\_\-status}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-run\-\_\-status}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-run\-\_\-status = 0}}\label{classlibcmaes_1_1CMASolutions_ad5b606082a773da2d5c309b3b663352a}
-current status of the stochastic optimization (e.\-g. running, or stopped under termination criteria). \hypertarget{classlibcmaes_1_1CMASolutions_a2ae1e479582128f96be7a39ac6db57dd}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-sepcov@{\-\_\-sepcov}}
-\index{\-\_\-sepcov@{\-\_\-sepcov}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-sepcov}]{\setlength{\rightskip}{0pt plus 5cm}d\-Mat libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-sepcov}}\label{classlibcmaes_1_1CMASolutions_a2ae1e479582128f96be7a39ac6db57dd}
-inverse root square of covariance matrix. \hypertarget{classlibcmaes_1_1CMASolutions_ac05a959d23279c36c0cff46f361d73e5}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-sigma@{\-\_\-sigma}}
-\index{\-\_\-sigma@{\-\_\-sigma}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-sigma}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-sigma}}\label{classlibcmaes_1_1CMASolutions_ac05a959d23279c36c0cff46f361d73e5}
-step size. \hypertarget{classlibcmaes_1_1CMASolutions_a1962eb8dde999aa46d8e89689298bc3e}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-updated\-\_\-eigen@{\-\_\-updated\-\_\-eigen}}
-\index{\-\_\-updated\-\_\-eigen@{\-\_\-updated\-\_\-eigen}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-updated\-\_\-eigen}]{\setlength{\rightskip}{0pt plus 5cm}bool libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-updated\-\_\-eigen = true}}\label{classlibcmaes_1_1CMASolutions_a1962eb8dde999aa46d8e89689298bc3e}
-last update is not lazy. \hypertarget{classlibcmaes_1_1CMASolutions_a206048105c382882cb4ec3f85e3b15af}{\index{libcmaes\-::\-C\-M\-A\-Solutions@{libcmaes\-::\-C\-M\-A\-Solutions}!\-\_\-xmean@{\-\_\-xmean}}
-\index{\-\_\-xmean@{\-\_\-xmean}!libcmaes::CMASolutions@{libcmaes\-::\-C\-M\-A\-Solutions}}
-\subsubsection[{\-\_\-xmean}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-C\-M\-A\-Solutions\-::\-\_\-xmean}}\label{classlibcmaes_1_1CMASolutions_a206048105c382882cb4ec3f85e3b15af}
-distribution mean. 
 
 The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
 \item 

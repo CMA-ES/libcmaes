@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>libcmaes: libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt; Class Template Reference</title>
+<title>libcmaes: libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -91,7 +91,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classlibcmaes_1_1ESOptimizer-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt; Class Template Reference</div>  </div>
+<div class="title">libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -100,41 +100,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="esoptimizer_8h_source.html">esoptimizer.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;:</div>
+Inheritance diagram for libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classlibcmaes_1_1ESOptimizer.png" usemap="#libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;_map" alt=""/>
-  <map id="libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;_map" name="libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;_map">
+  <img src="classlibcmaes_1_1ESOptimizer.png" usemap="#libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;_map" alt=""/>
+  <map id="libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;_map" name="libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;_map">
 </map>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7c58536329acf5c33e11b882130629d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a7c58536329acf5c33e11b882130629d9">ESOptimizer</a> (FitFunc &amp;func, TParameters &amp;parameters)</td></tr>
-<tr class="memdesc:a7c58536329acf5c33e11b882130629d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">constructor  <a href="#a7c58536329acf5c33e11b882130629d9">More...</a><br/></td></tr>
-<tr class="separator:a7c58536329acf5c33e11b882130629d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a175e487b798d7a748c28c784256b51c8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a175e487b798d7a748c28c784256b51c8"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a175e487b798d7a748c28c784256b51c8">optimize</a> ()</td></tr>
-<tr class="memdesc:a175e487b798d7a748c28c784256b51c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">finds the minimum of a function, by calling on the underlying procedure of the EOSOptimizer object, like a variety of flavor of CMA-ES. <br/></td></tr>
-<tr class="separator:a175e487b798d7a748c28c784256b51c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a2cdd5a168a2ffb8ce0689d16c364e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a2cdd5a168a2ffb8ce0689d16c364e6"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a6a2cdd5a168a2ffb8ce0689d16c364e6">ESOptimizer</a> ()</td></tr>
+<tr class="memdesc:a6a2cdd5a168a2ffb8ce0689d16c364e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">dummy constructor <br/></td></tr>
+<tr class="separator:a6a2cdd5a168a2ffb8ce0689d16c364e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72c6ef297e29b6f85a410dbbdc0fa93e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#a72c6ef297e29b6f85a410dbbdc0fa93e">ESOptimizer</a> (FitFunc &amp;func, TParameters &amp;parameters)</td></tr>
+<tr class="memdesc:a72c6ef297e29b6f85a410dbbdc0fa93e"><td class="mdescLeft">&#160;</td><td class="mdescRight">constructor  <a href="#a72c6ef297e29b6f85a410dbbdc0fa93e">More...</a><br/></td></tr>
+<tr class="separator:a72c6ef297e29b6f85a410dbbdc0fa93e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab16f590ab683f4c4dd6f618c5e831a9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#aab16f590ab683f4c4dd6f618c5e831a9">ESOptimizer</a> (FitFunc &amp;func, TParameters &amp;parameters, const TSolutions &amp;solution)</td></tr>
+<tr class="memdesc:aab16f590ab683f4c4dd6f618c5e831a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">constructor for starting from an existing solution  <a href="#aab16f590ab683f4c4dd6f618c5e831a9">More...</a><br/></td></tr>
+<tr class="separator:aab16f590ab683f4c4dd6f618c5e831a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad14d01c88f05a536d18be2277766a715"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad14d01c88f05a536d18be2277766a715"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlibcmaes_1_1ESOptimizer.html#ad14d01c88f05a536d18be2277766a715">optimize</a> ()</td></tr>
+<tr class="memdesc:ad14d01c88f05a536d18be2277766a715"><td class="mdescLeft">&#160;</td><td class="mdescRight">finds the minimum of a function, by calling on the underlying procedure of the EOSOptimizer object, like a variety of flavor of CMA-ES. <br/></td></tr>
+<tr class="separator:ad14d01c88f05a536d18be2277766a715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class TESOStrategy, class TParameters&gt;<br/>
-class libcmaes::ESOptimizer&lt; TESOStrategy, TParameters &gt;</h3>
+<div class="textblock"><h3>template&lt;class TESOStrategy, class TParameters, class TSolutions = CMASolutions&gt;<br/>
+class libcmaes::ESOptimizer&lt; TESOStrategy, TParameters, TSolutions &gt;</h3>
 
 <p>an optimizer main class. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a7c58536329acf5c33e11b882130629d9"></a>
+<a class="anchor" id="a72c6ef297e29b6f85a410dbbdc0fa93e"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class TESOStrategy , class TParameters &gt; </div>
+template&lt;class TESOStrategy , class TParameters , class TSolutions  = CMASolutions&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer</a>&lt; TESOStrategy, TParameters &gt;::<a class="el" href="classlibcmaes_1_1ESOptimizer.html">ESOptimizer</a> </td>
+          <td class="memname"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer</a>&lt; TESOStrategy, TParameters, TSolutions &gt;::<a class="el" href="classlibcmaes_1_1ESOptimizer.html">ESOptimizer</a> </td>
           <td>(</td>
           <td class="paramtype">FitFunc &amp;&#160;</td>
           <td class="paramname"><em>func</em>, </td>
@@ -169,13 +176,65 @@ template&lt;class TESOStrategy , class TParameters &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="aab16f590ab683f4c4dd6f618c5e831a9"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TESOStrategy , class TParameters , class TSolutions  = CMASolutions&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classlibcmaes_1_1ESOptimizer.html">libcmaes::ESOptimizer</a>&lt; TESOStrategy, TParameters, TSolutions &gt;::<a class="el" href="classlibcmaes_1_1ESOptimizer.html">ESOptimizer</a> </td>
+          <td>(</td>
+          <td class="paramtype">FitFunc &amp;&#160;</td>
+          <td class="paramname"><em>func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TParameters &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const TSolutions &amp;&#160;</td>
+          <td class="paramname"><em>solution</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>constructor for starting from an existing solution </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func</td><td>function to minimize </td></tr>
+    <tr><td class="paramname">parameters</td><td>optimization parameters </td></tr>
+    <tr><td class="paramname">solution</td><td>solution to start from </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="esoptimizer_8h_source.html">esoptimizer.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

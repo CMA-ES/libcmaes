@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['unset_5ffixed_5fp',['unset_fixed_p',['../classlibcmaes_1_1CMAParameters.html#adb4f043e62081a8910d54f87db3b6ef4',1,'libcmaes::CMAParameters::unset_fixed_p()'],['../classlibcmaes_1_1Parameters.html#a540a57691845698e79af120f16d27f2c',1,'libcmaes::Parameters::unset_fixed_p()']]],
-  ['update',['update',['../classlibcmaes_1_1CovarianceUpdate.html#ae7625c0bc9d335b85c89588d77edec77',1,'libcmaes::CovarianceUpdate']]],
-  ['update_5fbest_5fcandidates',['update_best_candidates',['../classlibcmaes_1_1CMASolutions.html#a207c159be5f8668f018d564a1adb8dc8',1,'libcmaes::CMASolutions']]],
-  ['update_5feigenv',['update_eigenv',['../classlibcmaes_1_1CMASolutions.html#a28a20c0a90712e4f28038af2a4bd320b',1,'libcmaes::CMASolutions']]],
-  ['update_5ffevals',['update_fevals',['../classlibcmaes_1_1ESOStrategy.html#a9cfe783dc0284fce441c8757cd5222c3',1,'libcmaes::ESOStrategy']]]
+  ['tell',['tell',['../classlibcmaes_1_1BIPOPCMAStrategy.html#adc3f5ef544a151efeb96e4d4c83e1858',1,'libcmaes::BIPOPCMAStrategy::tell()'],['../classlibcmaes_1_1CMAStrategy.html#a03d9a4f9338ccd55141323ca309dbdfa',1,'libcmaes::CMAStrategy::tell()'],['../classlibcmaes_1_1ESOStrategy.html#ad35926877abdaed3922b316f57723612',1,'libcmaes::ESOStrategy::tell()'],['../classlibcmaes_1_1IPOPCMAStrategy.html#a9b3b59e7caf752f48b37500d84736137',1,'libcmaes::IPOPCMAStrategy::tell()'],['../classlibcmaes_1_1SimpleSurrogateStrategy.html#a4892de71ff0db4d17fbec5bb7149dbfd',1,'libcmaes::SimpleSurrogateStrategy::tell()'],['../classlibcmaes_1_1ACMSurrogateStrategy.html#a08ac31b1455972caa4eef2f5b1a85bee',1,'libcmaes::ACMSurrogateStrategy::tell()']]],
+  ['train',['train',['../classlibcmaes_1_1SurrogateStrategy.html#abf5c234a03257183d0a997fca95076b4',1,'libcmaes::SurrogateStrategy']]],
+  ['twodoubles',['twoDoubles',['../structtwoDoubles.html',1,'']]]
 ];

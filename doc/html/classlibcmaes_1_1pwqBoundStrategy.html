@@ -72,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -89,7 +89,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classlibcmaes_1_1pwqBoundStrategy-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">libcmaes::pwqBoundStrategy Class Reference</div>  </div>
@@ -101,6 +100,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a37f4c3ff6a558e20fa6c80a5b59ce497"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a37f4c3ff6a558e20fa6c80a5b59ce497"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>pwqBoundStrategy</b> (const double *lbounds, const double *ubounds, const int &amp;dim)</td></tr>
 <tr class="separator:a37f4c3ff6a558e20fa6c80a5b59ce497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a211f627d589847afe171160a0928ecc7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a211f627d589847afe171160a0928ecc7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>pwqBoundStrategy</b> (const double *lbounds, const double *ubounds, const double *plbounds, const double *pubounds, const int &amp;dim)</td></tr>
+<tr class="separator:a211f627d589847afe171160a0928ecc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebb3b92377ce6e90c34890420607c246"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aebb3b92377ce6e90c34890420607c246"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>to_f_representation</b> (const dVec &amp;x, dVec &amp;y) const </td></tr>
 <tr class="separator:aebb3b92377ce6e90c34890420607c246"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,30 +118,18 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>getLBound</b> (cons
 <tr class="memitem:a457a0e05a886af1df39f002c1fa85995"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a457a0e05a886af1df39f002c1fa85995"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getUBound</b> (const int &amp;k) const </td></tr>
 <tr class="separator:a457a0e05a886af1df39f002c1fa85995"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a960ccbcf7632359914d0b17797fcbcb9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a960ccbcf7632359914d0b17797fcbcb9"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_lbounds</b></td></tr>
-<tr class="separator:a960ccbcf7632359914d0b17797fcbcb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60ab4a842e4be2b1381cb277fb704c71"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a60ab4a842e4be2b1381cb277fb704c71"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_ubounds</b></td></tr>
-<tr class="separator:a60ab4a842e4be2b1381cb277fb704c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4191a379dea50cf65d7e10187e11b42"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac4191a379dea50cf65d7e10187e11b42"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_al</b></td></tr>
-<tr class="separator:ac4191a379dea50cf65d7e10187e11b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbc3f8447747aa8e69b9531de79102b5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adbc3f8447747aa8e69b9531de79102b5"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_au</b></td></tr>
-<tr class="separator:adbc3f8447747aa8e69b9531de79102b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14fcb2d8c35fe850f5eb50ef20b05078"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a14fcb2d8c35fe850f5eb50ef20b05078"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_xlow</b></td></tr>
-<tr class="separator:a14fcb2d8c35fe850f5eb50ef20b05078"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b62aa7afd03d0c17311b67678bdfe8d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2b62aa7afd03d0c17311b67678bdfe8d"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_xup</b></td></tr>
-<tr class="separator:a2b62aa7afd03d0c17311b67678bdfe8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f4b5a62672f381fdf8e25708e986152"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5f4b5a62672f381fdf8e25708e986152"></a>
-dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_r</b></td></tr>
-<tr class="separator:a5f4b5a62672f381fdf8e25708e986152"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae73e1b4b2a5b3790df35d2b9d2e6f79d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae73e1b4b2a5b3790df35d2b9d2e6f79d"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getPhenoLBound</b> (const int &amp;k) const </td></tr>
+<tr class="separator:ae73e1b4b2a5b3790df35d2b9d2e6f79d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06ec87ccab430f70440efdb6721d807d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06ec87ccab430f70440efdb6721d807d"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getPhenoUBound</b> (const int &amp;k) const </td></tr>
+<tr class="separator:a06ec87ccab430f70440efdb6721d807d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abac7ef27875331f619b30de7c274a250"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abac7ef27875331f619b30de7c274a250"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getAL</b> (const int &amp;k) const </td></tr>
+<tr class="separator:abac7ef27875331f619b30de7c274a250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16ff65bb05a68090f0ecf8df59d71b09"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16ff65bb05a68090f0ecf8df59d71b09"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getAU</b> (const int &amp;k) const </td></tr>
+<tr class="separator:a16ff65bb05a68090f0ecf8df59d71b09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="pwq__bound__strategy_8h_source.html">pwq_bound_strategy.h</a></li>
@@ -148,7 +138,7 @@ dVec&#160;</td><td class="memItemRight" valign="bottom"><b>_r</b></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 12 2014 15:41:44 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Nov 13 2014 11:00:55 for libcmaes by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
