@@ -13,7 +13,7 @@ Current features include:
 - implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES and VD-CMA (linear time & space complexity) along with support for IPOP and BIPOP flavors as well;
 - high performances, the fastest implementation (9), some operations benefit from multicores;
 - support for objective function gradient, when available;
-- support for [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model);
+- support for [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model)(10);
 - a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
 - python bindings
 
@@ -202,3 +202,4 @@ See (7) for more information and details.
 - (7) http://coco.gforge.inria.fr/doku.php?id=bbob-2013
 - (8) Y. Akimoto, A. Auger and N. Hansen (2014). Comparison-Based Natural Gradient Optimization in High Dimension. In Proceedings of Genetic and Evolutionary Computation Conference 2014
 - (9) https://github.com/beniz/libcmaes/issues/82
+- (10) Loshchilov I. (2013) Surrogate-Assisted Evolutionary Algorithms, PhD-Thesis, University Paris-Sud, https://www.lri.fr/~ilya/phd.html
