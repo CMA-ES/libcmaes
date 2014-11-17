@@ -1,7 +1,7 @@
 2014-11-17	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v0.9.3:
 	- full support for surrogates, allowing optimization of costly objective functions, ref #57
-	- integrated rankign SVM default surrogate, ref #83
+	- integrated ranking SVM default surrogate, ref #83
 	- Python bindings for surrogates, ref #75
 	- more informed optimization status and error messages, ref #85
 	- API for computing confidence intervals around optima, ref #30
