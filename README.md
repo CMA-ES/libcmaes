@@ -12,6 +12,7 @@ Current features include:
 - high-level API for simple use in external applications;
 - implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES and VD-CMA (linear time & space complexity) along with support for IPOP and BIPOP flavors as well;
 - high performances, the fastest implementation (9), some operations benefit from multicores;
+- scales up to millions of dimensions;
 - support for objective function gradient, when available;
 - support for [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model)(10);
 - a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
