@@ -48,8 +48,11 @@ namespace libcmaes
       template <class U, class V> friend class BIPOPCMAStrategy;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      template <class U> friend class errstats;
       friend class VDCMAUpdate;
       friend class Candidate;
+      template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
+      template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
       
     public:
       /**
@@ -100,6 +103,16 @@ namespace libcmaes
 	for (int i=0;i<_dim;i++)
 	  _x0min(i) = _x0max(i) = x0[i];
       }
+
+      /**
+       * \brief sets initial objective function parameter values from Eigen vector
+       * @param x0 Eigen vector of initial parameter values
+       */
+      void set_x0(const dVec &x0)
+      {
+	_x0min = x0;
+	_x0max = x0;
+      }
       
       /**
        * \brief sets bounds on initial objective function parameter values.
@@ -122,7 +135,8 @@ namespace libcmaes
        */
       void set_x0(const double *x0min, const double *x0max)
       {
-	_x0min = x0max = dVec(_dim);
+	_x0min = dVec(_dim);
+	_x0max = dVec(_dim);
 	for (int i=0;i<_dim;i++)
 	  {
 	    _x0min(i) = x0min[i];

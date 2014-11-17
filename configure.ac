@@ -1,8 +1,8 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.9.2)
+AC_INIT(libcmaes,0.9.3)
 AC_CONFIG_SRCDIR(Makefile.am)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 AM_CONFIG_HEADER([libcmaes_config.h])
 AC_CONFIG_FILES(libcmaes.pc)
 

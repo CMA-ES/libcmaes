@@ -23,6 +23,7 @@
 #define NOBOUNDSTRATEGY_H
 
 #include "eo_matrix.h"
+#include <limits>
 
 namespace libcmaes
 {
@@ -34,8 +35,18 @@ namespace libcmaes
 	(void)lbounds;
 	(void)ubounds;
 	(void)dim;
-      } // empty constructor with signature.
+      }; // empty constructor with signature.
 
+    NoBoundStrategy(const double *lbounds,const double *ubounds,
+		    const double *plbounds,const double *pubounds,const int dim=0)
+      {
+	(void)lbounds;
+	(void)ubounds;
+	(void)plbounds;
+	(void)pubounds;
+	(void)dim;
+      }; // empty constructor with signature.
+    
     ~NoBoundStrategy() {};
 
     void to_f_representation(const dVec &x, dVec &y) const
@@ -46,6 +57,8 @@ namespace libcmaes
 
     double getLBound(const int &k) const { (void)k;return -std::numeric_limits<double>::max(); }
     double getUBound(const int &k) const { (void)k;return std::numeric_limits<double>::max(); }
+    double getPhenoLBound(const int &k) const { (void)k;return -std::numeric_limits<double>::max(); }
+    double getPhenoUBound(const int &k) const { (void)k;return std::numeric_limits<double>::max(); }
   };
 }
 

@@ -76,10 +76,28 @@ namespace libcmaes
   inline dVec get_x_dvec() const { return _x; }
 
   /**
-   * \brief get parameter vector of this candidate as array.
-   * @return parameter vector as array
+   * \brief get reference parameter vector of this candidate in Eigen vector format.
+   * @return reference to parameter vector in Eigen vector format
    */
-  inline const double* get_x() const { return _x.data(); }
+  inline dVec& get_x_dvec_ref() { return _x; }
+  
+  /**
+   * \brief get parameter vector pointer of this candidate as array. 
+   *        DO NOT USE from temporary candidate object.
+   * @return parameter vector pointer
+   */
+  inline const double* get_x_ptr() const { return _x.data(); }
+  
+  /**
+   * \brief get parameter vector copy for this candidate.
+   * @return parameter vector copy
+   */
+  inline std::vector<double> get_x() const
+  {
+    std::vector<double> x;
+    x.assign(_x.data(),_x.data()+_x.size());
+    return x;
+  }
 
   /**
    * \brief get x vector size
@@ -94,7 +112,7 @@ namespace libcmaes
   template<class TGenoPheno>
     dVec get_x_pheno_dvec(const CMAParameters<TGenoPheno> &p) const
     {
-      dVec gx = p._gp.pheno(_x);
+      dVec gx = p.get_gp().pheno(_x);
       return gx;
     }
   

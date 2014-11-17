@@ -26,11 +26,14 @@
 #include "candidate.h"
 #include "eo_matrix.h"
 #include "cmaparameters.h"
+#include "cmastopcriteria.h"
+#include "pli.h"
 #include <vector>
 #include <algorithm>
 
 namespace libcmaes
 {
+  
   /**
    * \brief Holder of the set of evolving solutions from running an instance
    *        of CMA-ES.
@@ -38,13 +41,16 @@ namespace libcmaes
   class CMASolutions
   {
     template <class U, class V> friend class CMAStrategy;
-    template <class U, class V> friend class ESOptimizer;
+    template <class U, class V, class W> friend class ESOptimizer;
     template <class U, class V, class W> friend class ESOStrategy;
     template <class U> friend class CMAStopCriteria;
     template <class U, class V> friend class IPOPCMAStrategy;
     template <class U, class V> friend class BIPOPCMAStrategy;
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
+    template <class U> friend class errstats;
+    template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
+    template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
     friend class VDCMAUpdate;
     
   public:
@@ -105,6 +111,14 @@ namespace libcmaes
       {
 	return _candidates.at(r);
       }
+
+    /**
+     * \brief get a reference to the full candidate set
+     */
+    inline std::vector<Candidate>& candidates()
+    {
+      return _candidates;
+    }
     
     /**
      * \brief number of candidate solutions.
@@ -113,6 +127,33 @@ namespace libcmaes
     inline int size() const
     {
       return _candidates.size();
+    }
+
+    /**
+     * \brief resets the solution object in order to restart from
+     *        the current solution with fresh covariance matrix.
+     * Note: experimental.
+     */
+    void reset();
+    
+    /**
+     * \brief re-arrange solution object such that parameter 'k' is fixed (i.e. removed).
+     * @param k index of the parameter to remove.
+     */
+    void reset_as_fixed(const int &k);
+
+    /**
+     * \brief get profile likelihood if previously computed.
+     */
+    bool get_pli(const int &k, pli &p) const
+    {
+      std::map<int,pli>::const_iterator mit;
+      if ((mit=_pls.find(k))!=_pls.end())
+	{
+	  p = (*mit).second;
+	  return true;
+	}
+      return false;
     }
 
     /**
@@ -143,6 +184,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns reference to error covariance matrix
+     * @return error covariance matrix
+     */
+    inline const dMat& cov_ref() const
+    {
+      return _cov;
+    }
+    
+    /**
      * \brief returns pointer to covariance matrix array
      * @return pointer to covariance matrix array
      */
@@ -152,7 +202,7 @@ namespace libcmaes
     }
     
     /**
-     * \brief returns separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
+     * \brief returns separable covariance diagonal matrix, only applicable to sep-CMA-ES algorithms.
      * @return error covariance diagonal vector
      */
     inline dMat sepcov() const
@@ -161,12 +211,39 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns reference to separable covariance diagonal vector, only applicable to sep-CMA-ES algorithms.
+     * @return error covariance diagonal vector
+     */
+    inline const dMat& sepcov_ref() const
+    {
+      return _sepcov;
+    }
+    
+    /**
      * \brief returns pointer to covariance diagnoal vector
      * @return pointer to covariance diagonal array
      */
     inline const double* sepcov_data() const
     {
       return _sepcov.data();
+    }
+
+    /**
+     * \brief returns inverse root square of covariance matrix
+     * @return square root of error covariance matrix
+     */
+    inline dMat csqinv() const
+    {
+      return _csqinv;
+    }
+
+    /**
+     * \brief returns inverse root square of separable covariance diagonal matrix, only applicable to sep-CMA-ES algorithms.
+     * @return square root of error covariance diagonal matrix
+     */
+    inline dMat sepcsqinv() const
+    {
+      return _sepcsqinv;
     }
     
     /**
@@ -188,6 +265,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief sets the current distributions' mean in parameter space
+     * @param xmean mean vector
+     */
+    inline void set_xmean(const dVec &xmean)
+    {
+      _xmean = xmean;
+    }
+    
+    /**
      * \brief returns current optimization status.
      * @return status
      */
@@ -195,6 +281,15 @@ namespace libcmaes
     {
       return _run_status;
     }
+
+    /**
+     * \brief returns current optimization status' message.
+     * @return status message
+     */
+    inline std::string status_msg() const
+      {
+	return CMAStopCriteria<>::_scriterias[_run_status];
+      }
 
     /**
      * \brief returns currently elapsed time spent on optimization
@@ -224,6 +319,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns current budget (number of objective function calls)
+     * @return number of objective function calls
+     */
+    inline int nevals() const
+    {
+      return _nevals;
+    }
+    
+    /**
      * \brief returns current minimal eigen value
      * @return minimal eigen value
      */
@@ -239,6 +343,15 @@ namespace libcmaes
     inline double max_eigenv() const
     {
       return _max_eigenv;
+    }
+
+    /**
+     * \brief returns whether the last update is lazy
+     * @return whether the last update is lazy
+     */
+    inline bool updated_eigen() const
+    {
+      return _updated_eigen;
     }
 
     /**
@@ -307,8 +420,14 @@ namespace libcmaes
     int _elapsed_tell = 0;
     int _elapsed_stop = 0;
 #endif
+
+    std::map<int,pli> _pls; /**< profile likelihood for parameters it has been computed for. */
     double _edm = 0.0; /**< expected vertical distance to the minimum. */
 
+    Candidate _best_seen_candidate; /**< best seen candidate along the run. */
+    int _best_seen_iter;
+    Candidate _initial_candidate;
+    
     dVec _v; /**< complementary vector for use in vdcma. */
   };
 

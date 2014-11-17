@@ -34,6 +34,14 @@ namespace libcmaes
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
+  IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::IPOPCMAStrategy(FitFunc &func,
+								 CMAParameters<TGenoPheno> &parameters,
+								 const CMASolutions &solutions)
+    :CMAStrategy<TCovarianceUpdate,TGenoPheno>(func,parameters,solutions)
+  {
+  }
+
+  template <class TCovarianceUpdate, class TGenoPheno>
   IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::~IPOPCMAStrategy()
   {
   }
@@ -45,14 +53,16 @@ namespace libcmaes
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
-  int IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
+  int IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(const EvalFunc &evalf,
+							      const AskFunc &askf,
+							      const TellFunc &tellf)
   {
     CMASolutions best_run;
     for (int r=0;r<CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._nrestarts;r++)
       {
 	LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "r: " << r << " / lambda=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << std::endl;
-	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
-
+	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
+		
 	// capture best solution.
 	capture_best_solution(best_run);
 	

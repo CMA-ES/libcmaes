@@ -29,6 +29,10 @@ namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
   typedef std::function<dVec (const double*, const int &n)> GradFunc;
+
+  typedef std::function<void(const dMat&, const dMat&)> EvalFunc;
+  typedef std::function<dMat(void)> AskFunc;
+  typedef std::function<void(void)> TellFunc;
   
   template<class TParameters,class TSolutions>
     using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
@@ -60,6 +64,16 @@ namespace libcmaes
     ESOStrategy(FitFunc &func,
 		TParameters &parameters);
 
+    /**
+     * \brief constructor for starting from an existing solution.
+     * @param func objective function to minimize
+     * @param parameters stochastic search parameters
+     * @param solution solution object to start from
+     */
+    ESOStrategy(FitFunc &func,
+		TParameters &parameters,
+		const TSolutions &solutions);
+    
   protected:
     ~ESOStrategy();
 
@@ -71,7 +85,7 @@ namespace libcmaes
     dMat ask();
 
     /**
-     * \brief Evaluates a set of candiates against the objective function.
+     * \brief Evaluates a set of candidates against the objective function.
      *        The procedure is multithreaded and stores both the candidates
      *        and their f-value into the _solutions object that bears the 
      *        current set of potential solutions to the optimization problem.
@@ -98,10 +112,13 @@ namespace libcmaes
      * \brief Finds the minimum of the objective function. It makes
      *        alternative calls to ask(), tell() and stop() until 
      *        one of the termination criteria triggers.
+     * @param evalf custom eval function
+     * @param askf custom ask function
+     * @param tellf custom tell function
      * @return success or error code, as defined in opti_err.h
      */
-    int optimize();
-
+    int optimize(const EvalFunc &evalf, const AskFunc &askf, const TellFunc &tellf);
+    
     /**
      * \brief increment iteration count.
      */
@@ -112,9 +129,9 @@ namespace libcmaes
      * @param evals increment to the current consumed budget
      */
     void update_fevals(const int &evals);
-    
+
     /**
-     * \brief sets gradient function
+     * \brief sets the gradient function, if available.
      * @param gfunc gradient function
      */
     void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
@@ -127,6 +144,17 @@ namespace libcmaes
      * @param pfunc a progress function
      */
     void set_progress_func(ProgressFunc<TParameters,TSolutions> &pfunc) { _pfunc = pfunc; }
+
+    /**
+     * \brief starts optimization from a given solution object.
+     * @param sol the solution object to start search from.
+     */
+    void start_from_solution(const TSolutions &sol)
+    {
+      _parameters.set_x0(sol.best_candidate().get_x_dvec());
+      _solutions = sol;
+      _solutions.reset();
+    }
 
     /**
      * \brief Sets the possibly custom plot to file function,
@@ -179,6 +207,8 @@ namespace libcmaes
     // deprecated.
     Candidate best_solution() const;
 
+    void set_initial_elitist(const bool &e) { _initial_elitist = e; }
+    
   protected:
     FitFunc _func; /**< the objective function. */
     int _nevals;  /**< number of function evaluations. */
@@ -189,6 +219,7 @@ namespace libcmaes
     GradFunc _gfunc = nullptr; /**< gradient function, when available. */
     PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
     FitFunc _funcaux;
+    bool _initial_elitist = false; /**< restarts from and re-injects best seen solution if not the final one. */
   };
   
 }

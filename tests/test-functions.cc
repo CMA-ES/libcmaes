@@ -20,6 +20,7 @@
  */
 
 #include "cmaes.h"
+#include "errstats.h"
 #include <map>
 #include <random>
 #include <limits>
@@ -33,6 +34,21 @@
 #include <assert.h>
 
 using namespace libcmaes;
+
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+  std::stringstream ss(s);
+  std::string item;
+  while (std::getline(ss, item, delim)) {
+    elems.push_back(item);
+  }
+  return elems;
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+  std::vector<std::string> elems;
+  split(s, delim, elems);
+  return elems;
+}
 
 bool compEp(const double &a, const double &b, const double &epsilon)
 {
@@ -408,7 +424,15 @@ DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecew
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_bool(quiet,false,"no intermediate output");
+DEFINE_bool(le,false,"whether to return profile likelihood error bounds around the minimum");
+DEFINE_double(le_fup,0.1,"deviation from the minimum as the size of the confidence interval for profile likelihood computation");
+DEFINE_double(le_delta,0.1,"tolerance factor around the fup confidence interval for profile likelihood computation");
+DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing the profile likelihood in every direction");
+DEFINE_int32(le_maxiters,1e4,"max number of iterations in search for profile likelihood points");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
+DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
+DEFINE_int32(contour_p,4,"number of contour points, must be >= 4");
+DEFINE_double(contour_fup,0.1,"value from the minimum at which to find contour points");
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
@@ -416,6 +440,7 @@ DEFINE_bool(with_gradient,false,"whether to use the function gradient when avail
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
+DEFINE_bool(elitist,false,"whether to activate elistist scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
 DEFINE_int32(max_hist,-1,"maximum stored history, helps mitigate the memory usage though preventing the 'stagnation' criteria to trigger");
 DEFINE_bool(no_stagnation,false,"deactivate stagnation stopping criteria");
 DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
@@ -448,6 +473,7 @@ CMASolutions cmaes_opt()
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
+  cmaparams.set_elitist(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
@@ -512,10 +538,31 @@ CMASolutions cmaes_opt()
 	  return 0;
 	};
     }
-  std::cout.precision(std::numeric_limits<double>::digits10);
-  cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,gfunc,pffunc);
+  cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,gfunc,cmasols,pffunc);
+  std::cout << "Minimization completed in " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  if (cmasols.run_status() >= 0 && FLAGS_le)
+    {
+      std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate().get_fvalue() + FLAGS_le_fup << ")\n";
+      for (int k=0;k<FLAGS_dim;k++)
+	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
+						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta,FLAGS_le_maxiters);
+    }
+  if (!FLAGS_contour.empty())
+    {
+      cmaparams.set_quiet(true);
+      std::vector<std::string> contour_indexes_str = split(FLAGS_contour,',');
+      std::pair<int,int> contour_indexes;
+      contour_indexes.first = atoi(contour_indexes_str.at(0).c_str());
+      contour_indexes.second = atoi(contour_indexes_str.at(1).c_str());
+      std::cout << "Now computing contour passing through point (" << contour_indexes.first << "," << contour_indexes.second << ")\n";
+      contour ct = errstats<TGenoPheno>::contour_points(mfuncs[FLAGS_fname],contour_indexes.first,contour_indexes.second,
+							FLAGS_contour_p,FLAGS_contour_fup,cmaparams,cmasols,FLAGS_le_delta,FLAGS_le_maxiters);
+      std::cout << ct << std::endl;
+    }
+  std::cout << "Done!\n";
   if (cmasols.run_status() < 0)
-    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
+    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << " -- " << cmasols.status_msg() << std::endl;
+  else LOG(INFO) << "optimization succeeded with termination criteria " << cmasols.run_status() << " -- " << cmasols.status_msg() << std::endl;
   LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   if (cmasols.best_candidate().get_x_size() <= 1000)
     {
@@ -538,7 +585,7 @@ int main(int argc, char *argv[])
 #endif
   
   fillupfuncs();
-
+  
   if (FLAGS_list)
     {
       printAvailFuncs();

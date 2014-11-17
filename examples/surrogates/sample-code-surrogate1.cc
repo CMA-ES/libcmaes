@@ -20,36 +20,51 @@
  */
 
 #include "cmaes.h"
+#include "surrogatestrategy.h"
 #include <iostream>
 
 using namespace libcmaes;
 
-FitFunc rosenbrock = [](const double *x, const int N)
+FitFunc fsphere = [](const double *x, const int N)
 {
   double val = 0.0;
-  for (int i=0;i<N-1;i++)
-    {
-      val += 100.0*pow((x[i+1]-x[i]*x[i]),2) + pow((x[i]-1.0),2);
-    }
+  for (int i=0;i<N;i++)
+    val += x[i]*x[i];
   return val;
 };
 
-PlotFunc<CMAParameters<>,CMASolutions> plotf = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+CSurrFunc ftrain = [](const std::vector<Candidate> &c, const dMat &cov)
 {
-  fplotstream << "kappa=" << cmasols.max_eigenv() / cmasols.min_eigenv() << std::endl; // storing covariance matrix condition number to file.
+  //do nothing
+  return 0;
+};
+
+SurrFunc fpredict = [](std::vector<Candidate> &c, const dMat &cov)
+{
+  // fill up with real fvalue.
+  for (size_t i=0;i<c.size();i++)
+    c.at(i).set_fvalue(fsphere(c.at(i).get_x_ptr(),c.at(i).get_x_size()));
   return 0;
 };
 
 int main(int argc, char *argv[])
 {
-  int dim = 20; // problem dimensions.
+  int dim = 10; // problem dimensions.
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
-  //int lambda = 100; // offsprings at each generation.
+
   CMAParameters<> cmaparams(dim,&x0.front(),sigma);
-  cmaparams.set_fplot("pffunc.dat"); // DON'T MISS: mandatory output file name.
-  CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols,plotf);
-  std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
-  return cmasols.run_status();
+  ESOptimizer<SimpleSurrogateStrategy<CMAStrategy>,CMAParameters<>> optim(fsphere,cmaparams);
+  optim.set_ftrain(ftrain);
+  optim.set_fpredict(fpredict);
+  optim.set_exploit(false); // test mode.
+  
+  while(!optim.stop())
+    {
+      dMat candidates = optim.ask();
+      optim.eval(candidates);
+      optim.tell();
+      optim.inc_iter(); // important step: signals next iteration.
+    }
+  std::cout << optim.get_solutions() << std::endl;
 }

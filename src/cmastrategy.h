@@ -57,6 +57,16 @@ namespace libcmaes
        */
       CMAStrategy(FitFunc &func,
 		  CMAParameters<TGenoPheno> &parameters);
+
+      /**
+       * \brief constructor for starting from an existing solution.
+       * @param func objective function to minimize
+       * @param parameters stochastic search parameters
+       * @param cmasols solution object to start from
+       */
+      CMAStrategy(FitFunc &func,
+		  CMAParameters<TGenoPheno> &parameters,
+		  const CMASolutions &cmasols);
     
       ~CMAStrategy();
 
@@ -82,10 +92,27 @@ namespace libcmaes
        * \brief Finds the minimum of the objective function. It makes
        *        alternate calls to ask(), tell() and stop() until 
        *        one of the termination criteria triggers.
+       * @param evalf custom eval function
+       * @param askf custom ask function
+       * @param tellf custom tell function
        * @return success or error code, as defined in opti_err.h
        * Note: the termination criteria code is held by _solutions._run_status
        */
-      int optimize();
+    int optimize(const EvalFunc &evalf, const AskFunc &askf, const TellFunc &tellf);
+
+      /**
+       * \brief Finds the minimum of the objective function. It makes
+       *        alternate calls to ask(), tell() and stop() until 
+       *        one of the termination criteria triggers.
+       * @return success or error code, as defined in opti_err.h
+       * Note: the termination criteria code is held by _solutions._run_status
+       */
+    int optimize()
+    {
+      return optimize(std::bind(&ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno>>::eval,this,std::placeholders::_1,std::placeholders::_2),
+		      std::bind(&CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask,this),
+		      std::bind(&CMAStrategy<TCovarianceUpdate,TGenoPheno>::tell,this));
+    }
     
       /**
        * \brief Stream the internal state of the search into an output file, 
@@ -94,10 +121,10 @@ namespace libcmaes
       void plot();
     
     protected:
-      EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
+      Eigen::EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
       std::ofstream *_fplotstream = nullptr; /**< plotting file stream, not in parameters because of copy-constructor hell. */
-
+    
     public:
     static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
     static PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultFPFunc; /**< the default plot to file function. */

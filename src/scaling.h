@@ -101,8 +101,8 @@ namespace libcmaes
 			 const double *ubounds,
 			 const int &dim)
     {
-      dVec vlbounds = Map<dVec>(const_cast<double*>(lbounds),dim);
-      dVec vubounds = Map<dVec>(const_cast<double*>(ubounds),dim);
+      dVec vlbounds = Eigen::Map<dVec>(const_cast<double*>(lbounds),dim);
+      dVec vubounds = Eigen::Map<dVec>(const_cast<double*>(ubounds),dim);
       dVec denom = vubounds-vlbounds;
       denom = denom.cwiseMin(std::numeric_limits<double>::max()); // protects against overflow
       _scaling = (dVec::Constant(dim,_intmax)-dVec::Constant(dim,_intmin)).cwiseQuotient(denom);

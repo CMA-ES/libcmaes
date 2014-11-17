@@ -26,6 +26,7 @@
 #include <chrono>
 #include "parameters.h"
 #include "esostrategy.h"
+#include "cmasolutions.h"
 
 /* algorithms */
 enum {
@@ -66,7 +67,7 @@ namespace libcmaes
   /**
    * \brief an optimizer main class. 
    */
-  template <class TESOStrategy,class TParameters>
+  template <class TESOStrategy,class TParameters,class TSolutions=CMASolutions>
     class ESOptimizer : public TESOStrategy
     {
     public:
@@ -89,6 +90,19 @@ namespace libcmaes
 	{
 	}
       
+      /**
+       * \brief constructor for starting from an existing solution
+       * @param func function to minimize
+       * @param parameters optimization parameters
+       * @param solution solution to start from
+       */
+      ESOptimizer(FitFunc &func,
+		  TParameters &parameters,
+		  const TSolutions &solution)
+	:TESOStrategy(func,parameters,solution)
+	{
+	}
+      
       ~ESOptimizer() {}
 
       /**
@@ -98,7 +112,7 @@ namespace libcmaes
       int optimize()
       {
 	std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
-	bool opt = TESOStrategy::optimize();
+	int opt = TESOStrategy::optimize();
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
 	TESOStrategy::_solutions._elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 	return opt;

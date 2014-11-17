@@ -46,6 +46,16 @@ namespace libcmaes
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
   }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  ESOStrategy<TParameters,TSolutions,TStopCriteria>::ESOStrategy(FitFunc &func,
+								 TParameters &parameters,
+								 const TSolutions &solutions)
+    :_func(func),_nevals(0),_niter(0),_parameters(parameters)
+  {
+    _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
+    start_from_solution(solutions);
+  }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
   ESOStrategy<TParameters,TSolutions,TStopCriteria>::~ESOStrategy()
@@ -71,6 +81,24 @@ namespace libcmaes
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
+
+    // if initial elitist, reinject initial solution as needed.
+    if (_initial_elitist)
+      {
+	// reinject intial solution if half or more points have value above that of the initial point candidate.
+	int count = 0;
+	for (int r=0;r<candidates.cols();r++)
+	  if (_solutions._candidates.at(r).get_fvalue() < _solutions._initial_candidate.get_fvalue())
+	    ++count;
+	if (count/2.0 < candidates.cols()/2)
+	  {
+#ifdef HAVE_DEBUG
+	    std::cout << "reinjecting initial solution\n";
+#endif
+	    _solutions._candidates.at(1) = _solutions._initial_candidate;
+	  }
+      }
+    
     update_fevals(candidates.cols());
     
 #ifdef HAVE_DEBUG
@@ -105,8 +133,8 @@ namespace libcmaes
     for (int i=0;i<_parameters._dim;i++)
       {
 	dVec ei1 = x;
-	ei1(i,0) += epsilon(i); //TODO: beware of bounds ?
-	ei1(i,0) = std::min(ei1(i,0),_parameters.get_gp().get_boundstrategy().getUBound(i));
+	ei1(i,0) += epsilon(i);
+	ei1(i,0) = std::min(ei1(i,0),_parameters.get_gp().get_boundstrategy_ref().getUBound(i));
 	double gradi = (_func(ei1.data(),_parameters._dim) - fx)/epsilon(i);
 	vgradf(i,0) = gradi;
       }

@@ -77,7 +77,7 @@ namespace libcmaes
     
     if (static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
       {
-	EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
+	Eigen::EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
 	esolver.set_covar(_sepcov);
 	_v = esolver.samples_ind(1) / std::sqrt(p._dim);
       }
@@ -110,6 +110,13 @@ namespace libcmaes
     _median_fvalues.push_back(median);
     if (_median_fvalues.size() > static_cast<size_t>(ceil(0.2*_niter+120+30*_xmean.size()/static_cast<double>(_candidates.size()))))
       _median_fvalues.erase(_median_fvalues.begin());
+
+    // store best seen candidate.
+    if (_niter == 0 || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
+      {
+	_best_seen_candidate = _candidates.at(0);
+	_best_seen_iter = _niter;
+      }
   }
 
   void CMASolutions::update_eigenv(const dVec &eigenvalues,
@@ -121,6 +128,57 @@ namespace libcmaes
     _leigenvectors = eigenvectors;
   }
 
+  void CMASolutions::reset()
+  {
+    //_candidates.clear();
+    _best_candidates_hist.clear();
+    //_leigenvalues.setZero(); // beware.
+    //_leigenvectors.setZero();
+    //_cov /= 1e-3;//_sigma;
+    _cov = dMat::Identity(_csqinv.rows(),_csqinv.cols());
+    //std::cout << "cov: " << _cov << std::endl;
+    _niter = 0;
+    _nevals = 0;
+    //_sigma = 1.0/static_cast<double>(_csqinv.rows());
+    _psigma = dVec::Zero(_cov.rows());
+    _pc = dVec::Zero(_cov.rows());
+    _k_best_candidates_hist.clear();
+    _bfvalues.clear();
+    _median_fvalues.clear();
+    _run_status = 0;
+    _elapsed_time = _elapsed_last_iter = 0;
+#ifdef HAVE_DEBUG
+    _elapsed_eval = _elapsed_ask = _elapsed_tell = _elapsed_stop = 0;
+#endif
+  }
+  
+  void CMASolutions::reset_as_fixed(const int &k)
+  {
+    removeRow(_cov,k);
+    removeColumn(_cov,k);
+    removeRow(_csqinv,k);
+    removeColumn(_csqinv,k);
+    removeElement(_xmean,k);
+    removeElement(_psigma,k);
+    removeElement(_pc,k);
+    for (size_t i=0;i<_candidates.size();i++)
+      removeElement(_candidates.at(i).get_x_dvec_ref(),k);
+    _best_candidates_hist.clear();
+    removeElement(_leigenvalues,k);
+    removeRow(_leigenvectors,k);
+    removeColumn(_leigenvectors,k);
+    _niter = 0;
+    _nevals = 0;
+    _k_best_candidates_hist.clear();
+    _bfvalues.clear();
+    _median_fvalues.clear();
+    _run_status = 0;
+    _elapsed_time = _elapsed_last_iter = 0;
+#ifdef HAVE_DEBUG
+    _elapsed_eval = _elapsed_ask = _elapsed_tell = _elapsed_stop = 0;
+#endif
+  }
+  
   template <class TGenoPheno>
   std::ostream& CMASolutions::print(std::ostream &out,
 				    const int &verb_level,
@@ -128,7 +186,6 @@ namespace libcmaes
   {
     if (_candidates.empty())
       {
-	out << "empth solution set\n";
 	return out;
       }
     out << "best solution => f-value=" << best_candidate().get_fvalue() << " / fevals=" << _nevals << " / sigma=" << _sigma << " / iter=" << _niter << " / elaps=" << _elapsed_time << "ms" << " / x=" << gp.pheno(best_candidate().get_x_dvec()).transpose();
@@ -137,6 +194,21 @@ namespace libcmaes
 	out << "\ncovdiag=" << _cov.diagonal().transpose() << std::endl;
 	out << "psigma=" << _psigma.transpose() << std::endl;
 	out << "pc=" << _pc.transpose() << std::endl;
+      }
+    if (!_pls.empty())
+      {
+	out << "\nconfidence intervals:\n";
+	for (auto it=_pls.begin();it!=_pls.end();++it)
+	  {
+	    out << "dim " << (*it).first << " in [" << (*it).second._min << "," << (*it).second._max << "] with error [" << (*it).second._errmin << "," << (*it).second._errmax << "]";
+	    if ((*it).second._err[(*it).second._minindex] || (*it).second._err[(*it).second._maxindex])
+	      out << " / status=[" << (*it).second._err[(*it).second._minindex] << "," << (*it).second._err[(*it).second._maxindex] << "]";
+	    out << " / fvalue=" << "(" << (*it).second._fvaluem((*it).second._minindex) << "," << (*it).second._fvaluem((*it).second._samplesize+1+(*it).second._maxindex) << ")\n";
+	    if (verb_level)
+	      {
+		out << "x=" << "([" << (*it).second._xm.row((*it).second._minindex) << "],[" << (*it).second._xm.row((*it).second._samplesize + 1 + (*it).second._maxindex) << "])\n";
+	      }
+	  }
       }
     return out;
   }
