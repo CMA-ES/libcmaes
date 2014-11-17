@@ -1,3 +1,15 @@
+2014-11-17	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.9.3:
+	- full support for surrogates, allowing optimization of costly objective functions, ref #57
+	- integrated rankign SVM default surrogate, ref #83
+	- Python bindings for surrogates, ref #75
+	- more informed optimization status and error messages, ref #85
+	- API for computing confidence intervals around optima, ref #30
+	- API for computing 2D contour around optima, ref #31
+	- new 'elitist' scheme for improved restart strategy useful on some rather difficult functions, ref #77
+	- fixed Eigen namespace import, ref #62
+	- fixed and added new parameter vector getter in Candidate, ref #84
+
 2014-10-30	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v.0.9.2:
 	- new VD-CMA algorithm with linear time and space complexity for black-box optimization, ref #72
