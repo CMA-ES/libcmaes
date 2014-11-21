@@ -13,5 +13,8 @@ all:lcmaes.so
 install: all
 	$(INSTALL) lcmaes.so $(libdir)
 
+uninstall-hook:
+	rm $(libdir)/lcmaes.so
+
 clean:
 	rm *.so *.o
