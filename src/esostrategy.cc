@@ -45,6 +45,13 @@ namespace libcmaes
       }
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
+    if (parameters._uh)
+      {
+	std::random_device rd;
+	_uhgen = std::mt19937(rd());
+	_uhgen.seed(static_cast<uint64_t>(time(nullptr)));
+	_uhunif = std::uniform_real_distribution<>(0,1);
+      }
   }
 
   template<class TParameters,class TSolutions,class TStopCriteria>
@@ -55,6 +62,13 @@ namespace libcmaes
   {
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     start_from_solution(solutions);
+    if (parameters._uh)
+      {
+	std::random_device rd;
+	_uhgen = std::mt19937(rd());
+	_uhgen.seed(static_cast<uint64_t>(time(nullptr)));
+	_uhunif = std::uniform_real_distribution<>(0,1);
+      }
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
@@ -80,6 +94,46 @@ namespace libcmaes
 	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
+      }
+
+    // evaluation step of uncertainty handling scheme.
+    if (_parameters._uh)
+      {
+	// compute the number of solutions to re-evaluate
+	_solutions._lambda_reev = 0.0;
+	double r_l = _parameters._rlambda * _parameters._lambda;
+	int lr_l = std::floor(r_l);
+	double pr_l = r_l - lr_l;
+	double p = _uhunif(_uhgen);
+	//std::cout << "lambda=" << _parameters._lambda << " / rlambda=" << _parameters._rlambda << " / rl=" << r_l << " / lr_r=" << lr_l << " / p=" << p << " -- pr_l=" << pr_l << std::endl;
+	if (p < pr_l)
+	  _solutions._lambda_reev = lr_l + 1;
+	else _solutions._lambda_reev = lr_l;
+	//std::cout << "lambda_reev=" << _solutions._lambda_reev << std::endl;
+	//TODO: check that lambda_reev is not == 0 for more than 2/(rlambda*lambda) generations.
+
+	// mutate candidates.
+	dMat ncandidates;
+	if (phenocandidates.size())
+	  ncandidates = phenocandidates.block(0,0,phenocandidates.rows(),_solutions._lambda_reev);
+	else ncandidates = candidates.block(0,0,candidates.rows(),_solutions._lambda_reev);
+	if (_solutions._sepcov.size())
+	  _uhesolver.set_covar(_solutions._sepcov);
+	else _uhesolver.set_covar(_solutions._cov);
+	ncandidates += _parameters._epsuh * _solutions._sigma * _uhesolver.samples_ind(_solutions._lambda_reev);
+	
+	// re-evaluate
+	std::vector<RankedCandidate> nvcandidates;
+	for (int r=0;r<candidates.cols();r++)
+	  {
+	    if (r < _solutions._lambda_reev)
+	      {
+		double nfvalue = _func(ncandidates.col(r).data(),ncandidates.rows());
+		nvcandidates.emplace_back(nfvalue,_solutions._candidates.at(r),r);
+	      }
+	    else nvcandidates.emplace_back(_solutions._candidates.at(r).get_fvalue(),_solutions._candidates.at(r),r);
+	  }
+	_solutions._candidates_uh = nvcandidates;
       }
 
     // if initial elitist, reinject initial solution as needed.

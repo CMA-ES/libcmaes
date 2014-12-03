@@ -31,6 +31,10 @@
 namespace libcmaes
 {
 
+  template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+  }
+
   template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
   
   template <class TCovarianceUpdate, class TGenoPheno>
@@ -247,7 +251,129 @@ namespace libcmaes
 #endif
     
     // sort candidates.
-    eostrat<TGenoPheno>::_solutions.sort_candidates();
+    if (!eostrat<TGenoPheno>::_parameters._uh)
+      eostrat<TGenoPheno>::_solutions.sort_candidates();
+    else
+      {
+	std::sort(eostrat<TGenoPheno>::_solutions._candidates_uh.begin(),
+		  eostrat<TGenoPheno>::_solutions._candidates_uh.end(),
+		  [](RankedCandidate &c1, RankedCandidate &c2)
+		  { 
+		    bool lower = c1.get_fvalue() < c2.get_fvalue();
+		    return lower;
+		  });
+	int pos = 0;
+	auto vit = eostrat<TGenoPheno>::_solutions._candidates_uh.begin();
+        while(vit!=eostrat<TGenoPheno>::_solutions._candidates_uh.end())
+          {
+	    (*vit)._r1 = pos;
+	    ++vit;
+	    ++pos;
+	  }
+	
+	// sort second uh set of candidates
+	//std::cout << "sorting second rank\n";
+	std::sort(eostrat<TGenoPheno>::_solutions._candidates_uh.begin(),
+		  eostrat<TGenoPheno>::_solutions._candidates_uh.end(),
+		  [](RankedCandidate &c1, RankedCandidate &c2)
+		  { 
+		    bool lower = c1._fvalue_mut < c2._fvalue_mut;
+		    return lower;
+		  });
+	pos = 0;
+	vit = eostrat<TGenoPheno>::_solutions._candidates_uh.begin();
+        while(vit!=eostrat<TGenoPheno>::_solutions._candidates_uh.end())
+          {
+	    (*vit)._r2 = pos;
+	    ++vit;
+	    ++pos;
+	  }
+	
+	// compute delta
+	//std::cout << "computing delta\n";
+	vit = eostrat<TGenoPheno>::_solutions._candidates_uh.begin();
+	while(vit!=eostrat<TGenoPheno>::_solutions._candidates_uh.end())
+	  {
+	    if ((*vit)._idx >= eostrat<TGenoPheno>::_solutions._lambda_reev)
+              {
+		++vit;
+		continue;
+	      }
+	    int diffr = (*vit)._r2 - (*vit)._r1;
+	    (*vit)._delta = diffr - sgn(diffr);
+	    //std::cout << "delta=" << (*vit)._delta << std::endl;
+	    ++vit;
+	  }
+	//std::cout << "computing meandelta\n";
+	double meandelta = std::accumulate(eostrat<TGenoPheno>::_solutions._candidates_uh.begin(),
+					   eostrat<TGenoPheno>::_solutions._candidates_uh.end(),
+					   0.0,
+					   [](double sum, const RankedCandidate &c){ return sum + fabs(c._delta); });
+	meandelta /= eostrat<TGenoPheno>::_solutions._lambda_reev;
+	//std::cout << "meandelta=" << meandelta << std::endl;
+	
+	// compute uncertainty level
+	double s = 0.0;
+	for (size_t i=0;i<eostrat<TGenoPheno>::_solutions._candidates_uh.size();i++)
+	  {
+	    RankedCandidate rc = eostrat<TGenoPheno>::_solutions._candidates_uh.at(i);
+	    if (rc._idx >= eostrat<TGenoPheno>::_solutions._lambda_reev)
+	      continue;
+	    s += 2*fabs(rc._delta);
+	    double d1 = rc._r2 - static_cast<int>(rc._r2 > rc._r1);
+	    std::vector<double> dv;
+	    double fact = eostrat<TGenoPheno>::_parameters._thetauh*0.5;
+	    for (int j=1;j<2*eostrat<TGenoPheno>::_parameters._lambda;j++)
+	      dv.push_back(fabs(j-d1));
+	    std::nth_element(dv.begin(),dv.begin()+int(dv.size()*fact),dv.end());
+	    double comp1 = *(dv.begin()+int(dv.size()*fact));
+	    s -= comp1;
+	    
+	    double d2 = rc._r1 - static_cast<int>(rc._r1 > rc._r2);
+	    dv.clear();
+	    for (int j=1;j<2*eostrat<TGenoPheno>::_parameters._lambda;j++)
+	      dv.push_back(fabs(j-d2));
+	    std::nth_element(dv.begin(),dv.begin()+int(dv.size()*fact),dv.end());
+	    double comp2 = *(dv.begin()+int(dv.size()*fact));
+	    s -= comp2;
+
+	    //std::cout << "r1=" << rc._r1 << " / r2=" << rc._r2 << " / 2delta=" << 2*fabs(rc._delta) << " / comp1=" << comp1 << " / comp2=" << comp2 << std::endl;
+	  }
+	s /= static_cast<double>(eostrat<TGenoPheno>::_solutions._lambda_reev);
+	//std::cout << "s=" << s << std::endl;
+	eostrat<TGenoPheno>::_solutions._suh = s;
+	
+	// rerank according to r1 + r2
+	int lreev = eostrat<TGenoPheno>::_solutions._lambda_reev;
+	std::sort(eostrat<TGenoPheno>::_solutions._candidates_uh.begin(),
+		  eostrat<TGenoPheno>::_solutions._candidates_uh.end(),
+		  [lreev,meandelta](RankedCandidate const &c1, RankedCandidate const &c2)
+		  { 
+		    int s1 = c1._r1 + c1._r2;
+		    int s2 = c2._r2 + c2._r2;
+		    if (s1 == s2)
+		      {
+			if (c1._delta == c2._delta)
+			  return c1.get_fvalue() + c1._fvalue_mut < c2.get_fvalue() + c2._fvalue_mut;
+			else
+			  {
+			    double c1d = c1._idx < lreev ? fabs(c1._delta) : meandelta;
+			    double c2d = c2._idx < lreev ? fabs(c2._delta) : meandelta;
+			    return c1d < c2d;
+			  }
+		      }
+		    else return c1._r1 + c1._r2 < c2._r1 + c2._r2;
+		  });
+	//std::cout << "reranked according to both ranks\n";
+	std::vector<Candidate> ncandidates;
+	vit = eostrat<TGenoPheno>::_solutions._candidates_uh.begin();
+	while(vit!=eostrat<TGenoPheno>::_solutions._candidates_uh.end())
+          {
+	    ncandidates.push_back(eostrat<TGenoPheno>::_solutions._candidates.at((*vit)._idx));
+	    ++vit;
+	  }
+	eostrat<TGenoPheno>::_solutions._candidates = ncandidates;
+      }
 
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
@@ -255,6 +381,10 @@ namespace libcmaes
     // CMA-ES update, depends on the selected 'flavor'.
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,_esolver,eostrat<TGenoPheno>::_solutions);
     
+    if (eostrat<TGenoPheno>::_parameters._uh)
+      if (eostrat<TGenoPheno>::_solutions._suh > 0.0)
+	eostrat<TGenoPheno>::_solutions._sigma *= eostrat<TGenoPheno>::_parameters._alphathuh;
+
     // other stuff.
     if (!eostrat<TGenoPheno>::_parameters._sep && !eostrat<TGenoPheno>::_parameters._vd)
       eostrat<TGenoPheno>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),

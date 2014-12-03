@@ -483,6 +483,24 @@ namespace libcmaes
       {
 	return _maximize;
       }
+
+      /**
+       * \brief activates / deactivates uncertainty handling scheme.
+       * @param b activates / deactivates
+       */
+      inline void set_uh(const bool &b)
+      {
+	_uh = b;
+      }
+
+      /**
+       * \brief get uncertainty handling status.
+       * @return uncertainty handling status.
+       */
+      inline bool get_uh() const
+      {
+	return _uh;
+      }
       
     protected:
       int _dim; /**< function space dimensions. */
@@ -513,6 +531,14 @@ namespace libcmaes
 
       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
+
+      // uncertainty handling
+      bool _uh = false; /**< whether to activate uncertainty handling. */
+      double _rlambda; /**< fraction of solutions to be reevaluated. */
+      double _epsuh = 1e-7; /**< mutation strength for the reevaluation. */
+      double _thetauh = 0.2; /**< control parameter for the acceptance threshold for the measured rank-change value. */
+      double _csuh = 1.0; /**< learning rate for averaging the uncertainty measurement. */
+      double _alphathuh = 1.0; /**< factor of increasing the population spread. */
     };
 }
 
