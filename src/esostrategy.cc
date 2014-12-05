@@ -109,12 +109,11 @@ namespace libcmaes
 	int lr_l = std::floor(r_l);
 	double pr_l = r_l - lr_l;
 	double p = _uhunif(_uhgen);
-	//std::cout << "lambda=" << _parameters._lambda << " / rlambda=" << _parameters._rlambda << " / rl=" << r_l << " / lr_r=" << lr_l << " / p=" << p << " -- pr_l=" << pr_l << std::endl;
 	if (p < pr_l)
 	  _solutions._lambda_reev = lr_l + 1;
 	else _solutions._lambda_reev = lr_l;
-	//std::cout << "lambda_reev=" << _solutions._lambda_reev << std::endl;
-	//TODO: check that lambda_reev is not == 0 for more than 2/(rlambda*lambda) generations.
+	if (_solutions._lambda_reev == 0)
+	  _solutions._lambda_reev = 1;
 
 	// mutate candidates.
 	dMat ncandidates;
