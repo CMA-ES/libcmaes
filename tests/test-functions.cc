@@ -349,15 +349,34 @@ FitFunc hardcos = [](const double *x, const int N)
 };
 
 // uncertainty handling testing functions
-FitFunc elli_uh = [norm,gen](const double *x, const int N)
+FitFunc fsphere_uhc = [](const double *x, const int N)
+{
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += x[i]*x[i];
+  val += cauch(gen); // noise
+  return val;
+};
+
+FitFunc elli_uh = [](const double *x, const int N)
 {
   if (N == 1)
     return x[0] * x[0];
   double val = 0.0;
   for (int i=0;i<N;i++)
     val += pow(10,6*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
-  //TODO: add noise.
-  val += norm(gen);
+  val += norm(gen); // noise
+  return val;
+};
+
+FitFunc elli_uhc = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0] * x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += pow(10,6*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+  val += cauch(gen); // noise
   return val;
 };
 
@@ -413,7 +432,9 @@ void fillupfuncs()
   mfuncs["diffpow"]=diffpow;
   mfuncs["diffpowrot"]=diffpowrot;
   mfuncs["hardcos"]=hardcos;
+  mfuncs["fsphere_uhc"]=fsphere_uhc;
   mfuncs["elli_uh"]=elli_uh;
+  mfuncs["elli_uhc"]=elli_uhc;
 }
 
 void printAvailFuncs()
@@ -607,9 +628,6 @@ int main(int argc, char *argv[])
   
   fillupfuncs();
   
-  //std::random_device rd;
-  //std::normal_distribution<double> norm(0.0,1.0);
-  //std::cauchy_distribution<double> cauch(0.0,1.0);
   gen = std::mt19937(rd());
   gen.seed(static_cast<uint64_t>(time(nullptr)));
 
