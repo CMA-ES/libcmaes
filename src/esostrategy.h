@@ -205,6 +205,12 @@ namespace libcmaes
      * @return objective function value at x
      */
     double fitfunc(const double *x, const int N) { return _func(x,N); }
+
+    /**
+     * \brief uncertainty handling scheme that computes and uncertainty
+     *        level based on a dual candidate ranking.
+     */
+    void uncertainty_handling();
     
     // deprecated.
     Candidate best_solution() const;

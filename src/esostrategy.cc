@@ -33,6 +33,10 @@
 
 namespace libcmaes
 {
+  template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+  }
+
   template<class TParameters,class TSolutions,class TStopCriteria>
   ESOStrategy<TParameters,TSolutions,TStopCriteria>::ESOStrategy(FitFunc &func,
 								 TParameters &parameters)
@@ -219,6 +223,120 @@ namespace libcmaes
     edm *= gradn;
     _solutions._edm = edm;
     return edm;
+  }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::uncertainty_handling()
+  {
+    std::sort(_solutions._candidates_uh.begin(),
+	      _solutions._candidates_uh.end(),
+	      [](RankedCandidate &c1, RankedCandidate &c2)
+	      { 
+		bool lower = c1.get_fvalue() < c2.get_fvalue();
+		return lower;
+	      });
+    int pos = 0;
+    auto vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	(*vit)._r1 = pos;
+	++vit;
+	++pos;
+      }
+    
+    // sort second uh set of candidates
+    std::sort(_solutions._candidates_uh.begin(),
+	      _solutions._candidates_uh.end(),
+	      [](RankedCandidate &c1, RankedCandidate &c2)
+	      { 
+		bool lower = c1._fvalue_mut < c2._fvalue_mut;
+		return lower;
+	      });
+    pos = 0;
+    vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	(*vit)._r2 = pos;
+	++vit;
+	++pos;
+      }
+    
+    // compute delta
+    vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	if ((*vit)._idx >= _solutions._lambda_reev)
+	  {
+	    ++vit;
+	    continue;
+	  }
+	int diffr = (*vit)._r2 - (*vit)._r1;
+	(*vit)._delta = diffr - sgn(diffr);
+	++vit;
+      }
+    double meandelta = std::accumulate(_solutions._candidates_uh.begin(),
+				       _solutions._candidates_uh.end(),
+				       0.0,
+				       [](double sum, const RankedCandidate &c){ return sum + fabs(c._delta); });
+    meandelta /= _solutions._lambda_reev;
+    
+    // compute uncertainty level
+    double s = 0.0;
+    for (size_t i=0;i<_solutions._candidates_uh.size();i++)
+      {
+	RankedCandidate rc = _solutions._candidates_uh.at(i);
+	if (rc._idx >= _solutions._lambda_reev)
+	  continue;
+	s += 2*fabs(rc._delta);
+	double d1 = rc._r2 - static_cast<int>(rc._r2 > rc._r1);
+	std::vector<double> dv;
+	double fact = _parameters._thetauh*0.5;
+	for (int j=1;j<2*_parameters._lambda;j++)
+	  dv.push_back(fabs(j-d1));
+	std::nth_element(dv.begin(),dv.begin()+int(dv.size()*fact),dv.end());
+	double comp1 = *(dv.begin()+int(dv.size()*fact));
+	s -= comp1;
+	
+	double d2 = rc._r1 - static_cast<int>(rc._r1 > rc._r2);
+	dv.clear();
+	for (int j=1;j<2*_parameters._lambda;j++)
+	  dv.push_back(fabs(j-d2));
+	std::nth_element(dv.begin(),dv.begin()+int(dv.size()*fact),dv.end());
+	double comp2 = *(dv.begin()+int(dv.size()*fact));
+	s -= comp2;
+      }
+    s /= static_cast<double>(_solutions._lambda_reev);
+    _solutions._suh = s;
+    
+    // rerank according to r1 + r2
+    int lreev = _solutions._lambda_reev;
+    std::sort(_solutions._candidates_uh.begin(),
+	      _solutions._candidates_uh.end(),
+	      [lreev,meandelta](RankedCandidate const &c1, RankedCandidate const &c2)
+	      { 
+		int s1 = c1._r1 + c1._r2;
+		int s2 = c2._r2 + c2._r2;
+		if (s1 == s2)
+		  {
+		    if (c1._delta == c2._delta)
+		      return c1.get_fvalue() + c1._fvalue_mut < c2.get_fvalue() + c2._fvalue_mut;
+		    else
+		      {
+			double c1d = c1._idx < lreev ? fabs(c1._delta) : meandelta;
+			double c2d = c2._idx < lreev ? fabs(c2._delta) : meandelta;
+			return c1d < c2d;
+		      }
+		  }
+		else return c1._r1 + c1._r2 < c2._r1 + c2._r2;
+	      });
+    std::vector<Candidate> ncandidates;
+    vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	ncandidates.push_back(_solutions._candidates.at((*vit)._idx));
+	++vit;
+      }
+    _solutions._candidates = ncandidates;
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
