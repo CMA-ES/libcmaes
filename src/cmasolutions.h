@@ -52,6 +52,7 @@ namespace libcmaes
     template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
     template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
     friend class VDCMAUpdate;
+    template <class U, class V> friend class RLCMAStrategy;
     
   public:
     /**

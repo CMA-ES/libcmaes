@@ -53,6 +53,7 @@ namespace libcmaes
       friend class Candidate;
       template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
       template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
+      template <class U, class V> friend class RLCMAStrategy;
       
     public:
       /**
