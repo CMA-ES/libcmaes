@@ -111,7 +111,8 @@ namespace libcmaes
     void set(const dVec &s, const int &a, const double &val);
 
     double geth(const std::string &s, const int &a) const;
-    
+    int gethcount(const dVec &s, const int &a) const;
+
     std::vector<size_t> vec2lookup(const dVec &s) const;
     std::string hashl(const dVec &s) const;
     
@@ -119,7 +120,7 @@ namespace libcmaes
     std::ostream& print_best(std::ostream &out) const;
 
     std::vector<multi_vec<double>*> _tab;
-    std::vector<std::unordered_map<std::string,double>> _htab;
+    std::vector<std::unordered_map<std::string,std::pair<double,int>>> _htab;
     double _precision = 1e-1; /**< precison on tiles. */
     double _lbound = -5.0;
     double _ubound = 5.0;
@@ -178,13 +179,15 @@ namespace libcmaes
 		  const double &alpha=0.1,
 		  const double &gamma=0.1,
 		  const double &lbound=-5.0, const double &ubound=5.0,
-		  const double &precision=1e-1)
+		  const double &precision=0.1,
+		  const double &epsilon=0.1)
       {
 	if (_rl)
 	  delete _rl;
 	_rl = new RL(na,dim,lbound,ubound,precision);
 	_rl->_alpha = alpha;
 	_rl->_gamma = gamma;
+	_rl->_epsilon = epsilon;
       }
 
       int optimize();

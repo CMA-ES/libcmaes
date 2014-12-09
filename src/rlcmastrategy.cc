@@ -23,6 +23,7 @@
 #include "opti_err.h"
 #include "llogging.h"
 #include <iostream>
+#include <assert.h>
 
 namespace libcmaes
 {
@@ -35,6 +36,7 @@ namespace libcmaes
     :_precision(precision),_lbound(lbound),_ubound(ubound),_dim(dim)
   {
     _disc = std::floor(ubound-lbound)/precision;
+    std::cout << "disc=" << _disc + 2 << std::endl;
     for (int i=0;i<na;i++)
       {
 	if (!_use_hash)
@@ -82,21 +84,35 @@ namespace libcmaes
     else
       {
 	std::string hs = hashl(s);
-	std::unordered_map<std::string,double>::iterator hit;
+	std::unordered_map<std::string,std::pair<double,int>>::iterator hit;
 	if ((hit=_htab.at(a).find(hs))!=_htab.at(a).end())
-	  (*hit).second = val;
-	else _htab.at(a).insert(std::pair<std::string,double>(hs,val));
+	  {
+	    (*hit).second.first = val;
+	    (*hit).second.second++;
+	  }
+	else _htab.at(a).insert(std::pair<std::string,std::pair<double,int>>(hs,std::pair<double,int>(val,1)));
       }
   }
 
   double ApproxTab::geth(const std::string &s, const int &a) const
   {
-    std::unordered_map<std::string,double>::const_iterator hit;
+    std::unordered_map<std::string,std::pair<double,int>>::const_iterator hit;
     if ((hit=_htab.at(a).find(s))!=_htab.at(a).end())
       {
-	return (*hit).second;
+	return (*hit).second.first;
       }
     else return -_default_val;
+  }
+
+  int ApproxTab::gethcount(const dVec &s, const int &a) const
+  {
+    std::string hs = hashl(s);
+    std::unordered_map<std::string,std::pair<double,int>>::const_iterator hit;
+    if ((hit=_htab.at(a).find(hs))!=_htab.at(a).end())
+      {
+	return (*hit).second.second;
+      }
+    else return 1;
   }
   
   std::vector<size_t> ApproxTab::vec2lookup(const dVec &s) const
@@ -163,7 +179,7 @@ namespace libcmaes
 	auto hit = ht.begin();
 	while(hit!=ht.end())
 	  {
-	    out << (*hit).first << " / " << (*hit).second << std::endl;;
+	    out << (*hit).first << " / " << (*hit).second.first << std::endl;;
 	    ++hit;
 	  }
 	++a;
@@ -195,7 +211,7 @@ namespace libcmaes
     for (std::string key: all_keys)
       {
 	int best_a = -1;
-	int best_val = -_default_val * 10.0;
+	int best_val = -_default_val * 1e6;
 	for (size_t a=0;a<_htab.size();a++)
 	  {
 	    double asval = geth(key,a);
@@ -269,17 +285,28 @@ namespace libcmaes
 		   int &max_a, 
 		   double &max_val)
   {
+    std::vector<int> ties;
     max_a = -1;
-    max_val = -_Q->_default_val * 10.0;
+    max_val = -_Q->_default_val * 1e6;
     for (size_t i=0;i<_Q->_htab.size();i++)
       {
 	double qval = _Q->get(s,i);
-	if (qval > max_val) // XXX: no handling of ties
+	if (qval == max_val)
+	  ties.push_back(i);
+	else if (qval > max_val) // XXX: no handling of ties
 	  {
 	    max_val = qval;
 	    max_a = i;
+	    ties.clear();
+	    ties.push_back(max_a);
 	  }
       }
+    if (!ties.empty())
+      {
+	std::random_shuffle(ties.begin(),ties.end());
+	max_a = (*ties.begin());
+      }
+    //assert(max_a >= 0);
   }
 
   void RL::qlearn(const dVec &s, 
@@ -291,7 +318,11 @@ namespace libcmaes
     double max_qasp;
     int max_a;
     max_qas(sp,max_a,max_qasp);
-    double upd_val = qas + _alpha*(fitness + _gamma*max_qasp - qas);
+    double alpha;
+    if (_alpha < 0)
+      alpha = _alpha/static_cast<double>(_Q->gethcount(sp,max_a));
+    else alpha = _alpha;
+    double upd_val = qas + alpha*(fitness + _gamma*max_qasp - qas);
     _Q->set(s,a,upd_val);
   }
 
@@ -328,6 +359,7 @@ namespace libcmaes
 	  
 	  // translate action into lambda
 	  int lambda = a+2; // XXX: basic.
+	  //std::cout << "best action=" << lambda << std::endl;
 	  this->_parameters._lambda = lambda;
 	  this->_parameters.initialize_parameters();
 	  this->_solutions._candidates.resize(lambda); // XXX: _max_hist and _kcand are lambda-dependent
@@ -376,7 +408,8 @@ namespace libcmaes
 	      int lambda = a+2; // XXX: basic.
 	      this->_parameters._lambda = lambda;
 	      this->_parameters.initialize_parameters();
-	      this->_solutions._candidates.resize(lambda); // XXX: _max_hist and _kcand are lambda-dependent
+	      if (this->_solutions._candidates.size() != lambda)
+		this->_solutions._candidates.resize(lambda); // XXX: _max_hist and _kcand are lambda-dependent
 	      this->_solutions._kcand = std::min(this->_parameters._lambda-1,static_cast<int>(1.0+ceil(0.1+this->_parameters._lambda/4.0)));
 	      
 	      //std::cout << "choosing lambda=" << lambda << std::endl;
@@ -388,6 +421,8 @@ namespace libcmaes
 	      // gather fitness and update with sarsa or qlearning
 	      dVec sp = this->_solutions.xmean();
 	      double fitness = this->_func(sp.data(),sp.size()) + this->_solutions.fevals();
+	      if (this->stop())
+		fitness = 0.0;
 	      _rl->qlearn(s,a,sp,-fitness); //TODO: fitness that takes fevals into account.
 	    
 	      //std::cout << "fitness=" << fitness << std::endl;
@@ -432,5 +467,5 @@ namespace libcmaes
     }
 
   template class RLCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  template class RLCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  //template class RLCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
 }
