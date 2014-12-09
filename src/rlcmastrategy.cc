@@ -20,6 +20,7 @@
  */
 
 #include "rlcmastrategy.h"
+#include "opti_err.h"
 #include "llogging.h"
 #include <iostream>
 
@@ -36,30 +37,66 @@ namespace libcmaes
     _disc = std::floor(ubound-lbound)/precision;
     for (int i=0;i<na;i++)
       {
-	std::vector<size_t> dims;
-	for (int j=0;j<dim;j++)
-	  dims.push_back(_disc + 2); // + 2 if for open ended interval on both sides
-	multi_vec<double> *mv = new multi_vec<double>(dims);
-	_tab.push_back(mv);
+	if (!_use_hash)
+	  {
+	    std::vector<size_t> dims;
+	    for (int j=0;j<dim;j++)
+	      dims.push_back(_disc + 2); // + 2 if for open ended interval on both sides
+	    multi_vec<double> *mv = new multi_vec<double>(dims);
+	    _tab.push_back(mv);
+	  }
+	else
+	  {
+	    _htab.emplace_back();
+	  }
       }
   }
 
   ApproxTab::~ApproxTab()
   {
-    for (size_t i=0;i<_tab.size();i++)
-      delete _tab.at(i);
+    if (!_use_hash)
+      for (size_t i=0;i<_tab.size();i++)
+	delete _tab.at(i);
   }
 
   double ApproxTab::get(const dVec &s, const int &a) const
   {
     std::vector<size_t> lookup = vec2lookup(s);
-    return (*_tab.at(a))[lookup];
+    if (!_use_hash)
+      return (*_tab.at(a))[lookup];
+    else
+      {
+	std::string hs = hashl(s);
+	return geth(hs,a);
+      }
   }
   
   void ApproxTab::set(const dVec &s, const int &a, const double &val)
   {
-    std::vector<size_t> lookup = vec2lookup(s);
-    (*_tab.at(a))[lookup] = val;
+
+    if (!_use_hash)
+      {
+	std::vector<size_t> lookup = vec2lookup(s);
+	(*_tab.at(a))[lookup] = val;
+      }
+    else
+      {
+	std::string hs = hashl(s);
+	std::unordered_map<std::string,double>::iterator hit;
+	if ((hit=_htab.at(a).find(hs))!=_htab.at(a).end())
+	  (*hit).second = val;
+	else _htab.at(a).insert(std::pair<std::string,double>(hs,val));
+      }
+  }
+
+  double ApproxTab::geth(const std::string &s, const int &a) const
+  {
+    std::unordered_map<std::string,double>::const_iterator hit;
+    if ((hit=_htab.at(a).find(s))!=_htab.at(a).end())
+      {
+	return (*hit).second;
+      }
+    else return -_default_val;
   }
   
   std::vector<size_t> ApproxTab::vec2lookup(const dVec &s) const
@@ -87,9 +124,21 @@ namespace libcmaes
     return lookup;
   }
 
+  std::string ApproxTab::hashl(const dVec &s) const
+  {
+    std::vector<size_t> lookup = vec2lookup(s);
+    std::string hs;
+    for (size_t c : lookup)
+      {
+	hs += std::to_string(c) + "|";
+      }
+    //std::cout << "hs=" << hs << std::endl;
+    return hs;
+  }
+
   std::ostream& ApproxTab::print(std::ostream &out) const
   {
-    for (size_t a=0;a<_tab.size();a++)
+    /*for (size_t a=0;a<_tab.size();a++)
       {
 	out << "lambda=" << a + 2 << std::endl;
 	dVec s = dVec::Constant(_dim,_lbound-1);
@@ -106,7 +155,70 @@ namespace libcmaes
 	      }
 	    out << std::endl;
 	  }
+	  }*/
+    int a = 0;
+    for (auto ht : _htab)
+      {
+	out << "lambda=" << a + 2 << std::endl;
+	auto hit = ht.begin();
+	while(hit!=ht.end())
+	  {
+	    out << (*hit).first << " / " << (*hit).second << std::endl;;
+	    ++hit;
+	  }
+	++a;
       }
+    return out;
+  }
+
+  std::ostream& ApproxTab::print_best(std::ostream &out) const
+  {
+    //TODO: get all keys.
+    size_t all_keys_size = 0;
+    for (auto ht: _htab)
+      all_keys_size += ht.size();
+    std::vector<std::string> all_keys;
+    all_keys.reserve(all_keys_size);
+    for (auto ht: _htab)
+      {
+	auto hit = ht.begin();
+	while(hit!=ht.end())
+	  {
+	    all_keys.push_back((*hit).first);
+	    ++hit;
+	  }
+      }
+    out << "number of buckets=" << all_keys.size() << std::endl;
+
+    // for each key, get max action
+    std::unordered_map<std::string,std::vector<double>> best_actions;
+    for (std::string key: all_keys)
+      {
+	int best_a = -1;
+	int best_val = -_default_val * 10.0;
+	for (size_t a=0;a<_htab.size();a++)
+	  {
+	    double asval = geth(key,a);
+	    if (asval > best_val) // XXX: no handling of ties
+	      {
+		best_a = a;
+		best_val = asval;
+	      }
+	  }
+	std::vector<double> res; // 0: action, 1: qval, 2: fval
+	res.push_back(best_a);
+	res.push_back(best_val);
+	best_actions.insert(std::pair<std::string,std::vector<double>>(key,res));
+      }
+
+    //TODO: print out max action per keys, order per fval ?
+    auto bhit = best_actions.begin();
+    while(bhit != best_actions.end())
+      {
+	out << (*bhit).first << " / " << (*bhit).second.at(0)+2 << " / " << (*bhit).second.at(1) << std::endl;
+	++bhit;
+      }
+    
     return out;
   }
 
@@ -127,10 +239,10 @@ namespace libcmaes
   {
     //std::cout << "choose action Q precision=" << _Q->_precision << std::endl;
 
-    // get current min action
-    int min_a;
-    double min_val;
-    min_qas(s,min_a,min_val);
+    // get current max action
+    int max_a;
+    double max_val;
+    max_qas(s,max_a,max_val);
 
     // sample
     double p = _unif(_gen);
@@ -141,22 +253,31 @@ namespace libcmaes
 	int ra = _unifi(_gen);
 	return ra;
       }
-    else return min_a;
+    else return max_a;
   }
 
-  void RL::min_qas(const dVec &s,
-		   int &min_a, 
-		   double &min_val)
+  int RL::choose_best_action(const dVec &s)
   {
-    min_a = -1;
-    min_val = 1e10;
-    for (size_t i=0;i<_Q->_tab.size();i++)
+    // get current max action
+    int max_a;
+    double max_val;
+    max_qas(s,max_a,max_val);
+    return max_a;
+  }
+
+  void RL::max_qas(const dVec &s,
+		   int &max_a, 
+		   double &max_val)
+  {
+    max_a = -1;
+    max_val = -_Q->_default_val * 10.0;
+    for (size_t i=0;i<_Q->_htab.size();i++)
       {
 	double qval = _Q->get(s,i);
-	if (qval < min_val)
+	if (qval > max_val) // XXX: no handling of ties
 	  {
-	    min_val = qval;
-	    min_a = i;
+	    max_val = qval;
+	    max_a = i;
 	  }
       }
   }
@@ -167,10 +288,10 @@ namespace libcmaes
 		  const double &fitness)
   {
     double qas = _Q->get(s,a);
-    double min_qasp;
-    int min_a;
-    min_qas(sp,min_a,min_qasp);
-    double upd_val = qas + _alpha*(fitness + _gamma*min_qasp - qas);
+    double max_qasp;
+    int max_a;
+    max_qas(sp,max_a,max_qasp);
+    double upd_val = qas + _alpha*(fitness + _gamma*max_qasp - qas);
     _Q->set(s,a,upd_val);
   }
 
@@ -192,23 +313,48 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   int RLCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
     {
-      //TODO: learn optimal policy
-      rllearn();
-
       //TODO apply optimal policy
+      dVec s;
+      
+      CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
+      this->_niter = 0;
+      
+      while(!this->stop())
+	{
+	  s = this->_solutions.xmean();
 
-      return 0;
+	  //TODO: choose best action
+	  int a = _rl->choose_best_action(s);
+	  
+	  // translate action into lambda
+	  int lambda = a+2; // XXX: basic.
+	  this->_parameters._lambda = lambda;
+	  this->_parameters.initialize_parameters();
+	  this->_solutions._candidates.resize(lambda); // XXX: _max_hist and _kcand are lambda-dependent
+	  this->_solutions._kcand = std::min(this->_parameters._lambda-1,static_cast<int>(1.0+ceil(0.1+this->_parameters._lambda/4.0)));
+	
+	  // run CMA step
+	  dMat candidates = this->ask();
+	  this->eval(candidates,this->_parameters.get_gp().pheno(candidates));
+	  this->tell();
+	  this->inc_iter();
+	}
+      
+      if (this->_solutions.run_status() >= 0)
+	return OPTI_SUCCESS;
+      else return OPTI_ERR_TERMINATION;
     }
   
   template <class TCovarianceUpdate, class TGenoPheno>
-  void RLCMAStrategy<TCovarianceUpdate,TGenoPheno>::rllearn()
+  void RLCMAStrategy<TCovarianceUpdate,TGenoPheno>::rllearn(const int &episodes)
     {
       int episode = 0;
 
       std::cout << "Q function precision=" << _rl->_Q->_precision << std::endl;
+      std::cout << "episodes\tmean_fevals\tmean_reward\n";
       
       // repeat for episodes below.
-      while(episode < _max_episodes)
+      while(episode < episodes)
 	{
       	  //TODO: start from x0.
 	  dVec s = this->_parameters.get_x0max(); // initial parameter values x0
@@ -242,7 +388,7 @@ namespace libcmaes
 	      // gather fitness and update with sarsa or qlearning
 	      dVec sp = this->_solutions.xmean();
 	      double fitness = this->_func(sp.data(),sp.size()) + this->_solutions.fevals();
-	      _rl->qlearn(s,a,sp,fitness); //TODO: fitness that takes fevals into account.
+	      _rl->qlearn(s,a,sp,-fitness); //TODO: fitness that takes fevals into account.
 	    
 	      //std::cout << "fitness=" << fitness << std::endl;
 	      
@@ -252,13 +398,37 @@ namespace libcmaes
 	  /*std::cout << "Q-table:\n";
 	  _rl->_Q->print(std::cout);
 	  std::cout << std::endl;*/
+
+	  if (episode % _test_step == 0)
+	    {
+	      double mean_fevals,mean_reward;
+	      test(100,mean_fevals,mean_reward);
+	      //std::cout << "step=" << episode << " / fevals=" << mean_fevals << " / reward=" << -mean_reward << std::endl;
+	      std::cout << episode << "\t" << mean_fevals << "\t" << -mean_reward << std::endl;
+	    }
 	  
 	  episode++;
 	}
+      
+      /*std::cout << "Q-table:\n";
+      _rl->_Q->print_best(std::cout);
+      std::cout << std::endl;*/
+    }
 
-      std::cout << "Q-table:\n";
-      _rl->_Q->print(std::cout);
-      std::cout << std::endl;
+    template <class TCovarianceUpdate, class TGenoPheno>
+    void RLCMAStrategy<TCovarianceUpdate,TGenoPheno>::test(const int &ncontrol,
+							   double &mean_fevals,
+							   double &mean_reward)
+    {
+      mean_fevals = mean_reward = 0.0;
+      for (int i=0;i<ncontrol;i++)
+	{
+	  optimize();
+	  mean_fevals += this->_solutions.fevals();
+	  mean_reward += this->_solutions.best_candidate().get_fvalue() + this->_solutions.fevals();
+	}
+      mean_fevals /= static_cast<double>(ncontrol);
+      mean_reward /= static_cast<double>(ncontrol);
     }
 
   template class RLCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;

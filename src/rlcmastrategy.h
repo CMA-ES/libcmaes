@@ -24,6 +24,7 @@
 
 #include "cmastrategy.h"
 #include <memory>
+#include <unordered_map>
 #include <iostream>
 
 namespace libcmaes
@@ -108,17 +109,24 @@ namespace libcmaes
     
     double get(const dVec &s, const int &a) const;
     void set(const dVec &s, const int &a, const double &val);
+
+    double geth(const std::string &s, const int &a) const;
     
     std::vector<size_t> vec2lookup(const dVec &s) const;
+    std::string hashl(const dVec &s) const;
     
     std::ostream& print(std::ostream &out) const;
+    std::ostream& print_best(std::ostream &out) const;
 
     std::vector<multi_vec<double>*> _tab;
+    std::vector<std::unordered_map<std::string,double>> _htab;
     double _precision = 1e-1; /**< precison on tiles. */
     double _lbound = -5.0;
     double _ubound = 5.0;
     int _dim;
     int _disc; /**< discretization step. */
+    int _default_val = 1e6;
+    bool _use_hash = true;
   };
 
   class RL
@@ -136,10 +144,11 @@ namespace libcmaes
       }
 
     int choose_action_eps_greedy(const dVec &s);
-    
-    void min_qas(const dVec &s,
+    int choose_best_action(const dVec &s);
+
+    void max_qas(const dVec &s,
 		 int &min_a, 
-		 double &min_val);
+		 double &max_val);
 
     void qlearn(const dVec &s, 
 		const int &a,
@@ -148,7 +157,7 @@ namespace libcmaes
     
     ApproxTab *_Q = nullptr; /**< Q-values. */
     double _alpha = 0.1;
-    double _gamma = 1e-2;
+    double _gamma = 0.9;
     double _epsilon = 0.1;
 
     std::uniform_real_distribution<double> _unif;
@@ -166,20 +175,28 @@ namespace libcmaes
 
       void set_rl(const int &na,
 		  const int &dim,
+		  const double &alpha=0.1,
+		  const double &gamma=0.1,
 		  const double &lbound=-5.0, const double &ubound=5.0,
 		  const double &precision=1e-1)
       {
 	if (_rl)
 	  delete _rl;
 	_rl = new RL(na,dim,lbound,ubound,precision);
+	_rl->_alpha = alpha;
+	_rl->_gamma = gamma;
       }
 
       int optimize();
 
-      void rllearn(); //TODO.
+      void rllearn(const int &episodes); //TODO.
+
+    void test(const int &ncontrol,
+	      double &mean_fevals,
+	      double &mean_reward);
       
       RL *_rl = nullptr;
-      int _max_episodes = 1000;
+    int _test_step = 100;
     };
 
 }
