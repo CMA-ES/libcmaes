@@ -320,9 +320,25 @@ namespace libcmaes
     max_qas(sp,max_a,max_qasp);
     double alpha;
     if (_alpha < 0)
-      alpha = _alpha/static_cast<double>(_Q->gethcount(sp,max_a));
+      alpha = 1.0/static_cast<double>(_Q->gethcount(sp,max_a));
     else alpha = _alpha;
     double upd_val = qas + alpha*(fitness + _gamma*max_qasp - qas);
+    _Q->set(s,a,upd_val);
+  }
+
+  void RL::sarsa(const dVec &s,
+		 const int &a,
+		 const dVec &sp,
+		 const int &ap,
+		 const double &fitness)
+  {
+    double qas = _Q->get(s,a);
+    double qasp = _Q->get(sp,ap);
+    double alpha;
+    if (_alpha < 0)
+      alpha = 1.0/static_cast<double>(std::log(1+_Q->gethcount(sp,ap)));
+    else alpha = _alpha;
+    double upd_val = qas + alpha*(fitness + _gamma*qasp - qas);
     _Q->set(s,a,upd_val);
   }
 
@@ -344,7 +360,7 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   int RLCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
     {
-      //TODO apply optimal policy
+      // apply optimal policy
       dVec s;
       
       CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
@@ -354,7 +370,7 @@ namespace libcmaes
 	{
 	  s = this->_solutions.xmean();
 
-	  //TODO: choose best action
+	  // choose best action
 	  int a = _rl->choose_best_action(s);
 	  
 	  // translate action into lambda
@@ -390,7 +406,8 @@ namespace libcmaes
 	{
       	  //TODO: start from x0.
 	  dVec s = this->_parameters.get_x0max(); // initial parameter values x0
-	  
+	  int a = -1;
+
 	  // restart.
 	  //std::cout << "new episode\n";
 	  CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = CMASolutions(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters);
@@ -402,13 +419,14 @@ namespace libcmaes
 	      s = this->_solutions.xmean();
 	      
 	      // for each step, take action lambda
-	      int a = _rl->choose_action_eps_greedy(s);
+	      if (!_sarsa || a == -1)
+		a = _rl->choose_action_eps_greedy(s);
 
 	      // translate action into lambda
 	      int lambda = a+2; // XXX: basic.
 	      this->_parameters._lambda = lambda;
 	      this->_parameters.initialize_parameters();
-	      if (this->_solutions._candidates.size() != lambda)
+	      if (static_cast<int>(this->_solutions._candidates.size()) != lambda)
 		this->_solutions._candidates.resize(lambda); // XXX: _max_hist and _kcand are lambda-dependent
 	      this->_solutions._kcand = std::min(this->_parameters._lambda-1,static_cast<int>(1.0+ceil(0.1+this->_parameters._lambda/4.0)));
 	      
@@ -423,8 +441,31 @@ namespace libcmaes
 	      double fitness = this->_func(sp.data(),sp.size()) + this->_solutions.fevals();
 	      if (this->stop())
 		fitness = 0.0;
-	      _rl->qlearn(s,a,sp,-fitness); //TODO: fitness that takes fevals into account.
-	    
+
+	      if (!_sarsa)
+		_rl->qlearn(s,a,sp,-fitness); //TODO: fitness that takes fevals into account.
+	      else
+		{
+		  int ap = _rl->choose_action_eps_greedy(sp);
+		  
+		  // translate action into lambda
+		  int lambdap = ap+2; // XXX: basic.
+		  this->_parameters._lambda = lambdap;
+		  this->_parameters.initialize_parameters();
+		  if (static_cast<int>(this->_solutions._candidates.size()) != lambdap)
+		    this->_solutions._candidates.resize(lambdap); // XXX: _max_hist and _kcand are lambda-dependent
+		  this->_solutions._kcand = std::min(this->_parameters._lambda-1,static_cast<int>(1.0+ceil(0.1+this->_parameters._lambda/4.0)));
+		  
+		  dMat candidates = this->ask();
+		  this->eval(candidates,this->_parameters.get_gp().pheno(candidates));
+		  this->tell();
+		  
+		  _rl->sarsa(s,a,sp,ap,-fitness);
+
+		  a = ap;
+		  s = sp;
+		}
+	      
 	      //std::cout << "fitness=" << fitness << std::endl;
 	      
 	      this->inc_iter();
@@ -446,6 +487,10 @@ namespace libcmaes
 	}
       
       /*std::cout << "Q-table:\n";
+      _rl->_Q->print(std::cout);
+      std::cout << std::endl;
+
+      std::cout << "best Q-table:\n";
       _rl->_Q->print_best(std::cout);
       std::cout << std::endl;*/
     }

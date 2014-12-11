@@ -156,6 +156,12 @@ namespace libcmaes
 		const dVec &sp,
 		const double &fitness);
     
+    void sarsa(const dVec &c,
+	       const int &a,
+	       const dVec &sp,
+	       const int &ap,
+	       const double &fitness);
+
     ApproxTab *_Q = nullptr; /**< Q-values. */
     double _alpha = 0.1;
     double _gamma = 0.9;
@@ -200,6 +206,7 @@ namespace libcmaes
       
       RL *_rl = nullptr;
     int _test_step = 100;
+    bool _sarsa = false;
     };
 
 }
