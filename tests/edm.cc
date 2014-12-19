@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
       for (size_t i=0;i<lambdas.size();i++)
 	{
 	  double lambda = lambdas.at(i);
-	  CMAParameters<> cmaparams(dim,&x0.front(),sigma,lambda);
+	  CMAParameters<> cmaparams(x0,sigma,lambda);
 	  cmaparams.set_quiet(true);
 	  //cmaparams.set_ftarget(1e-8);
 	  //cmaparams.set_algo(aCMAES);

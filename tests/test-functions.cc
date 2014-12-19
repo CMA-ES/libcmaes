@@ -245,7 +245,7 @@ FitFunc rastrigin = [](const double *x, const int N)
   return val;
 };
 std::vector<double> rastx0(10,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
-CMAParameters<> rastrigin_params(10,&rastx0.front(),5.0,400,1234); // 1234 is seed.
+CMAParameters<> rastrigin_params(rastx0,5.0,400,1234); // 1234 is seed.
 
 FitFunc elli = [](const double *x, const int N)
 {
@@ -504,7 +504,7 @@ CMASolutions cmaes_opt()
     }
   TGenoPheno gp(&lbounds.at(0),&ubounds.at(0),FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
-  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
+  CMAParameters<TGenoPheno> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
@@ -648,7 +648,7 @@ int main(int argc, char *argv[])
 	    }
 	  int dim = msols[(*mit).first].get_x_dvec().rows();
 	  std::vector<double> x0(dim,FLAGS_x0);
-	  CMAParameters<> cmaparams(dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+	  CMAParameters<> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda);
 	  cmaparams.set_max_iter(FLAGS_max_iter);
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;
