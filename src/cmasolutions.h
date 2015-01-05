@@ -49,8 +49,10 @@ namespace libcmaes
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
     template <class U> friend class errstats;
+#ifdef HAVE_SURROG
     template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
     template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
+#endif
     friend class VDCMAUpdate;
     
   public:

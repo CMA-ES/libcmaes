@@ -137,6 +137,19 @@ AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and e
 esac],[onlylib=false])
 AM_CONDITIONAL(HAVE_ONLYLIB, test x$onlylib = xtrue)
 
+# Whether to compile support for surrogates
+AC_ARG_ENABLE(surrog,
+AC_HELP_STRING([--enable-surrog],[Compile the library with support for surrogates (default is YES)]),
+[case "${enableval}" in 
+	yes) surrog=true ;;
+	no) surrog=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-surrog) ;;
+esac],[surrog=true])
+AM_CONDITIONAL(HAVE_SURROG, test x$surrog = xtrue)
+if test x"$surrog" = x"true"; then
+   AC_DEFINE(HAVE_SURROG, 1, [surrog])
+fi
+
 # Whether debug mode
 AC_ARG_ENABLE(debug,
 AC_HELP_STRING([--enable-debug],[Enable debug mode (default is NO)]),

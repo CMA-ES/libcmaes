@@ -51,9 +51,11 @@ namespace libcmaes
       template <class U> friend class errstats;
       friend class VDCMAUpdate;
       friend class Candidate;
+#ifdef HAVE_SURROG
       template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
       template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
-      
+#endif      
+
     public:
       /**
        * \brief empty constructor.
