@@ -229,7 +229,7 @@ namespace libcmaes
   {
     std::sort(_solutions._candidates_uh.begin(),
 	      _solutions._candidates_uh.end(),
-	      [](RankedCandidate &c1, RankedCandidate &c2)
+	      [](const RankedCandidate &c1, const RankedCandidate &c2)
 	      { 
 		bool lower = c1.get_fvalue() < c2.get_fvalue();
 		return lower;
@@ -246,7 +246,7 @@ namespace libcmaes
     // sort second uh set of candidates
     std::sort(_solutions._candidates_uh.begin(),
 	      _solutions._candidates_uh.end(),
-	      [](RankedCandidate &c1, RankedCandidate &c2)
+	      [](const RankedCandidate &c1, const RankedCandidate &c2)
 	      { 
 		bool lower = c1._fvalue_mut < c2._fvalue_mut;
 		return lower;

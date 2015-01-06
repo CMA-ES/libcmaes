@@ -253,7 +253,7 @@ namespace libcmaes
     // sort candidates.
     if (!eostrat<TGenoPheno>::_parameters._uh)
       eostrat<TGenoPheno>::_solutions.sort_candidates();
-    else this->uncertainty_handling();
+    else eostrat<TGenoPheno>::uncertainty_handling();
     
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
