@@ -60,6 +60,10 @@ void tokenize(const std::string &str,
 
 std::mutex fmtx; // WARNING: bbob function calls are NOT thread-safe (learnt the hard way...).
 
+bool resample_upon_restart = false;
+bool resample_from_history = false;
+bool restart_from_best = false;
+
 void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient)
 {
   // map fct to libcmaes FitFunc.
@@ -89,6 +93,9 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   cmaparams.set_quiet(true);
   cmaparams.set_gradient(withnumgradient);
   cmaparams.set_mt_feval(true);
+  cmaparams.set_resample_upon_restart(resample_upon_restart);
+  cmaparams.set_resample_from_history(resample_from_history);
+  cmaparams.set_restart_from_best(restart_from_best);
   if (noisy)
     cmaparams.set_noisy();
   cmaes(ff,cmaparams);
@@ -103,6 +110,9 @@ DEFINE_string(comment,"","comment for the experiment. If using multiple algorith
 DEFINE_double(maxfunevals,1e6,"maximum number of function evaluations");
 DEFINE_double(minfunevals,-1,"minimum number of function evaluations, -1 for automatic definition based on dimension");
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
+DEFINE_bool(resample_upon_restart,false,"whether to resample x0 at restart (bipop only)");
+DEFINE_bool(resample_from_history,false,"whether to resample x0 from history (bipop only)");
+DEFINE_bool(restart_from_best,false,"whether to restart from best value in history (bipop only");
 
 int main(int argc, char *argv[])
 {
@@ -111,7 +121,11 @@ int main(int argc, char *argv[])
   // parse the alg flags in order to capture all requested algorithm flavors.
   std::vector<std::string> algs;
   tokenize(FLAGS_alg,algs,",");
-  
+
+  resample_upon_restart = FLAGS_resample_upon_restart;
+  resample_from_history = FLAGS_resample_from_history;
+  restart_from_best = FLAGS_restart_from_best;
+
   std::map<int,std::string> flavors;
   for (size_t i=0;i<algs.size();i++)
     {
@@ -181,7 +195,8 @@ int main(int argc, char *argv[])
       for (idx_dim = 0; idx_dim < 6; idx_dim++)
 	{
 	  /* Function indices are from 1 to 24 (noiseless) or from 101 to 130 (noisy) */
-	  unsigned int ifunbegin = 1, ifunend = 24;
+	  //unsigned int ifunbegin = 1, ifunend = 24;
+	  unsigned int ifunbegin = 15, ifunend = 24; // multimodal only.
 	  if (FLAGS_noisy)
 	    {
 	      ifunbegin = 101;

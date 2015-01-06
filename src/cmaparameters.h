@@ -195,6 +195,10 @@ namespace libcmaes
        */
       inline void set_elitist(const bool &e) { _elitist = e; }
 
+      inline void set_resample_upon_restart(const bool &r) { _resample_upon_restart = r; }
+      inline void set_resample_from_history(const bool &r) { _resample_from_history = r; }
+      inline void set_restart_from_best(const bool &r) { _restart_from_best = r; }
+
       /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
@@ -241,6 +245,9 @@ namespace libcmaes
       bool _vd = false;
       
       bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      bool _resample_upon_restart = false; /**< resample x0 upon restart (e.g. bipop). */
+      bool _resample_from_history = false;
+      bool _restart_from_best = false;
       
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */

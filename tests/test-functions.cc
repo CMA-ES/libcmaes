@@ -487,6 +487,9 @@ DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
 DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
+DEFINE_bool(resample_upon_restart,false,"whether to resample x0 at restart (bipop only)");
+DEFINE_bool(resample_from_history,false,"whether to resample x0 from history (bipop only)");
+DEFINE_bool(restart_from_best,false,"whether to restart from best value in history (bipop only");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -517,6 +520,9 @@ CMASolutions cmaes_opt()
   cmaparams.set_elitist(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
+  cmaparams.set_resample_upon_restart(FLAGS_resample_upon_restart);
+  cmaparams.set_resample_from_history(FLAGS_resample_from_history);
+  cmaparams.set_restart_from_best(FLAGS_restart_from_best);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
