@@ -118,6 +118,11 @@ namespace libcmaes
   }
   
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
+  SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::~SimpleSurrogateStrategy()
+  {
+  }
+
+  template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
   void SimpleSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::eval(const dMat &candidates,
 								   const dMat &phenocandidates)
   {

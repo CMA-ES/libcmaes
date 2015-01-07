@@ -65,9 +65,10 @@ template<class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoB
 	  _rsvm._encode = true;
 	  _rsvm.train(x,_rsvm_iter,cov,xmean);
 	  
-	  this->set_train_error(this->compute_error(cp,
-						    eostrat<TGenoPheno>::get_solutions().csqinv()));
-	  
+	  dMat cinv = eostrat<TGenoPheno>::get_solutions().csqinv();
+	  //this->set_train_error(this->compute_error(cp,cinv)); // clang doesn't like this call within a lambda...
+	  this->set_train_error(_rsvm.error(x,x,fvalues,cinv,xmean));
+						 	  
 	  //debug
 	  //std::cout << "training error=" << _rsvm.error(x,x,fvalues,cov,xmean) << std::endl;
 	  //std::cout << "train error=" << this->get_train_error() << std::endl;

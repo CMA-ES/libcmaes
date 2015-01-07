@@ -223,7 +223,7 @@ namespace libcmaes
     SimpleSurrogateStrategy(FitFunc &func,
 			    CMAParameters<TGenoPheno> &parameters);
 
-    ~SimpleSurrogateStrategy() {};
+    ~SimpleSurrogateStrategy();
 
     /**
      * \brief Evaluates a set of candiates against the objective function 
