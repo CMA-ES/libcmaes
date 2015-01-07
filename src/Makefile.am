@@ -14,7 +14,10 @@ libcmaesinclude_HEADERS += surrogatestrategy.h
 endif
 
 AM_CPPFLAGS=-I$(EIGEN3_INC)
-AM_CXXFLAGS=-Wall -Wextra -g -fopenmp
+AM_CXXFLAGS=-Wall -Wextra -g
+if !HAVE_CLANG
+AM_CXXFLAGS += -fopenmp
+endif
 
 uninstall-hook:
 	if test -d ${libcmaesincludedir}; then rm -rf ${libcmaesincludedir}; fi

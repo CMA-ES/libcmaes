@@ -23,7 +23,10 @@ ut_scaling_SOURCES=ut-scaling.cc
 endif
 
 AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)
-AM_CXXFLAGS=-g -Wall -fopenmp
+AM_CXXFLAGS=-g -Wall
+if !HAVE_CLANG
+AM_CXXFLAGS += -fopenmp
+endif
 AM_LDFLAGS=-L../src
 LDADD=-lcmaes -lm $(GLOG_LIBS) $(GFLAGS_LIBS)
 if HAVE_BBOB
