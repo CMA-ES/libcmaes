@@ -13,8 +13,9 @@ AC_CONFIG_FILES(libcmaes.pc)
 AC_PROG_INSTALL
 AC_CANONICAL_HOST
 
-AC_PROG_CC(g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
-AC_PROG_CXX
+AC_PROG_CC(clang++ g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
+AC_PROG_CXX(clang++ g++ c++)
+AM_CONDITIONAL(HAVE_CLANG, test x"$CXX" = xclang++)
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
