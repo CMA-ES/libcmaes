@@ -2,13 +2,13 @@ import lcmaes
 
 # input parameters for a 10-D problem
 x = [3]*10
-olambda = 10 # lambda is a reserved keyword in python, using olambda instead.
+lambda_ = 10 # lambda is a reserved keyword in python, using lambda_ instead.
 seed = 0 # 0 for seed auto-generated within the lib.
 sigma = 0.1
 lbounds = [-4]*10
 ubounds = [4]*10
 gp = lcmaes.make_genopheno_pwqb(lbounds,ubounds,10)
-p = lcmaes.make_parameters_pwqb(x,sigma,olambda,seed,gp)
+p = lcmaes.make_parameters_pwqb(x,sigma,lambda_,seed,gp)
 
 # objective function.
 def nfitfunc(x,n):
@@ -26,8 +26,8 @@ cmasols = lcmaes.pcmaes_pwqb(objfunc,p)
 # collect and inspect results
 bcand = cmasols.best_candidate()
 bx = lcmaes.get_candidate_x(bcand)
-print "best x=",bx
-print "distribution mean=",lcmaes.get_solution_xmean(cmasols)
+print("best x=",bx)
+print("distribution mean=",lcmaes.get_solution_xmean(cmasols))
 cov = lcmaes.get_solution_cov(cmasols) # numpy array
-print "cov=",cov
-print "elapsed time=",cmasols.elapsed_time(),"ms"
+print("cov=",cov)
+print("elapsed time=",cmasols.elapsed_time(),"ms")
