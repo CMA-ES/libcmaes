@@ -109,6 +109,10 @@ namespace libcmaes
 
     // active cma.
     _deltamaxsigma = std::numeric_limits<double>::max();
+
+    // uncertainty handling.
+    this->_rlambda = std::max(0.1,2.0/Parameters<TGenoPheno>::_lambda);
+    this->_alphathuh = 1 + 2.0/(Parameters<TGenoPheno>::_dim+10.0);
   }
   
   template <class TGenoPheno>

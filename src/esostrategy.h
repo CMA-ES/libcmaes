@@ -24,6 +24,8 @@
 
 #include "eo_matrix.h" // to include Eigen everywhere.
 #include "candidate.h"
+#include "eigenmvn.h"
+#include <random>
 
 namespace libcmaes
 {
@@ -203,6 +205,12 @@ namespace libcmaes
      * @return objective function value at x
      */
     double fitfunc(const double *x, const int N) { return _func(x,N); }
+
+    /**
+     * \brief uncertainty handling scheme that computes and uncertainty
+     *        level based on a dual candidate ranking.
+     */
+    void uncertainty_handling();
     
     // deprecated.
     Candidate best_solution() const;
@@ -220,6 +228,11 @@ namespace libcmaes
     PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
     FitFunc _funcaux;
     bool _initial_elitist = false; /**< restarts from and re-injects best seen solution if not the final one. */
+
+  private:
+    std::mt19937 _uhgen; /**< random device used for uncertainty handling operations. */
+    std::uniform_real_distribution<> _uhunif;
+    Eigen::EigenMultivariateNormal<double> _uhesolver;
   };
   
 }

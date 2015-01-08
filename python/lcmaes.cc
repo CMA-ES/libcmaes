@@ -20,7 +20,9 @@
  */
 
 #include "cmaes.h"
+#ifdef HAVE_SURROG
 #include "surrogatestrategy.h"
+#endif
 using namespace libcmaes;
 
 #include <boost/python.hpp>
@@ -138,6 +140,7 @@ GenoPheno<TBoundStrategy,TScalingStrategy> make_genopheno(const boost::python::l
   return GenoPheno<TBoundStrategy,TScalingStrategy>(&vlbounds.front(),&vubounds.front(),dim);
 }
 
+#ifdef HAVE_SURROG
 /* wrapper to surrogate cmaes high level function. */
 int csurrfunc_f(const boost::python::list &candidates, boost::python::object &pyArray)
 {
@@ -199,6 +202,7 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
     optim.optimize();
     return optim.get_solutions();
   }
+#endif
 
 BOOST_PYTHON_MODULE(lcmaes)
 {
@@ -401,6 +405,7 @@ BOOST_PYTHON_MODULE(lcmaes)
   def("pcmaes_pwqb_ls",pcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"));
 
 
+#ifdef HAVE_SURROG
   /*- surrogates -*/
   def_function<int(const boost::python::list&,boost::python::object&)>("csurrfunc_pbf","training function for python");
   scope().attr("csurrfunc_bf") = csurrfunc_bf;
@@ -411,5 +416,6 @@ BOOST_PYTHON_MODULE(lcmaes)
   def("surrpcmaes_pwqb",surrpcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
   def("surrpcmaes_ls",surrpcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
   def("surrpcmaes_pwqb_ls",surrpcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+#endif
   
 } // end boost

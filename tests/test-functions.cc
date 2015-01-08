@@ -35,6 +35,11 @@
 
 using namespace libcmaes;
 
+std::random_device rd;
+std::normal_distribution<double> norm(0.0,1.0);
+std::cauchy_distribution<double> cauch(0.0,1.0);
+std::mt19937 gen;
+
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
   std::stringstream ss(s);
   std::string item;
@@ -240,7 +245,7 @@ FitFunc rastrigin = [](const double *x, const int N)
   return val;
 };
 std::vector<double> rastx0(10,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
-CMAParameters<> rastrigin_params(10,&rastx0.front(),5.0,400,1234); // 1234 is seed.
+CMAParameters<> rastrigin_params(rastx0,5.0,400,1234); // 1234 is seed.
 
 FitFunc elli = [](const double *x, const int N)
 {
@@ -343,6 +348,38 @@ FitFunc hardcos = [](const double *x, const int N)
   return sum;
 };
 
+// uncertainty handling testing functions
+FitFunc fsphere_uhc = [](const double *x, const int N)
+{
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += x[i]*x[i];
+  val += cauch(gen); // noise
+  return val;
+};
+
+FitFunc elli_uh = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0] * x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += pow(10,6*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+  val += norm(gen); // noise
+  return val;
+};
+
+FitFunc elli_uhc = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0] * x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += pow(10,6*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+  val += cauch(gen); // noise
+  return val;
+};
+
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,GradFunc> mgfuncs;
 std::map<std::string,Candidate> msols;
@@ -395,6 +432,9 @@ void fillupfuncs()
   mfuncs["diffpow"]=diffpow;
   mfuncs["diffpowrot"]=diffpowrot;
   mfuncs["hardcos"]=hardcos;
+  mfuncs["fsphere_uhc"]=fsphere_uhc;
+  mfuncs["elli_uh"]=elli_uh;
+  mfuncs["elli_uhc"]=elli_uhc;
 }
 
 void printAvailFuncs()
@@ -446,6 +486,7 @@ DEFINE_bool(no_stagnation,false,"deactivate stagnation stopping criteria");
 DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
 DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
+DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -463,7 +504,7 @@ CMASolutions cmaes_opt()
     }
   TGenoPheno gp(&lbounds.at(0),&ubounds.at(0),FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
-  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
+  CMAParameters<TGenoPheno> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
@@ -475,6 +516,7 @@ CMASolutions cmaes_opt()
   cmaparams.set_mt_feval(FLAGS_mt);
   cmaparams.set_elitist(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
+  cmaparams.set_uh(FLAGS_uh);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
@@ -586,6 +628,9 @@ int main(int argc, char *argv[])
   
   fillupfuncs();
   
+  gen = std::mt19937(rd());
+  gen.seed(static_cast<uint64_t>(time(nullptr)));
+
   if (FLAGS_list)
     {
       printAvailFuncs();
@@ -603,7 +648,7 @@ int main(int argc, char *argv[])
 	    }
 	  int dim = msols[(*mit).first].get_x_dvec().rows();
 	  std::vector<double> x0(dim,FLAGS_x0);
-	  CMAParameters<> cmaparams(dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+	  CMAParameters<> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda);
 	  cmaparams.set_max_iter(FLAGS_max_iter);
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;

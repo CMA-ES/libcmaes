@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
       ubounds[i] = 2.0;
     }
   GenoPheno<pwqBoundStrategy,linScalingStrategy> gp(lbounds,ubounds,dim);
-  CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>> cmaparams(dim,&x0.front(),sigma,-1,0,gp); // -1 for automatically decided lambda.
+  CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>> cmaparams(x0,sigma,-1,0,gp); // -1 for automatically decided lambda.
   cmaparams.set_algo(aCMAES);
   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;

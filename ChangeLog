@@ -1,3 +1,11 @@
+2015-01-08	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.9.4
+	- work around clang bug, now working with clang, ref #19
+	- easier build on OSX
+	- added uncertainty handling scheme for noisy objective functions, ref #65
+	- optional support for surrogates at compile time, reducing the overal lib size, ref #90
+	- fixed uninstall of python bindings
+	
 2014-11-17	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v0.9.3:
 	- full support for surrogates, allowing optimization of costly objective functions, ref #57

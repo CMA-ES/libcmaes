@@ -33,6 +33,10 @@
 
 namespace libcmaes
 {
+  template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+  }
+
   template<class TParameters,class TSolutions,class TStopCriteria>
   ESOStrategy<TParameters,TSolutions,TStopCriteria>::ESOStrategy(FitFunc &func,
 								 TParameters &parameters)
@@ -45,6 +49,13 @@ namespace libcmaes
       }
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     _solutions = TSolutions(_parameters);
+    if (parameters._uh)
+      {
+	std::random_device rd;
+	_uhgen = std::mt19937(rd());
+	_uhgen.seed(static_cast<uint64_t>(time(nullptr)));
+	_uhunif = std::uniform_real_distribution<>(0,1);
+      }
   }
 
   template<class TParameters,class TSolutions,class TStopCriteria>
@@ -55,6 +66,13 @@ namespace libcmaes
   {
     _pfunc = [](const TParameters&,const TSolutions&){return 0;}; // high level progress function does do anything.
     start_from_solution(solutions);
+    if (parameters._uh)
+      {
+	std::random_device rd;
+	_uhgen = std::mt19937(rd());
+	_uhgen.seed(static_cast<uint64_t>(time(nullptr)));
+	_uhunif = std::uniform_real_distribution<>(0,1);
+      }
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
@@ -80,6 +98,45 @@ namespace libcmaes
 	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
+      }
+
+    // evaluation step of uncertainty handling scheme.
+    if (_parameters._uh)
+      {
+	// compute the number of solutions to re-evaluate
+	_solutions._lambda_reev = 0.0;
+	double r_l = _parameters._rlambda * _parameters._lambda;
+	int lr_l = std::floor(r_l);
+	double pr_l = r_l - lr_l;
+	double p = _uhunif(_uhgen);
+	if (p < pr_l)
+	  _solutions._lambda_reev = lr_l + 1;
+	else _solutions._lambda_reev = lr_l;
+	if (_solutions._lambda_reev == 0)
+	  _solutions._lambda_reev = 1;
+
+	// mutate candidates.
+	dMat ncandidates;
+	if (phenocandidates.size())
+	  ncandidates = phenocandidates.block(0,0,phenocandidates.rows(),_solutions._lambda_reev);
+	else ncandidates = candidates.block(0,0,candidates.rows(),_solutions._lambda_reev);
+	if (_solutions._sepcov.size())
+	  _uhesolver.set_covar(_solutions._sepcov);
+	else _uhesolver.set_covar(_solutions._cov);
+	ncandidates += _parameters._epsuh * _solutions._sigma * _uhesolver.samples_ind(_solutions._lambda_reev);
+	
+	// re-evaluate
+	std::vector<RankedCandidate> nvcandidates;
+	for (int r=0;r<candidates.cols();r++)
+	  {
+	    if (r < _solutions._lambda_reev)
+	      {
+		double nfvalue = _func(ncandidates.col(r).data(),ncandidates.rows());
+		nvcandidates.emplace_back(nfvalue,_solutions._candidates.at(r),r);
+	      }
+	    else nvcandidates.emplace_back(_solutions._candidates.at(r).get_fvalue(),_solutions._candidates.at(r),r);
+	  }
+	_solutions._candidates_uh = nvcandidates;
       }
 
     // if initial elitist, reinject initial solution as needed.
@@ -165,6 +222,120 @@ namespace libcmaes
     edm *= gradn;
     _solutions._edm = edm;
     return edm;
+  }
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::uncertainty_handling()
+  {
+    std::sort(_solutions._candidates_uh.begin(),
+	      _solutions._candidates_uh.end(),
+	      [](const RankedCandidate &c1, const RankedCandidate &c2)
+	      { 
+		bool lower = c1.get_fvalue() < c2.get_fvalue();
+		return lower;
+	      });
+    int pos = 0;
+    auto vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	(*vit)._r1 = pos;
+	++vit;
+	++pos;
+      }
+    
+    // sort second uh set of candidates
+    std::sort(_solutions._candidates_uh.begin(),
+	      _solutions._candidates_uh.end(),
+	      [](const RankedCandidate &c1, const RankedCandidate &c2)
+	      { 
+		bool lower = c1._fvalue_mut < c2._fvalue_mut;
+		return lower;
+	      });
+    pos = 0;
+    vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	(*vit)._r2 = pos;
+	++vit;
+	++pos;
+      }
+    
+    // compute delta
+    vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	if ((*vit)._idx >= _solutions._lambda_reev)
+	  {
+	    ++vit;
+	    continue;
+	  }
+	int diffr = (*vit)._r2 - (*vit)._r1;
+	(*vit)._delta = diffr - sgn(diffr);
+	++vit;
+      }
+    double meandelta = std::accumulate(_solutions._candidates_uh.begin(),
+				       _solutions._candidates_uh.end(),
+				       0.0,
+				       [](double sum, const RankedCandidate &c){ return sum + fabs(c._delta); });
+    meandelta /= _solutions._lambda_reev;
+    
+    // compute uncertainty level
+    double s = 0.0;
+    for (size_t i=0;i<_solutions._candidates_uh.size();i++)
+      {
+	RankedCandidate rc = _solutions._candidates_uh.at(i);
+	if (rc._idx >= _solutions._lambda_reev)
+	  continue;
+	s += 2*fabs(rc._delta);
+	double d1 = rc._r2 - static_cast<int>(rc._r2 > rc._r1);
+	std::vector<double> dv;
+	double fact = _parameters._thetauh*0.5;
+	for (int j=1;j<2*_parameters._lambda;j++)
+	  dv.push_back(fabs(j-d1));
+	std::nth_element(dv.begin(),dv.begin()+int(dv.size()*fact),dv.end());
+	double comp1 = *(dv.begin()+int(dv.size()*fact));
+	s -= comp1;
+	
+	double d2 = rc._r1 - static_cast<int>(rc._r1 > rc._r2);
+	dv.clear();
+	for (int j=1;j<2*_parameters._lambda;j++)
+	  dv.push_back(fabs(j-d2));
+	std::nth_element(dv.begin(),dv.begin()+int(dv.size()*fact),dv.end());
+	double comp2 = *(dv.begin()+int(dv.size()*fact));
+	s -= comp2;
+      }
+    s /= static_cast<double>(_solutions._lambda_reev);
+    _solutions._suh = s;
+    
+    // rerank according to r1 + r2
+    int lreev = _solutions._lambda_reev;
+    std::sort(_solutions._candidates_uh.begin(),
+	      _solutions._candidates_uh.end(),
+	      [lreev,meandelta](RankedCandidate const &c1, RankedCandidate const &c2)
+	      { 
+		int s1 = c1._r1 + c1._r2;
+		int s2 = c2._r2 + c2._r2;
+		if (s1 == s2)
+		  {
+		    if (c1._delta == c2._delta)
+		      return c1.get_fvalue() + c1._fvalue_mut < c2.get_fvalue() + c2._fvalue_mut;
+		    else
+		      {
+			double c1d = c1._idx < lreev ? fabs(c1._delta) : meandelta;
+			double c2d = c2._idx < lreev ? fabs(c2._delta) : meandelta;
+			return c1d < c2d;
+		      }
+		  }
+		else return c1._r1 + c1._r2 < c2._r1 + c2._r2;
+	      });
+    std::vector<Candidate> ncandidates;
+    vit = _solutions._candidates_uh.begin();
+    while(vit!=_solutions._candidates_uh.end())
+      {
+	ncandidates.push_back(_solutions._candidates.at((*vit)._idx));
+	++vit;
+      }
+    _solutions._candidates = ncandidates;
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>

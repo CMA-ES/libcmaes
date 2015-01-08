@@ -25,6 +25,7 @@
 #include "noboundstrategy.h"
 #include "pwq_bound_strategy.h"
 #include "scaling.h"
+#include <vector>
 
 namespace libcmaes
 {

@@ -49,8 +49,10 @@ namespace libcmaes
     friend class CovarianceUpdate;
     friend class ACovarianceUpdate;
     template <class U> friend class errstats;
+#ifdef HAVE_SURROG
     template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
     template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
+#endif
     friend class VDCMAUpdate;
     
   public:
@@ -429,6 +431,10 @@ namespace libcmaes
     Candidate _initial_candidate;
     
     dVec _v; /**< complementary vector for use in vdcma. */
+
+    std::vector<RankedCandidate> _candidates_uh; /**< temporary set of candidates used by uncertainty handling scheme. */
+    int _lambda_reev; /**< number of reevaluated solutions at current step. */
+    double _suh; /**< uncertainty level computed by uncertainty handling procedure. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

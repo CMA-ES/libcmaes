@@ -34,14 +34,16 @@ namespace libcmaes
   template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
   
   template <class TCovarianceUpdate, class TGenoPheno>
-  ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
+  int pfuncdef_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
   {
     LOG_IF(INFO,!cmaparams.quiet()) << std::setprecision(std::numeric_limits<double>::digits10) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / last_iter=" << cmasols.elapsed_last_iter() << std::endl;
     return 0;
-  };
-
+  }
+  template <class TCovarianceUpdate, class TGenoPheno>
+  ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = &pfuncdef_impl<TCovarianceUpdate,TGenoPheno>;
+  
   template<class TCovarianceUpdate, class TGenoPheno>
-  PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultFPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+  int fpfuncdef_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
   {
     std::string sep = " ";
     fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
@@ -59,7 +61,9 @@ namespace libcmaes
 #endif
     fplotstream << std::endl;
     return 0;
-  };
+    }
+  template<class TCovarianceUpdate, class TGenoPheno>
+  PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultFPFunc = &fpfuncdef_impl<TCovarianceUpdate,TGenoPheno>;
 
   template <class TCovarianceUpdate, class TGenoPheno>
   CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy()
@@ -247,14 +251,20 @@ namespace libcmaes
 #endif
     
     // sort candidates.
-    eostrat<TGenoPheno>::_solutions.sort_candidates();
-
+    if (!eostrat<TGenoPheno>::_parameters._uh)
+      eostrat<TGenoPheno>::_solutions.sort_candidates();
+    else eostrat<TGenoPheno>::uncertainty_handling();
+    
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
     
     // CMA-ES update, depends on the selected 'flavor'.
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,_esolver,eostrat<TGenoPheno>::_solutions);
     
+    if (eostrat<TGenoPheno>::_parameters._uh)
+      if (eostrat<TGenoPheno>::_solutions._suh > 0.0)
+	eostrat<TGenoPheno>::_solutions._sigma *= eostrat<TGenoPheno>::_parameters._alphathuh;
+
     // other stuff.
     if (!eostrat<TGenoPheno>::_parameters._sep && !eostrat<TGenoPheno>::_parameters._vd)
       eostrat<TGenoPheno>::_solutions.update_eigenv(_esolver._eigenSolver.eigenvalues(),

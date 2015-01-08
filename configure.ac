@@ -1,6 +1,6 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.9.3)
+AC_INIT(libcmaes,0.9.4)
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_CONFIG_HEADER([libcmaes_config.h])
@@ -13,8 +13,9 @@ AC_CONFIG_FILES(libcmaes.pc)
 AC_PROG_INSTALL
 AC_CANONICAL_HOST
 
-AC_PROG_CC(g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
-AC_PROG_CXX
+AC_PROG_CC(clang++ g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
+AC_PROG_CXX(clang++ g++ c++)
+AM_CONDITIONAL(HAVE_CLANG, test x"$CXX" = xclang++)
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
@@ -136,6 +137,19 @@ AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and e
 	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-onlylib) ;;
 esac],[onlylib=false])
 AM_CONDITIONAL(HAVE_ONLYLIB, test x$onlylib = xtrue)
+
+# Whether to compile support for surrogates
+AC_ARG_ENABLE(surrog,
+AC_HELP_STRING([--enable-surrog],[Compile the library with support for surrogates (default is YES)]),
+[case "${enableval}" in 
+	yes) surrog=true ;;
+	no) surrog=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-surrog) ;;
+esac],[surrog=true])
+AM_CONDITIONAL(HAVE_SURROG, test x$surrog = xtrue)
+if test x"$surrog" = x"true"; then
+   AC_DEFINE(HAVE_SURROG, 1, [surrog])
+fi
 
 # Whether debug mode
 AC_ARG_ENABLE(debug,

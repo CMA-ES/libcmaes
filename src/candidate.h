@@ -121,6 +121,23 @@ namespace libcmaes
    dVec _x; /**< function parameter vector. */
   };
 
+  class RankedCandidate : public Candidate
+  {
+  public:
+    RankedCandidate(const double &fvalue_mut,
+		    Candidate &c,
+		    const int &idx)
+      :Candidate(c.get_fvalue(),dVec()),_idx(idx),_fvalue_mut(fvalue_mut)
+    {}
+    ~RankedCandidate() {}
+
+    int _idx = -1;
+    double _fvalue_mut;
+    int _r1 = 0;
+    int _r2 = 0;
+    double _delta = 0.0;
+  };
+
 }
 
 #endif
