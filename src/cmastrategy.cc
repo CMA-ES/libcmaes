@@ -268,7 +268,7 @@ namespace libcmaes
 	&& eostrat<TGenoPheno>::_solutions._bfvalues.at(eostrat<TGenoPheno>::_solutions._bfvalues.size()-2) - eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue() < 0)
       _steps_wrong_dir++;
     else _steps_wrong_dir = 0;
-    if (_steps_wrong_dir >= 10)
+    if (eostrat<TGenoPheno>::_parameters._sigma_step_control && _steps_wrong_dir >= 10)
       eostrat<TGenoPheno>::_solutions._sigma /= 2.0;
 
     if (eostrat<TGenoPheno>::_parameters._uh)

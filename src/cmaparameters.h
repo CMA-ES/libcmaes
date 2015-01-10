@@ -196,6 +196,12 @@ namespace libcmaes
       inline void set_elitist(const int &e) { _elitist = e; }
 
       /**
+       * \brief lowers sigma by half when search goes into the wrong direction for a number of steps
+       * @param b whether to activate sigma step control
+       */
+      inline void set_sigma_stepc(const bool &b) { _sigma_step_control = b; }
+
+      /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
        * @param criteria stopping criteria CMAStopCritType, see cmastopcriteria.h
@@ -241,7 +247,8 @@ namespace libcmaes
       bool _vd = false;
       
       int _elitist = 0; /**< activate (if > 0) the restart from and re-injection of the best seen solution if not the final one (1), or reinjects x0 (2). */
-      
+      bool _sigma_step_control = false; /** whether to activate sigma auto-step-control. */
+
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
     };
