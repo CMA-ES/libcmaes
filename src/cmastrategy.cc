@@ -257,10 +257,20 @@ namespace libcmaes
     
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
-    
+
     // CMA-ES update, depends on the selected 'flavor'.
     TCovarianceUpdate::update(eostrat<TGenoPheno>::_parameters,_esolver,eostrat<TGenoPheno>::_solutions);
-    
+
+    /*if (eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue()
+	> eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_solutions._initial_candidate.get_x_dvec().data(),
+	eostrat<TGenoPheno>::_parameters._dim))*/
+    if (eostrat<TGenoPheno>::_solutions._bfvalues.size() > 2 
+	&& eostrat<TGenoPheno>::_solutions._bfvalues.at(eostrat<TGenoPheno>::_solutions._bfvalues.size()-2) - eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue() < 0)
+      _steps_wrong_dir++;
+    else _steps_wrong_dir = 0;
+    if (_steps_wrong_dir >= 10)
+      eostrat<TGenoPheno>::_solutions._sigma /= 2.0;
+
     if (eostrat<TGenoPheno>::_parameters._uh)
       if (eostrat<TGenoPheno>::_solutions._suh > 0.0)
 	eostrat<TGenoPheno>::_solutions._sigma *= eostrat<TGenoPheno>::_parameters._alphathuh;
@@ -303,8 +313,13 @@ namespace libcmaes
     //debug
     //DLOG(INFO) << "optimize()\n";
     //debug
+    //std::cout << "parameters elitist=" << eostrat<TGenoPheno>::_parameters._elitist << std::endl;
+    if (eostrat<TGenoPheno>::_parameters._elitist == 2)
+      this->set_initial_elitist(true);
+    
+    //std::cout << "elitist=" << eostrat<TGenoPheno>::_initial_elitist << std::endl;
 
-    if (eostrat<TGenoPheno>::_initial_elitist)
+    //if (eostrat<TGenoPheno>::_initial_elitist)
       {
 	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim),
 								       eostrat<TGenoPheno>::_solutions._xmean);
@@ -325,7 +340,7 @@ namespace libcmaes
       eostrat<TGenoPheno>::edm();
 
     // test on final value wrt. to best candidate value and number of iterations in between.
-    if (eostrat<TGenoPheno>::_parameters._elitist)
+    if (eostrat<TGenoPheno>::_parameters._elitist == 1)
       {
 	if (eostrat<TGenoPheno>::_parameters._elitist
 	    && eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue()

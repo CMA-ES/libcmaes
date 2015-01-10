@@ -145,8 +145,10 @@ namespace libcmaes
 	// reinject intial solution if half or more points have value above that of the initial point candidate.
 	int count = 0;
 	for (int r=0;r<candidates.cols();r++)
-	  if (_solutions._candidates.at(r).get_fvalue() < _solutions._initial_candidate.get_fvalue())
-	    ++count;
+	  {
+	    if (_solutions._candidates.at(r).get_fvalue() < _solutions._initial_candidate.get_fvalue())
+	      ++count;
+	  }
 	if (count/2.0 < candidates.cols()/2)
 	  {
 #ifdef HAVE_DEBUG

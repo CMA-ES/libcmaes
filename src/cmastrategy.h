@@ -125,6 +125,8 @@ namespace libcmaes
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
       std::ofstream *_fplotstream = nullptr; /**< plotting file stream, not in parameters because of copy-constructor hell. */
     
+    int _steps_wrong_dir = 0; /**< number of steps in the wrong direction. */
+    
     public:
     static ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultPFunc; /**< the default progress function. */
     static PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> _defaultFPFunc; /**< the default plot to file function. */

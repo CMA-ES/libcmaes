@@ -191,9 +191,9 @@ namespace libcmaes
        * \brief sets initial elitist scheme: restart if best encountered solution is not
        *        the final solution and reinjects the best solution until the population
        *        has better fitness, in its majority
-       * @param e whether to activate the initial elitist scheme
+       * @param e whether to activate the initial elitist scheme (0: deactivate, 1: reinject on restart, 2: injects x0)
        */
-      inline void set_elitist(const bool &e) { _elitist = e; }
+      inline void set_elitist(const int &e) { _elitist = e; }
 
       /**
        * \brief all stopping criteria are active by default, this allows to control
@@ -240,7 +240,7 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
-      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      int _elitist = 0; /**< activate (if > 0) the restart from and re-injection of the best seen solution if not the final one (1), or reinjects x0 (2). */
       
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
