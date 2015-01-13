@@ -90,7 +90,9 @@ namespace libcmaes
     
     _muw = sum_weights*sum_weights / sq_weights;
 
-    _csigma = (_muw+2.0)/(Parameters<TGenoPheno>::_dim+_muw+5.0);
+    if (Parameters<TGenoPheno>::_dim < 1000)
+      _csigma = (_muw+2.0)/(Parameters<TGenoPheno>::_dim+_muw+5.0);
+    else _csigma = (std::sqrt(_muw) + 2.0) / (std::sqrt(Parameters<TGenoPheno>::_dim) + std::sqrt(_muw) + 3.0);
     _cc = (4.0+_muw/static_cast<double>(Parameters<TGenoPheno>::_dim))/(Parameters<TGenoPheno>::_dim+4.0+2.0*_muw/static_cast<double>(Parameters<TGenoPheno>::_dim));
     
     _c1 = 2.0/(pow((Parameters<TGenoPheno>::_dim+1.3),2)+_muw);
