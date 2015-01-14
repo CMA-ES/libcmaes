@@ -488,6 +488,7 @@ DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
 DEFINE_bool(sigma_stepc,false,"activates sigma step control");
+DEFINE_bool(tpa,false,"whether to use two-point adapation for step-size update");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -519,6 +520,7 @@ CMASolutions cmaes_opt()
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
   cmaparams.set_sigma_stepc(FLAGS_sigma_stepc);
+  cmaparams.set_tpa(FLAGS_tpa);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)

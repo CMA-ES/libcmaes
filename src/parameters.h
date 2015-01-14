@@ -503,6 +503,24 @@ namespace libcmaes
       {
 	return _uh;
       }
+
+      /**
+       * \brief activates / deactivates two-point adaptation step-size mechanism
+       * @param b activates / deactivates
+       */
+      inline void set_tpa(const bool &b)
+      {
+	_tpa = b;
+      }
+
+      /**
+       * \brief get two-point adapation step-size mechanism status.
+       * @return two-point adaptation status.
+       */
+      inline bool get_tpa() const
+      {
+	return _tpa;
+      }
       
     protected:
       int _dim; /**< function space dimensions. */
@@ -541,6 +559,10 @@ namespace libcmaes
       double _thetauh = 0.2; /**< control parameter for the acceptance threshold for the measured rank-change value. */
       double _csuh = 1.0; /**< learning rate for averaging the uncertainty measurement. */
       double _alphathuh = 1.0; /**< factor of increasing the population spread. */
+
+      // two-point adaptation
+      bool _tpa = false; /**< whether to activate two-point adaptation. */
+      double _tpa_csigma = 0.3;
     };
 }
 
