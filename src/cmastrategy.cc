@@ -215,6 +215,26 @@ namespace libcmaes
 	    pop.col(0) = nx;
 	  }
       }
+
+    // tpa: fill up two first (or second in case of gradient) points with candidates usable for tpa computation
+    if (eostrat<TGenoPheno>::_parameters._tpa && eostrat<TGenoPheno>::_niter > 0)
+      {
+	dVec mean_shift = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._xmean_prev;
+	double mean_shift_norm = mean_shift.norm();
+	dVec z = eostrat<TGenoPheno>::_parameters._chi * (mean_shift / mean_shift_norm);
+	eostrat<TGenoPheno>::_solutions._tpa_x1 = eostrat<TGenoPheno>::_solutions._xmean + eostrat<TGenoPheno>::_solutions._sigma * z;
+	eostrat<TGenoPheno>::_solutions._tpa_x2 = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * z;
+	
+	// if gradient is in col 0, move tpa vectors to pos 1 & 2
+	int p1 = 0, p2 = 1;
+	if (eostrat<TGenoPheno>::_parameters._with_gradient)
+	  {
+	    p1 = 1;
+	    p2 = 2;
+	  }
+	pop.col(p1) = eostrat<TGenoPheno>::_solutions._tpa_x1;
+	pop.col(p2) = eostrat<TGenoPheno>::_solutions._tpa_x2;
+      }
     
     // if some parameters are fixed, reset them.
     if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
@@ -255,6 +275,10 @@ namespace libcmaes
       eostrat<TGenoPheno>::_solutions.sort_candidates();
     else eostrat<TGenoPheno>::uncertainty_handling();
     
+    //TODO: call on tpa computation of s(t)
+    if (eostrat<TGenoPheno>::_parameters._tpa && eostrat<TGenoPheno>::_niter > 0)
+      eostrat<TGenoPheno>::tpa_update();
+
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
     

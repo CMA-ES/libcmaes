@@ -211,7 +211,13 @@ namespace libcmaes
      *        level based on a dual candidate ranking.
      */
     void uncertainty_handling();
-    
+
+    /**
+     * \brief updates the two-point adaptation average rank difference for
+     *        the step-size adaptation mechanism
+     */
+    void tpa_update();
+
     // deprecated.
     Candidate best_solution() const;
 

@@ -97,7 +97,9 @@ namespace libcmaes
     _cmu = 2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw);
     _cmu = std::min(1.0-_c1,_cmu);
     
-    _dsigma = 1.0+_csigma+2.0*std::max(0.0,sqrt((_muw-1)/(Parameters<TGenoPheno>::_dim+1))-1);
+    if (!Parameters<TGenoPheno>::_tpa)
+      _dsigma = 1.0+_csigma+2.0*std::max(0.0,sqrt((_muw-1)/(Parameters<TGenoPheno>::_dim+1))-1);
+    else _dsigma = std::sqrt(Parameters<TGenoPheno>::_dim);
 
     // constants used in covariance update.
     _fact_ps = sqrt(_csigma*(2.0-_csigma)*_muw);
