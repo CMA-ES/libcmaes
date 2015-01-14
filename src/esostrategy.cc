@@ -99,7 +99,8 @@ namespace libcmaes
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
-
+    int nfcalls = candidates.cols();
+    
     // evaluation step of uncertainty handling scheme.
     if (_parameters._uh)
       {
@@ -114,7 +115,7 @@ namespace libcmaes
 	else _solutions._lambda_reev = lr_l;
 	if (_solutions._lambda_reev == 0)
 	  _solutions._lambda_reev = 1;
-
+	
 	// mutate candidates.
 	dMat ncandidates;
 	if (phenocandidates.size())
@@ -133,6 +134,7 @@ namespace libcmaes
 	      {
 		double nfvalue = _func(ncandidates.col(r).data(),ncandidates.rows());
 		nvcandidates.emplace_back(nfvalue,_solutions._candidates.at(r),r);
+		nfcalls++;
 	      }
 	    else nvcandidates.emplace_back(_solutions._candidates.at(r).get_fvalue(),_solutions._candidates.at(r),r);
 	  }
@@ -156,7 +158,7 @@ namespace libcmaes
 	  }
       }
     
-    update_fevals(candidates.cols());
+    update_fevals(nfcalls);
     
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
