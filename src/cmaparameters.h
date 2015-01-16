@@ -206,6 +206,8 @@ namespace libcmaes
       {
 	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
       }
+
+      void set_tpa(const bool &b); // overrides def in parameters.h in order to reset dsigma
       
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
