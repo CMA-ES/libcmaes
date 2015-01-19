@@ -207,7 +207,18 @@ namespace libcmaes
 	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
       }
 
+      /**
+       * \brief activates / deactivates two-point adaptation step-size mechanism.
+       *        Overrides parameters::set_tpa by automatically setting dsigma value.
+       * @param b activates / deactivates
+       */
       void set_tpa(const bool &b); // overrides def in parameters.h in order to reset dsigma
+
+      /**
+       * \brief sets dsigma value, use with care.
+       * @param d dsigma
+       */
+      void set_tpa_dsigma(const double &d) { _dsigma = d; }
       
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
