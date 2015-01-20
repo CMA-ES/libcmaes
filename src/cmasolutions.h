@@ -102,6 +102,8 @@ namespace libcmaes
      */
     inline Candidate best_candidate() const
     {
+      if (_best_candidates_hist.empty()) // iter = 0
+	return Candidate(std::numeric_limits<double>::quiet_NaN(),_xmean);
       return _best_candidates_hist.back();
     }
 

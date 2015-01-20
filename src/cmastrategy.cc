@@ -283,15 +283,15 @@ namespace libcmaes
     if (eostrat<TGenoPheno>::_solutions._run_status < 0) // an error occured, most likely out of memory at cov matrix creation.
       return true;
     
-    if (eostrat<TGenoPheno>::_niter == 0)
-      return false;
-    
     if (eostrat<TGenoPheno>::_pfunc(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) // progress function.
       return true; // end on progress function internal termination, possibly custom.
     
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       plot();
     
+    if (eostrat<TGenoPheno>::_niter == 0)
+      return false;
+
     if ((eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != CONT)
       return true;
     else return false;
