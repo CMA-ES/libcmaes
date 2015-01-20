@@ -149,6 +149,11 @@ namespace libcmaes
   template <class TGenoPheno>
   void CMAParameters<TGenoPheno>::set_vd()
   {
+    if (this->_algo != 12 && this->_algo != 13 && this->_algo != 14)
+      {
+	std::cerr << "[Warning]: set_vd on non VD algorithm " << this->_algo << ". Not activating VD update\n";
+	return;
+      }
     _vd = true;
     _csigma = std::sqrt(_muw)/(2.0*(std::sqrt(Parameters<TGenoPheno>::_dim) + std::sqrt(_muw)));
     _c1 *= (Parameters<TGenoPheno>::_dim-5)/6.0;
