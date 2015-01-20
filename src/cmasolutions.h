@@ -97,7 +97,7 @@ namespace libcmaes
     /**
      * \brief returns current best solution candidate.
      *        NOTE: candidates MUST be sorted
-     * @return currentbest candidate
+     * @return current best candidate
      * @see CMASolutions::sort_candidates
      */
     inline Candidate best_candidate() const
@@ -105,6 +105,15 @@ namespace libcmaes
       if (_best_candidates_hist.empty()) // iter = 0
 	return Candidate(std::numeric_limits<double>::quiet_NaN(),_xmean);
       return _best_candidates_hist.back();
+    }
+
+    /**
+     * \brief returns the best seen candidate.
+     * @return best seen candidate
+     */
+    inline Candidate get_best_seen_candidate() const
+    {
+      return _best_seen_candidate;
     }
 
     /**
