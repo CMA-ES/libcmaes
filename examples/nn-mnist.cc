@@ -257,7 +257,6 @@ GradFunc gnn = [](const double *x, const int N)
   return grad;
 };
 
-double gmaxmaha = 0.0;
 ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
   if (!gdrop)
@@ -265,7 +264,7 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       gtrainacc = testing(cmasols.best_candidate().get_x_dvec(),true,false);
       gtestacc = testing(cmasols.best_candidate().get_x_dvec(),false,false);
     }
-  std::cout << "epoch=" << ceil(cmasols.niter() / gnpasses) << " / iter=" << cmasols.niter() << " / evals=" << cmaparams.lambda() * cmasols.niter() << " / f-value=" << cmasols.best_candidate().get_fvalue() << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols.sigma() /*<< " / maha=" << cmasols.maha() */ << " / iter=" << cmasols.elapsed_last_iter() << std::endl;
+  std::cout << "epoch=" << ceil(cmasols.niter() / gnpasses) << " / iter=" << cmasols.niter() << " / evals=" << cmaparams.lambda() * cmasols.niter() << " / f-value=" << cmasols.best_candidate().get_fvalue() << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << " / sigma=" << cmasols.sigma() << " / iter=" << cmasols.elapsed_last_iter() << std::endl;
   
   /*if (gbatches > 0)
     {
@@ -281,14 +280,6 @@ ProgressFunc<CMAParameters<>,CMASolutions> mpfunc = [](const CMAParameters<> &cm
       gbatchlabels = glabels.block(0,beg,glabels.rows(),bsize);
       }*/
 
-  if (cmasols.maha() > gmaxmaha)
-    gmaxmaha = cmasols.maha();
-  if (cmasols.maha() < gmaxmaha / 10.0)
-    {
-      std::cout << "Mahalanobis drop to 1/10th of its max, stopping optimization\n";
-      return 1;
-    }
-  
   return 0;
 };
 							
@@ -485,7 +476,7 @@ int main(int argc, char *argv[])
 		{
 		  Candidate bcand = cmasols.best_candidate();
 		  x0.clear();
-		  std::copy(bcand.get_x(),bcand.get_x()+bcand.get_x_size(),std::back_inserter(x0));
+		  std::copy(bcand.get_x_ptr(),bcand.get_x_ptr()+bcand.get_x_size(),std::back_inserter(x0));
 		  nn hgn = nn(glsizes,gsigmoid,false,gregularize,gregularize,FLAGS_l1reg,FLAGS_l2reg);
 		  for (int i=0;i<(int)x0.size();i++)
 		    hgn._allparams.push_back(x0[i]);
@@ -564,7 +555,6 @@ int main(int argc, char *argv[])
 	{
 	  gdrop = FLAGS_drop;
 	  gi = 0;
-	  gmaxmaha = 0;
 	  // randomly drop units
 	  gmnistnn.to_array();
 	  if (gallparams.empty())
@@ -647,7 +637,6 @@ int main(int argc, char *argv[])
 	  cmaparams.set_ftarget(1e-2);
 	  cmaparams.set_mt_feval(true);
 	  cmaparams.set_quiet(false);
-	  cmaparams.set_kl(true);
 	  cmaparams.set_ftolerance(FLAGS_ftolerance);
 	  cmasols = cmaes<>(nn_dof,cmaparams,mpfunc);
 	  nevals += cmasols.fevals();
@@ -667,7 +656,7 @@ int main(int argc, char *argv[])
 	  std::cout << "iter=" << droppasses + 1 << " / loss=" << cmasols.best_candidate().get_fvalue() << " / fevals=" << nevals;
 	  if (FLAGS_testp || FLAGS_testf != "")
 	    {
-	      dVec bx = Map<dVec>(&gallparams.front(),gallparams.size());
+	      dVec bx = Eigen::Map<dVec>(&gallparams.front(),gallparams.size());
 	      gtrainacc = testing(bx,true,false);
 	      gtestacc = testing(bx,false,false);
 	      std::cout << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc;
@@ -701,7 +690,7 @@ int main(int argc, char *argv[])
 	      gmnistnn.clear_grad();
 	      if (i == npasses - 1)
 		{
-		  dVec x = Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
+		  dVec x = Eigen::Map<dVec>(&gmnistnn._allparams.front(),gmnistnn._allparams.size());;
 		  gtrainacc = testing(x,true,false);
 		  gtestacc = testing(x,false,false);
 		  std::cout << "epochs=" << epochs << " / iter=" << epochs * npasses + i << " / loss=" << gmnistnn._loss << " / trainacc=" << gtrainacc << " / testacc=" << gtestacc << std::endl;
@@ -727,7 +716,7 @@ int main(int argc, char *argv[])
   dVec bx;
   if (!FLAGS_drop && !FLAGS_sgd && FLAGS_mbatch <= 0)
     bx = cmasols.best_candidate().get_x_dvec();
-  else bx = Map<dVec>(&gallparams.front(),gallparams.size());
+  else bx = Eigen::Map<dVec>(&gallparams.front(),gallparams.size());
   testing(bx,true);
     
   // testing on testing set, if any.

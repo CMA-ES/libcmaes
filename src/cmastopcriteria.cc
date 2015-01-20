@@ -21,6 +21,7 @@
 
 #include "libcmaes_config.h"
 #include "cmastopcriteria.h"
+#include "cmasolutions.h"
 #include <cmath>
 #include <iterator>
 #include "llogging.h"
@@ -77,7 +78,7 @@ namespace libcmaes
     StopCriteriaFunc<TGenoPheno> autoMaxIter = [](const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)
       {
 	double thresh = 100.0 + 50*pow(cmap._dim+3,2) / sqrt(cmap._lambda);
-	if (cmap._vd && cmap._dim < 10)
+	if (cmap._vd && cmap._dim < 10) // vd-cma requires a much higher default auto_maxiter.
 	  thresh *= 1000.0;
 	if (cmas._niter >= thresh)
 	  {
@@ -188,7 +189,7 @@ namespace libcmaes
 	std::vector<double> oldest_median_fvalues(20);
 	std::copy_n(cmas._median_fvalues.begin(),20,oldest_median_fvalues.begin());
 	double old_medianbv = median(oldest_median_fvalues);
-	if (medianbv > old_medianbv)
+	if (medianbv >= old_medianbv)
 	  {
 	    LOG_IF(INFO,!cmap._quiet) << "stopping criteria stagnation => oldmedianfvalue=" << old_medianbv << " / newmedianfvalue=" << medianbv << std::endl;
 	    return STAGNATION;
@@ -227,13 +228,11 @@ namespace libcmaes
       {
 	double fact = 0.2*cmas._sigma;
 	for (int i=0;i<cmap._dim;i++)
-	  if ((!cmap._sep && !cmap._vd && cmas._xmean[i] == fact * sqrt(cmas._cov(i,i)))
-	      || ((cmap._sep || cmap._vd) && cmas._xmean[i] == fact * sqrt(cmas._sepcov(i))))
-	    {
-	      LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
-	      return NOEFFECTCOOR;
-	    }
-	return CONT;
+	  if ((!cmap._sep && !cmap._vd && cmas._xmean[i] != cmas._xmean[i] + fact * sqrt(cmas._cov(i,i)))
+	      || ((cmap._sep || cmap._vd) && cmas._xmean[i] != cmas._xmean[i] + fact * sqrt(cmas._sepcov(i))))
+	    return CONT;
+	LOG_IF(INFO,!cmap._quiet) << "stopping criteria NoEffectCoor\n";
+	return NOEFFECTCOOR;
       };
     _scriteria.insert(std::pair<int,StopCriteria<TGenoPheno>>(NOEFFECTCOOR,StopCriteria<TGenoPheno>(noEffectCoor)));
   }
@@ -256,10 +255,6 @@ namespace libcmaes
       {
 	if (imap.second.active() && (r=imap.second._sfunc(cmap,cmas))!=0)
 	  {
-#ifdef HAVE_DEBUG
-	    std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
-	    const_cast<CMASolutions&>(cmas)._elapsed_stop = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
-#endif
 	    return r;
 	  }
       }

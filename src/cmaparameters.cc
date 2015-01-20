@@ -57,7 +57,7 @@ namespace libcmaes
 					   const uint64_t &seed)
     :Parameters<TGenoPheno>(x0.size(),&x0.front(),lambda,seed,TGenoPheno()),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
   {
-    dVec scaling = dVec::Constant(x0.size(),1.0).cwiseQuotient(Map<dVec>(const_cast<double*>(&sigma.front()),sigma.size()));
+    dVec scaling = dVec::Constant(x0.size(),1.0).cwiseQuotient(Eigen::Map<dVec>(const_cast<double*>(&sigma.front()),sigma.size()));
     dVec shift = dVec::Constant(x0.size(),0.0);
     TGenoPheno gp(scaling,shift,&lbounds.front(),&ubounds.front()); // XXX: is only effective when GenoPheno has linScalingStrategy
     this->set_gp(gp);
@@ -90,7 +90,9 @@ namespace libcmaes
     
     _muw = sum_weights*sum_weights / sq_weights;
 
-    _csigma = (_muw+2.0)/(Parameters<TGenoPheno>::_dim+_muw+5.0);
+    if (Parameters<TGenoPheno>::_dim < 1000)
+      _csigma = (_muw+2.0)/(Parameters<TGenoPheno>::_dim+_muw+5.0);
+    else _csigma = (std::sqrt(_muw) + 2.0) / (std::sqrt(Parameters<TGenoPheno>::_dim) + std::sqrt(_muw) + 3.0);
     _cc = (4.0+_muw/static_cast<double>(Parameters<TGenoPheno>::_dim))/(Parameters<TGenoPheno>::_dim+4.0+2.0*_muw/static_cast<double>(Parameters<TGenoPheno>::_dim));
     
     _c1 = 2.0/(pow((Parameters<TGenoPheno>::_dim+1.3),2)+_muw);
@@ -109,6 +111,10 @@ namespace libcmaes
 
     // active cma.
     _deltamaxsigma = std::numeric_limits<double>::max();
+
+    // uncertainty handling.
+    this->_rlambda = std::max(0.1,2.0/Parameters<TGenoPheno>::_lambda);
+    this->_alphathuh = 1 + 2.0/(Parameters<TGenoPheno>::_dim+10.0);
   }
   
   template <class TGenoPheno>
@@ -143,6 +149,11 @@ namespace libcmaes
   template <class TGenoPheno>
   void CMAParameters<TGenoPheno>::set_vd()
   {
+    if (this->_algo != 12 && this->_algo != 13 && this->_algo != 14)
+      {
+	std::cerr << "[Warning]: set_vd on non VD algorithm " << this->_algo << ". Not activating VD update\n";
+	return;
+      }
     _vd = true;
     _csigma = std::sqrt(_muw)/(2.0*(std::sqrt(Parameters<TGenoPheno>::_dim) + std::sqrt(_muw)));
     _c1 *= (Parameters<TGenoPheno>::_dim-5)/6.0;

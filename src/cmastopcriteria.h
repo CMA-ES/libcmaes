@@ -23,11 +23,13 @@
 #define CMASTOPCRITERIA_H
 
 #include "cmaparameters.h"
-#include "cmasolutions.h"
 #include <functional>
+#include <map>
 
 namespace libcmaes
 {
+
+  class CMASolutions;
 
   template <class TGenoPheno>
     using StopCriteriaFunc = std::function<int (const CMAParameters<TGenoPheno> &cmap, const CMASolutions &cmas)>;
@@ -72,6 +74,8 @@ namespace libcmaes
   template <class TGenoPheno=NoBoundStrategy>
   class CMAStopCriteria
   {
+    friend class CMASolutions;
+
   public:
     /**
      * \brief Constructor: instanciates a predefined set of termination criteria
@@ -99,8 +103,24 @@ namespace libcmaes
   private:
     std::map<int,StopCriteria<TGenoPheno> > _scriteria; /**< the set of predefined criteria, with priorities. */
     bool _active; /**< whether these termination criteria are active. */
+    static std::map<int,std::string> _scriterias;
   };
   
+  template <class TGenoPheno>
+    std::map<int,std::string> CMAStopCriteria<TGenoPheno>::_scriterias = {{CONT,"OK"},
+									  {AUTOMAXITER,"The automatically set maximal number of iterations per run has been reached"},
+									  {TOLHISTFUN,"[Success] The optimization has converved"},
+									  {EQUALFUNVALS,"[Partial Success] The objective function values are the same over too many iterations, check the formulation of your objective function"},
+									  {TOLX,"[Partial Success] All components of covariance matrix are very small (e.g. < 1e-12)"},
+									  {TOLUPSIGMA,"[Error] Mismatch between step size increase and decrease of all eigenvalues in covariance matrix. Try to restart the optimization."},
+									  {STAGNATION,"[Partial Success] Median of newest values is not smaller than the median of older values"},
+									  {CONDITIONCOV,"[Error] The covariance matrix's condition number exceeds 1e14. Check out the formulation of your problem"},
+									  {NOEFFECTAXIS,"[Partial Success] Mean remains constant along search axes"},
+									  {NOEFFECTCOOR,"[Partial Success] Mean remains constant in coordinates"},
+									  {MAXFEVALS,"The maximum number of function evaluations allowed for optimization has been reached"},
+									  {MAXITER,"The maximum number of iterations specified for optimization has been reached"},
+									  {FTARGET,"[Success] The objective function target value has been reached"}};
+
 }
 
 #endif

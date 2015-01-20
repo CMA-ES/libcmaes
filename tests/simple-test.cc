@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
   std::vector<double> x0 = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
   double sigma = 0.2;
   int lambda = 10;
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma,lambda);
+  CMAParameters<> cmaparams(x0,sigma,lambda);
   ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> cmaes(cigtab,cmaparams);
   cmaes.optimize();
   double edm = cmaes.edm();

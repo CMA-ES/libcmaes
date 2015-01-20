@@ -27,6 +27,8 @@
 #include "ipopcmastrategy.h"
 #include "bipopcmastrategy.h"
 
+namespace cma = libcmaes;
+
 namespace libcmaes
 {
   template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
@@ -180,8 +182,9 @@ namespace libcmaes
 	}
 	case sepCMAES:
 	{
-	  parameters.set_sep();
-	  if (solutions.sepcov().size()==0)
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
+	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
 	      if (gfunc != nullptr)
@@ -204,8 +207,9 @@ namespace libcmaes
 	}
 	case sepIPOP_CMAES:
 	{
-	  parameters.set_sep();
-	  if (solutions.sepcov().size()==0)
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
+	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
 	      if (gfunc != nullptr)
@@ -228,8 +232,9 @@ namespace libcmaes
 	}
 	case sepBIPOP_CMAES:
 	{
-	  parameters.set_sep();
-	  if (solutions.sepcov().size()==0)
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
+	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
 	      if (gfunc != nullptr)
@@ -251,8 +256,9 @@ namespace libcmaes
 	}
 	case sepaCMAES:
 	{
-	  parameters.set_sep();
-	  if (solutions.sepcov().size()==0)
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
+	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
 	      if (gfunc != nullptr)
@@ -274,8 +280,9 @@ namespace libcmaes
 	}
 	case sepaIPOP_CMAES:
 	{
-	  parameters.set_sep();
-	  if (solutions.sepcov().size() == 0)
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
+	  if (solutions.cov().size() == 0)
 	    {
 	      ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
 	      if (gfunc != nullptr)
@@ -297,8 +304,9 @@ namespace libcmaes
 	}
 	case sepaBIPOP_CMAES:
 	{
-	  parameters.set_sep();
-	  if (solutions.sepcov().size() == 0)
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
+	  if (solutions.cov().size() == 0)
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
 	      if (gfunc != nullptr)
@@ -320,7 +328,8 @@ namespace libcmaes
 	}
 	case VD_CMAES:
 	{
-	  parameters.set_vd();
+	  if (!parameters.is_vd())
+	    parameters.set_vd();
 	  ESOptimizer<CMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> vdcma(func,parameters);
 	  if (gfunc != nullptr)
 	    vdcma.set_gradient_func(gfunc);
@@ -328,6 +337,30 @@ namespace libcmaes
 	  vdcma.set_plot_func(pffunc);
 	  vdcma.optimize();
 	  return vdcma.get_solutions();
+	}
+	case VD_IPOP_CMAES:
+	{
+	  if (!parameters.is_vd())
+	    parameters.set_vd();
+	  ESOptimizer<IPOPCMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
+	  if (gfunc != nullptr)
+	    ipop.set_gradient_func(gfunc);
+	  ipop.set_progress_func(pfunc);
+	  ipop.set_plot_func(pffunc);
+	  ipop.optimize();
+	  return ipop.get_solutions();
+	}
+	case VD_BIPOP_CMAES:
+	{
+	  if (!parameters.is_vd())
+	    parameters.set_vd();
+	  ESOptimizer<BIPOPCMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
+	  if (gfunc != nullptr)
+	    bipop.set_gradient_func(gfunc);
+	  bipop.set_progress_func(pfunc);
+	  bipop.set_plot_func(pffunc);
+	  bipop.optimize();
+	  return bipop.get_solutions();
 	}
 	default:
 	return CMASolutions();

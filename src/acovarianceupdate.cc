@@ -27,7 +27,7 @@ namespace libcmaes
 
   template <class TGenoPheno>
   void ACovarianceUpdate::update(const CMAParameters<TGenoPheno> &parameters,
-				 EigenMultivariateNormal<double> &esolver,
+				 Eigen::EigenMultivariateNormal<double> &esolver,
 				 CMASolutions &solutions)
   {
     // compute mean, Eq. (2)
@@ -100,7 +100,7 @@ namespace libcmaes
     double cminustmp = parameters._lambdamintarget;
     if (!parameters._sep)
       {
-	SelfAdjointEigenSolver<dMat> tmpesolve(cminusdenom); // XXX: computing eigenvalues, could be avoid with an upper bound.
+	Eigen::SelfAdjointEigenSolver<dMat> tmpesolve(cminusdenom); // XXX: computing eigenvalues, could be avoid with an upper bound.
 	cminustmp = tmpesolve.eigenvalues().maxCoeff();
       }
     else cminustmp = cminusdenom.maxCoeff();
@@ -117,8 +117,8 @@ namespace libcmaes
     solutions._xmean = xmean;
   }
 
-  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void ACovarianceUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
 }

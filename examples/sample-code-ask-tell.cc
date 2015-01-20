@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
 
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
+  CMAParameters<> cmaparams(x0,sigma);
   //ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> optim(fsphere,cmaparams);
   ESOptimizer<customCMAStrategy,CMAParameters<>> optim(fsphere,cmaparams);
   

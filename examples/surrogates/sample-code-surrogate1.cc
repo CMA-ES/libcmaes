@@ -20,6 +20,7 @@
  */
 
 #include "cmaes.h"
+#include "surrogatestrategy.h"
 #include <iostream>
 
 using namespace libcmaes;
@@ -32,22 +33,38 @@ FitFunc fsphere = [](const double *x, const int N)
   return val;
 };
 
+CSurrFunc ftrain = [](const std::vector<Candidate> &c, const dMat &cov)
+{
+  //do nothing
+  return 0;
+};
+
+SurrFunc fpredict = [](std::vector<Candidate> &c, const dMat &cov)
+{
+  // fill up with real fvalue.
+  for (size_t i=0;i<c.size();i++)
+    c.at(i).set_fvalue(fsphere(c.at(i).get_x_ptr(),c.at(i).get_x_size()));
+  return 0;
+};
+
 int main(int argc, char *argv[])
 {
   int dim = 10; // problem dimensions.
-  std::vector<double> x0(dim,1.0);
+  std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
-  double lbounds[dim],ubounds[dim]; // arrays for lower and upper parameter bounds, respectively
-  for (int i=0;i<dim;i++)
+
+  CMAParameters<> cmaparams(x0,sigma);
+  ESOptimizer<SimpleSurrogateStrategy<CMAStrategy>,CMAParameters<>> optim(fsphere,cmaparams);
+  optim.set_ftrain(ftrain);
+  optim.set_fpredict(fpredict);
+  optim.set_exploit(false); // test mode.
+  
+  while(!optim.stop())
     {
-      lbounds[i] = -2.0;
-      ubounds[i] = 2.0;
+      dMat candidates = optim.ask();
+      optim.eval(candidates);
+      optim.tell();
+      optim.inc_iter(); // important step: signals next iteration.
     }
-  GenoPheno<pwqBoundStrategy,linScalingStrategy> gp(lbounds,ubounds,dim);
-  CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>> cmaparams(x0,sigma,-1,0,gp); // -1 for automatically decided lambda.
-  cmaparams.set_algo(aCMAES);
-  CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>(fsphere,cmaparams);
-  std::cout << "best solution: " << cmasols << std::endl;
-  std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
-  return cmasols.run_status();
+  std::cout << optim.get_solutions() << std::endl;
 }

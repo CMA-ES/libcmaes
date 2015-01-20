@@ -80,7 +80,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
       ubounds[i] = 5.0;
     }
   GenoPheno<pwqBoundStrategy> gp(lbounds,ubounds,dim);
-  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0.front(),2.0,-1,0,gp);
+  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(x0,2.0,-1,0,gp);
   //CMAParameters<> cmaparams(dim,&x0.front(),2.0,-1,0);
   cmaparams.set_max_fevals(maxfunevals);
   cmaparams.set_ftarget(ftarget);

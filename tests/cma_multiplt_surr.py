@@ -30,70 +30,72 @@ single_values = 4
 # read data into numpy array
 dat = loadtxt(sys.argv[1],dtype=float)
 
-dim = int(ceil(np.shape(dat)[1] - single_values) / 3) # we estimate the problem dimension from the data
+dim = int(ceil(np.shape(dat)[1] - single_values - 3) / 3) # we estimate the problem dimension from the data
 #print dim
 
 fvalue = np.absolute(dat[:,0])
 fevals = dat[:,1]
 sigma = dat[:,2]
 kappa = dat[:,3]
-if dim > 0:
-    eigenvc = []
-    for c in range(single_values,single_values+dim):
-        eigenvc.append(c)
-    eigenv = dat[:,eigenvc]
-    stdsc = []
-    for c in range(single_values+dim,single_values+2*dim):
-        stdsc.append(c)
-    stds = dat[:,stdsc]
-    minstds = np.amin(stds,axis=1)
-    maxstds = np.amax(stds,axis=1)
-    xmeanc = []
-    for c in range(single_values+2*dim,single_values+3*dim):
-        xmeanc.append(c)
-    xmean = dat[:,xmeanc]
+eigenvc = []
+for c in range(single_values,single_values+dim):
+    eigenvc.append(c)
+eigenv = dat[:,eigenvc]
+stdsc = []
+for c in range(single_values+dim,single_values+2*dim):
+    stdsc.append(c)
+stds = dat[:,stdsc]
+minstds = np.amin(stds,axis=1)
+maxstds = np.amax(stds,axis=1)
+xmeanc = []
+for c in range(single_values+2*dim,single_values+3*dim):
+    xmeanc.append(c)
+xmean = dat[:,xmeanc]
+trainerr = dat[:,single_values+3*dim+1]
+testerr = dat[:,single_values+3*dim+2]
+stesterr = dat[:,single_values+3*dim+3]
 
 # plot data.
 pylab.rcParams['font.size'] = 10
 xlab = "function evaluations"
 
 # plot fvalue, sigma, kappa
-if dim > 0:
-    subplot(221)
+subplot(321)
 semilogy(fevals,fvalue,'b')
 semilogy(fevals,sigma,'g')
 semilogy(fevals,kappa,'r')
-if dim > 0:
-    semilogy(fevals,sigma*minstds,'y')
-    semilogy(fevals,sigma*maxstds,'y')
+semilogy(fevals,sigma*minstds,'y')
+semilogy(fevals,sigma*maxstds,'y')
 title('f-value (blue), sigma (green), kappa (red)')
 grid(True)
 
-if dim == 0:
-    pylab.xlabel(xlab)
-    pylab.show();
-    msg = '  --- press return to continue --- '
-    raw_input(msg) if sys.version < '3' else input(msg)
-    sys.exit(1)
-    
 # plot xmean
-subplot(222)
+subplot(322)
 plot(fevals,xmean)
 title('Object Variables (mean, ' + str(dim) + '-D)')
 grid(True)
 
 # plot eigenvalues
-subplot(223)
+subplot(323)
 semilogy(fevals,eigenv,'-b')
 pylab.xlabel(xlab)
 title('Eigenvalues')
 grid(True)
 
 # plot std deviations
-subplot(224)
+subplot(324)
 semilogy(fevals,stds)
 pylab.xlabel(xlab)
 title('Standard Deviation in all coordinates')
+grid(True)
+
+# plot std deviations
+subplot(325)
+pylab.ylim(0,1)
+plot(fevals,trainerr,'r')
+plot(fevals,testerr,'g')
+plot(fevals,stesterr,'b')
+title('Surrogate error: train (red), test (green), smoothed test (blue)')
 grid(True)
 
 pylab.show()

@@ -26,11 +26,11 @@
 #include "genopheno.h"
 #include "llogging.h"
 #include <string>
-#include <ctime>
 #include <cmath>
 #include <limits>
 #include <unordered_map>
 #include <map>
+#include <chrono>
 
 namespace libcmaes
 {
@@ -49,9 +49,14 @@ namespace libcmaes
       //template <class U> friend class errstats;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      template <class U> friend class errstats;
       friend class VDCMAUpdate;
       friend class Candidate;
-      
+#ifdef HAVE_SURROG
+      template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
+      template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
+#endif      
+
     public:
       /**
        * \brief empty constructor.
@@ -74,7 +79,7 @@ namespace libcmaes
 	if (_lambda == -1) // lambda is unspecified
 	  _lambda = 4 + floor(3.0*log(_dim));
 	if (_seed == 0) // seed is not forced.
-	  _seed = static_cast<uint64_t>(time(nullptr));
+	  _seed = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 	set_x0(x0);
       }
       
@@ -101,6 +106,16 @@ namespace libcmaes
 	for (int i=0;i<_dim;i++)
 	  _x0min(i) = _x0max(i) = x0[i];
       }
+
+      /**
+       * \brief sets initial objective function parameter values from Eigen vector
+       * @param x0 Eigen vector of initial parameter values
+       */
+      void set_x0(const dVec &x0)
+      {
+	_x0min = x0;
+	_x0max = x0;
+      }
       
       /**
        * \brief sets bounds on initial objective function parameter values.
@@ -123,7 +138,8 @@ namespace libcmaes
        */
       void set_x0(const double *x0min, const double *x0max)
       {
-	_x0min = x0max = dVec(_dim);
+	_x0min = dVec(_dim);
+	_x0max = dVec(_dim);
 	for (int i=0;i<_dim;i++)
 	  {
 	    _x0min(i) = x0min[i];
@@ -470,6 +486,24 @@ namespace libcmaes
       {
 	return _maximize;
       }
+
+      /**
+       * \brief activates / deactivates uncertainty handling scheme.
+       * @param b activates / deactivates
+       */
+      inline void set_uh(const bool &b)
+      {
+	_uh = b;
+      }
+
+      /**
+       * \brief get uncertainty handling status.
+       * @return uncertainty handling status.
+       */
+      inline bool get_uh() const
+      {
+	return _uh;
+      }
       
     protected:
       int _dim; /**< function space dimensions. */
@@ -500,6 +534,14 @@ namespace libcmaes
 
       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
+
+      // uncertainty handling
+      bool _uh = false; /**< whether to activate uncertainty handling. */
+      double _rlambda; /**< fraction of solutions to be reevaluated. */
+      double _epsuh = 1e-7; /**< mutation strength for the reevaluation. */
+      double _thetauh = 0.2; /**< control parameter for the acceptance threshold for the measured rank-change value. */
+      double _csuh = 1.0; /**< learning rate for averaging the uncertainty measurement. */
+      double _alphathuh = 1.0; /**< factor of increasing the population spread. */
     };
 }
 

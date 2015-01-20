@@ -22,13 +22,12 @@
 #ifndef EO_MATRIX_H
 #define EO_MATRIX_H
 
+#include <algorithm>
 #include <Eigen/Dense>
 #include <stdlib.h>
 
 typedef Eigen::MatrixXd dMat; // declares a column-major non-sparse matrix type of double
 typedef Eigen::VectorXd dVec; // declares a vector of double.
-
-using namespace Eigen;
 
 #include <unsupported/Eigen/MatrixFunctions>
 

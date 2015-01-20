@@ -24,11 +24,17 @@
 
 #include "eo_matrix.h" // to include Eigen everywhere.
 #include "candidate.h"
+#include "eigenmvn.h"
+#include <random>
 
 namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
   typedef std::function<dVec (const double*, const int &n)> GradFunc;
+
+  typedef std::function<void(const dMat&, const dMat&)> EvalFunc;
+  typedef std::function<dMat(void)> AskFunc;
+  typedef std::function<void(void)> TellFunc;
   
   template<class TParameters,class TSolutions>
     using ProgressFunc = std::function<int (const TParameters&, const TSolutions&)>; // template aliasing.
@@ -81,7 +87,7 @@ namespace libcmaes
     dMat ask();
 
     /**
-     * \brief Evaluates a set of candiates against the objective function.
+     * \brief Evaluates a set of candidates against the objective function.
      *        The procedure is multithreaded and stores both the candidates
      *        and their f-value into the _solutions object that bears the 
      *        current set of potential solutions to the optimization problem.
@@ -108,10 +114,13 @@ namespace libcmaes
      * \brief Finds the minimum of the objective function. It makes
      *        alternative calls to ask(), tell() and stop() until 
      *        one of the termination criteria triggers.
+     * @param evalf custom eval function
+     * @param askf custom ask function
+     * @param tellf custom tell function
      * @return success or error code, as defined in opti_err.h
      */
-    int optimize();
-
+    int optimize(const EvalFunc &evalf, const AskFunc &askf, const TellFunc &tellf);
+    
     /**
      * \brief increment iteration count.
      */
@@ -122,9 +131,9 @@ namespace libcmaes
      * @param evals increment to the current consumed budget
      */
     void update_fevals(const int &evals);
-    
+
     /**
-     * \brief sets gradient function
+     * \brief sets the gradient function, if available.
      * @param gfunc gradient function
      */
     void set_gradient_func(GradFunc &gfunc) { _gfunc = gfunc; }
@@ -144,12 +153,12 @@ namespace libcmaes
      */
     void start_from_solution(const TSolutions &sol)
     {
-      _parameters.set_x0(sol.best_candidate().get_x());
+      _parameters.set_x0(sol.best_candidate().get_x_dvec());
       _solutions = sol;
       _solutions.reset();
     }
 
-    /*
+    /**
      * \brief Sets the possibly custom plot to file function,
      *        that is useful for storing into file various possibly custom
      *        variable values for each step until termination.
@@ -196,10 +205,18 @@ namespace libcmaes
      * @return objective function value at x
      */
     double fitfunc(const double *x, const int N) { return _func(x,N); }
+
+    /**
+     * \brief uncertainty handling scheme that computes and uncertainty
+     *        level based on a dual candidate ranking.
+     */
+    void uncertainty_handling();
     
     // deprecated.
     Candidate best_solution() const;
 
+    void set_initial_elitist(const bool &e) { _initial_elitist = e; }
+    
   protected:
     FitFunc _func; /**< the objective function. */
     int _nevals;  /**< number of function evaluations. */
@@ -210,6 +227,12 @@ namespace libcmaes
     GradFunc _gfunc = nullptr; /**< gradient function, when available. */
     PlotFunc<TParameters,TSolutions> _pffunc; /**< possibly custom stream data to file function. */
     FitFunc _funcaux;
+    bool _initial_elitist = false; /**< restarts from and re-injects best seen solution if not the final one. */
+
+  private:
+    std::mt19937 _uhgen; /**< random device used for uncertainty handling operations. */
+    std::uniform_real_distribution<> _uhunif;
+    Eigen::EigenMultivariateNormal<double> _uhesolver;
   };
   
 }

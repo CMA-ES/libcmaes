@@ -464,7 +464,7 @@ int main(int argc, char *argv[])
 		{
 		  
 		  Candidate bcand = cmasols.best_candidate();
-		  std::copy(bcand.get_x(),bcand.get_x()+bcand.get_x_size(),std::back_inserter(x0));
+		  std::copy(bcand.get_x_ptr(),bcand.get_x_ptr()+bcand.get_x_size(),std::back_inserter(x0));
 		  nn hgn = nn(glsizes,gsigmoid);
 		  for (int i=0;i<(int)x0.size();i++)
 		    hgn._allparams.push_back(x0[i]);
@@ -575,7 +575,7 @@ int main(int argc, char *argv[])
 	  
 	  // loop / break.
 	  std::cout << "iter=" << droppasses + 1 << " / ams=" << -cmasols.best_candidate().get_fvalue() << " / fevals=" << nevals;
-	  //dVec bx = Map<dVec>(&gallparams.front(),gallparams.size());
+	  //dVec bx = Eigen::Map<dVec>(&gallparams.front(),gallparams.size());
 	  nn hgn = nn(glsizes,gsigmoid);
 	  hgn._allparams = gallparams;
 	  hgn.forward_pass(gfeatures,glabels);
@@ -597,7 +597,7 @@ int main(int argc, char *argv[])
   dVec bx;
   if (!FLAGS_drop)
     bx = cmasols.best_candidate().get_x_dvec();
-  else bx = Map<dVec>(&gallparams.front(),gallparams.size());
+  else bx = Eigen::Map<dVec>(&gallparams.front(),gallparams.size());
   testing(bx,true);
   
   // testing on test set

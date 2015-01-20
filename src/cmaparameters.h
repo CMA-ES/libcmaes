@@ -43,6 +43,7 @@ namespace libcmaes
       //template <class U> friend class errstats;
       friend class CovarianceUpdate;
       friend class ACovarianceUpdate;
+      template <class U> friend class errstats;
       friend class VDCMAUpdate;
       
     public:
@@ -102,6 +103,9 @@ namespace libcmaes
        * \brief initialize required parameters based on dim, lambda, x0 and sigma.
        */
       void initialize_parameters();
+
+      
+      void reset_as_fixed(const int &k);
       
       /**
        * \brief adapt parameters for noisy objective function.
@@ -121,7 +125,7 @@ namespace libcmaes
 	if (algo.find("sep")!=std::string::npos)
 	  set_sep();
 	if (algo.find("vd")!=std::string::npos)
-	  _vd = true;
+	  set_vd();
       }
       
       /**
@@ -185,6 +189,14 @@ namespace libcmaes
       inline bool get_lazy_update() { return _lazy_update; }
 
       /**
+       * \brief sets initial elitist scheme: restart if best encountered solution is not
+       *        the final solution and reinjects the best solution until the population
+       *        has better fitness, in its majority
+       * @param e whether to activate the initial elitist scheme
+       */
+      inline void set_elitist(const bool &e) { _elitist = e; }
+
+      /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
        * @param criteria stopping criteria CMAStopCritType, see cmastopcriteria.h
@@ -195,17 +207,7 @@ namespace libcmaes
       {
 	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
       }
-
-      /**
-       * \brief resets parameter in k-th dimension to its initial value.
-       * @param k dimension to reset
-       */
-      void reset_as_fixed(const int &k);
-
-      void set_kl(const bool &b) { _kl = b; }
       
-      void set_sigma_init(const double &s) { _sigma_init = s; }
-
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
       dVec _weights; /**< offsprings weighting scheme. */
@@ -239,7 +241,9 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
-      // stopping criteria.
+      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      
+      // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
 
       // kl
@@ -247,7 +251,7 @@ namespace libcmaes
     };
 
   template<class TGenoPheno>
-    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11},{"vdcma",12}};
+    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11},{"vdcma",12},{"vdipopcma",13},{"vdbipopcma",14}};
 }
 
 #endif

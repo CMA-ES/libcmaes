@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
+  CMAParameters<> cmaparams(x0,sigma);
   cmaparams.set_algo(aCMAES);
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams,
 				 CMAStrategy<CovarianceUpdate>::_defaultPFunc,  // use default progress function

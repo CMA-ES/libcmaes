@@ -97,7 +97,29 @@ int main(int argc, char *argv[])
   CMAParameters<> cmaparams(dim,x0,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed);
   /*if (FLAGS_x0 != std::numeric_limits<double>::min())
     cmaparams.set_x0(FLAGS_x0);*/
-  cmaparams.set_str_algo(FLAGS_alg);
+  if (FLAGS_alg == "cmaes")
+    cmaparams.set_algo(CMAES_DEFAULT);
+  else if (FLAGS_alg == "ipop")
+    cmaparams.set_algo(IPOP_CMAES);
+  else if (FLAGS_alg == "bipop")
+    cmaparams.set_algo(BIPOP_CMAES);
+  else if (FLAGS_alg == "acmaes")
+    cmaparams.set_algo(aCMAES);
+  else if (FLAGS_alg == "aipop")
+    cmaparams.set_algo(aIPOP_CMAES);
+  else if (FLAGS_alg == "abipop")
+    cmaparams.set_algo(aBIPOP_CMAES);
+  else if (FLAGS_alg == "sepcmaes")
+    cmaparams.set_algo(sepCMAES);
+  else if (FLAGS_alg == "sepipop")
+    cmaparams.set_algo(sepIPOP_CMAES);
+  else if (FLAGS_alg == "sepbipop")
+    cmaparams.set_algo(sepBIPOP_CMAES);
+  else
+    {
+      std::cout << "unknown algorithm flavor " << FLAGS_alg << std::endl;
+      exit(-1);
+    }
   CMASolutions cmasols = cmaes<>(ff,cmaparams);
   std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
 

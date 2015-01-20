@@ -42,13 +42,12 @@ namespace libcmaes
       {
 	(void)lbounds;
 	(void)ubounds;
-	(void)dim;
 	(void)plbounds;
 	(void)pubounds;
 	(void)dim;
       }; // empty constructor with signature.
-
-    ~NoBoundStrategy() {};
+    
+    ~NoBoundStrategy() {}
 
     void to_f_representation(const dVec &x, dVec &y) const
     {

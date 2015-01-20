@@ -20,6 +20,9 @@
  */
 
 #include "cmaes.h"
+#ifdef HAVE_SURROG
+#include "surrogatestrategy.h"
+#endif
 using namespace libcmaes;
 
 #include <boost/python.hpp>
@@ -90,7 +93,7 @@ boost::python::list get_candidate_x(const Candidate &c)
 {
   boost::python::list x;
   for (int i=0;i<(int)c.get_x_size();i++)
-    x.append(c.get_x()[i]);
+    x.append(c.get_x_ptr()[i]);
   return x;
 }
 
@@ -137,6 +140,70 @@ GenoPheno<TBoundStrategy,TScalingStrategy> make_genopheno(const boost::python::l
   return GenoPheno<TBoundStrategy,TScalingStrategy>(&vlbounds.front(),&vubounds.front(),dim);
 }
 
+#ifdef HAVE_SURROG
+/* wrapper to surrogate cmaes high level function. */
+int csurrfunc_f(const boost::python::list &candidates, boost::python::object &pyArray)
+{
+  std::cout << "uninstanciated csurrfunc_f\n";
+  return 0.0;
+}
+boost::function<int(const boost::python::list&, boost::python::object &pyArray)> csurrfunc_bf(csurrfunc_f);
+
+int surrfunc_f(const boost::python::list &candidates, boost::python::object &pyArray)
+{
+  std::cout << "uninstanciated surrfunc_f\n";
+  return 0.0;
+}
+boost::function<int(boost::python::list&, boost::python::object &pyArray)> surrfunc_bf(surrfunc_f);
+
+template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+  CMASolutions surrpcmaes(boost::function<double(const boost::python::list&,const int&)>& fitfunc_bf,
+			  boost::function<int(const boost::python::list&,boost::python::object&)> &csurrfunc_bf,
+			  boost::function<int(boost::python::list&,boost::python::object&)> &surrfunc_bf,
+			  CMAParameters<TGenoPheno> &parameters,
+			  const bool &exploit,
+			  const int &l)
+  {
+    FitFunc fpython = [fitfunc_bf](const double *x, const int N)
+      {
+	boost::python::list plx;
+	for (int i=0;i<N;i++)
+	  plx.append(x[i]);
+	return fitfunc_bf(plx,N);
+      };
+    ESOptimizer<ACMSurrogateStrategy<CMAStrategy,CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> optim(fpython,parameters);
+    CSurrFunc csurrfpython = [csurrfunc_bf](const std::vector<Candidate> &c, const dMat &m)
+      {
+	boost::python::list plc;
+	for (size_t i=0;i<c.size();i++)
+	  plc.append(c[i]);
+	npy_intp shape[2] = {m.rows(),m.cols()};
+	PyObject *pyArray = PyArray_SimpleNewFromData(2, shape, NPY_DOUBLE, (double*)m.data());
+	boost::python::object boostobj(boost::python::handle<>((PyObject*)pyArray));
+	return csurrfunc_bf(plc,boost::ref(boostobj));
+      };
+    optim.set_ftrain(csurrfpython);
+    SurrFunc surrfpython = [surrfunc_bf](std::vector<Candidate> &c, const dMat &m)
+      {
+	boost::python::list plc;
+	for (size_t i=0;i<c.size();i++)
+	  plc.append(c[i]);
+	npy_intp shape[2] = {m.rows(),m.cols()};
+	PyObject *pyArray = PyArray_SimpleNewFromData(2, shape, NPY_DOUBLE, (double*)m.data());
+	boost::python::object boostobj(boost::python::handle<>((PyObject*)pyArray));
+	surrfunc_bf(boost::ref(plc),boost::ref(boostobj));
+	for (size_t i=0;i<c.size();i++)
+	  c.at(i) = boost::python::extract<Candidate>(plc[i]);
+	return 0;
+      };
+      optim.set_fpredict(surrfpython);
+      optim.set_exploit(exploit);
+      optim.set_l(l);
+    optim.optimize();
+    return optim.get_solutions();
+  }
+#endif
+
 BOOST_PYTHON_MODULE(lcmaes)
 {
   import_array(); // numpy.
@@ -146,7 +213,6 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("initialize_parameters", &CMAParameters<GenoPheno<NoBoundStrategy>>::initialize_parameters)
     .def("set_noisy", &CMAParameters<GenoPheno<NoBoundStrategy>>::set_noisy)
     .def("set_sep",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_sep)
-    .def("set_automaxiter",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_automaxiter)
     .def("set_fixed_p",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_fixed_p)
     .def("unset_fixed_p",&CMAParameters<GenoPheno<NoBoundStrategy>>::unset_fixed_p)
     .def("set_restarts",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_restarts)
@@ -176,6 +242,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_edm",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_edm)
     .def("set_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_mt_feval)
     .def("get_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_mt_feval)
+    .def("set_uh",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_uh)
+    .def("get_uh",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_uh)
     ;
   def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed","gp"));
   def("make_simple_parameters",make_simple_parameters,args("x0","sigma","lambda","seed"));
@@ -183,7 +251,6 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy>>::initialize_parameters)
     .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy>>::set_noisy)
     .def("set_sep",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_sep)
-    .def("set_automaxiter",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_automaxiter)
     .def("set_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_fixed_p)
     .def("unset_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy>>::unset_fixed_p)
     .def("set_restarts",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_restarts)
@@ -213,13 +280,14 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_edm",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_edm)
     .def("set_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_mt_feval)
     .def("get_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_mt_feval)
+    .def("set_uh",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_uh)
+    .def("get_uh",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_uh)
     ;
   def("make_parameters_pwqb",make_parameters<GenoPheno<pwqBoundStrategy>>,args("x0","sigma","lambda","gp"));
   class_<CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>>("CMAParametersNB")
     .def("initialize_parameters", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::initialize_parameters)
     .def("set_noisy", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_noisy)
     .def("set_sep",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_sep)
-    .def("set_automaxiter",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_automaxiter)
     .def("set_fixed_p",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_fixed_p)
     .def("unset_fixed_p",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::unset_fixed_p)
     .def("set_restarts",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_restarts)
@@ -249,13 +317,14 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_edm",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_edm)
     .def("set_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_mt_feval)
     .def("get_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_mt_feval)
+    .def("set_uh",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_uh)
+    .def("get_uh",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_uh)
     ;
   def("make_parameters_ls",make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
   class_<CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>>("CMAParametersNB")
     .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::initialize_parameters)
     .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_noisy)
     .def("set_sep",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_sep)
-    .def("set_automaxiter",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_automaxiter)
     .def("set_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_fixed_p)
     .def("unset_fixed_p",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::unset_fixed_p)
     .def("set_restarts",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_restarts)
@@ -285,6 +354,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_edm",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_edm)
     .def("set_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_mt_feval)
     .def("get_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_mt_feval)
+    .def("set_uh",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_uh)
+    .def("get_uh",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_uh)
     ;
     def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
     
@@ -297,13 +368,17 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def(init<Parameters<GenoPheno<NoBoundStrategy>>&>())
     .def("sort_candidates",&CMASolutions::sort_candidates)
     .def("update_best_candidate",&CMASolutions::update_best_candidates)
-    //TODO: update_eigenv ?
     .def("best_candidate",&CMASolutions::best_candidate)
     .def("size",&CMASolutions::size)
     .def("edm",&CMASolutions::edm)
     .def("sigma",&CMASolutions::sigma)
+    .def("fevals",&CMASolutions::fevals)
+    .def("eigenvalues",&CMASolutions::eigenvalues)
+    .def("min_eigenv",&CMASolutions::min_eigenv)
+    .def("max_eigenv",&CMASolutions::max_eigenv)
     .def("run_status",&CMASolutions::run_status)
     .def("elapsed_time",&CMASolutions::elapsed_time)
+    .def("elapsed_last_iter",&CMASolutions::elapsed_last_iter)
     .def("niter",&CMASolutions::niter)
     ;
   def("get_solution_xmean",get_solution_xmean,args("sol"));
@@ -313,6 +388,7 @@ BOOST_PYTHON_MODULE(lcmaes)
   /*- solution candidate object -*/
   class_<Candidate>("Candidate")
     .def("get_fvalue",&Candidate::get_fvalue)
+    .def("set_fvalue",&Candidate::set_fvalue)
     ;
   def("get_candidate_x",get_candidate_x,args("cand"));
 
@@ -329,18 +405,25 @@ BOOST_PYTHON_MODULE(lcmaes)
   class_<GenoPheno<pwqBoundStrategy,linScalingStrategy>>("GenoPhenoPWQBLS")
     ;
   def("make_genopheno_pwqb_ls",make_genopheno<pwqBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"));
-  //TODO: geno/pheno custom transforms.
-
-  
-  /* esoptimizer object -*/
-  //class_<ESOptimizer<CMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>,CMAParameters<GenoPheno<NoBoundStrategy>>>>("ESOptimizer",init<FitFunc&,CMAParameters<GenoPheno<NoBoundStrategy>>&>())
-	 //.def("optimize",&ESOptimizer::optimize)
-  //;
-
+    
   /*- cmaes header -*/
   def("pcmaes",pcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","parameters"));
   def("pcmaes_pwqb",pcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","parameters"));
   def("pcmaes_ls",pcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"));
   def("pcmaes_pwqb_ls",pcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"));
+
+
+#ifdef HAVE_SURROG
+  /*- surrogates -*/
+  def_function<int(const boost::python::list&,boost::python::object&)>("csurrfunc_pbf","training function for python");
+  scope().attr("csurrfunc_bf") = csurrfunc_bf;
+  def_function<int(boost::python::list&,boost::python::object&)>("surrfunc_pbf","prediction function for python");
+  scope().attr("surrfunc_bf") = surrfunc_bf;
+
+  def("surrpcmaes",surrpcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+  def("surrpcmaes_pwqb",surrpcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+  def("surrpcmaes_ls",surrpcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+  def("surrpcmaes_pwqb_ls",surrpcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+#endif
   
 } // end boost

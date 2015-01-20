@@ -53,14 +53,16 @@ namespace libcmaes
   }
 
   template <class TCovarianceUpdate, class TGenoPheno>
-  int IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize()
+  int IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(const EvalFunc &evalf,
+							      const AskFunc &askf,
+							      const TellFunc &tellf)
   {
     CMASolutions best_run;
     for (int r=0;r<CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._nrestarts;r++)
       {
 	LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "r: " << r << " / lambda=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << std::endl;
-	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize();
-
+	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
+		
 	// capture best solution.
 	capture_best_solution(best_run);
 	
@@ -106,10 +108,14 @@ namespace libcmaes
 
   template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
+  template class IPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
   template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
+  template class IPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
   template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
   template class IPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
   template class IPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class IPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
 }

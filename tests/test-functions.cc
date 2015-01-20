@@ -35,6 +35,11 @@
 
 using namespace libcmaes;
 
+std::random_device rd;
+std::normal_distribution<double> norm(0.0,1.0);
+std::cauchy_distribution<double> cauch(0.0,1.0);
+std::mt19937 gen;
+
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
   std::stringstream ss(s);
   std::string item;
@@ -240,7 +245,7 @@ FitFunc rastrigin = [](const double *x, const int N)
   return val;
 };
 std::vector<double> rastx0(10,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
-CMAParameters<> rastrigin_params(10,&rastx0.front(),5.0,400,1234); // 1234 is seed.
+CMAParameters<> rastrigin_params(rastx0,5.0,400,1234); // 1234 is seed.
 
 FitFunc elli = [](const double *x, const int N)
 {
@@ -343,6 +348,38 @@ FitFunc hardcos = [](const double *x, const int N)
   return sum;
 };
 
+// uncertainty handling testing functions
+FitFunc fsphere_uhc = [](const double *x, const int N)
+{
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += x[i]*x[i];
+  val += cauch(gen); // noise
+  return val;
+};
+
+FitFunc elli_uh = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0] * x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += pow(10,6*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+  val += norm(gen); // noise
+  return val;
+};
+
+FitFunc elli_uhc = [](const double *x, const int N)
+{
+  if (N == 1)
+    return x[0] * x[0];
+  double val = 0.0;
+  for (int i=0;i<N;i++)
+    val += pow(10,6*static_cast<double>(i)/static_cast<double>((N-1))) * x[i]*x[i];
+  val += cauch(gen); // noise
+  return val;
+};
+
 std::map<std::string,FitFunc> mfuncs;
 std::map<std::string,GradFunc> mgfuncs;
 std::map<std::string,Candidate> msols;
@@ -395,6 +432,9 @@ void fillupfuncs()
   mfuncs["diffpow"]=diffpow;
   mfuncs["diffpowrot"]=diffpowrot;
   mfuncs["hardcos"]=hardcos;
+  mfuncs["fsphere_uhc"]=fsphere_uhc;
+  mfuncs["elli_uh"]=elli_uh;
+  mfuncs["elli_uhc"]=elli_uhc;
 }
 
 void printAvailFuncs()
@@ -428,8 +468,11 @@ DEFINE_bool(le,false,"whether to return profile likelihood error bounds around t
 DEFINE_double(le_fup,0.1,"deviation from the minimum as the size of the confidence interval for profile likelihood computation");
 DEFINE_double(le_delta,0.1,"tolerance factor around the fup confidence interval for profile likelihood computation");
 DEFINE_int32(le_samplesize,10,"max number of steps of linesearch for computing the profile likelihood in every direction");
+DEFINE_int32(le_maxiters,1e4,"max number of iterations in search for profile likelihood points");
 DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 DEFINE_string(contour,"","two comma-separated variable indexes to which passes a contour to be computed as a set of additional points");
+DEFINE_int32(contour_p,4,"number of contour points, must be >= 4");
+DEFINE_double(contour_fup,0.1,"value from the minimum at which to find contour points");
 DEFINE_bool(linscaling,false,"whether to automatically scale parameter space linearly so that parameter sensitivity is similar across all dimensions (requires -lbound and/or -ubound");
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP algorithms");
@@ -437,12 +480,13 @@ DEFINE_bool(with_gradient,false,"whether to use the function gradient when avail
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
-DEFINE_bool(kl,false,"whether to compute KL divergence in between two steps");
+DEFINE_bool(elitist,false,"whether to activate elistist scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
 DEFINE_int32(max_hist,-1,"maximum stored history, helps mitigate the memory usage though preventing the 'stagnation' criteria to trigger");
 DEFINE_bool(no_stagnation,false,"deactivate stagnation stopping criteria");
 DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
 DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
+DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -460,7 +504,7 @@ CMASolutions cmaes_opt()
     }
   TGenoPheno gp(&lbounds.at(0),&ubounds.at(0),FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
-  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
+  CMAParameters<TGenoPheno> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
@@ -470,12 +514,13 @@ CMASolutions cmaes_opt()
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
+  cmaparams.set_elitist(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
+  cmaparams.set_uh(FLAGS_uh);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
     cmaparams.set_noisy();
-  cmaparams.set_kl(FLAGS_kl);
   //cmaparams.set_str_algo(FLAGS_alg);
 
   if (FLAGS_alg == "cmaes")
@@ -504,6 +549,10 @@ CMASolutions cmaes_opt()
     cmaparams.set_algo(sepaBIPOP_CMAES);
   else if (FLAGS_alg == "vdcma")
     cmaparams.set_algo(VD_CMAES);
+  else if (FLAGS_alg == "vdipopcma")
+    cmaparams.set_algo(VD_IPOP_CMAES);
+  else if (FLAGS_alg == "vdbipopcma")
+    cmaparams.set_algo(VD_BIPOP_CMAES);
   else
     {
       LOG(ERROR) << "unknown algorithm flavor " << FLAGS_alg << std::endl;
@@ -519,29 +568,6 @@ CMASolutions cmaes_opt()
     cmaparams.set_stopping_criteria(TOLUPSIGMA,false);
   
   CMASolutions cmasols;
-  /*  if (!FLAGS_with_gradient)
-    cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams);
-  else cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,mgfuncs[FLAGS_fname]);
-  std::cout << "Minimization completed in " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
-  if (cmasols.run_status() >= 0 && FLAGS_le)
-    {
-      std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate().get_fvalue() + FLAGS_le_fup << ")\n";
-      for (int k=0;k<FLAGS_dim;k++)
-	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
-						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta);
-    }
-  if (!FLAGS_contour.empty())
-    {
-      std::vector<std::string> contour_indexes_str = split(FLAGS_contour,',');
-      std::pair<int,int> contour_indexes;
-      contour_indexes.first = atoi(contour_indexes_str.at(0).c_str());
-      contour_indexes.second = atoi(contour_indexes_str.at(1).c_str());
-      std::cout << "Now computing contour passing through point (" << contour_indexes.first << "," << contour_indexes.second << ")\n";
-      contour ct = errstats<TGenoPheno>::contour_points(mfuncs[FLAGS_fname],contour_indexes.first,contour_indexes.second,
-							4,cmaparams,cmasols);
-      std::cout << ct << std::endl;
-    }
-    std::cout << "Done!\n";*/
   GradFunc gfunc = nullptr;
   if (FLAGS_with_gradient)
     gfunc = mgfuncs[FLAGS_fname];
@@ -555,10 +581,31 @@ CMASolutions cmaes_opt()
 	  return 0;
 	};
     }
-  std::cout.precision(std::numeric_limits<double>::digits10);
   cmasols = cmaes<>(mfuncs[FLAGS_fname],cmaparams,CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultPFunc,gfunc,cmasols,pffunc);
+  std::cout << "Minimization completed in " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+  if (cmasols.run_status() >= 0 && FLAGS_le)
+    {
+      std::cout << "Now computing confidence interval around minimum for a deviation of " << FLAGS_le_fup << " (fval=" << cmasols.best_candidate().get_fvalue() + FLAGS_le_fup << ")\n";
+      for (int k=0;k<FLAGS_dim;k++)
+	errstats<TGenoPheno>::profile_likelihood(mfuncs[FLAGS_fname],cmaparams,cmasols,k,false,
+						 FLAGS_le_samplesize,FLAGS_le_fup,FLAGS_le_delta,FLAGS_le_maxiters);
+    }
+  if (!FLAGS_contour.empty())
+    {
+      cmaparams.set_quiet(true);
+      std::vector<std::string> contour_indexes_str = split(FLAGS_contour,',');
+      std::pair<int,int> contour_indexes;
+      contour_indexes.first = atoi(contour_indexes_str.at(0).c_str());
+      contour_indexes.second = atoi(contour_indexes_str.at(1).c_str());
+      std::cout << "Now computing contour passing through point (" << contour_indexes.first << "," << contour_indexes.second << ")\n";
+      contour ct = errstats<TGenoPheno>::contour_points(mfuncs[FLAGS_fname],contour_indexes.first,contour_indexes.second,
+							FLAGS_contour_p,FLAGS_contour_fup,cmaparams,cmasols,FLAGS_le_delta,FLAGS_le_maxiters);
+      std::cout << ct << std::endl;
+    }
+  std::cout << "Done!\n";
   if (cmasols.run_status() < 0)
-    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << std::endl;
+    LOG(INFO) << "optimization failed with termination criteria " << cmasols.run_status() << " -- " << cmasols.status_msg() << std::endl;
+  else LOG(INFO) << "optimization succeeded with termination criteria " << cmasols.run_status() << " -- " << cmasols.status_msg() << std::endl;
   LOG(INFO) << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   if (cmasols.best_candidate().get_x_size() <= 1000)
     {
@@ -582,6 +629,9 @@ int main(int argc, char *argv[])
   
   fillupfuncs();
   
+  gen = std::mt19937(rd());
+  gen.seed(static_cast<uint64_t>(time(nullptr)));
+
   if (FLAGS_list)
     {
       printAvailFuncs();
@@ -599,7 +649,7 @@ int main(int argc, char *argv[])
 	    }
 	  int dim = msols[(*mit).first].get_x_dvec().rows();
 	  std::vector<double> x0(dim,FLAGS_x0);
-	  CMAParameters<> cmaparams(dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+	  CMAParameters<> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda);
 	  cmaparams.set_max_iter(FLAGS_max_iter);
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;

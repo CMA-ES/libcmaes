@@ -33,7 +33,7 @@ namespace libcmaes
 
   template <class TGenoPheno>
   void VDCMAUpdate::update(const CMAParameters<TGenoPheno> &parameters,
-			   EigenMultivariateNormal<double> &esolver,
+			   Eigen::EigenMultivariateNormal<double> &esolver,
 			   CMASolutions &solutions)
   {
     (void)esolver; // esolver is not needed.
@@ -120,9 +120,9 @@ namespace libcmaes
     solutions._xmean = xmean;
   }
 
-  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
-  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,EigenMultivariateNormal<double>&,CMASolutions&);
+  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
+  template void VDCMAUpdate::update(const CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&,Eigen::EigenMultivariateNormal<double>&,CMASolutions&);
   
 }

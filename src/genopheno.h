@@ -25,6 +25,7 @@
 #include "noboundstrategy.h"
 #include "pwq_bound_strategy.h"
 #include "scaling.h"
+#include <vector>
 
 namespace libcmaes
 {
@@ -238,8 +239,9 @@ namespace libcmaes
       else return gen;
     }
 
-    TBoundStrategy& get_boundstrategy() { return _boundstrategy; }
-    TBoundStrategy get_boundstrategy_const() const { return _boundstrategy; }
+    TBoundStrategy get_boundstrategy() const { return _boundstrategy; }
+      
+    TBoundStrategy& get_boundstrategy_ref() { return _boundstrategy; }
       
     private:
     TBoundStrategy _boundstrategy;
@@ -342,8 +344,8 @@ namespace libcmaes
       _scalingstrategy = linScalingStrategy(scaling,shift);
       if (lbounds == nullptr || ubounds == nullptr)
 	return;
-      dVec vlbounds = Map<dVec>(const_cast<double*>(lbounds),scaling.size());
-      dVec vubounds = Map<dVec>(const_cast<double*>(ubounds),scaling.size());
+      dVec vlbounds = Eigen::Map<dVec>(const_cast<double*>(lbounds),scaling.size());
+      dVec vubounds = Eigen::Map<dVec>(const_cast<double*>(ubounds),scaling.size());
       dVec nlbounds, nubounds;
       _scalingstrategy.scale_to_internal(nlbounds,vlbounds);
       _scalingstrategy.scale_to_internal(nubounds,vubounds);
