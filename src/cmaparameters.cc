@@ -99,7 +99,7 @@ namespace libcmaes
     
     if (!Parameters<TGenoPheno>::_tpa)
       _dsigma = 1.0+_csigma+2.0*std::max(0.0,sqrt((_muw-1)/(Parameters<TGenoPheno>::_dim+1))-1);
-    else _dsigma = std::sqrt(Parameters<TGenoPheno>::_dim);
+    else set_tpa(true);
     
     // constants used in covariance update.
     _fact_ps = sqrt(_csigma*(2.0-_csigma)*_muw);
@@ -133,7 +133,7 @@ namespace libcmaes
   {
     this->_tpa = b;
     if (this->_tpa)
-      _dsigma = std::sqrt(Parameters<TGenoPheno>::_dim);
+      _dsigma = 4 - 3.6 / std::sqrt(Parameters<TGenoPheno>::_dim);
   }
   
   template <class TGenoPheno>
