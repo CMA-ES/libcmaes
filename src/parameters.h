@@ -145,6 +145,17 @@ namespace libcmaes
 	    _x0max(i) = x0max[i];
 	  }
       }
+
+      /**
+       * \brief sets bounds on initial objective function parameter values.
+       *        Initial value is sampled uniformly within these bounds.
+       * @param x0min vector of initial lower bounds.
+       * @param x0max vector of initial upper bounds.
+       */
+      void set_x0(const std::vector<double> &x0min, const std::vector<double> &x0max)
+      {
+	set_x0(&x0min[0],&x0max[0]);
+      }
       
       /**
        * \brief sets bounds on initial objective function parameter values.
