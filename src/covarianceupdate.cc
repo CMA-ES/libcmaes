@@ -88,7 +88,8 @@ namespace libcmaes
       solutions._sigma *= std::exp(solutions._tpa_s / parameters._dsigma);
     
     // set mean.
-    solutions._xmean_prev = solutions._xmean;
+    if (parameters._tpa)
+      solutions._xmean_prev = solutions._xmean;
     solutions._xmean = xmean;
   }
 
