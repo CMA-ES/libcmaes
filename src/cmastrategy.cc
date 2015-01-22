@@ -220,10 +220,17 @@ namespace libcmaes
     if (eostrat<TGenoPheno>::_parameters._tpa && eostrat<TGenoPheno>::_niter > 0)
       {
 	dVec mean_shift = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._xmean_prev;
-	double mean_shift_norm = mean_shift.norm();
-	dVec z = eostrat<TGenoPheno>::_parameters._chi * (mean_shift / mean_shift_norm);
-	eostrat<TGenoPheno>::_solutions._tpa_x1 = eostrat<TGenoPheno>::_solutions._xmean + eostrat<TGenoPheno>::_solutions._sigma * z;
-	eostrat<TGenoPheno>::_solutions._tpa_x2 = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._sigma * z;
+	double mean_shift_norm = 1.0;
+	if (!eostrat<TGenoPheno>::_parameters._sep && !eostrat<TGenoPheno>::_parameters._vd)
+	  mean_shift_norm = (_esolver._eigenSolver.eigenvalues().cwiseInverse().cwiseProduct(_esolver._eigenSolver.eigenvectors().transpose()*mean_shift)).norm() / eostrat<TGenoPheno>::_solutions._sigma;
+	else mean_shift_norm = eostrat<TGenoPheno>::_solutions._sepcov.cwiseInverse().cwiseProduct(mean_shift).norm() / eostrat<TGenoPheno>::_solutions._sigma;
+	//std::cout << "mean_shift_norm=" << mean_shift_norm << " / sqrt(N)=" << std::sqrt(std::sqrt(eostrat<TGenoPheno>::_parameters._dim)) << std::endl;
+
+	dMat rz = _esolver.samples_ind(1);
+	double mfactor = rz.norm();
+	dVec z = mfactor * (mean_shift / mean_shift_norm);
+	eostrat<TGenoPheno>::_solutions._tpa_x1 = eostrat<TGenoPheno>::_solutions._xmean + z;
+	eostrat<TGenoPheno>::_solutions._tpa_x2 = eostrat<TGenoPheno>::_solutions._xmean - z;
 	
 	// if gradient is in col 0, move tpa vectors to pos 1 & 2
 	int p1 = 0, p2 = 1;
