@@ -222,8 +222,8 @@ namespace libcmaes
 	dVec mean_shift = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._xmean_prev;
 	double mean_shift_norm = 1.0;
 	if (!eostrat<TGenoPheno>::_parameters._sep && !eostrat<TGenoPheno>::_parameters._vd)
-	  mean_shift_norm = (_esolver._eigenSolver.eigenvalues().cwiseInverse().cwiseProduct(_esolver._eigenSolver.eigenvectors().transpose()*mean_shift)).norm() / eostrat<TGenoPheno>::_solutions._sigma;
-	else mean_shift_norm = eostrat<TGenoPheno>::_solutions._sepcov.cwiseInverse().cwiseProduct(mean_shift).norm() / eostrat<TGenoPheno>::_solutions._sigma;
+	  mean_shift_norm = (_esolver._eigenSolver.eigenvalues().cwiseSqrt().cwiseInverse().cwiseProduct(_esolver._eigenSolver.eigenvectors().transpose()*mean_shift)).norm() / eostrat<TGenoPheno>::_solutions._sigma;
+	else mean_shift_norm = eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt().cwiseInverse().cwiseProduct(mean_shift).norm() / eostrat<TGenoPheno>::_solutions._sigma;
 	//std::cout << "mean_shift_norm=" << mean_shift_norm << " / sqrt(N)=" << std::sqrt(std::sqrt(eostrat<TGenoPheno>::_parameters._dim)) << std::endl;
 
 	dMat rz = _esolver.samples_ind(1);
