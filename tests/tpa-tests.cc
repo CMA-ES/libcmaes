@@ -123,10 +123,10 @@ void run(const int &dim, const bool &gi, const bool &tpa, const std::string &alg
     {
       std::vector<double> x0(dim,-std::numeric_limits<double>::max());
       CMAParameters<> cmaparams(x0,-1);
-      cmaparams.set_tpa(tpa);
       cmaparams.set_gradient(gi);
       cmaparams.set_str_algo(alg);
       cmaparams.set_ftarget(1e-8);
+      cmaparams.set_tpa(tpa);
       cmaparams.set_stopping_criteria(STAGNATION,false);
       //cmaparams.set_quiet(false);
       GradFunc gfunc = nullptr;
