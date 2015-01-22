@@ -352,7 +352,7 @@ namespace libcmaes
       
       /**
        * \brief sets the optimization algorithm.
-       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES 
+       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES, VD_CMAES, VD_IPOP_CMAES, VD_BIPOP_CMAES 
        */
       void set_algo(const int &algo)
       {
@@ -412,6 +412,7 @@ namespace libcmaes
       void set_gradient(const bool &gradient)
       {
 	_with_gradient = gradient;
+	set_tpa(true); // TPA default when gradient is activated.
       }
       
       /**

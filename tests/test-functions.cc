@@ -489,6 +489,7 @@ DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
 DEFINE_bool(tpa,false,"whether to use two-point adapation for step-size update");
 DEFINE_double(tpa_dsigma,-1,"set two-point adaptation dsigma (use with care)");
+DEFINE_bool(no_tpa,false,"whether to override default two-point adaptation when gradient, vdcma, or sepcma are activated, use in place of -tpa");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -513,13 +514,13 @@ CMASolutions cmaes_opt()
   cmaparams.set_fplot(FLAGS_fplot);
   cmaparams.set_lazy_update(FLAGS_lazy_update);
   cmaparams.set_quiet(FLAGS_quiet);
+  cmaparams.set_tpa(FLAGS_tpa); // this is user actioned tpa, is overriden if gradient or sep/vd algorithms are activated
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
   cmaparams.set_elitist(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
-  cmaparams.set_tpa(FLAGS_tpa);
   if (FLAGS_tpa_dsigma > 0.0)
     cmaparams.set_tpa_dsigma(FLAGS_tpa_dsigma);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
@@ -570,7 +571,9 @@ CMASolutions cmaes_opt()
     cmaparams.set_stopping_criteria(TOLX,false);
   if (FLAGS_no_tolupsigma)
     cmaparams.set_stopping_criteria(TOLUPSIGMA,false);
-  
+  if (FLAGS_no_tpa)
+    cmaparams.set_tpa(false); // allows to undo default tpa
+
   CMASolutions cmasols;
   GradFunc gfunc = nullptr;
   if (FLAGS_with_gradient)
