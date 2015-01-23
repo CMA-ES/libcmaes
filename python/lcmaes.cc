@@ -244,6 +244,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_mt_feval)
     .def("set_uh",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_uh)
     .def("get_uh",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_uh)
+    .def("set_tpa",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_tpa)
+    .def("get_tpa",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_tpa)
     ;
   def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed","gp"));
   def("make_simple_parameters",make_simple_parameters,args("x0","sigma","lambda","seed"));
@@ -282,6 +284,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_mt_feval)
     .def("set_uh",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_uh)
     .def("get_uh",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_uh)
+    .def("set_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_tpa)
+    .def("get_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_tpa)
     ;
   def("make_parameters_pwqb",make_parameters<GenoPheno<pwqBoundStrategy>>,args("x0","sigma","lambda","gp"));
   class_<CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>>("CMAParametersNB")
@@ -319,6 +323,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_mt_feval",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_mt_feval)
     .def("set_uh",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_uh)
     .def("get_uh",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_uh)
+    .def("set_tpa",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_tpa)
+    .def("get_tpa",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_tpa)
     ;
   def("make_parameters_ls",make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
   class_<CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>>("CMAParametersNB")
@@ -356,6 +362,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_mt_feval",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_mt_feval)
     .def("set_uh",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_uh)
     .def("get_uh",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_uh)
+    .def("set_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_tpa)
+    .def("get_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_tpa)
     ;
     def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
     

@@ -363,7 +363,7 @@ namespace libcmaes
       
       /**
        * \brief sets the optimization algorithm.
-       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES 
+       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES, VD_CMAES, VD_IPOP_CMAES, VD_BIPOP_CMAES 
        */
       void set_algo(const int &algo)
       {
@@ -423,6 +423,7 @@ namespace libcmaes
       void set_gradient(const bool &gradient)
       {
 	_with_gradient = gradient;
+	set_tpa(true); // TPA default when gradient is activated.
       }
       
       /**
@@ -514,6 +515,24 @@ namespace libcmaes
       {
 	return _uh;
       }
+
+      /**
+       * \brief activates / deactivates two-point adaptation step-size mechanism
+       * @param b 0: no, 1: auto, 2: yes
+       */
+      inline void set_tpa(const int &b)
+      {
+	_tpa = b;
+      }
+
+      /**
+       * \brief get two-point adapation step-size mechanism status.
+       * @return two-point adaptation status.
+       */
+      inline int get_tpa() const
+      {
+	return _tpa;
+      }
       
     protected:
       int _dim; /**< function space dimensions. */
@@ -552,6 +571,10 @@ namespace libcmaes
       double _thetauh = 0.2; /**< control parameter for the acceptance threshold for the measured rank-change value. */
       double _csuh = 1.0; /**< learning rate for averaging the uncertainty measurement. */
       double _alphathuh = 1.0; /**< factor of increasing the population spread. */
+
+      // two-point adaptation
+      int _tpa = 1; /**< whether to activate two-point adaptation, 0: no (forced), 1: auto, 2: yes (forced) */
+      double _tpa_csigma = 0.3;
     };
 }
 

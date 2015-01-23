@@ -446,6 +446,11 @@ namespace libcmaes
     std::vector<RankedCandidate> _candidates_uh; /**< temporary set of candidates used by uncertainty handling scheme. */
     int _lambda_reev; /**< number of reevaluated solutions at current step. */
     double _suh; /**< uncertainty level computed by uncertainty handling procedure. */
+    
+    double _tpa_s = 0.0;
+    dVec _tpa_x1;
+    dVec _tpa_x2;
+    dVec _xmean_prev; /**< previous step's mean vector. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

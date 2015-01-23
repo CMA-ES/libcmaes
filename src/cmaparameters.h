@@ -113,6 +113,27 @@ namespace libcmaes
       
       /**
        * \brief sets the optimization algorithm.
+       *        Note: overrides Parameters::set_algo
+       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES, VD_CMAES, VD_IPOP_CMAES, VD_BIPOP_CMAES 
+       */
+      void set_algo(const int &algo)
+      {
+	this->_algo = algo;
+	if (this->_tpa != 0
+	    && (this->_algo == 6 // sepCMAES
+		|| this->_algo == 7 //sepIPOP_CMAES
+		|| this->_algo == 8 //sepBIPOP_CMAES
+		|| this->_algo == 9 //sepaCMAES
+		|| this->_algo == 10 //sepaIPOP_CMAES
+		|| this->_algo == 11 //sepBIPOP_CMAES
+		|| this->_algo == 12 //VD_CMAES
+		|| this->_algo == 13 //VD_IPOP_CMAES
+		|| this->_algo == 14)) //VD_BIPOP_CMAES
+	  set_tpa(2);
+      }
+
+      /**
+       * \brief sets the optimization algorithm.
        * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop
        */
       void set_str_algo(const std::string &algo)
@@ -125,6 +146,19 @@ namespace libcmaes
 	  set_sep();
 	if (algo.find("vd")!=std::string::npos)
 	  set_vd();
+      }
+
+      /**
+       * \brief activates the gradient injection scheme. 
+       *        If no gradient function is defined, injects a numerical gradient solution instead
+       *        Note: overrides Parameters::set_gradient
+       * @param gradient true/false
+       */
+      void set_gradient(const bool &gradient)
+      {
+	this->_with_gradient = gradient;
+	if (this->_tpa != 0)
+	  set_tpa(2); // TPA default when gradient is activated.
       }
       
       /**
@@ -206,6 +240,19 @@ namespace libcmaes
       {
 	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
       }
+
+      /**
+       * \brief activates / deactivates two-point adaptation step-size mechanism.
+       *        Overrides parameters::set_tpa by automatically setting dsigma value.
+       * @param b 0: no, 1: auto, 2: yes
+       */
+      void set_tpa(const int &b); // overrides def in parameters.h in order to reset dsigma
+
+      /**
+       * \brief sets dsigma value, use with care.
+       * @param d dsigma
+       */
+      void set_tpa_dsigma(const double &d) { _dsigma = d; }
       
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */

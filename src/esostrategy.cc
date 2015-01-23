@@ -87,7 +87,6 @@ namespace libcmaes
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
 #endif
-    
     // one candidate per row.
 #pragma omp parallel for if (_parameters._mt_feval)
     for (int r=0;r<candidates.cols();r++)
@@ -338,6 +337,31 @@ namespace libcmaes
 	++vit;
       }
     _solutions._candidates = ncandidates;
+  }
+  
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::tpa_update()
+  {
+    int r1 = -1;
+    int r2 = -1;
+    for (size_t i=0;i<_solutions._candidates.size();i++)
+      {
+	if (r1 == -1 && (_solutions._candidates.at(i).get_x_dvec()-_solutions._tpa_x1).isMuchSmallerThan(1e-15))
+	  {
+	    r1 = i;
+	  }
+	if (r2 == -1 && (_solutions._candidates.at(i).get_x_dvec()-_solutions._tpa_x2).isMuchSmallerThan(1e-15))
+	  {
+	    r2 = i;
+	  }
+	if (r1 != -1 && r2 != -1)
+	  {
+	    break;
+	  }
+      }
+    int rank_diff = r2-r1;
+    _solutions._tpa_s = (1.0 - _parameters._tpa_csigma) * _solutions._tpa_s
+      + _parameters._tpa_csigma * rank_diff / (_parameters._lambda - 1.0);
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>
