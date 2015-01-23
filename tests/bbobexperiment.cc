@@ -60,7 +60,7 @@ void tokenize(const std::string &str,
 
 std::mutex fmtx; // WARNING: bbob function calls are NOT thread-safe (learnt the hard way...).
 
-void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient, bool withtpa)
+void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient, int withtpa)
 {
   // map fct to libcmaes FitFunc.
   FitFunc ff = [&](const double *x, const int N)
@@ -104,7 +104,7 @@ DEFINE_string(comment,"","comment for the experiment. If using multiple algorith
 DEFINE_double(maxfunevals,1e6,"maximum number of function evaluations");
 DEFINE_double(minfunevals,-1,"minimum number of function evaluations, -1 for automatic definition based on dimension");
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
-DEFINE_bool(tpa,false,"whether to use two-point adapation for step-size update");
+DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
 
 int main(int argc, char *argv[])
 {

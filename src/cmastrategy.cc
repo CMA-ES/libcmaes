@@ -101,7 +101,7 @@ namespace libcmaes
 	return 0;
       };
     _esolver = Eigen::EigenMultivariateNormal<double>(false,eostrat<TGenoPheno>::_parameters._seed); // seeding the multivariate normal generator.
-    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / tpa=" << eostrat<TGenoPheno>::_parameters._tpa << " / threads=" << Eigen::nbThreads() << std::endl;
+    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / tpa=" << (eostrat<TGenoPheno>::_parameters._tpa==2) << " / threads=" << Eigen::nbThreads() << std::endl;
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       {
 	_fplotstream = new std::ofstream(eostrat<TGenoPheno>::_parameters._fplot);
@@ -217,7 +217,7 @@ namespace libcmaes
       }
 
     // tpa: fill up two first (or second in case of gradient) points with candidates usable for tpa computation
-    if (eostrat<TGenoPheno>::_parameters._tpa && eostrat<TGenoPheno>::_niter > 0)
+    if (eostrat<TGenoPheno>::_parameters._tpa == 2  && eostrat<TGenoPheno>::_niter > 0)
       {
 	dVec mean_shift = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._xmean_prev;
 	double mean_shift_norm = 1.0;
@@ -283,7 +283,7 @@ namespace libcmaes
     else eostrat<TGenoPheno>::uncertainty_handling();
     
     //TODO: call on tpa computation of s(t)
-    if (eostrat<TGenoPheno>::_parameters._tpa && eostrat<TGenoPheno>::_niter > 0)
+    if (eostrat<TGenoPheno>::_parameters._tpa == 2 && eostrat<TGenoPheno>::_niter > 0)
       eostrat<TGenoPheno>::tpa_update();
 
     // update function value history, as needed.

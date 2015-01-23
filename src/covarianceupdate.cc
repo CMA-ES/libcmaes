@@ -82,7 +82,7 @@ namespace libcmaes
       }
     
     // sigma update, Eq. (6)
-    if (!parameters._tpa)
+    if (parameters._tpa < 2)
       solutions._sigma *= std::exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0));
     else if (solutions._niter > 0)
       solutions._sigma *= std::exp(solutions._tpa_s / parameters._dsigma);

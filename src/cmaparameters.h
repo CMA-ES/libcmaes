@@ -119,16 +119,17 @@ namespace libcmaes
       void set_algo(const int &algo)
       {
 	this->_algo = algo;
-	if (this->_algo == 6 // sepCMAES
-	    || this->_algo == 7 //sepIPOP_CMAES
-	    || this->_algo == 8 //sepBIPOP_CMAES
-	    || this->_algo == 9 //sepaCMAES
-	    || this->_algo == 10 //sepaIPOP_CMAES
-	    || this->_algo == 11 //sepBIPOP_CMAES
-	    || this->_algo == 12 //VD_CMAES
-	    || this->_algo == 13 //VD_IPOP_CMAES
-	    || this->_algo == 14) //VD_BIPOP_CMAES
-	  set_tpa(true);
+	if (this->_tpa != 0
+	    && (this->_algo == 6 // sepCMAES
+		|| this->_algo == 7 //sepIPOP_CMAES
+		|| this->_algo == 8 //sepBIPOP_CMAES
+		|| this->_algo == 9 //sepaCMAES
+		|| this->_algo == 10 //sepaIPOP_CMAES
+		|| this->_algo == 11 //sepBIPOP_CMAES
+		|| this->_algo == 12 //VD_CMAES
+		|| this->_algo == 13 //VD_IPOP_CMAES
+		|| this->_algo == 14)) //VD_BIPOP_CMAES
+	  set_tpa(2);
       }
 
       /**
@@ -156,7 +157,8 @@ namespace libcmaes
       void set_gradient(const bool &gradient)
       {
 	this->_with_gradient = gradient;
-	set_tpa(true); // TPA default when gradient is activated.
+	if (this->_tpa != 0)
+	  set_tpa(2); // TPA default when gradient is activated.
       }
       
       /**
@@ -242,9 +244,9 @@ namespace libcmaes
       /**
        * \brief activates / deactivates two-point adaptation step-size mechanism.
        *        Overrides parameters::set_tpa by automatically setting dsigma value.
-       * @param b activates / deactivates
+       * @param b 0: no, 1: auto, 2: yes
        */
-      void set_tpa(const bool &b); // overrides def in parameters.h in order to reset dsigma
+      void set_tpa(const int &b); // overrides def in parameters.h in order to reset dsigma
 
       /**
        * \brief sets dsigma value, use with care.

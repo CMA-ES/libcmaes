@@ -114,7 +114,7 @@ void tokenize(const std::string &str,
     }
 }
 
-void run(const int &dim, const bool &gi, const bool &tpa, const std::string &alg,
+void run(const int &dim, const bool &gi, const int &tpa, const std::string &alg,
 	 double &fevals_avg, double &succ_runs)
 {
   fevals_avg = 0.0;
@@ -172,10 +172,10 @@ int main(int argc, char *argv[])
       int dim = vdims.at(d);
       double fevals_avg,fevals_avg_tpa,fevals_avg_gi,fevals_avg_gi_tpa;
       double succ_runs,succ_runs_tpa,succ_runs_gi,succ_runs_gi_tpa;
-      run(dim,false,false,FLAGS_alg,fevals_avg,succ_runs);
-      run(dim,false,true,FLAGS_alg,fevals_avg_tpa,succ_runs_tpa);
-      run(dim,true,false,FLAGS_alg,fevals_avg_gi,succ_runs_gi);
-      run(dim,true,true,FLAGS_alg,fevals_avg_gi_tpa,succ_runs_gi_tpa);
+      run(dim,false,0,FLAGS_alg,fevals_avg,succ_runs);
+      run(dim,false,2,FLAGS_alg,fevals_avg_tpa,succ_runs_tpa);
+      run(dim,true,0,FLAGS_alg,fevals_avg_gi,succ_runs_gi);
+      run(dim,true,2,FLAGS_alg,fevals_avg_gi_tpa,succ_runs_gi_tpa);
       std::cout << dim << "\t" << fevals_avg <<  " (" << succ_runs << ")\t\t" 
 		<< fevals_avg_tpa << " (" << succ_runs_tpa << ")\t\t" 
 		<< fevals_avg_gi << " (" << succ_runs_gi << ")\t\t" 

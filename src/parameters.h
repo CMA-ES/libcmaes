@@ -507,9 +507,9 @@ namespace libcmaes
 
       /**
        * \brief activates / deactivates two-point adaptation step-size mechanism
-       * @param b activates / deactivates
+       * @param b 0: no, 1: auto, 2: yes
        */
-      inline void set_tpa(const bool &b)
+      inline void set_tpa(const int &b)
       {
 	_tpa = b;
       }
@@ -518,7 +518,7 @@ namespace libcmaes
        * \brief get two-point adapation step-size mechanism status.
        * @return two-point adaptation status.
        */
-      inline bool get_tpa() const
+      inline int get_tpa() const
       {
 	return _tpa;
       }
@@ -562,7 +562,7 @@ namespace libcmaes
       double _alphathuh = 1.0; /**< factor of increasing the population spread. */
 
       // two-point adaptation
-      bool _tpa = false; /**< whether to activate two-point adaptation. */
+      int _tpa = 1; /**< whether to activate two-point adaptation, 0: no (forced), 1: auto, 2: yes (forced) */
       double _tpa_csigma = 0.3;
     };
 }
