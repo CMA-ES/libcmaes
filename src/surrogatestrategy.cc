@@ -44,7 +44,9 @@ namespace libcmaes
       {
 	std::string sep = " ";
 	fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
-	fplotstream << cmasols.eigenvalues().transpose() << sep;
+	if (!cmasols.eigenvalues().size())
+	  fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+	else fplotstream << cmasols.eigenvalues().transpose() << sep;
 	if (!cmaparams.is_sep() && !cmaparams.is_vd())
 	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
 	else if (cmaparams.is_sep())

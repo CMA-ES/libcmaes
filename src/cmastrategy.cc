@@ -47,7 +47,9 @@ namespace libcmaes
   {
     std::string sep = " ";
     fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
-    fplotstream << cmasols.eigenvalues().transpose() << sep;
+    if (!cmasols.eigenvalues().size())
+      fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+    else fplotstream << cmasols.eigenvalues().transpose() << sep;
     if (!cmaparams.is_sep() && !cmaparams.is_vd())
       fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
     else if (cmaparams.is_sep())
@@ -85,14 +87,16 @@ namespace libcmaes
       {
 	std::string sep = " ";
 	fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
-	fplotstream << cmasols.eigenvalues().transpose() << sep;
+	if (!cmasols.eigenvalues().size())
+	  fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+	else fplotstream << cmasols.eigenvalues().transpose() << sep;
 	if (!cmaparams.is_sep() && !cmaparams.is_vd())
 	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
 	else if (cmaparams.is_sep())
 	  fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
 	else if (cmaparams.is_vd())
 	fplotstream << cmasols.sepcov().transpose() << sep; // C = D(I+vv')D, and we print out D^2 as an approx
-	fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
+	fplotstream << cmasols.xmean().transpose();
 	fplotstream << sep << cmasols.elapsed_last_iter();
 #ifdef HAVE_DEBUG
 	fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
