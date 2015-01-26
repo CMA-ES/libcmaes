@@ -31,6 +31,10 @@
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 #include <assert.h>
 
 using namespace libcmaes;
@@ -623,7 +627,7 @@ CMASolutions cmaes_opt()
 
 int main(int argc, char *argv[])
 {
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
 #ifdef HAVE_GLOG
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr=1;

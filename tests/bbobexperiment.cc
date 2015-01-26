@@ -36,6 +36,10 @@
 #include <mutex>
 #include <iostream>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 using namespace libcmaes;
 
 void tokenize(const std::string &str,
@@ -108,7 +112,7 @@ DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: 
 
 int main(int argc, char *argv[])
 {
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
 
   // parse the alg flags in order to capture all requested algorithm flavors.
   std::vector<std::string> algs;

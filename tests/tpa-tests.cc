@@ -22,6 +22,10 @@
 #include "cmaes.h"
 #include <gflags/gflags.h>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 using namespace libcmaes;
 
 DEFINE_string(fname,"fsphere","name of the function to optimize");
@@ -149,7 +153,7 @@ int main(int argc, char *argv[])
   mfuncs["elli"]=elli;
   mgfuncs["elli"]=grad_elli;
 
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
 
   // dims
   std::vector<std::string> vdims_str;

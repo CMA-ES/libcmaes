@@ -30,6 +30,10 @@
 
 #include <gflags/gflags.h>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 using namespace libcmaes;
 
 FitFunc fsphere = [](const double *x, const int N)
@@ -97,7 +101,7 @@ int main(int argc, char *argv[])
   mfuncs["elli"]=elli;
   mfuncs["rosenbrock"]=rosenbrock;
   
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
   
   CMAParameters<> cmaparams(x0,FLAGS_sigma0);

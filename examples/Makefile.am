@@ -25,7 +25,7 @@ sample_code_surrogate_rsvm_SOURCES=surrogates/sample-code-surrogate-rsvm.cc
 endif
 endif
 
-AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)
+AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
 AM_CXXFLAGS=-g -Wall
 if !HAVE_CLANG
 AM_CXXFLAGS+=-fopenmp
