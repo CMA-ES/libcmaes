@@ -119,7 +119,7 @@ namespace libcmaes
       void set_algo(const int &algo)
       {
 	this->_algo = algo;
-	if (this->_tpa != 0
+	/*if (this->_tpa != 0
 	    && (this->_algo == 6 // sepCMAES
 		|| this->_algo == 7 //sepIPOP_CMAES
 		|| this->_algo == 8 //sepBIPOP_CMAES
@@ -129,7 +129,7 @@ namespace libcmaes
 		|| this->_algo == 12 //VD_CMAES
 		|| this->_algo == 13 //VD_IPOP_CMAES
 		|| this->_algo == 14)) //VD_BIPOP_CMAES
-	  set_tpa(2);
+		set_tpa(2); */ // XXX: deactivated until flaw is fixed
       }
 
       /**
@@ -157,8 +157,8 @@ namespace libcmaes
       void set_gradient(const bool &gradient)
       {
 	this->_with_gradient = gradient;
-	if (this->_tpa != 0)
-	  set_tpa(2); // TPA default when gradient is activated.
+	/*if (this->_tpa != 0)
+	  set_tpa(2);*/ // TPA default when gradient is activated.
       }
       
       /**

@@ -423,7 +423,8 @@ namespace libcmaes
       void set_gradient(const bool &gradient)
       {
 	_with_gradient = gradient;
-	set_tpa(true); // TPA default when gradient is activated.
+	/*if (this->_tpa != 0)
+	  set_tpa(2); */ // TPA default when gradient is activated. XXX: deactivated until flaw is fixed.
       }
       
       /**
