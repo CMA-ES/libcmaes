@@ -132,6 +132,7 @@ void run(const int &dim, const bool &gi, const int &tpa, const std::string &alg,
       cmaparams.set_ftarget(1e-8);
       cmaparams.set_tpa(tpa);
       cmaparams.set_stopping_criteria(STAGNATION,false);
+      cmaparams.set_stopping_criteria(TOLX,false);
       //cmaparams.set_quiet(false);
       GradFunc gfunc = nullptr;
       if (gi)
