@@ -134,7 +134,7 @@ namespace libcmaes
 
       /**
        * \brief sets the optimization algorithm.
-       * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop
+       * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop,vdcma,vdipopcma,vdbipopcma
        */
       void set_str_algo(const std::string &algo)
       {
