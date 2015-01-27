@@ -153,8 +153,9 @@ namespace libcmaes
   {
     _sep = true;
     _c1 *= (Parameters<TGenoPheno>::_dim+2.0)/3.0;
-    _cmu = std::min(1.0-_c1,2.0*(_muw-2.0+1.0/_muw)/(pow(Parameters<TGenoPheno>::_dim+2.0,2)+_muw));
+    _cmu = std::min(1.0-_c1,(0.3 + _muw - 2.0 + 1.0/_muw) / (this->_dim + 4.0*std::sqrt(this->_dim) + _muw/2.0));
     _lazy_value = 1.0/(_c1+_cmu)/Parameters<TGenoPheno>::_dim/10.0;
+    _cc = (1.0+1.0/static_cast<double>(Parameters<TGenoPheno>::_dim) + _muw/static_cast<double>(Parameters<TGenoPheno>::_dim))/(std::sqrt(Parameters<TGenoPheno>::_dim)+1.0/static_cast<double>(Parameters<TGenoPheno>::_dim)+2.0*_muw/static_cast<double>(Parameters<TGenoPheno>::_dim));
   }
   
   template <class TGenoPheno>
