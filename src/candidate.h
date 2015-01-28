@@ -119,6 +119,8 @@ namespace libcmaes
   private:
    double _fvalue; /**< function value. */
    dVec _x; /**< function parameter vector. */
+  public:
+   int _r = -1; /**< candidate rank. */
   };
 
   class RankedCandidate : public Candidate

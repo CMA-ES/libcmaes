@@ -75,7 +75,7 @@ namespace libcmaes
      */
     void sort_candidates()
     {
-      std::sort(_candidates.begin(),_candidates.end(),
+      std::stable_sort(_candidates.begin(),_candidates.end(),
 		[](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() < c2.get_fvalue();});
     }
 

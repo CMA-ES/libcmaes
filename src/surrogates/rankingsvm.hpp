@@ -99,7 +99,7 @@ class RBFKernel : public SVMKernel
     for (int i=0;i<x.cols();i++)
       for (int j=i+1;j<x.cols();j++)
 	avgdist += (x.col(i)-x.col(j)).norm();
-    avgdist /= (x.cols()*(x.cols()-1.0))/2.0;
+    avgdist /= 0.5*(x.cols()*(x.cols()-1.0));
     double sigma = _sigma_a * std::pow(avgdist,_sigma_pow);
     _gamma = 1.0/(2.0*sigma*sigma);
     

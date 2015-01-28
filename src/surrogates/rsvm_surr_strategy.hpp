@@ -93,7 +93,7 @@ namespace libcmaes
       ~RSVMSurrogateStrategy() {};
       
       RankingSVM<RBFKernel> _rsvm;
-      int _rsvm_iter = 1e6; /**< number of iterations for optimizing the ranking SVM */
+      int _rsvm_iter = 5e6; /**< number of iterations for optimizing the ranking SVM */
   };
 
 }

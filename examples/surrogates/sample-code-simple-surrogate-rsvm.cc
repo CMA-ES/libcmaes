@@ -149,7 +149,7 @@ DEFINE_string(fplot,"","file where to store data for later plotting of results a
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_bool(no_exploit,false,"whether to exploit the surrogate model");
 DEFINE_int32(l,-1,"training set size (number of points)");
-DEFINE_int32(rsvm_iter,1e6,"number of iterations for optimizing the ranking SVM");
+DEFINE_int32(rsvm_iter,5e6,"number of iterations for optimizing the ranking SVM");
 DEFINE_int32(lifel,-1,"surrogate lifelength, -1 for automatic & dynamic determination");
 
 int main(int argc, char *argv[])
