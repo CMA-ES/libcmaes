@@ -277,7 +277,7 @@ namespace libcmaes
       void set_seed(const int &seed)
       {
 	if (_seed == 0)
-	  _seed = static_cast<uint64_t>(time(nullptr));
+	  _seed = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 	else _seed = seed;
       }
       
