@@ -215,7 +215,8 @@ namespace libcmaes
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
   void ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::init_rd()
   {
-    _gen = std::mt19937(_rd());
+    _gen0 = std::mt19937(_rd());
+    _gen1 = std::mt19937(_rd());
     _norm_sel0 = std::normal_distribution<double>(0.0,_theta_sel0*_theta_sel0);
     _norm_sel1 = std::normal_distribution<double>(0.0,_theta_sel1*_theta_sel1);
   }
@@ -345,7 +346,7 @@ namespace libcmaes
     std::unordered_set<int>::const_iterator uhit;
     while((int)ncandidates.size() < eostrat<TGenoPheno>::_parameters._lambda)
       {
-	double da = _prelambda*std::fabs(_norm_sel0(_gen));
+	double da = _prelambda*std::fabs(_norm_sel0(_gen0));
 	int a = std::floor(da);
 	if (a < (int)eostrat<TGenoPheno>::_solutions._candidates.size() && (uhit=uh.find(a))==uh.end())
 	  {
@@ -369,7 +370,7 @@ namespace libcmaes
     while(count < _lambdaprime)
       {
 	// XXX: do we need to drop the samples with a > lambda and if a == 0 ? weird bias on sampling...
-	double da = std::fabs(_norm_sel1(_gen));
+	double da = std::fabs(_norm_sel1(_gen1));
 	int a = std::floor(eostrat<TGenoPheno>::_parameters._lambda*da);
 	if (a < (int)ncandidates.size() && (uhit=uh.find(a))==uh.end())
 	  {

@@ -425,7 +425,8 @@ namespace libcmaes
     std::random_device _rd;
     std::normal_distribution<double> _norm_sel0;
     std::normal_distribution<double> _norm_sel1;
-    std::mt19937 _gen;
+    std::mt19937 _gen0;
+    std::mt19937 _gen1;
   };
 }
 
