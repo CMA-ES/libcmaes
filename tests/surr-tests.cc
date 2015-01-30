@@ -138,11 +138,12 @@ template<template <class U, class V> class TStrategy, class TCovarianceUpdate=Co
     optim.set_exploit(!FLAGS_no_exploit);
   optim.set_prelambda(FLAGS_prelambda);
   optim.set_lambdaprime(lambdaprime);
-  optim._rsvm_iter = FLAGS_rsvm_iter;
+  //optim._rsvm_iter = FLAGS_rsvm_iter;
+  optim._rsvm_iter = 50000*std::sqrt(dim);
   if (FLAGS_fname == "elli"
       || FLAGS_fname == "rosenbrock")
-    optim.set_l(std::floor(40.0*std::sqrt(dim)));
-  else if (FLAGS_fname == "rastrigin")
+    optim.set_l(std::floor(70.0*std::sqrt(dim)));
+    else if (FLAGS_fname == "rastrigin")
     {
       optim.set_theta_sel0(0.6);
       optim.set_theta_sel1(0.6);
