@@ -248,6 +248,7 @@ void run(const int &dim, const int &tpa, const std::string &alg,
       cmaparams.set_tpa(tpa);
       cmaparams.set_stopping_criteria(STAGNATION,false);
       cmaparams.set_stopping_criteria(TOLX,false);
+      cmaparams.set_stopping_criteria(CONDITIONCOV,false);
       cmaparams.set_quiet(!FLAGS_no_quiet);
       ESOptimizer<RSVMSurrogateStrategy<CMAStrategy,CovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
       set_optim_options(optim,dim,lambdaprime);
@@ -263,7 +264,7 @@ void run(const int &dim, const int &tpa, const std::string &alg,
   fevals_avg /= succ_runs;
   for (double d: vfevals)
     stddev += std::pow(fevals_avg-d,2);
-  stddev = std::sqrt(stddev);
+  stddev = std::sqrt((1.0/static_cast<double>(vfevals.size()))*stddev);
 }
 
 int main(int argc, char *argv[])
