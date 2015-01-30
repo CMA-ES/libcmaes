@@ -259,8 +259,8 @@ void run(const int &dim, const int &tpa, const std::string &alg,
 	{
 	  succ_runs++;
 	  vfevals.push_back(cmasols.fevals());
+	  fevals_avg += cmasols.fevals();
 	}
-      fevals_avg += cmasols.fevals();
     }
   fevals_avg /= succ_runs;
   for (double d: vfevals)
