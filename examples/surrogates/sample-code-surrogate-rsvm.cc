@@ -78,7 +78,7 @@ DEFINE_bool(no_exploit,false,"whether to exploit the surrogate model");
 DEFINE_int32(l,-1,"training set size (number of points)");
 DEFINE_int32(lambdaprime,-1,"true objective function calls per iteration");
 DEFINE_int32(prelambda,500,"number of pre-screened offprings sampled at every iteration");
-DEFINE_int32(rsvm_iter,5e6,"number of iterations for optimizing the ranking SVM");
+DEFINE_int32(rsvm_iter,1e6,"number of iterations for optimizing the ranking SVM");
 
 template<template <class U, class V> class TStrategy, class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
   void set_optim_options(ESOptimizer<RSVMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> &optim)

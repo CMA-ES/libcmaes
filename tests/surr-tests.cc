@@ -138,11 +138,12 @@ template<template <class U, class V> class TStrategy, class TCovarianceUpdate=Co
     optim.set_exploit(!FLAGS_no_exploit);
   optim.set_prelambda(FLAGS_prelambda);
   optim.set_lambdaprime(lambdaprime);
-  optim._rsvm_iter = FLAGS_rsvm_iter;
+  //optim._rsvm_iter = FLAGS_rsvm_iter;
+  optim._rsvm_iter = 50000*std::sqrt(dim);
   if (FLAGS_fname == "elli"
       || FLAGS_fname == "rosenbrock")
-    optim.set_l(std::floor(40.0*std::sqrt(dim)));
-  else if (FLAGS_fname == "rastrigin")
+    optim.set_l(std::floor(70.0*std::sqrt(dim)));
+    else if (FLAGS_fname == "rastrigin")
     {
       optim.set_theta_sel0(0.6);
       optim.set_theta_sel1(0.6);
@@ -248,6 +249,7 @@ void run(const int &dim, const int &tpa, const std::string &alg,
       cmaparams.set_tpa(tpa);
       cmaparams.set_stopping_criteria(STAGNATION,false);
       cmaparams.set_stopping_criteria(TOLX,false);
+      cmaparams.set_stopping_criteria(CONDITIONCOV,false);
       cmaparams.set_quiet(!FLAGS_no_quiet);
       ESOptimizer<RSVMSurrogateStrategy<CMAStrategy,CovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
       set_optim_options(optim,dim,lambdaprime);
@@ -257,13 +259,13 @@ void run(const int &dim, const int &tpa, const std::string &alg,
 	{
 	  succ_runs++;
 	  vfevals.push_back(cmasols.fevals());
+	  fevals_avg += cmasols.fevals();
 	}
-      fevals_avg += cmasols.fevals();
     }
   fevals_avg /= succ_runs;
   for (double d: vfevals)
     stddev += std::pow(fevals_avg-d,2);
-  stddev = std::sqrt(stddev);
+  stddev = std::sqrt((1.0/static_cast<double>(vfevals.size()))*stddev);
 }
 
 int main(int argc, char *argv[])
