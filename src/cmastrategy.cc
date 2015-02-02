@@ -237,14 +237,13 @@ namespace libcmaes
 	eostrat<TGenoPheno>::_solutions._tpa_x2 = eostrat<TGenoPheno>::_solutions._xmean - z;
 	
 	// if gradient is in col 0, move tpa vectors to pos 1 & 2
-	int p1 = 0, p2 = 1;
 	if (eostrat<TGenoPheno>::_parameters._with_gradient)
 	  {
-	    p1 = 1;
-	    p2 = 2;
+	    eostrat<TGenoPheno>::_solutions._tpa_p1 = 1;
+	    eostrat<TGenoPheno>::_solutions._tpa_p2 = 2;
 	  }
-	pop.col(p1) = eostrat<TGenoPheno>::_solutions._tpa_x1;
-	pop.col(p2) = eostrat<TGenoPheno>::_solutions._tpa_x2;
+	pop.col(eostrat<TGenoPheno>::_solutions._tpa_p1) = eostrat<TGenoPheno>::_solutions._tpa_x1;
+	pop.col(eostrat<TGenoPheno>::_solutions._tpa_p2) = eostrat<TGenoPheno>::_solutions._tpa_x2;
       }
     
     // if some parameters are fixed, reset them.

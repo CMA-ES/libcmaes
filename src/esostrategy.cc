@@ -92,6 +92,7 @@ namespace libcmaes
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r).set_x(candidates.col(r));
+	_solutions._candidates.at(r).set_id(r);
 	if (phenocandidates.size())
 	  _solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
 	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
@@ -346,11 +347,11 @@ namespace libcmaes
     int r2 = -1;
     for (size_t i=0;i<_solutions._candidates.size();i++)
       {
-	if (r1 == -1 && (_solutions._candidates.at(i).get_x_dvec()-_solutions._tpa_x1).isMuchSmallerThan(1e-15))
-	  {
+	if (r1 == -1 && _solutions._candidates.at(i).get_id() == _solutions._tpa_p1)
+	{
 	    r1 = i;
 	  }
-	if (r2 == -1 && (_solutions._candidates.at(i).get_x_dvec()-_solutions._tpa_x2).isMuchSmallerThan(1e-15))
+	if (r2 == -1 && _solutions._candidates.at(i).get_id() == _solutions._tpa_p2)
 	  {
 	    r2 = i;
 	  }
