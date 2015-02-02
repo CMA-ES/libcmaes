@@ -448,6 +448,8 @@ namespace libcmaes
     double _suh; /**< uncertainty level computed by uncertainty handling procedure. */
     
     double _tpa_s = 0.0;
+    int _tpa_p1 = 0;
+    int _tpa_p2 = 1;
     dVec _tpa_x1;
     dVec _tpa_x2;
     dVec _xmean_prev; /**< previous step's mean vector. */

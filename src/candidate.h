@@ -116,10 +116,34 @@ namespace libcmaes
       return gx;
     }
   
-  private:
+  /**
+   * \brief set candidate id
+   * @param id candidate id
+   */
+  inline void set_id(const int &id) { _id = id; }
+  
+  /**
+   * \brief get candidate id
+   * @return candidate id
+   */
+  inline int get_id() const { return _id; }
+  
+  /**
+   * \brief set candidate rank
+   * @param r candidate rank
+   */
+  inline void set_rank(const int &r) { _r = r; }
+
+  /**
+   * \brief get candidate rank
+   * @return candidate rank
+   */
+  inline int get_rank() const { return _r; }
+
+  protected:
    double _fvalue; /**< function value. */
    dVec _x; /**< function parameter vector. */
-  public:
+   int _id = -1; /**< candidate id, used for identification after ranking, when needed. */
    int _r = -1; /**< candidate rank. */
   };
 

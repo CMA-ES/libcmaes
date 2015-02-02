@@ -340,7 +340,7 @@ namespace libcmaes
     
     // keep the estimated best candidate.
     ncandidates.push_back(eostrat<TGenoPheno>::_solutions._candidates.at(0));
-    ncandidates.at(0)._r = 0;
+    ncandidates.at(0).set_rank(0);
     uh.insert(0);
     
     std::unordered_set<int>::const_iterator uhit;
@@ -351,7 +351,7 @@ namespace libcmaes
 	if (a < (int)eostrat<TGenoPheno>::_solutions._candidates.size() && (uhit=uh.find(a))==uh.end())
 	  {
 	    uh.insert(a);
-	    eostrat<TGenoPheno>::_solutions._candidates.at(a)._r = a;
+	    eostrat<TGenoPheno>::_solutions._candidates.at(a).set_rank(a);
 	    ncandidates.push_back(eostrat<TGenoPheno>::_solutions._candidates.at(a));
 	  }
       }
@@ -392,7 +392,7 @@ namespace libcmaes
 		if (c1.get_fvalue() < c2.get_fvalue())
 		  return true;
 		if (c1.get_fvalue() == c2.get_fvalue())
-		  return c1._r < c2._r;
+		  return c1.get_rank() < c2.get_rank();
 		return false;
 	      });
     
