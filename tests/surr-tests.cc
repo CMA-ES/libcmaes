@@ -64,7 +64,7 @@ FitFunc elli = [](const double *x, const int N)
 {
   double val = 0.0;
   for (int i=1;i<=N;i++)
-    val += std::pow(10,6*(i-1)/(N-1))*x[i-1]*x[i-1];
+    val += std::pow(1e6,(i-1)/(N-1))*x[i-1]*x[i-1];
   return val;
 };
 
