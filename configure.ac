@@ -130,6 +130,19 @@ if test x"$python" = x"true"; then
     fi
 fi
 
+# Check for numpy
+if test x"$python" = x"true"; then
+AC_MSG_CHECKING([for Numpy include directory])
+CPPFLAGS=$PYTHON_CPPFLAGS $CPPFLAGS
+NUMPY_INCLUDE_DIR=`echo "import numpy; print numpy.get_include()" | $PYTHON - 2>/dev/null`
+AC_SUBST(NUMPY_INCLUDE_DIR)
+AC_CHECK_HEADER([${NUMPY_INCLUDE_DIR}/numpy/arrayobject.h],
+                [NUMPY_HEADER=yes],
+			[AC_MSG_ERROR([Numpy extension header not found])],
+			   		          [#include "Python.h"])
+AC_SUBST(NUMPY_HEADER)
+fi
+
 # Whether to only compile the library, without exe (e.g. tests and examples).
 AC_ARG_ENABLE(onlylib,
 AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and examples (default is NO)]),
