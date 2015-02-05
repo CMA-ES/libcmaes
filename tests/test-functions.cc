@@ -485,6 +485,9 @@ DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
 DEFINE_bool(init_elitist_restart,false,"whether to activate initial elistist on restart scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
+DEFINE_bool(initial_fvalue,false,"whether to compute initial objective function value at x0");
+DEFINE_bool(elitist,false,"whether to activate elistist scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
+>>>>>>> dev
 DEFINE_int32(max_hist,-1,"maximum stored history, helps mitigate the memory usage though preventing the 'stagnation' criteria to trigger");
 DEFINE_bool(no_stagnation,false,"deactivate stagnation stopping criteria");
 DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
@@ -522,6 +525,7 @@ CMASolutions cmaes_opt()
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
   cmaparams.set_initial_elitist_on_restart(FLAGS_init_elitist_restart);
+  cmaparams.set_initial_fvalue(FLAGS_initial_fvalue);
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
   if (FLAGS_tpa_dsigma > 0.0)

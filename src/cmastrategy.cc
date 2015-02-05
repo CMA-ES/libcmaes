@@ -338,10 +338,12 @@ namespace libcmaes
     //DLOG(INFO) << "optimize()\n";
     //debug
 
-    if (eostrat<TGenoPheno>::_initial_elitist)
+    if (eostrat<TGenoPheno>::_initial_elitist 
+	|| eostrat<TGenoPheno>::_parameters._initial_fvalue)
       {
-	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim),
+	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_parameters._gp.pheno(eostrat<TGenoPheno>::_solutions._xmean).data(),eostrat<TGenoPheno>::_parameters._dim),
 								       eostrat<TGenoPheno>::_solutions._xmean);
+	this->update_fevals(1);
       }
     
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();

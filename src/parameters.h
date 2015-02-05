@@ -500,6 +500,15 @@ namespace libcmaes
       }
 
       /**
+       * \brief whether to compute initial objective function value (i.e. at x0)
+       * @param b activates / deactivates
+       */
+      inline void set_initial_fvalue(const bool &b)
+      {
+	_initial_fvalue = b;
+      }
+
+      /**
        * \brief activates / deactivates uncertainty handling scheme.
        * @param b activates / deactivates
        */
@@ -564,6 +573,8 @@ namespace libcmaes
 
       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
+
+      bool _initial_fvalue = false; /**< whether to compute initial objective function value (not required). */
 
       // uncertainty handling
       bool _uh = false; /**< whether to activate uncertainty handling. */
