@@ -339,6 +339,7 @@ namespace libcmaes
     //debug
 
     if (eostrat<TGenoPheno>::_initial_elitist 
+	|| eostrat<TGenoPheno>::_parameters._initial_elitist
 	|| eostrat<TGenoPheno>::_parameters._initial_fvalue)
       {
 	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_parameters._gp.pheno(eostrat<TGenoPheno>::_solutions._xmean).data(),eostrat<TGenoPheno>::_parameters._dim),

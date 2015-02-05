@@ -141,20 +141,35 @@ namespace libcmaes
 	_solutions._candidates_uh = nvcandidates;
       }
 
-    // if initial elitist, reinject initial solution as needed.
-    if (_initial_elitist)
+    // if an elitist is active, reinject initial solution as needed.
+    if (_niter > 0 && (_parameters._elitist || _parameters._initial_elitist || (_initial_elitist && _parameters._initial_elitist_on_restart)))
       {
+	// get reference values.
+	double ref_fvalue = std::numeric_limits<double>::max();
+	Candidate ref_candidate;
+	
+	if (_parameters._initial_elitist_on_restart || _parameters._initial_elitist)
+	  {
+	    ref_fvalue = _solutions._initial_candidate.get_fvalue();
+	    ref_candidate = _solutions._initial_candidate;
+	  }
+	else if (_parameters._elitist)
+	  {
+	    ref_fvalue = _solutions._best_seen_candidate.get_fvalue();
+	    ref_candidate = _solutions._best_seen_candidate;
+	  }
+
 	// reinject intial solution if half or more points have value above that of the initial point candidate.
 	int count = 0;
 	for (int r=0;r<candidates.cols();r++)
-	  if (_solutions._candidates.at(r).get_fvalue() < _solutions._initial_candidate.get_fvalue())
+	  if (_solutions._candidates.at(r).get_fvalue() < ref_fvalue)
 	    ++count;
 	if (count/2.0 < candidates.cols()/2)
 	  {
 #ifdef HAVE_DEBUG
 	    std::cout << "reinjecting initial solution\n";
 #endif
-	    _solutions._candidates.at(1) = _solutions._initial_candidate;
+	    _solutions._candidates.at(1) = ref_candidate;
 	  }
       }
     
