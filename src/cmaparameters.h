@@ -222,12 +222,12 @@ namespace libcmaes
       inline bool get_lazy_update() { return _lazy_update; }
 
       /**
-       * \brief sets initial elitist scheme: restart if best encountered solution is not
+       * \brief sets initial elitist on restart scheme: restart if best encountered solution is not
        *        the final solution and reinjects the best solution until the population
        *        has better fitness, in its majority
        * @param e whether to activate the initial elitist scheme
        */
-      inline void set_elitist(const bool &e) { _elitist = e; }
+      inline void set_initial_elitist_on_restart(const bool &e) { _initial_elitist_on_restart = e; }
 
       /**
        * \brief all stopping criteria are active by default, this allows to control
@@ -287,7 +287,7 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
-      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
       
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */

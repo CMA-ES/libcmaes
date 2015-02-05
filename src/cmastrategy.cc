@@ -359,14 +359,14 @@ namespace libcmaes
       eostrat<TGenoPheno>::edm();
 
     // test on final value wrt. to best candidate value and number of iterations in between.
-    if (eostrat<TGenoPheno>::_parameters._elitist)
+    if (eostrat<TGenoPheno>::_parameters._initial_elitist_on_restart)
       {
-	if (eostrat<TGenoPheno>::_parameters._elitist
+	if (eostrat<TGenoPheno>::_parameters._initial_elitist_on_restart
 	    && eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue()
 	    < eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue()
 	    && eostrat<TGenoPheno>::_niter - eostrat<TGenoPheno>::_solutions._best_seen_iter >= 3) // elitist
 	  {
-	    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "Starting elitist: bfvalue=" << eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue() << " / biter=" << eostrat<TGenoPheno>::_solutions._best_seen_iter << std::endl;
+	    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "Starting elitist on restart: bfvalue=" << eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue() << " / biter=" << eostrat<TGenoPheno>::_solutions._best_seen_iter << std::endl;
 	    this->set_initial_elitist(true);
 
 	    // reinit solution and re-optimize.
