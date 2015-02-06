@@ -167,7 +167,7 @@ namespace libcmaes
 	if (count/2.0 < candidates.cols()/2)
 	  {
 #ifdef HAVE_DEBUG
-	    std::cout << "reinjecting initial solution\n";
+	    std::cout << "reinjecting solution=" << ref_fvalue << std::endl;
 #endif
 	    _solutions._candidates.at(1) = ref_candidate;
 	  }

@@ -112,7 +112,7 @@ namespace libcmaes
       _median_fvalues.erase(_median_fvalues.begin());
 
     // store best seen candidate.
-    if (_niter == 0 || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
+    if ((_niter == 0 && !_best_seen_candidate.get_x_size()) || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
       {
 	_best_seen_candidate = _candidates.at(0);
 	_best_seen_iter = _niter;

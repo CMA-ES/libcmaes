@@ -344,6 +344,7 @@ namespace libcmaes
       {
 	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_parameters._gp.pheno(eostrat<TGenoPheno>::_solutions._xmean).data(),eostrat<TGenoPheno>::_parameters._dim),
 								       eostrat<TGenoPheno>::_solutions._xmean);
+	eostrat<TGenoPheno>::_solutions._best_seen_candidate = eostrat<TGenoPheno>::_solutions._initial_candidate;
 	this->update_fevals(1);
       }
     
