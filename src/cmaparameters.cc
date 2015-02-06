@@ -132,7 +132,7 @@ namespace libcmaes
   void CMAParameters<TGenoPheno>::set_tpa(const int &b)
   {
     this->_tpa = b;
-    if (this->_tpa > 0)
+    if (this->_tpa == 2)
       _dsigma = 4 - 3.6 / std::sqrt(Parameters<TGenoPheno>::_dim);
     else if (!this->_vd)
       _dsigma = 1.0+_csigma+2.0*std::max(0.0,sqrt((_muw-1)/(Parameters<TGenoPheno>::_dim+1))-1); // default
