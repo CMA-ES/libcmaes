@@ -222,13 +222,35 @@ namespace libcmaes
       inline bool get_lazy_update() { return _lazy_update; }
 
       /**
-       * \brief sets initial elitist scheme: restart if best encountered solution is not
-       *        the final solution and reinjects the best solution until the population
-       *        has better fitness, in its majority
-       * @param e whether to activate the initial elitist scheme
+       * \brief sets elitism:
+       *        0 -> no elitism
+       *        1 -> elitism: reinjects the best-ever seen solution
+       *        2 -> initial elitism: reinject x0 as long as it is not improved upon
+       *        3 -> initial elitism on restart: restart if best encountered solution is not the
+       *             the final solution and reinjects the best solution until the population
+       *             has better fitness, in its majority
        */
-      inline void set_elitist(const bool &e) { _elitist = e; }
-
+      inline void set_elitism(const int &e)
+      {
+	if (e == 0)
+	  _elitist = _initial_elitist = _initial_elitist_on_restart;
+	else if (e == 1)
+	  {
+	    _elitist = true;
+	    _initial_elitist = _initial_elitist_on_restart = false;
+	  }
+	else if (e == 2)
+	  {
+	    _initial_elitist = true;
+	    _elitist = _initial_elitist_on_restart = false;
+	  }
+	else if (e == 3)
+	  {
+	    _initial_elitist_on_restart = true;
+	    _elitist = _initial_elitist = false;
+	  }
+      }
+      
       /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
@@ -287,7 +309,9 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
-      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      bool _elitist = false; /**< re-inject the best-ever seen solution. */
+      bool _initial_elitist = false; /**< re-inject x0. */
+      bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
       
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
