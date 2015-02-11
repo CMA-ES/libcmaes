@@ -250,9 +250,9 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-  def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed","gp"));
-  def("make_simple_parameters",make_simple_parameters,args("x0","sigma","lambda","seed"));
-  class_<CMAParameters<GenoPheno<pwqBoundStrategy>>>("CMAParametersPB")
+  def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed","gp"),"creates a CMAParametersNB object for problem with unbounded parameters");
+  def("make_simple_parameters",make_simple_parameters,args("x0","sigma","lambda","seed"),"simple constructor for creating a CMAParametersNB object for problem with unbounded parameters");
+  class_<CMAParameters<GenoPheno<pwqBoundStrategy>>>("CMAParametersPB","CMAParameters object for problems with bounded parameters")
     .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy>>::initialize_parameters,"initialize required CMA parameters based on dim, lambda, x0 and sigma")
     .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy>>::set_noisy,"adapt CMA parameters for noisy objective function")
     .def("set_sep",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_sep,"set CMA parameters for using sep-CMA-ES, using only the diagonal of the covariance matrix")
@@ -290,8 +290,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-  def("make_parameters_pwqb",make_parameters<GenoPheno<pwqBoundStrategy>>,args("x0","sigma","lambda","gp"));
-  class_<CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>>("CMAParametersNBS")
+  def("make_parameters_pwqb",make_parameters<GenoPheno<pwqBoundStrategy>>,args("x0","sigma","lambda","gp"),"creates a CMAParametersPB object for problem with bounded parameters");
+  class_<CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>>("CMAParametersNBS","CMAParameters object for problems with scaled parameters")
     .def("initialize_parameters", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::initialize_parameters,"initialize required CMA parameters based on dim, lambda, x0 and sigma")
     .def("set_noisy", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_noisy,"adapt CMA parameters for noisy objective function")
     .def("set_sep",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_sep,"set CMA parameters for using sep-CMA-ES, using only the diagonal of the covariance matrix")
@@ -329,7 +329,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-  def("make_parameters_ls",make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
+  def("make_parameters_ls",make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"),"creates a CMAParametersNBS object for problem with unbounded but scaled parameters");
   class_<CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>>("CMAParametersPBS","CMA Parameters for problems with bounded and rescaled parameters")
     .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::initialize_parameters,"initialize required CMA parameters based on dim, lambda, x0 and sigma")
     .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_noisy,"adapt CMA parameters for noisy objective function")
@@ -368,73 +368,74 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-    def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"));
+  def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"),"creates a CMAParametersPBS object for problem with bounded and scaled parameters");
     
   /*- FitFunc -*/  
-  def_function<double(const boost::python::list&,const int&)>("fitfunc_pbf","fitfunc for python");
+  def_function<double(const boost::python::list&,const int&)>("fitfunc_pbf","objective function for python");
   scope().attr("fitfunc_bf") = fitfunc_bf;
   
   /*- solutions object -*/
-  class_<CMASolutions>("CMASolutions")
+  class_<CMASolutions>("CMASolutions","Object for holding results and intermediate evolving solutions from a running optimizer")
     .def(init<Parameters<GenoPheno<NoBoundStrategy>>&>())
-    .def("sort_candidates",&CMASolutions::sort_candidates)
-    .def("update_best_candidate",&CMASolutions::update_best_candidates)
-    .def("best_candidate",&CMASolutions::best_candidate)
-    .def("size",&CMASolutions::size)
-    .def("edm",&CMASolutions::edm)
-    .def("sigma",&CMASolutions::sigma)
-    .def("fevals",&CMASolutions::fevals)
-    .def("eigenvalues",&CMASolutions::eigenvalues)
-    .def("min_eigenv",&CMASolutions::min_eigenv)
-    .def("max_eigenv",&CMASolutions::max_eigenv)
-    .def("run_status",&CMASolutions::run_status)
-    .def("elapsed_time",&CMASolutions::elapsed_time)
-    .def("elapsed_last_iter",&CMASolutions::elapsed_last_iter)
-    .def("niter",&CMASolutions::niter)
+    .def("sort_candidates",&CMASolutions::sort_candidates,"sorts the current internal set of solution candidates")
+    .def("update_best_candidate",&CMASolutions::update_best_candidates,"updates the history of best candidates, typically used in termination criteria")
+    .def("best_candidate",&CMASolutions::best_candidate,"returns the current best candidate solution")
+    .def("size",&CMASolutions::size,"returns the number of candidate solutions")
+    .def("edm",&CMASolutions::edm,"returns the expected distance to minimum, if computed (see set_edm() in CMAParameters)")
+    .def("sigma",&CMASolutions::sigma,"returns current value of step-size sigma")
+    .def("fevals",&CMASolutions::fevals,"returns current number of objective function evaluations")
+    .def("eigenvalues",&CMASolutions::eigenvalues,"returns a vector of last computed eigenvalues")
+    .def("min_eigenv",&CMASolutions::min_eigenv,"returns current min eigen value")
+    .def("max_eigenv",&CMASolutions::max_eigenv,"returns current max eigen value")
+    .def("run_status",&CMASolutions::run_status,"returns current optimization status code")
+    .def("run_status_msg",&CMASolutions::status_msg,"returns current optimization status message")
+    .def("elapsed_time",&CMASolutions::elapsed_time,"returns current elapsed time spent on optimization")
+    .def("elapsed_last_iter",&CMASolutions::elapsed_last_iter,"returns time taken by last iteration")
+    .def("niter",&CMASolutions::niter,"returns current number of iterations")
     ;
-  def("get_solution_xmean",get_solution_xmean,args("sol"));
-  def("get_solution_cov",get_solution_cov,args("sol"));
-  def("get_solution_sepcov",get_solution_sepcov,args("sol"));
+  def("get_solution_xmean",get_solution_xmean,args("sol"),"returns current mean vector of objective function parameters");
+  def("get_solution_cov",get_solution_cov,args("sol"),"returns current covariance matrix");
+  def("get_solution_sepcov",get_solution_sepcov,args("sol"),"returns current diagonal covariance matrix, only for sep-* and vd-* algorithms");
   
   /*- solution candidate object -*/
-  class_<Candidate>("Candidate")
-    .def("get_fvalue",&Candidate::get_fvalue)
-    .def("set_fvalue",&Candidate::set_fvalue)
+  class_<Candidate>("Candidate","candidate solution point in objective function parameter space")
+    .def("get_fvalue",&Candidate::get_fvalue,"returns candidate's objective function value")
+    .def("set_fvalue",&Candidate::set_fvalue,"sets candidate's objective function value")
     ;
-  def("get_candidate_x",get_candidate_x,args("cand"));
+  def("get_candidate_x",get_candidate_x,args("cand"),"returns candidate's parameter vector");
 
   /*- genopheno object -*/
-  class_<GenoPheno<NoBoundStrategy>>("GenoPhenoNB")
+  class_<GenoPheno<NoBoundStrategy>>("GenoPhenoNB","genotype/phenotype transformation object for problem with unbounded parameters")
     ;
-  def("make_genopheno",make_genopheno<NoBoundStrategy,NoScalingStrategy>,args("lbounds","ubounds","dim"));
-  class_<GenoPheno<pwqBoundStrategy>>("GenoPhenoPWQB")
+  def("make_genopheno",make_genopheno<NoBoundStrategy,NoScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problem with unbounded parameters");
+  class_<GenoPheno<pwqBoundStrategy>>("GenoPhenoPWQB","genotype/phenotype transformation object for problem with bounded parameters")
     ;
-  def("make_genopheno_pwqb",make_genopheno<pwqBoundStrategy,NoScalingStrategy>,args("lbounds","ubounds","dim"));
-  class_<GenoPheno<NoBoundStrategy,linScalingStrategy>>("GenoPhenoLS")
+  def("make_genopheno_pwqb",make_genopheno<pwqBoundStrategy,NoScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problems with bounded parameters");
+  class_<GenoPheno<NoBoundStrategy,linScalingStrategy>>("GenoPhenoLS","genotype/phenotype transformation object for problem with scaled parameters")
     ;
-  def("make_genopheno_ls",make_genopheno<NoBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"));
-  class_<GenoPheno<pwqBoundStrategy,linScalingStrategy>>("GenoPhenoPWQBLS")
+  def("make_genopheno_ls",make_genopheno<NoBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problem with scaled parameters");
+  class_<GenoPheno<pwqBoundStrategy,linScalingStrategy>>("GenoPhenoPWQBLS","genotype/phenotype transformation object for problem with bounded and scaled parameters")
     ;
-  def("make_genopheno_pwqb_ls",make_genopheno<pwqBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"));
+  def("make_genopheno_pwqb_ls",make_genopheno<pwqBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problem with bounded and scaled parameters");
     
   /*- cmaes header -*/
-  def("pcmaes",pcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","parameters"));
-  def("pcmaes_pwqb",pcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","parameters"));
-  def("pcmaes_ls",pcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"));
-  def("pcmaes_pwqb_ls",pcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"));
+  def("pcmaes",pcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","parameters"),"optimizes a function with unbounded parameters");
+  def("pcmaes_pwqb",pcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","parameters"),"optimizes a function with bounded parameters");
+  def("pcmaes_ls",pcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"),"optimizes a function with scaled parameters");
+  def("pcmaes_pwqb_ls",pcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","parameters"),"optimizes a function with bounded and scaled parameters");
 
 
 #ifdef HAVE_SURROG
   /*- surrogates -*/
-  def_function<int(const boost::python::list&,boost::python::object&)>("csurrfunc_pbf","training function for python");
+  def_function<int(const boost::python::list&,boost::python::object&)>("csurrfunc_pbf","training surrogate function for python");
   scope().attr("csurrfunc_bf") = csurrfunc_bf;
-  def_function<int(boost::python::list&,boost::python::object&)>("surrfunc_pbf","prediction function for python");
+  def_function<int(boost::python::list&,boost::python::object&)>("surrfunc_pbf","prediction surrogate function for python");
   scope().attr("surrfunc_bf") = surrfunc_bf;
 
-  def("surrpcmaes",surrpcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
-  def("surrpcmaes_pwqb",surrpcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
-  def("surrpcmaes_ls",surrpcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
-  def("surrpcmaes_pwqb_ls",surrpcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"));
+  def("surrpcmaes",surrpcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"),"optimizes a function with surrogate and unbounded parameters");
+  def("surrpcmaes_pwqb",surrpcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"),"optimizes a function with surrogate and bounded parameters");
+  def("surrpcmaes_ls",surrpcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"),"optimizes a function with surrogate and scaled parameters");
+  def("surrpcmaes_pwqb_ls",surrpcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"),"optimizes a function with surrogate and both bounded and scaled parameters");
 #endif
   
 } // end boost
