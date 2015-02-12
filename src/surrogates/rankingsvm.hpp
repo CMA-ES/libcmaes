@@ -122,6 +122,7 @@ class RankingSVM
  public:
   RankingSVM()
   {    
+    _udist = std::uniform_real_distribution<>(0,1);
   }
   
   ~RankingSVM()
@@ -265,7 +266,8 @@ class RankingSVM
 	    {
 	      _dKij(i,j) = _K(i,j) - _K(i,j+1) - _K(i+1,j) + _K(i+1,j+1);
 	    }
-	  _alpha(i) = _C(i) * (0.95 + 0.05*std::rand()/(double)RAND_MAX);
+	  double fact = _udist(_rng);
+	  _alpha(i) = _C(i) * (0.95 + 0.05*fact);
 	}
 #pragma omp for
       for (int i=0;i<_dKij.rows();i++)
@@ -350,6 +352,9 @@ class RankingSVM
   double _epsilon = 1.0;
   
   TKernel _kernel; /**< kernel class. */
+
+  std::mt19937 _rng;
+  std::uniform_real_distribution<> _udist;
 };
 
 #endif
