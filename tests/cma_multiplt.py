@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """In a OS shell::
 
-    python cma_multplt.py data_file_name
+    python cma_multiplt.py data_file_name
     
 or in a python shell::
 
-    import cma_multplt as lcmaplt
+    import cma_multiplt as lcmaplt
     lcmaplt.plot(data_file_name)
     
 """
