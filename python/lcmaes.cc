@@ -60,9 +60,9 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
 template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   CMAParameters<TGenoPheno> make_parameters(const boost::python::list &x0,
 					    const double &sigma,
+					    const TGenoPheno &gp,
 					    const int &lambda=-1,
-					    const uint64_t &seed=0,
-					    const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
+					    const uint64_t &seed=0)
 {
   std::vector<double> vx0;
   for (int i=0;i<len(x0);i++)
@@ -204,6 +204,12 @@ template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
   }
 #endif
 
+BOOST_PYTHON_FUNCTION_OVERLOADS(make_simple_parameters_default,make_simple_parameters,2,4)
+BOOST_PYTHON_FUNCTION_OVERLOADS(make_parameters_default_nb,make_parameters<GenoPheno<NoBoundStrategy>>,3,5)
+BOOST_PYTHON_FUNCTION_OVERLOADS(make_parameters_default_pwqb,make_parameters<GenoPheno<pwqBoundStrategy>>,3,5)
+//BOOST_PYTHON_FUNCTION_OVERLOADS(make_parameters_default_ls,make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,3,5) // prevented by bug in Boost Python
+//BOOST_PYTHON_FUNCTION_OVERLOADS(make_parameters_default_pwb_ls,make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,3,5)
+
 BOOST_PYTHON_MODULE(lcmaes)
 {
   // disables C++ signatures in the Python module documentation
@@ -231,7 +237,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_ftolerance",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_ftolerance,"return the function tolerance")
     .def("set_xtolerance",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_xtolerance,"set the function parameters' tolerance criteria for TolX")
     .def("get_xtolerance",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_xtolerance,"return the function parameters' tolerance")
-    .def("lambda",&CMAParameters<GenoPheno<NoBoundStrategy>>::lambda,"return the value of lambda")
+    .def("lambda_",&CMAParameters<GenoPheno<NoBoundStrategy>>::lambda,"return the value of lambda")
     .def("dim",&CMAParameters<GenoPheno<NoBoundStrategy>>::dim,"return the problem dimension")
     .def("set_quiet",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_quiet,"set the quiet mode (no output from the library)")
     .def("quiet",&CMAParameters<GenoPheno<NoBoundStrategy>>::quiet,"return the status of the quiet mode")
@@ -250,8 +256,8 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<NoBoundStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<NoBoundStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-  def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,args("x0","sigma","lambda","seed","gp"),"creates a CMAParametersNB object for problem with unbounded parameters");
-  def("make_simple_parameters",make_simple_parameters,args("x0","sigma","lambda","seed"),"simple constructor for creating a CMAParametersNB object for problem with unbounded parameters");
+  def("make_parameters",make_parameters<GenoPheno<NoBoundStrategy>>,make_parameters_default_nb(args("x0","sigma","gp","lambda","seed"),"creates a CMAParametersNB object for problem with unbounded parameters"));
+  def("make_simple_parameters",make_simple_parameters,make_simple_parameters_default(args("x0","sigma","lambda","seed"),"simple constructor for creating a CMAParametersNB object for problem with unbounded parameters"));
   class_<CMAParameters<GenoPheno<pwqBoundStrategy>>>("CMAParametersPB","CMAParameters object for problems with bounded parameters")
     .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy>>::initialize_parameters,"initialize required CMA parameters based on dim, lambda, x0 and sigma")
     .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy>>::set_noisy,"adapt CMA parameters for noisy objective function")
@@ -271,7 +277,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_ftolerance",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_ftolerance,"return the function tolerance")
     .def("set_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_xtolerance,"set the function parameters' tolerance criteria for TolX")
     .def("get_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_xtolerance,"return the function parameters' tolerance")
-    .def("lambda",&CMAParameters<GenoPheno<pwqBoundStrategy>>::lambda,"return the value of lambda")
+    .def("lambda_",&CMAParameters<GenoPheno<pwqBoundStrategy>>::lambda,"return the value of lambda")
     .def("dim",&CMAParameters<GenoPheno<pwqBoundStrategy>>::dim,"return the problem dimension")
     .def("set_quiet",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_quiet,"set the quiet mode (no output from the library)")
     .def("quiet",&CMAParameters<GenoPheno<pwqBoundStrategy>>::quiet,"return the status of the quiet mode")
@@ -290,7 +296,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-  def("make_parameters_pwqb",make_parameters<GenoPheno<pwqBoundStrategy>>,args("x0","sigma","lambda","gp"),"creates a CMAParametersPB object for problem with bounded parameters");
+  def("make_parameters_pwqb",make_parameters<GenoPheno<pwqBoundStrategy>>,make_parameters_default_pwqb(args("x0","sigma","gp","lambda","seed"),"creates a CMAParametersPB object for problem with bounded parameters"));
   class_<CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>>("CMAParametersNBS","CMAParameters object for problems with scaled parameters")
     .def("initialize_parameters", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::initialize_parameters,"initialize required CMA parameters based on dim, lambda, x0 and sigma")
     .def("set_noisy", &CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_noisy,"adapt CMA parameters for noisy objective function")
@@ -310,7 +316,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_ftolerance",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_ftolerance,"return the function tolerance")
     .def("set_xtolerance",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_xtolerance,"set the function parameters' tolerance criteria for TolX")
     .def("get_xtolerance",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_xtolerance,"return the function parameters' tolerance")
-    .def("lambda",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::lambda,"return the value of lambda")
+    .def("lambda_",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::lambda,"return the value of lambda")
     .def("dim",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::dim,"return the problem dimension")
     .def("set_quiet",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_quiet,"set the quiet mode (no output from the library)")
     .def("quiet",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::quiet,"return the status of the quiet mode")
@@ -349,7 +355,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_ftolerance",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_ftolerance,"return the function tolerance")
     .def("set_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_xtolerance,"set the function parameters' tolerance criteria for TolX")
     .def("get_xtolerance",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_xtolerance,"return the function parameters' tolerance")
-    .def("lambda",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::lambda,"return the value of lambda")
+    .def("lambda_",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::lambda,"return the value of lambda")
     .def("dim",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::dim,"return the problem dimension")
     .def("set_quiet",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_quiet,"set the quiet mode (no output from the library)")
     .def("quiet",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::quiet,"return the status of the quiet mode")

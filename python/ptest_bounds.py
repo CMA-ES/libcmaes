@@ -8,7 +8,7 @@ sigma = 0.1
 lbounds = [-4]*10
 ubounds = [4]*10
 gp = lcmaes.make_genopheno_pwqb(lbounds,ubounds,10)
-p = lcmaes.make_parameters_pwqb(x,sigma,lambda_,seed,gp)
+p = lcmaes.make_parameters_pwqb(x,sigma,gp,lambda_,seed)
 
 # objective function.
 def nfitfunc(x,n):
