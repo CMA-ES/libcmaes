@@ -16,6 +16,8 @@ before_install:
   - cd eigen-eigen-10219c95fe65
   - mkdir build; cd build
   - cmake .. && sudo make install
+  - cd ../../
+  - rm -rf 3.2.4.tar.gz2 eigen-eigen-10219c95fe65
 
 before_script:
   - ./autogen.sh
