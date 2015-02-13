@@ -7,12 +7,15 @@ branches:
 
 compiler:
   - gcc
-  - clang
 
 before_install:
-  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install autoconf automake libtool libgoogle-glog-dev libgflags-dev libeigen3-dev libboost-python-dev python-numpy; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && sudo apt-get update -qq && sudo apt-get install -qq autoconf automake libtool g++-4.8 libeigen3-dev; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
-script: ./configure --enable-python && make
+before_script:
+  - ./autogen.sh
+
+script: ./configure && make
 
 os: 
  - linux
