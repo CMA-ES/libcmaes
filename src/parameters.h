@@ -407,6 +407,15 @@ namespace libcmaes
       }
       
       /**
+       * \brief activates / deactivates the full output (for legacy plotting).
+       * @param b whether to activate / deactivate
+       */
+      void set_full_fplot(const bool &b)
+      {
+	_full_fplot = b;
+      }
+
+      /**
        * \brief returns the current output filename.
        * @return output filename
        */
@@ -552,6 +561,7 @@ namespace libcmaes
       
       bool _quiet = true; /**< quiet all outputs. */
       std::string _fplot = ""; /**< plotting file, if specified. */
+      bool _full_fplot = false; /**< whether to write to file full legacy data output. */
       dVec _x0min; /**< initial mean vector min bound value for all components. */
       dVec _x0max; /**< initial mean vector max bound value for all components. */
       double _ftarget = -std::numeric_limits<double>::infinity(); /**< optional objective function target value. */

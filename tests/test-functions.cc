@@ -459,6 +459,7 @@ DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
+DEFINE_bool(full_fplot,false,"whether to activate full legacy plot");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
@@ -516,6 +517,7 @@ CMASolutions cmaes_opt()
   cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
   cmaparams.set_fplot(FLAGS_fplot);
+  cmaparams.set_full_fplot(FLAGS_full_fplot);
   cmaparams.set_lazy_update(FLAGS_lazy_update);
   cmaparams.set_quiet(FLAGS_quiet);
   cmaparams.set_tpa(FLAGS_tpa);

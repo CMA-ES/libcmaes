@@ -117,6 +117,12 @@ namespace libcmaes
 	_best_seen_candidate = _candidates.at(0);
 	_best_seen_iter = _niter;
       }
+
+    // store the worst seen candidate.
+    if ((_niter == 0 && !_worst_seen_candidate.get_x_size()) || _candidates.back().get_fvalue() > _worst_seen_candidate.get_fvalue())
+      {
+	_worst_seen_candidate = _candidates.back();
+      }
   }
 
   void CMASolutions::update_eigenv(const dVec &eigenvalues,

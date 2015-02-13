@@ -121,6 +121,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief returns the worst seen candidate.
+     * @return worst seen candidate
+     */
+    inline Candidate get_worst_seen_candidate() const
+    {
+      return _worst_seen_candidate;
+    }
+
+    /**
      * \brief get a reference to the r-th candidate in current set
      * @param r candidate position
      */
@@ -128,6 +137,11 @@ namespace libcmaes
       {
 	return _candidates.at(r);
       }
+
+    inline Candidate get_candidate(const int &r) const
+    {
+      return _candidates.at(r);
+    }
 
     /**
      * \brief get a reference to the full candidate set
@@ -443,6 +457,7 @@ namespace libcmaes
 
     Candidate _best_seen_candidate; /**< best seen candidate along the run. */
     int _best_seen_iter;
+    Candidate _worst_seen_candidate;
     Candidate _initial_candidate;
     
     dVec _v; /**< complementary vector for use in vdcma. */
