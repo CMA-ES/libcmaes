@@ -10,7 +10,7 @@ compiler:
   - clang
 
 before_install:
-  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install autoconf automake libtool libgoogle-glog-dev libgflags-dev libeigen3-dev libboost-python-dev python-numpy
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install autoconf automake libtool libgoogle-glog-dev libgflags-dev libeigen3-dev libboost-python-dev python-numpy; fi
 
 script: ./configure --enable-python && make
 
