@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
-bin_PROGRAMS=simple_test edm tpa_tests surr_tests
+bin_PROGRAMS=simple_test edm
 if HAVE_GFLAGS
-bin_PROGRAMS += test_functions
+bin_PROGRAMS += test_functions tpa_tests surr_tests
 test_functions_SOURCES=test-functions.cc
 endif
 simple_test_SOURCES=simple-test.cc
