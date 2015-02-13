@@ -73,7 +73,7 @@ gnuplot -e "filename='out.dat'" cma_multiplt.dem
 ```
 to plot results with matplotlib instead
 ```
-python cma_multiplt.py out.dat
+python ../python/cma_multiplt.py out.dat
 ```
 to run a check across a range of classical single-objective optimization functions:
 ```
