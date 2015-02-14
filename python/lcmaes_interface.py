@@ -9,7 +9,7 @@
     
     # run optimization via lci
     res = lci.lcmaes.pcmaes(lci.to_fitfunc(myfun), lci.to_params(x0, sigma0))
-    lci.plot()
+    lci.plot()  # plot from file set in lci.to_params
     
 Details: for the time being `to_params` is based on `lcmaes.make_simple_parameters`, 
 but that might change in future to expose more parameters. 
