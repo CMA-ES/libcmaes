@@ -15,7 +15,8 @@ Details: for the time being `to_params` is based on `lcmaes.make_simple_paramete
 but that might change in future to expose more parameters. 
 
 """
-
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
 import lcmaes
 import cma_multiplt as cmaplt
 outfile_current = 'lcmaes.dat'
@@ -31,7 +32,7 @@ def to_params(x0, sigma0, strategy="acmaes", outfile=None):
     return p
 
 def to_fitfunc(f):
-    """return function from callable `f`, where `f` accepts a list of numbers as input."""
+    """return function for lcmaes from callable `f`, where `f` accepts a list of numbers as input."""
     return cmaes.fitfunc_pbf.from_callable(lambda x, n: f(x))
     
 def plot(outfile=None):
