@@ -21,13 +21,14 @@ import lcmaes
 import cma_multiplt as cmaplt
 outfile_current = 'lcmaes.dat'
 
-def to_params(x0, sigma0, strategy="acmaes", outfile=None):
+def to_params(x0, sigma0, str_algo="acmaes", fplot=None):
     """return parameter object instance for ``lcmaes.pcmaes``"""
-    if outfile:
+    # TODO: add further parameters
+    if fplot:
         global outfile_current
         outfile_current = outfile
     p = cmaes.make_simple_parameters(x0, sigma0)
-    p.set_str_algo("acmaes")
+    p.set_str_algo(str_algo)
     p.set_fplot(outfile_current)
     return p
 
