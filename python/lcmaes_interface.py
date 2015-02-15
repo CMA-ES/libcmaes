@@ -12,29 +12,32 @@
     lci.plot()  # plot from file set in lci.to_params
     
 Details: for the time being `to_params` is based on `lcmaes.make_simple_parameters`, 
-but that might change in future to expose more parameters. 
+but that might change in future. 
 
 """
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 import lcmaes
 import cma_multiplt as cmaplt
-outfile_current = 'lcmaes.dat'
+fplot_current = 'lcmaes.dat'
 
 def to_params(x0, sigma0, str_algo="acmaes", fplot=None, **kwargs):
-    """return parameter object instance for ``lcmaes.pcmaes``.
+    """return parameter object instance for `lcmaes.pcmaes`.
     
-    `kwargs` must correspond to `name` in `set_name` attributes of 
-    `lcmaes.CMAParameters`
+    Keys in `kwargs` must correspond to `name` in `set_name` attributes
+    of `lcmaes.CMAParameters`, e.g. ``ftarget=1e-7``. 
+    
+    Details: when `fplot is None` (default), the default output filename 
+    is used. 
     """
     # TODO: add further parameters explicitly? 
-    if fplot and is not True:
-        global outfile_current
-        outfile_current = outfile
     p = lcmaes.make_simple_parameters(x0, sigma0)
     p.set_str_algo(str_algo)
-    if fplot or fplot is None:
-        p.set_fplot(outfile_current)
+    if fplot and fplot != True:  # then fplot must be filename
+        global fplot_current
+        fplot_current = fplot
+    if fplot or fplot is None:  # 0 or False or '' or "" prevents writing
+        p.set_fplot(fplot_current)
     for key, val in kwargs.items():
         setter = "set_" + key
         if not hasattr(p, setter):
@@ -46,6 +49,6 @@ def to_fitfunc(f):
     """return function for lcmaes from callable `f`, where `f` accepts a list of numbers as input."""
     return lcmaes.fitfunc_pbf.from_callable(lambda x, n: f(x))
     
-def plot(outfile=None):
-    cmaplt.plot(outfile if outfile else outfile_current)
+def plot(file=None):
+    cmaplt.plot(file if file else fplot_current)
     
