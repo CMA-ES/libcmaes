@@ -31,7 +31,7 @@ def to_params(x0, sigma0, str_algo="acmaes", fplot=None, **kwargs):
     if fplot and is not True:
         global outfile_current
         outfile_current = outfile
-    p = cmaes.make_simple_parameters(x0, sigma0)
+    p = lcmaes.make_simple_parameters(x0, sigma0)
     p.set_str_algo(str_algo)
     if fplot or fplot is None:
         p.set_fplot(outfile_current)
@@ -44,7 +44,7 @@ def to_params(x0, sigma0, str_algo="acmaes", fplot=None, **kwargs):
 
 def to_fitfunc(f):
     """return function for lcmaes from callable `f`, where `f` accepts a list of numbers as input."""
-    return cmaes.fitfunc_pbf.from_callable(lambda x, n: f(x))
+    return lcmaes.fitfunc_pbf.from_callable(lambda x, n: f(x))
     
 def plot(outfile=None):
     cmaplt.plot(outfile if outfile else outfile_current)
