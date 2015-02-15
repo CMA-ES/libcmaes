@@ -21,15 +21,25 @@ import lcmaes
 import cma_multiplt as cmaplt
 outfile_current = 'lcmaes.dat'
 
-def to_params(x0, sigma0, str_algo="acmaes", fplot=None):
-    """return parameter object instance for ``lcmaes.pcmaes``"""
-    # TODO: add further parameters
-    if fplot:
+def to_params(x0, sigma0, str_algo="acmaes", fplot=None, **kwargs):
+    """return parameter object instance for ``lcmaes.pcmaes``.
+    
+    `kwargs` must correspond to `name` in `set_name` attributes of 
+    `lcmaes.CMAParameters`
+    """
+    # TODO: add further parameters explicitly? 
+    if fplot and is not True:
         global outfile_current
         outfile_current = outfile
     p = cmaes.make_simple_parameters(x0, sigma0)
     p.set_str_algo(str_algo)
-    p.set_fplot(outfile_current)
+    if fplot or fplot is None:
+        p.set_fplot(outfile_current)
+    for key, val in kwargs.items():
+        setter = "set_" + key
+        if not hasattr(p, setter):
+            raise ValueError(setter + " is not known as method of CMAParameters")
+        getattr(p, setter)(val)  # call setter with value
     return p
 
 def to_fitfunc(f):
