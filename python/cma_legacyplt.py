@@ -54,7 +54,6 @@ def convert(infile,outprefix):
     max_eigenv = dat[:,8]
     pos = 9
     best_seen_x = dat[:,range(pos,pos+dim)]
-    print 'best_seen_x=',best_seen_x
     pos += dim
     eigenv = dat[:,range(pos,pos+dim)]
     pos += dim
