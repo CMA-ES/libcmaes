@@ -31,8 +31,7 @@ or in a python shell::
 
 import sys, pylab, csv
 import numpy as np
-from matplotlib.pylab import subplot, semilogy, grid, title
-# from matplotlib.pylab import figure, subplot, semilogy, hold, grid, axis, title, text, xlabel, isinteractive, draw, gcf
+from matplotlib.pylab import figure, ioff, ion, subplot, semilogy, hold, grid, axis, title, text, xlabel, isinteractive, draw, gcf
 # TODO: the above direct imports clutter the interface in a Python shell
 
 # number of static variables at the head of every line (i.e. independent of problem dimension)
@@ -108,8 +107,6 @@ def plot(filename):
     title('Standard Deviation in all coordinates')
     grid(True)
 
-    pylab.ion()
-    pylab.draw()
     pylab.show()
 
 if __name__ == "__main__":
