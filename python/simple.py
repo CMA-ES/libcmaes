@@ -20,3 +20,10 @@ cmasols = lcmaes.pcmaes(lcmaes.fitfunc_pbf.from_callable(nfitfunc), p)
 
 # visualize results
 lcmaplt.plot(outfile)
+
+if __name__ == "__main__":
+    msg = '  --- press return to continue --- '
+    try: 
+        raw_input(msg) 
+    except NameError: 
+        input(msg)
