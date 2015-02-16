@@ -51,11 +51,13 @@ namespace libcmaes
       {
 	std::chrono::time_point<std::chrono::system_clock> tnow = std::chrono::system_clock::now();
 	std::time_t tdate = std::chrono::system_clock::to_time_t(tnow);
-	fplotstream << cmaparams.get_seed() << sep << std::ctime(&tdate) << std::endl; // date and seed
+	fplotstream << cmaparams.dim() << sep << cmaparams.get_seed() << " / " << std::ctime(&tdate) << std::endl; // date and seed
       }
     fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
     fplotstream << cmasols.get_best_seen_candidate().get_fvalue() << sep << cmasols.get_candidate(cmasols.size() / 2).get_fvalue() << sep << cmasols.get_worst_seen_candidate().get_fvalue() << sep << cmasols.min_eigenv() << sep << cmasols.max_eigenv() << sep; // best ever fvalue, median fvalue, worst fvalue, max eigen, min eigen
-    fplotstream << cmasols.get_best_seen_candidate().get_x_dvec().transpose() << sep;  // xbest
+    if (cmasols.get_best_seen_candidate().get_x_size())
+      fplotstream << cmasols.get_best_seen_candidate().get_x_dvec().transpose() << sep;  // xbest
+    else fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
     if (!cmasols.eigenvalues().size())
       fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
     else fplotstream << cmasols.eigenvalues().transpose() << sep;
