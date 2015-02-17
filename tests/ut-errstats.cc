@@ -25,6 +25,44 @@
 
 using namespace libcmaes;
 
+TEST(eomatrix,removeElement)
+{
+  for (int k=0;k<10;k++)
+    {
+      dVec x = dVec::Random(10);
+      dVec xp = x;
+      removeElement(xp,k);
+      ASSERT_EQ(9,xp.size());
+      for (int i=0;i<10;i++)
+	{
+	  if (i<k)
+	    ASSERT_EQ(x[i],xp[i]);
+	  else if (i>k)
+	    ASSERT_EQ(x[i],xp[i-1]);
+	}
+    }
+}
+
+TEST(eomatrix,addElement)
+{
+  for (int k=0;k<11;k++)
+    {
+      dVec x = dVec::Random(10);
+      dVec xp = x;
+      addElement(xp,k,2.5);
+      ASSERT_EQ(11,xp.size());
+      for (int i=0;i<1;i++)
+	{
+	  if (i<k)
+	    ASSERT_EQ(x[i],xp[i]);
+	  else if (i == k)
+	    ASSERT_EQ(2.5,xp[i]);
+	  else if (i>k)
+	    ASSERT_EQ(x[i+1],xp[i]);
+	}
+    }
+}
+
 TEST(rearrangecmasol,reset_as_fixed)
 {
   FitFunc fsphere = [](const double *x, const int N)
@@ -45,8 +83,6 @@ TEST(rearrangecmasol,reset_as_fixed)
   ASSERT_EQ(9,copsols.cov().rows());
   ASSERT_EQ(9,copsols.cov().cols());
   ASSERT_EQ(9,copsols.xmean().size());
-  /*std::cout << cmasols.xmean().transpose() << std::endl;
-    std::cout << copsols.xmean().transpose() << std::endl;*/
   CMAParameters<> copparams = cmaparams;
   cmaparams.reset_as_fixed(6);
   
@@ -67,13 +103,13 @@ TEST(optimize,optimize_fixed_p)
   CMAParameters<> cmaparams(dim,&x0.front(),sigma);
   cmaparams.set_quiet(true);
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
-  /*cmaparams.set_fixed_p(6,0.1);
-    CMASolutions cmaksols = cmaes<>(fsphere,cmaparams);*/
-  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,0.1);
+  dVec nx;
+  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,cmasols.xmean(),nx);
   std::cout << "iter: " << cmaksols.niter() << std::endl;
   std::cout << "run status: " << cmaksols.run_status() << std::endl;
   ASSERT_EQ(TOLHISTFUN,cmaksols.run_status());
-  ASSERT_EQ(10,cmaksols.best_candidate().get_x_dvec().size());
+  ASSERT_EQ(9,cmaksols.best_candidate().get_x_dvec().size());
+  ASSERT_EQ(10,nx.size());
   std::cout << "fvalue: " << cmaksols.best_candidate().get_fvalue() << std::endl;
   std::cout << "x: " << cmaksols.best_candidate().get_x_dvec().transpose() << std::endl;
 }
@@ -100,8 +136,8 @@ TEST(pl,profile_likelihood_nocurve)
    pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,false,samplesize,fup);
    std::cout << "le fvalue: " << le.get_fvaluem().transpose() << std::endl;
    std::cout << "le xm: " << le.get_xm() << std::endl;
-   EXPECT_FLOAT_EQ(-0.31640971,le.get_min());
-   EXPECT_FLOAT_EQ(0.31640971,le.get_max());
+   EXPECT_FLOAT_EQ(-0.32090676,le.get_min());
+   EXPECT_FLOAT_EQ(0.32090676,le.get_max());
 }
 
 TEST(pl,profile_likelihood_curve)
@@ -128,6 +164,6 @@ TEST(pl,profile_likelihood_curve)
   std::cout << "le xm: " << le.get_xm() << std::endl;
   int mini, maxi;
   std::pair<double,double> mm = le.getMinMax(0.1,mini,maxi);
-  EXPECT_FLOAT_EQ(-0.311827,mm.first);
-  EXPECT_FLOAT_EQ(0.311827,mm.second);
+  EXPECT_FLOAT_EQ(-0.30449873,mm.first);
+  EXPECT_FLOAT_EQ(0.30449873,mm.second);
 }

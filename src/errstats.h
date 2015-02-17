@@ -96,6 +96,9 @@ namespace libcmaes
      * @param fup the function deviation for which to compute the profile likelihood
      * @param delta tolerance around fvalue + fup for which to compute the profile likelihood
      * @param linit whether this is the first linesearch call
+     * @param eigenve eigenvectors
+     * @param d step
+     * @param x vector on the line
      */
     static void take_linear_step(FitFunc &func,
 				 const CMAParameters<TGenoPheno> &parameters,
@@ -105,6 +108,7 @@ namespace libcmaes
 				 const double &delta,
 				 const int &n,
 				 const bool &linit,
+				 const dMat &eigenve,
 				 double &d,
 				 dVec &x);
 
@@ -122,7 +126,9 @@ namespace libcmaes
 				     const CMAParameters<TGenoPheno> &parameters,
 				     const CMASolutions &cmasol,
 				     const std::vector<int> &k,
-				     const std::vector<double> &vk);
+				     const std::vector<double> &vk,
+				     const dVec &x0,
+				     dVec &nx);
     
     /**
      * \brief optimizes an objective function while fixing the value of parameters in dimension k
@@ -137,7 +143,8 @@ namespace libcmaes
 				    const CMAParameters<TGenoPheno> &parameters,
 				    const CMASolutions &cmasol,
 				    const int &k,
-				    const double &vk);
+				    const dVec &vk,
+				    dVec &nx);
     
     /*- contour -*/
     public:
