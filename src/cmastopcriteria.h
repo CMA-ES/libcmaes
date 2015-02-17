@@ -109,7 +109,7 @@ namespace libcmaes
   template <class TGenoPheno>
     std::map<int,std::string> CMAStopCriteria<TGenoPheno>::_scriterias = {{CONT,"OK"},
 									  {AUTOMAXITER,"The automatically set maximal number of iterations per run has been reached"},
-									  {TOLHISTFUN,"[Success] The optimization has converved"},
+									  {TOLHISTFUN,"[Success] The optimization has converged"},
 									  {EQUALFUNVALS,"[Partial Success] The objective function values are the same over too many iterations, check the formulation of your objective function"},
 									  {TOLX,"[Partial Success] All components of covariance matrix are very small (e.g. < 1e-12)"},
 									  {TOLUPSIGMA,"[Error] Mismatch between step size increase and decrease of all eigenvalues in covariance matrix. Try to restart the optimization."},
