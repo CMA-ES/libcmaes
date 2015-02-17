@@ -37,7 +37,7 @@ namespace libcmaes
      * \brief empty constructor.
      */
   Candidate():
-    _fvalue(0.0) {}
+    _fvalue(std::numeric_limits<double>::quiet_NaN()) {}
     
     /**
      * \brief constructor.
