@@ -63,7 +63,7 @@ namespace libcmaes
 		    const double &sigma,
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
-		    const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
+		    const TGenoPheno &gp=TGenoPheno());
       
       /**
        * \brief Constructor.
@@ -78,7 +78,7 @@ namespace libcmaes
 		    const double &sigma,
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
-		    const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
+		    const TGenoPheno &gp=TGenoPheno());
       
       /**
        * \brief Constructor.
