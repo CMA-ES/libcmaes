@@ -390,6 +390,15 @@ namespace libcmaes
     }
     
     /**
+     * \brief returns last computed eigenvectors
+     * @return last computed eigenvectors
+     */
+    inline dMat eigenvectors() const
+    {
+      return _leigenvectors;
+    }
+
+    /**
      * \brief print the solution object out.
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
