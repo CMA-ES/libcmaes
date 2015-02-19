@@ -27,20 +27,27 @@ using namespace libcmaes;
 
 TEST(eomatrix,removeElement)
 {
-  for (int k=0;k<10;k++)
+  for (int dim=1;dim<11;dim++)
     {
-      dVec x = dVec::Random(10);
-      dVec xp = x;
-      removeElement(xp,k);
-      ASSERT_EQ(9,xp.size());
-      for (int i=0;i<10;i++)
+      for (int k=0;k<dim;k++)
 	{
-	  if (i<k)
-	    ASSERT_EQ(x[i],xp[i]);
-	  else if (i>k)
-	    ASSERT_EQ(x[i],xp[i-1]);
+	  dVec x = dVec::Random(dim);
+	  dVec xp = x;
+	  removeElement(xp,k);
+	  ASSERT_EQ(dim-1,xp.size());
+	  for (int i=0;i<dim;i++)
+	    {
+	      if (i<k)
+		ASSERT_EQ(x[i],xp[i]);
+	      else if (i>k)
+		ASSERT_EQ(x[i],xp[i-1]);
+	    }
 	}
     }
+  dVec x = dVec::Random(2);
+  removeElement(x,1);
+  removeElement(x,0);
+  ASSERT_EQ(0,x.size());
 }
 
 TEST(eomatrix,addElement)
@@ -104,12 +111,11 @@ TEST(optimize,optimize_fixed_p)
   cmaparams.set_quiet(true);
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   dVec nx;
-  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,cmasols.xmean(),nx);
+  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,cmasols.xmean());
   std::cout << "iter: " << cmaksols.niter() << std::endl;
   std::cout << "run status: " << cmaksols.run_status() << std::endl;
   ASSERT_EQ(TOLHISTFUN,cmaksols.run_status());
-  ASSERT_EQ(9,cmaksols.best_candidate().get_x_dvec().size());
-  ASSERT_EQ(10,nx.size());
+  ASSERT_EQ(10,cmaksols.best_candidate().get_x_dvec().size());
   std::cout << "fvalue: " << cmaksols.best_candidate().get_fvalue() << std::endl;
   std::cout << "x: " << cmaksols.best_candidate().get_x_dvec().transpose() << std::endl;
 }
