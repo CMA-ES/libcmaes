@@ -295,7 +295,7 @@ namespace libcmaes
       eostrat<TGenoPheno>::_solutions.sort_candidates();
     else eostrat<TGenoPheno>::uncertainty_handling();
     
-    //TODO: call on tpa computation of s(t)
+    // call on tpa computation of s(t)
     if (eostrat<TGenoPheno>::_parameters._tpa == 2 && eostrat<TGenoPheno>::_niter > 0)
       eostrat<TGenoPheno>::tpa_update();
 

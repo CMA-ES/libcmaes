@@ -61,4 +61,13 @@ inline void removeElement(dVec &vec, unsigned int k)
   vec.conservativeResize(vec.size()-1);
 }
 
+inline void addElement(dVec &vec, unsigned int k, const double &xk)
+{
+  if (k >= vec.size()+1)
+    return;
+  vec.conservativeResize(vec.size()+1);
+  std::copy(vec.data()+k,vec.data()+vec.size()-1,vec.data()+k+1);
+  vec[k] = xk;
+}
+
 #endif
