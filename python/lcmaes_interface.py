@@ -24,7 +24,7 @@ import lcmaes
 import cma_multiplt as cmaplt
 fplot_current = b'lcmaes.dat'
 
-def to_params(x0, sigma0, str_algo=b'acmaes', fplot=None, lbounds=None, ubounds=None, **kwargs):
+def to_params(x0, sigma0, str_algo=b'acmaes', fplot=None, lbounds=None, ubounds=None, scaling=False, vscaling=None, vshift=None, **kwargs):
     """return parameter object instance for `lcmaes.pcmaes`.
 
     Keys in `kwargs` must correspond to `name` in `set_name` attributes
@@ -36,10 +36,18 @@ def to_params(x0, sigma0, str_algo=b'acmaes', fplot=None, lbounds=None, ubounds=
     has_bounds = not lbounds==None and not ubounds == None
     p = None
     if has_bounds:
-        gp = lcmaes.make_genopheno_pwqb(lbounds,ubounds,len(ubounds))
-        p = lcmaes.make_parameters_pwqb(x0,sigma0,gp)
+        if scaling==False:
+            gp = lcmaes.make_genopheno_pwqb(lbounds,ubounds,len(ubounds))
+            p = lcmaes.make_parameters_pwqb(x0,sigma0,gp)
+        else:
+            gp = lcmaes.make_genopheno_pwqb_ls(lbounds,ubounds,len(ubounds))
+            p = lcmaes.make_parameters_pwqb_ls(x0,sigma0,gp,-1,0)
     else:
-        p = lcmaes.make_simple_parameters(x0, sigma0)
+        if vscaling is None:
+            p = lcmaes.make_simple_parameters(x0, sigma0)
+        else:
+            gp = lcmaes.make_genopheno_ls(vscaling,vshift)
+            p = lcmaes.make_parameters_ls(x0,sigma0,gp)
     p.set_str_algo(str_algo)
     if fplot and fplot != True:  # then fplot must be filename
         global fplot_current
@@ -53,11 +61,17 @@ def to_params(x0, sigma0, str_algo=b'acmaes', fplot=None, lbounds=None, ubounds=
         getattr(p, setter)(val)  # call setter with value
     return p
 
-def pcmaes(fitfunc,p,has_bounds=False):
+def pcmaes(fitfunc,p,has_bounds=False,has_scaling=False):
     if not has_bounds:
-        return lcmaes.pcmaes(fitfunc,p)
+        if not has_scaling:
+            return lcmaes.pcmaes(fitfunc,p)
+        else:
+            return lcmaes.pcmaes_ls(fitfunc,p)
     else:
-        return lcmaes.pcmaes_pwqb(fitfunc,p)
+        if not has_scaling:
+            return lcmaes.pcmaes_pwqb(fitfunc,p)
+        else:
+            return lcmaes.pcmaes_pwqb_ls(fitfunc,p)
 
 def to_fitfunc(f):
     """return function for lcmaes from callable `f`, where `f` accepts a list of numbers as input."""

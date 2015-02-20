@@ -349,7 +349,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-  def("make_parameters_ls",make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"),"creates a CMAParametersNBS object for problem with unbounded but scaled parameters");
+  def("make_parameters_ls",make_parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("x0","sigma","gp","lambda","seed"),"creates a CMAParametersNBS object for problem with unbounded but scaled parameters");
   class_<CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>>("CMAParametersPBS","CMA Parameters for problems with bounded and rescaled parameters")
     .def("initialize_parameters", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::initialize_parameters,"initialize required CMA parameters based on dim, lambda, x0 and sigma")
     .def("set_noisy", &CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_noisy,"adapt CMA parameters for noisy objective function")
@@ -388,7 +388,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::set_tpa,"activate the two-point adaptation scheme")
     .def("get_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
-  def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","lambda","gp"),"creates a CMAParametersPBS object for problem with bounded and scaled parameters");
+  def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","gp","lambda","seed"),"creates a CMAParametersPBS object for problem with bounded and scaled parameters");
     
   /*- FitFunc -*/  
   def_function<double(const boost::python::list&,const int&)>("fitfunc_pbf","objective function for python");
