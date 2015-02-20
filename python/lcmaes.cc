@@ -140,6 +140,20 @@ GenoPheno<TBoundStrategy,TScalingStrategy> make_genopheno(const boost::python::l
   return GenoPheno<TBoundStrategy,TScalingStrategy>(&vlbounds.front(),&vubounds.front(),dim);
 }
 
+GenoPheno<NoBoundStrategy,linScalingStrategy> make_genopheno_ls(const boost::python::list &scaling,
+								const boost::python::list &shift)
+{
+  assert(len(scaling)==len(shift));
+  dVec vscaling(len(scaling));
+  dVec vshift(len(shift));
+  for (int i=0;i<len(scaling);i++)
+    {
+      vscaling[i] = boost::python::extract<double>(scaling[i]);
+      vshift[i] = boost::python::extract<double>(shift[i]);
+    }
+  return GenoPheno<NoBoundStrategy,linScalingStrategy>(vscaling,vshift,nullptr,nullptr);
+}
+
 #ifdef HAVE_SURROG
 /* wrapper to surrogate cmaes high level function. */
 int csurrfunc_f(const boost::python::list &candidates, boost::python::object &pyArray)
@@ -419,7 +433,7 @@ BOOST_PYTHON_MODULE(lcmaes)
   def("make_genopheno_pwqb",make_genopheno<pwqBoundStrategy,NoScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problems with bounded parameters");
   class_<GenoPheno<NoBoundStrategy,linScalingStrategy>>("GenoPhenoLS","genotype/phenotype transformation object for problem with scaled parameters")
     ;
-  def("make_genopheno_ls",make_genopheno<NoBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problem with scaled parameters");
+  def("make_genopheno_ls",make_genopheno_ls,args("scaling","shift"),"creates a genotype/phenotype transform for problem with no bounds and linear scaling of parameters");
   class_<GenoPheno<pwqBoundStrategy,linScalingStrategy>>("GenoPhenoPWQBLS","genotype/phenotype transformation object for problem with bounded and scaled parameters")
     ;
   def("make_genopheno_pwqb_ls",make_genopheno<pwqBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problem with bounded and scaled parameters");
