@@ -65,8 +65,8 @@ def to_params(x0, sigma0, str_algo=b'acmaes', fplot=None, lbounds=None, ubounds=
 def pcmaes(fitfunc,p):
     has_bounds = isinstance(p,lcmaes.CMAParametersPB) or isinstance(p,lcmaes.CMAParametersPBS)
     has_scaling = isinstance(p,lcmaes.CMAParametersNBS) or isinstance(p,lcmaes.CMAParametersPBS)
-    print(has_bounds)
-    print(has_scaling)
+    print(has_bounds)  # TODO: remove at some point
+    print(has_scaling)  # TODO: remove at some point
     if not has_bounds:
         if not has_scaling:
             return lcmaes.pcmaes(fitfunc,p)
