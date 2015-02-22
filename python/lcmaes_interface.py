@@ -3,19 +3,20 @@
     import lcmaes_interface as lci
 
     # setup input parameters
-    myfun = lambda x: sum([xi**2 for xi in x])  # myfun accepts a list of numbers as input
-    x0 = [2.1] * 10
+    def myfun(x): return sum([xi**2 for xi in x])  # myfun accepts a list of numbers as input
+    dimension = 10 
+    x0 = [2.1] * dimension
     sigma0 = 0.1
 
     # run optimization via lci
-    res = lci.lcmaes.pcmaes(lci.to_fitfunc(myfun),
-                            lci.to_params(x0, sigma0,
-                                str_algo=b'aipop', # b=bytes, unicode fails
-                                restarts=2))
+    res = lci.pcmaes(lci.to_fitfunc(myfun),
+                     lci.to_params(x0, sigma0,  # all remaining parameters are optional
+                         str_algo=b'aipop',  # b=bytes, because unicode fails
+                         lbounds=[-5] * dimension, ubounds=[5] * dimension,
+                         restarts=2,  # means 2 runs, i.e. one restart
+                         )
+                    ) 
     lci.plot()  # plot from file set in lci.to_params
-
-Details: for the time being `to_params` is based on `lcmaes.make_simple_parameters`,
-but that might change in future.
 
 """
 from __future__ import (absolute_import, division,
