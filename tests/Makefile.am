@@ -20,8 +20,8 @@ bbobexperiment_SOURCES=bbobexperiment.cc
 endif
 
 if HAVE_GTEST
-TESTS = $(check_PROGRAMS)
 check_PROGRAMS = ut_pwqbounds ut_errstats ut_scaling
+TESTS = $(check_PROGRAMS)
 ut_pwqbounds_SOURCES=ut-pwqbounds.cc
 ut_errstats_SOURCES=ut-errstats.cc
 ut_scaling_SOURCES=ut-scaling.cc
