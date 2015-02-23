@@ -20,3 +20,5 @@ cmasols = lcmaes.pcmaes(lcmaes.fitfunc_pbf.from_callable(nfitfunc), p)
 
 # visualize results
 lcmaplt.plot(outfile)
+lcmaplt.pylab.ioff()
+lcmaplt.pylab.show()

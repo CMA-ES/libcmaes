@@ -82,4 +82,6 @@ def to_fitfunc(f):
 
 def plot(file=None):
     cmaplt.plot(file if file else fplot_current)
+    cmaplt.pylab.ioff()
+    cmaplt.pylab.show()
 
