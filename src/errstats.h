@@ -96,6 +96,9 @@ namespace libcmaes
      * @param fup the function deviation for which to compute the profile likelihood
      * @param delta tolerance around fvalue + fup for which to compute the profile likelihood
      * @param linit whether this is the first linesearch call
+     * @param eigenve eigenvectors
+     * @param d step
+     * @param x vector on the line
      */
     static void take_linear_step(FitFunc &func,
 				 const CMAParameters<TGenoPheno> &parameters,
@@ -105,6 +108,7 @@ namespace libcmaes
 				 const double &delta,
 				 const int &n,
 				 const bool &linit,
+				 const dMat &eigenve,
 				 double &d,
 				 dVec &x);
 
@@ -116,13 +120,14 @@ namespace libcmaes
      * @param cmasol solution object that contains the previously found optima
      * @param k dimensions in which to fix parameters (i.e. search takes place in all other dimensions)
      * @param vk fixed values of parameters in dimensions of set k
-     * @return optimization solution object
+     * @return optimization solution partial object with a single candidate that is the best candidate in full dimension
      */
     static CMASolutions optimize_vpk(FitFunc &func,
 				     const CMAParameters<TGenoPheno> &parameters,
 				     const CMASolutions &cmasol,
 				     const std::vector<int> &k,
-				     const std::vector<double> &vk);
+				     const std::vector<double> &vk,
+				     const dVec &x0);
     
     /**
      * \brief optimizes an objective function while fixing the value of parameters in dimension k
@@ -131,13 +136,13 @@ namespace libcmaes
      * @param cmasol solution object that contains the previously found optima
      * @param k dimension into which to fix the parameter (i.e. search takes place in all other dimensions)
      * @param vk fixed value of parameter k
-     * @return optimization solution object
+     * @return optimization solution partial object with a single candidate that is the best candidate in full dimension
      */
     static CMASolutions optimize_pk(FitFunc &func,
 				    const CMAParameters<TGenoPheno> &parameters,
 				    const CMASolutions &cmasol,
 				    const int &k,
-				    const double &vk);
+				    const dVec &vk);
     
     /*- contour -*/
     public:

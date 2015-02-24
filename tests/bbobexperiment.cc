@@ -36,6 +36,10 @@
 #include <mutex>
 #include <iostream>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 using namespace libcmaes;
 
 void tokenize(const std::string &str,
@@ -60,7 +64,7 @@ void tokenize(const std::string &str,
 
 std::mutex fmtx; // WARNING: bbob function calls are NOT thread-safe (learnt the hard way...).
 
-void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient)
+void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient, int withtpa)
 {
   // map fct to libcmaes FitFunc.
   FitFunc ff = [&](const double *x, const int N)
@@ -88,6 +92,7 @@ void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ft
   cmaparams.set_algo(alg);
   cmaparams.set_quiet(true);
   cmaparams.set_gradient(withnumgradient);
+  cmaparams.set_tpa(withtpa);
   cmaparams.set_mt_feval(true);
   if (noisy)
     cmaparams.set_noisy();
@@ -103,10 +108,11 @@ DEFINE_string(comment,"","comment for the experiment. If using multiple algorith
 DEFINE_double(maxfunevals,1e6,"maximum number of function evaluations");
 DEFINE_double(minfunevals,-1,"minimum number of function evaluations, -1 for automatic definition based on dimension");
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
+DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
 
 int main(int argc, char *argv[])
 {
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
 
   // parse the alg flags in order to capture all requested algorithm flavors.
   std::vector<std::string> algs;
@@ -220,7 +226,7 @@ int main(int argc, char *argv[])
 		      if (++independent_restarts > 0) 
                         fgeneric_restart("independent restart");  /* additional info */
 		      MY_OPTIMIZER(&fgeneric_evaluate, dim[idx_dim], fgeneric_ftarget(),
-				   maxfunevals - fgeneric_evaluations(), (*mit).first, FLAGS_noisy, FLAGS_with_num_gradient);
+				   maxfunevals - fgeneric_evaluations(), (*mit).first, FLAGS_noisy, FLAGS_with_num_gradient, FLAGS_tpa);
 		      if (fgeneric_best() < fgeneric_ftarget())
                         break;
 		    }

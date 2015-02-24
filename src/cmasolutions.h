@@ -75,7 +75,7 @@ namespace libcmaes
      */
     void sort_candidates()
     {
-      std::sort(_candidates.begin(),_candidates.end(),
+      std::stable_sort(_candidates.begin(),_candidates.end(),
 		[](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() < c2.get_fvalue();});
     }
 
@@ -97,14 +97,36 @@ namespace libcmaes
     /**
      * \brief returns current best solution candidate.
      *        NOTE: candidates MUST be sorted
-     * @return currentbest candidate
+     * @return current best candidate
      * @see CMASolutions::sort_candidates
      */
     inline Candidate best_candidate() const
     {
       if (_best_candidates_hist.empty()) // iter = 0
-	return Candidate(std::numeric_limits<double>::quiet_NaN(),_xmean);
+	{
+	  if (_initial_candidate.get_x_size())
+	    return _initial_candidate;
+	  else return Candidate(std::numeric_limits<double>::quiet_NaN(),_xmean);
+	}
       return _best_candidates_hist.back();
+    }
+
+    /**
+     * \brief returns the best seen candidate.
+     * @return best seen candidate
+     */
+    inline Candidate get_best_seen_candidate() const
+    {
+      return _best_seen_candidate;
+    }
+
+    /**
+     * \brief returns the worst seen candidate.
+     * @return worst seen candidate
+     */
+    inline Candidate get_worst_seen_candidate() const
+    {
+      return _worst_seen_candidate;
     }
 
     /**
@@ -115,6 +137,11 @@ namespace libcmaes
       {
 	return _candidates.at(r);
       }
+
+    inline Candidate get_candidate(const int &r) const
+    {
+      return _candidates.at(r);
+    }
 
     /**
      * \brief get a reference to the full candidate set
@@ -387,6 +414,15 @@ namespace libcmaes
     }
     
     /**
+     * \brief returns last computed eigenvectors
+     * @return last computed eigenvectors
+     */
+    inline dMat eigenvectors() const
+    {
+      return _leigenvectors;
+    }
+
+    /**
      * \brief print the solution object out.
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
@@ -440,6 +476,7 @@ namespace libcmaes
 
     Candidate _best_seen_candidate; /**< best seen candidate along the run. */
     int _best_seen_iter;
+    Candidate _worst_seen_candidate;
     Candidate _initial_candidate;
     
     dVec _v; /**< complementary vector for use in vdcma. */
@@ -447,6 +484,13 @@ namespace libcmaes
     std::vector<RankedCandidate> _candidates_uh; /**< temporary set of candidates used by uncertainty handling scheme. */
     int _lambda_reev; /**< number of reevaluated solutions at current step. */
     double _suh; /**< uncertainty level computed by uncertainty handling procedure. */
+    
+    double _tpa_s = 0.0;
+    int _tpa_p1 = 0;
+    int _tpa_p2 = 1;
+    dVec _tpa_x1;
+    dVec _tpa_x2;
+    dVec _xmean_prev; /**< previous step's mean vector. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

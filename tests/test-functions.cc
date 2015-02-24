@@ -31,6 +31,10 @@
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 #include <assert.h>
 
 using namespace libcmaes;
@@ -455,6 +459,7 @@ DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
+DEFINE_bool(full_fplot,false,"whether to activate full legacy plot");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
@@ -480,13 +485,16 @@ DEFINE_bool(with_gradient,false,"whether to use the function gradient when avail
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
-DEFINE_bool(elitist,false,"whether to activate elistist scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
+DEFINE_bool(initial_fvalue,false,"whether to compute initial objective function value at x0");
+DEFINE_int32(elitist,0,"whether to activate elistism, 0: deactivated, 1: reinjects best seen candidate, 2: initial elitism, reinjects x0, 3: on restart scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
 DEFINE_int32(max_hist,-1,"maximum stored history, helps mitigate the memory usage though preventing the 'stagnation' criteria to trigger");
 DEFINE_bool(no_stagnation,false,"deactivate stagnation stopping criteria");
 DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
 DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
+DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
+DEFINE_double(tpa_dsigma,-1,"set two-point adaptation dsigma (use with care)");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -509,14 +517,19 @@ CMASolutions cmaes_opt()
   cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
   cmaparams.set_fplot(FLAGS_fplot);
+  cmaparams.set_full_fplot(FLAGS_full_fplot);
   cmaparams.set_lazy_update(FLAGS_lazy_update);
   cmaparams.set_quiet(FLAGS_quiet);
+  cmaparams.set_tpa(FLAGS_tpa);
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
-  cmaparams.set_elitist(FLAGS_elitist);
+  cmaparams.set_initial_fvalue(FLAGS_initial_fvalue);
+  cmaparams.set_elitism(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
+  if (FLAGS_tpa_dsigma > 0.0)
+    cmaparams.set_tpa_dsigma(FLAGS_tpa_dsigma);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
@@ -619,7 +632,7 @@ CMASolutions cmaes_opt()
 
 int main(int argc, char *argv[])
 {
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
 #ifdef HAVE_GLOG
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr=1;

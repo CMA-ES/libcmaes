@@ -194,7 +194,7 @@ namespace libcmaes
     
   protected:
     bool _exploit = true; /**< whether to exploit or test the surrogate. */
-    int _l = 200; /**< number of training samples. set to floor(30/sqrt(n)) in constructor. */
+    int _l = 200; /**< number of training samples. set to floor(30*sqrt(n)) in constructor. */
     std::vector<Candidate> _tset; /**< current training set. */
     CSurrFunc _train; /**< custom training function. */
     SurrFunc _predict; /**< custom prediction function. */
@@ -390,6 +390,30 @@ namespace libcmaes
      */
     int get_prelambda() const { return _prelambda; }
     
+    /**
+     * \brief sets the standard deviation of selection sampling step 0
+     * @param s standard deviation
+     */
+    void set_theta_sel0(const double &s) { _theta_sel0 = s; }
+    
+    /**
+     * \brief returns the standard deviation of selection sampling step 0
+     * @return standard deviation
+     */
+    double get_theta_sel0() const { return _theta_sel0; }
+
+    /**
+     * \brief sets the standard deviation of selection sampling step 1
+     * @param s standard deviation
+     */
+    void set_theta_sel1(const double &s) { _theta_sel1 = s; }
+
+    /**
+     * \brief returns the standard deviation of selection sampling step 0
+     * @return standard deviation
+     */
+    double get_theta_sel1() const { return _theta_sel1; }
+
     protected:
     double _prelambda = 500; /**< number of pre-screened offsprings. */
     double _theta_sel0 = 0.4;  /**< standard deviation of selection sampling step 0. */
@@ -401,7 +425,8 @@ namespace libcmaes
     std::random_device _rd;
     std::normal_distribution<double> _norm_sel0;
     std::normal_distribution<double> _norm_sel1;
-    std::mt19937 _gen;
+    std::mt19937 _gen0;
+    std::mt19937 _gen1;
   };
 }
 

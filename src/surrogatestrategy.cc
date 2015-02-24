@@ -44,7 +44,9 @@ namespace libcmaes
       {
 	std::string sep = " ";
 	fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
-	fplotstream << cmasols.eigenvalues().transpose() << sep;
+	if (!cmasols.eigenvalues().size())
+	  fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+	else fplotstream << cmasols.eigenvalues().transpose() << sep;
 	if (!cmaparams.is_sep() && !cmaparams.is_vd())
 	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
 	else if (cmaparams.is_sep())
@@ -213,7 +215,8 @@ namespace libcmaes
   template<template <class U,class V> class TStrategy, class TCovarianceUpdate, class TGenoPheno>
   void ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>::init_rd()
   {
-    _gen = std::mt19937(_rd());
+    _gen0 = std::mt19937(_rd());
+    _gen1 = std::mt19937(_rd());
     _norm_sel0 = std::normal_distribution<double>(0.0,_theta_sel0*_theta_sel0);
     _norm_sel1 = std::normal_distribution<double>(0.0,_theta_sel1*_theta_sel1);
   }
@@ -224,8 +227,9 @@ namespace libcmaes
     // when starting or restarting, make sure the training set is reset.
     if (this->_niter == 0)
       {
+	if (!this->_tset.empty()) // this is a restart
+	  _prelambda = 50 * eostrat<TGenoPheno>::_parameters._lambda; // rescale pre-lambda, in case this is the first step of a restart with different population, also this is overriding the default upon restart
 	this->reset_training_set();
-	_prelambda = 50 * eostrat<TGenoPheno>::_parameters._lambda; // rescale pre-lambda, in case this is the first step of a restart with different population
       }
 	
     if (this->_exploit && (int)this->_tset.size() >= this->_l)
@@ -247,7 +251,6 @@ namespace libcmaes
     if (this->_exploit && (int)this->_tset.size() >= this->_l)
       {
 	pre_selection_eval(candidates);
-	this->update_fevals(_lambdaprime);
       }
     else
       {
@@ -334,32 +337,40 @@ namespace libcmaes
     // - draw 'a'<lambda_pre samples according to lambda_pre*N(0,theta_sel0^2) and retain each sample from initial population, with rank r < floor(a)
     std::vector<Candidate> ncandidates;
     std::unordered_set<int> uh;
+    
+    // keep the estimated best candidate.
+    ncandidates.push_back(eostrat<TGenoPheno>::_solutions._candidates.at(0));
+    ncandidates.at(0).set_rank(0);
+    uh.insert(0);
+    
     std::unordered_set<int>::const_iterator uhit;
     while((int)ncandidates.size() < eostrat<TGenoPheno>::_parameters._lambda)
       {
-	double da = _prelambda*std::fabs(_norm_sel0(_gen));
+	double da = _prelambda*std::fabs(_norm_sel0(_gen0));
 	int a = std::floor(da);
 	if (a < (int)eostrat<TGenoPheno>::_solutions._candidates.size() && (uhit=uh.find(a))==uh.end())
 	  {
 	    uh.insert(a);
-	    eostrat<TGenoPheno>::_solutions._candidates.at(a).set_fvalue(a);
+	    eostrat<TGenoPheno>::_solutions._candidates.at(a).set_rank(a);
 	    ncandidates.push_back(eostrat<TGenoPheno>::_solutions._candidates.at(a));
 	  }
       }
-	
+    
     // - draw 'a'<lambda samples according to lambda*N(0,theta_sel1^2) and retain each sample from the population from previous step, with rank r < floor(a)
     std::vector<Candidate> test_set;
     std::sort(ncandidates.begin(),ncandidates.end(),
 	      [](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() < c2.get_fvalue();});
     ncandidates.at(0).set_fvalue(this->_func(eostrat<TGenoPheno>::_parameters._gp.pheno(ncandidates.at(0).get_x_dvec()).data(),ncandidates.at(0).get_x_size()));
+    this->update_fevals(1);
     test_set.push_back(ncandidates.at(0));
     this->add_to_training_set(ncandidates.at(0));
-    int count = 0;
+    int count = 1;
     uh.clear();
+    uh.insert(0);
     while(count < _lambdaprime)
       {
 	// XXX: do we need to drop the samples with a > lambda and if a == 0 ? weird bias on sampling...
-	double da = std::fabs(_norm_sel1(_gen));
+	double da = std::fabs(_norm_sel1(_gen1));
 	int a = std::floor(eostrat<TGenoPheno>::_parameters._lambda*da);
 	if (a < (int)ncandidates.size() && (uhit=uh.find(a))==uh.end())
 	  {
@@ -368,10 +379,23 @@ namespace libcmaes
 	    ncandidates.at(a).set_fvalue(fvalue);
 	    test_set.push_back(ncandidates.at(a));
 	    this->add_to_training_set(ncandidates.at(a));
+	    this->update_fevals(1);
 	    ++count;
 	  }
       }
-
+    for (size_t i=1;i<ncandidates.size();i++)
+      if ((uhit=uh.find(i))==uh.end())
+	ncandidates.at(i).set_fvalue(std::numeric_limits<double>::max());
+    std::sort(ncandidates.begin(),ncandidates.end(),
+	      [](Candidate const &c1, Candidate const &c2)
+	      {
+		if (c1.get_fvalue() < c2.get_fvalue())
+		  return true;
+		if (c1.get_fvalue() == c2.get_fvalue())
+		  return c1.get_rank() < c2.get_rank();
+		return false;
+	      });
+    
     // test error.
     if (!eostrat<TGenoPheno>::_parameters.is_sep() && !eostrat<TGenoPheno>::_parameters.is_vd())
       this->set_test_error(this->compute_error(test_set,eostrat<TGenoPheno>::_solutions._csqinv));

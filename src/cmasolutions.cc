@@ -77,7 +77,7 @@ namespace libcmaes
     
     if (static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
       {
-	Eigen::EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
+	Eigen::EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(p._seed));
 	esolver.set_covar(_sepcov);
 	_v = esolver.samples_ind(1) / std::sqrt(p._dim);
       }
@@ -112,10 +112,16 @@ namespace libcmaes
       _median_fvalues.erase(_median_fvalues.begin());
 
     // store best seen candidate.
-    if (_niter == 0 || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
+    if ((_niter == 0 && !_best_seen_candidate.get_x_size()) || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
       {
 	_best_seen_candidate = _candidates.at(0);
 	_best_seen_iter = _niter;
+      }
+
+    // store the worst seen candidate.
+    if ((_niter == 0 && !_worst_seen_candidate.get_x_size()) || _candidates.back().get_fvalue() > _worst_seen_candidate.get_fvalue())
+      {
+	_worst_seen_candidate = _candidates.back();
       }
   }
 

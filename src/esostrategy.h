@@ -164,7 +164,7 @@ namespace libcmaes
      *        variable values for each step until termination.
      * @param pffunc a stream to file output function
      */
-    void set_plot_func(PlotFunc<TParameters,TSolutions> &pffunc) { _pffunc = pffunc; }
+    void set_plot_func(PlotFunc<TParameters,TSolutions> &pffunc) { if (!_parameters._full_fplot) _pffunc = pffunc; }
     
     /**
      * \brief returns numerical gradient of objective function at x.
@@ -211,7 +211,13 @@ namespace libcmaes
      *        level based on a dual candidate ranking.
      */
     void uncertainty_handling();
-    
+
+    /**
+     * \brief updates the two-point adaptation average rank difference for
+     *        the step-size adaptation mechanism
+     */
+    void tpa_update();
+
     // deprecated.
     Candidate best_solution() const;
 

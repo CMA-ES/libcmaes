@@ -111,9 +111,13 @@ namespace libcmaes
     else solutions._sepcov = (1-parameters._c1-parameters._cmu + cminus*parameters._alphaminusold)*solutions._sepcov + parameters._c1*spc + (parameters._cmu + cminus * (1.0-parameters._alphaminusold))*cmuplus - cminus * cmuminus;
     
     // sigma update, Eq. (9)
-    solutions._sigma *= std::min(parameters._deltamaxsigma,exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0)));
+    if (parameters._tpa < 2)
+      solutions._sigma *= std::min(parameters._deltamaxsigma,exp((parameters._csigma / parameters._dsigma) * (norm_ps / parameters._chi - 1.0)));
+    else if (solutions._niter > 0)
+      solutions._sigma *= std::exp(solutions._tpa_s / parameters._dsigma);
         
     // set mean.
+    solutions._xmean_prev = solutions._xmean;
     solutions._xmean = xmean;
   }
 

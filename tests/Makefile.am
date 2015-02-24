@@ -1,8 +1,13 @@
 AUTOMAKE_OPTIONS = subdir-objects
 bin_PROGRAMS=simple_test edm
 if HAVE_GFLAGS
-bin_PROGRAMS += test_functions
+bin_PROGRAMS += test_functions tpa_tests
+if HAVE_SURROG
+bin_PROGRAMS += surr_tests
+surr_tests_SOURCES=surr-tests.cc
+endif
 test_functions_SOURCES=test-functions.cc
+tpa_tests_SOURCES=tpa-tests.cc
 endif
 simple_test_SOURCES=simple-test.cc
 edm_SOURCES=edm.cc
@@ -22,7 +27,7 @@ ut_errstats_SOURCES=ut-errstats.cc
 ut_scaling_SOURCES=ut-scaling.cc
 endif
 
-AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC)
+AM_CPPFLAGS=-I../src/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
 AM_CXXFLAGS=-g -Wall
 if !HAVE_CLANG
 AM_CXXFLAGS += -fopenmp
