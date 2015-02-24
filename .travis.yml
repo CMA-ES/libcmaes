@@ -10,7 +10,7 @@ compiler:
   - clang
 
 before_install:
-  - if [ $TRAVIS_OS_NAME == linux ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && sudo apt-get update -qq && sudo apt-get install -qq autoconf automake libtool g++-4.8 libboost-python-dev python-numpy libgtest-dev; cd /usr/src/gtest && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/lib/ ; cd -; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y && sudo apt-get update -qq && sudo apt-get install -qq autoconf automake libtool g++-4.8 libboost-python-dev python-numpy libgtest-dev; cd /usr/src/gtest && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install boost-python gflags; export CXX=clang++; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   - wget http://bitbucket.org/eigen/eigen/get/3.2.4.tar.bz2
@@ -27,7 +27,7 @@ before_script:
   - if [ $TRAVIS_OS_NAME == osx ]; then ./configure --enable-python LDFLAGS="-L/usr/local/lib/"; fi
 
 script: 
-  - if [ $TRAVIS_OS_NAME == linux ]; then make -j2 && make check; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then make && make check; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then make; fi
 
 os: 
