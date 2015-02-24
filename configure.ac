@@ -1,6 +1,6 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.9.4)
+AC_INIT(libcmaes,0.9.5)
 AC_MSG_NOTICE([libcmaes $PACKAGE_VERSION])
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE([subdir-objects])
