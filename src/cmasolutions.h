@@ -276,6 +276,22 @@ namespace libcmaes
     {
       return _sepcsqinv;
     }
+
+    /**
+     * \returns standard deviation vector
+     * @return standard deviation vector
+     */
+    template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
+      inline dVec stds(const CMAParameters<TGenoPheno> &cmaparams) const
+    {
+      if (!cmaparams.is_sep() && !cmaparams.is_vd())
+	return cmaparams.get_gp().pheno(static_cast<dVec>(_cov.sqrt().diagonal()));
+      else if (cmaparams.is_sep())
+	return cmaparams.get_gp().pheno(static_cast<dVec>(_sepcov.cwiseSqrt()));
+      else if (cmaparams.is_vd())
+	return cmaparams.get_gp().pheno(static_cast<dVec>((dVec::Constant(cmaparams.dim(),1.0)+_v.cwiseProduct(_v)).cwiseSqrt().cwiseProduct(_sepcov)));
+      return dVec(); // should never reach here.
+    }
     
     /**
      * \brief returns current value of step-size sigma
@@ -420,7 +436,7 @@ namespace libcmaes
     template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
     std::ostream& print(std::ostream &out,
 			const int &verb_level=0,
-			const TGenoPheno &gp=GenoPheno<NoBoundStrategy>()) const;
+			const TGenoPheno &gp=TGenoPheno()) const;
 
   private:
     dMat _cov; /**< covariance matrix. */
