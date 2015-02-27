@@ -125,6 +125,33 @@ namespace libcmaes
       }
   }
 
+  dMat CMASolutions::corr() const
+  {
+    dMat corr, dinvcov;
+    if (_cov.size() > 0) // full cov
+      {
+	dinvcov = _cov.diagonal().cwiseSqrt().cwiseInverse();
+	corr = dMat(_cov.rows(),_cov.cols());
+	for (int i=0;i<_cov.cols();i++)
+	  corr.col(i) = _cov.col(i).cwiseProduct(dinvcov);
+	for (int i=0;i<_cov.rows();i++)
+	  corr.row(i) = corr.row(i).cwiseProduct(dinvcov.transpose());
+      }
+    else if (_v.size() > 0) //vd
+      {
+	// we need to compute the full covariance matrix, which is counter productive in large-scale settings
+	dMat cov =_sepcov.asDiagonal()*(dMat::Identity(_sepcov.rows(),_sepcov.rows())+_v*_v.transpose())*(_sepcov.asDiagonal());
+	dinvcov = cov.diagonal().cwiseSqrt().cwiseInverse();
+	corr = dMat(cov.rows(),cov.cols());
+	for (int i=0;i<cov.cols();i++)
+	  corr.col(i) = cov.col(i).cwiseProduct(dinvcov);
+	for (int i=0;i<cov.rows();i++)
+	  corr.row(i) = corr.row(i).cwiseProduct(dinvcov.transpose());
+      }
+    else return dMat::Constant(_sepcov.rows(),1,1.0); // sep
+    return corr;
+  }
+
   void CMASolutions::update_eigenv(const dVec &eigenvalues,
 				   const dMat &eigenvectors)
   {

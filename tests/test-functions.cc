@@ -484,6 +484,8 @@ DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP a
 DEFINE_bool(with_gradient,false,"whether to use the function gradient when available in closed form");
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
+DEFINE_bool(with_stds,false,"whether to compute and print the standard deviation for every parameter");
+DEFINE_bool(with_corr,false,"whether to compute and print the correlation matrix (may not fit in memory in large-scale settings)");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
 DEFINE_bool(initial_fvalue,false,"whether to compute initial objective function value at x0");
 DEFINE_int32(elitist,0,"whether to activate elistism, 0: deactivated, 1: reinjects best seen candidate, 2: initial elitism, reinjects x0, 3: on restart scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
@@ -626,6 +628,10 @@ CMASolutions cmaes_opt()
     }
   if (FLAGS_with_edm)
     LOG(INFO) << "EDM=" << cmasols.edm() << " / EDM/fm=" << cmasols.edm() / cmasols.best_candidate().get_fvalue() << std::endl;
+  if (FLAGS_with_stds)
+    std::cout << "stds=" << cmasols.stds(cmaparams).transpose() << std::endl;
+  if (FLAGS_with_corr)
+    std::cout << "correlation=" << cmasols.corr() << std::endl;
   return cmasols;
 }
 

@@ -294,6 +294,12 @@ namespace libcmaes
     }
     
     /**
+     * \brief returns correlation matrix
+     * @return correlation matrix
+     */
+    dMat corr() const;
+
+    /**
      * \brief returns current value of step-size sigma
      * @return current step-size
      */
