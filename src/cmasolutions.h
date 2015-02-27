@@ -233,6 +233,13 @@ namespace libcmaes
     }
     
     /**
+     * \brief returns full covariance matrix. Similar to cov() but in case of linear-sized
+     *        algorithms like sep and vd, returns the full covariance matrix anyways.
+     * @return full size covariance matrix
+     */
+    dMat full_cov() const;
+
+    /**
      * \brief returns separable covariance diagonal matrix, only applicable to sep-CMA-ES algorithms.
      * @return error covariance diagonal vector
      */
@@ -285,7 +292,7 @@ namespace libcmaes
       inline dVec stds(const CMAParameters<TGenoPheno> &cmaparams) const
     {
       if (!cmaparams.is_sep() && !cmaparams.is_vd())
-	return cmaparams.get_gp().pheno(static_cast<dVec>(_cov.sqrt().diagonal()));
+	return cmaparams.get_gp().pheno(static_cast<dVec>(_cov.diagonal().cwiseSqrt()));
       else if (cmaparams.is_sep())
 	return cmaparams.get_gp().pheno(static_cast<dVec>(_sepcov.cwiseSqrt()));
       else if (cmaparams.is_vd())
@@ -298,6 +305,12 @@ namespace libcmaes
      * @return correlation matrix
      */
     dMat corr() const;
+
+    /**
+     * \brief returns correlation between parameter i and j (useful in large-scale settings)
+     * @return correlation between parameter i and j
+     */
+    double corr(const int &i, const int &j) const;
 
     /**
      * \brief returns current value of step-size sigma
