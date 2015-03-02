@@ -88,6 +88,7 @@ namespace libcmaes
 
     /**
      * \brief take a linesearch step in a given direction
+     *        Note: the search takes place in geno-space
      * @param func objective function
      * @param parameters stochastic search parameters
      * @param k dimension in which to compute profile likelihood points

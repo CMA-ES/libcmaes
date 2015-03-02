@@ -123,5 +123,21 @@ namespace libcmaes
 	  x[i] = (_ubounds[i] + _au[i]) - 2.0 * sqrt(_au[i] * fabs(x[i] - _ubounds[i]));
       }
   }
+
+  void pwqBoundStrategy::remove_dimensions(const std::vector<int> &k)
+  {
+    for (const int i: k)
+      {
+	removeElement(_lbounds,i);
+	removeElement(_ubounds,i);
+	removeElement(_al,i);
+	removeElement(_au,i);
+	removeElement(_xlow,i);
+	removeElement(_xup,i);
+	removeElement(_r,i);
+	removeElement(_phenolbounds,i);
+	removeElement(_phenoubounds,i);
+      }
+  }
   
 }

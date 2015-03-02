@@ -142,8 +142,37 @@ TEST(pl,profile_likelihood_nocurve)
    pli le = errstats<>::profile_likelihood(fsphere,cmaparams,cmasols,k,false,samplesize,fup);
    std::cout << "le fvalue: " << le.get_fvaluem().transpose() << std::endl;
    std::cout << "le xm: " << le.get_xm() << std::endl;
-   EXPECT_FLOAT_EQ(-0.32090676,le.get_min());
-   EXPECT_FLOAT_EQ(0.32090676,le.get_max());
+   ASSERT_NEAR(-0.32090676,le.get_min(),1e-5);
+   ASSERT_NEAR(0.32090676,le.get_max(),1e-5);
+}
+
+TEST(pl,profile_likelihood_nocurve_gp)
+{
+   FitFunc fsphere = [](const double *x, const int N)
+    {
+      double val = 0.0;
+      for (int i=0;i<N;i++)
+	val += x[i]*x[i];
+      return val;
+    };
+   int dim = 10;
+   double sigma = 0.1;
+   std::vector<double> x0(dim,1.0);
+   std::vector<double> lbounds(dim,-5.0);
+   std::vector<double> ubounds(dim,5.0);
+   GenoPheno<pwqBoundStrategy,linScalingStrategy> gp(&lbounds.at(0),&ubounds.at(0),dim);
+   CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>> cmaparams(dim,&x0.front(),sigma,-1,0,gp);
+   cmaparams.set_quiet(true);
+   cmaparams.set_seed(1234);
+   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>(fsphere,cmaparams);
+   int k = 6;
+   double fup = 0.1;
+   int samplesize = 20;
+   pli le = errstats<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::profile_likelihood(fsphere,cmaparams,cmasols,k,false,samplesize,fup);
+   std::cout << "le fvalue: " << le.get_fvaluem().transpose() << std::endl;
+   std::cout << "le xm: " << le.get_xm() << std::endl;
+   ASSERT_NEAR(-0.30294415,le.get_min(),1e-5);
+   ASSERT_NEAR(0.30294415,le.get_max(),1e-5);
 }
 
 TEST(pl,profile_likelihood_curve)
@@ -170,6 +199,6 @@ TEST(pl,profile_likelihood_curve)
   std::cout << "le xm: " << le.get_xm() << std::endl;
   int mini, maxi;
   std::pair<double,double> mm = le.getMinMax(0.1,mini,maxi);
-  EXPECT_FLOAT_EQ(-0.30449873,mm.first);
-  EXPECT_FLOAT_EQ(0.30449873,mm.second);
+  ASSERT_NEAR(-0.30449873,mm.first,1e-5);
+  ASSERT_NEAR(0.30449873,mm.second,1e-5);
 }

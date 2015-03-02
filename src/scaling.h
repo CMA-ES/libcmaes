@@ -65,6 +65,16 @@ namespace libcmaes
       y = x;
     }
 
+    void remove_dimensions(const std::vector<int> &k)
+    {
+      (void)k;
+    }
+
+    bool is_id() const
+    {
+      return _id;
+    }
+
   private:
     double _intmin = -std::numeric_limits<double>::max();  /**< default internal min bound. */
     double _intmax = std::numeric_limits<double>::max();  /**< default internal max bound. */
@@ -107,9 +117,6 @@ namespace libcmaes
       denom = denom.cwiseMin(std::numeric_limits<double>::max()); // protects against overflow
       _scaling = (dVec::Constant(dim,_intmax)-dVec::Constant(dim,_intmin)).cwiseQuotient(denom);
       _shift = dVec::Constant(dim,_intmax) - _scaling.cwiseProduct(vubounds);
-
-      /*std::cout << "scaling=" << _scaling.transpose() << std::endl;
-	std::cout << "shift=" << _shift.transpose() << std::endl;*/
     }
     
     void scale_to_internal(dVec &x,
@@ -126,12 +133,23 @@ namespace libcmaes
     }
 
     bool is_id() const { return _id; }
+
+    void remove_dimensions(const std::vector<int> &k)
+    {
+      for (const int i: k)
+	{
+	  removeElement(_scaling,i);
+	  removeElement(_shift,i);
+	}
+    }
     
-  private:
+  public:
     double _intmin = 0.0;  /**< default internal min bound. */
     double _intmax = 10.0;  /**< default internal max bound. */
     dVec _scaling;
     dVec _shift;
+
+  public:
     bool _id = true;
   };
   

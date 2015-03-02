@@ -90,7 +90,6 @@ namespace libcmaes
 	//debug
 	
 	// minimize.
-	//dVec nx;
 	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x);
 	if (ncitsol._run_status < 0)
 	  {
@@ -228,7 +227,6 @@ namespace libcmaes
 	  }
       }
     x[k] = xtmp[k];
-    phenoxtmp = parameters._gp.pheno(xtmp);
   }
   
   template <class TGenoPheno>
@@ -239,37 +237,49 @@ namespace libcmaes
 						  const std::vector<double> &vk,
 						  const dVec &x0)
   {
-    dVec rx0 = x0;
+    dVec rx0 = parameters.get_gp().pheno(x0);
     double sigma = 0.0;
+    TGenoPheno ngp = parameters.get_gp();
+    ngp.remove_dimensions(k);
     for (int i=k.size()-1;i>=0;i--)
       {
-	sigma = std::max(sigma,fabs(cmasol._candidates.at(0).get_x_dvec()[k[i]]-vk[i]));
+	sigma = std::max(sigma,fabs(cmasol._candidates.at(0).get_x_dvec()[k[i]]-vk[i])); // heuristic: sigma as max distance to minima
 	removeElement(rx0,k[i]);
       }
-    if (rx0.size() == 0)
+    
+    // transform the point of interest from genotype to phenotype
+    dVec pvk = dVec::Zero(x0.size());
+    for (size_t i=0;i<vk.size();i++)
+      pvk(k[i]) = vk.at(i);
+    pvk = parameters.get_gp().pheno(pvk);
+     
+    if (rx0.size() == 0) // if all variables are fixed, simply return value for this point
       {
 	dVec nx = dVec(k.size());
 	for (size_t i=0;i<k.size();i++)
 	  nx[k[i]] = vk[i];
-	double fval = func(nx.data(),nx.size());
+	dVec pnx = parameters.get_gp().pheno(nx);
+	double fval = func(pnx.data(),pnx.size());
 	CMASolutions rcmasol;
 	rcmasol._candidates.emplace_back(fval,nx);
 	rcmasol._best_candidates_hist.push_back(cmasol._candidates.at(0));
 	rcmasol._nevals++;
 	return rcmasol;
       }
-    CMAParameters<TGenoPheno> nparameters(rx0.size(),rx0.data(),sigma,parameters.lambda());
+    CMAParameters<TGenoPheno> nparameters(rx0.size(),rx0.data(),sigma,parameters.lambda(),
+					  parameters.get_seed(),ngp);
+    nparameters.set_initial_fvalue(true);
     nparameters.set_ftarget(parameters.get_ftarget());
     //nparameters.set_quiet(false);
     
-    FitFunc rfunc = [func,k,vk](const double *x, const int N)
+    FitFunc rfunc = [func,k,pvk](const double *x, const int N)
       {
 	dVec nx(N);
 	for (int i=0;i<N;i++)
 	  nx[i] = x[i];
 	for (size_t i=0;i<k.size();i++)
 	  {
-	    addElement(nx,k[i],vk[i]);
+	    addElement(nx,k[i],pvk[k[i]]); // in phenotype
 	  }
 	return func(nx.data(),nx.size());
       };
@@ -284,7 +294,6 @@ namespace libcmaes
     rcmasol._nevals = cms._nevals;
     rcmasol._run_status = cms.run_status();
     return rcmasol;
-    //return cms;
   }
 
   template <class TGenoPheno>
@@ -328,6 +337,7 @@ namespace libcmaes
     
     // find upper y value for x parameter.
     CMAParameters<TGenoPheno> nparameters = parameters;
+    nparameters.set_gp(parameters.get_gp());
     nparameters.set_x0(phenox);
     nparameters.set_fixed_p(px,valx+plx._errmax);
     CMASolutions exy_up = cmaes(func,nparameters);
