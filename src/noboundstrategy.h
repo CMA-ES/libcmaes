@@ -23,6 +23,7 @@
 #define NOBOUNDSTRATEGY_H
 
 #include "eo_matrix.h"
+#include <vector>
 #include <limits>
 
 namespace libcmaes

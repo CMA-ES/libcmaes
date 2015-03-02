@@ -23,6 +23,7 @@
 #define PWQ_BOUND_STRATEGY_H
 
 #include "eo_matrix.h"
+#include <vector>
 
 namespace libcmaes
 {
