@@ -149,6 +149,15 @@ namespace libcmaes
       }
 
       /**
+       * \brief returns initial sigma value
+       * @return initial sigma value
+       */
+      double get_sigma_init() const
+      {
+	return _sigma_init;
+      }
+
+      /**
        * \brief activates the gradient injection scheme. 
        *        If no gradient function is defined, injects a numerical gradient solution instead
        *        Note: overrides Parameters::set_gradient
