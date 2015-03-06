@@ -111,7 +111,7 @@ TEST(optimize,optimize_fixed_p)
   cmaparams.set_quiet(true);
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   dVec nx;
-  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,cmasols.xmean());
+  CMASolutions cmaksols = errstats<>::optimize_pk(fsphere,cmaparams,cmasols,6,1.0,cmasols.xmean(),false,false);
   std::cout << "iter: " << cmaksols.niter() << std::endl;
   std::cout << "run status: " << cmaksols.run_status() << std::endl;
   ASSERT_EQ(TOLHISTFUN,cmaksols.run_status());
