@@ -193,7 +193,7 @@ namespace libcmaes
       bool is_vd() const { return _vd; }
       
       /**
-       * \brief freezes a parameter to a given value during optimization.
+       * \brief freezes a parameter to a given value in genotype during optimization.
        *        Adapts some generic parameters as well.
        * @param index dimension index of the parameter to be frozen
        * @param value frozen value of the parameter

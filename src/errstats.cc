@@ -90,7 +90,7 @@ namespace libcmaes
 	//debug
 	
 	// minimize.
-	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x);
+	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k],x,false,false);
 	if (ncitsol._run_status < 0)
 	  {
 	    LOG(ERROR) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << " -- " << ncitsol.status_msg() << std::endl;
@@ -235,9 +235,14 @@ namespace libcmaes
 						  const CMASolutions &cmasol,
 						  const std::vector<int> &k,
 						  const std::vector<double> &vk,
-						  const dVec &x0)
+						  const dVec &x0,
+						  const bool &pheno_x0,
+						  const bool &pheno_vk)
   {
-    dVec rx0 = parameters.get_gp().pheno(x0);
+    dVec rx0;
+    if (!pheno_x0)
+      rx0 = parameters.get_gp().pheno(x0);
+    else rx0 = x0;
     double sigma = 0.0;
     TGenoPheno ngp = parameters.get_gp();
     ngp.remove_dimensions(k);
@@ -251,17 +256,14 @@ namespace libcmaes
     dVec pvk = dVec::Zero(x0.size());
     for (size_t i=0;i<vk.size();i++)
       pvk(k[i]) = vk.at(i);
-    pvk = parameters.get_gp().pheno(pvk);
+    if (!pheno_vk)
+      pvk = parameters.get_gp().pheno(pvk);
      
     if (rx0.size() == 0) // if all variables are fixed, simply return value for this point
       {
-	dVec nx = dVec(k.size());
-	for (size_t i=0;i<k.size();i++)
-	  nx[k[i]] = vk[i];
-	dVec pnx = parameters.get_gp().pheno(nx);
-	double fval = func(pnx.data(),pnx.size());
+	double fval = func(pvk.data(),pvk.size());
 	CMASolutions rcmasol;
-	rcmasol._candidates.emplace_back(fval,nx);
+	rcmasol._candidates.emplace_back(fval,pvk);
 	rcmasol._best_candidates_hist.push_back(cmasol._candidates.at(0));
 	rcmasol._nevals++;
 	return rcmasol;
@@ -286,10 +288,24 @@ namespace libcmaes
         
     CMASolutions cms = cmaes<TGenoPheno>(rfunc,nparameters);
     dVec nx = cms.best_candidate().get_x_dvec();
-    for (size_t i=0;i<k.size();i++)
-      addElement(nx,k[i],vk[i]);
+    if (!pheno_vk)
+      {
+	for (size_t i=0;i<k.size();i++)
+	  addElement(nx,k[i],vk[i]);
+      }
+      else
+      {
+	// XXX: wish to not have to rely on the geno() function, which 
+	//      remains unused elsewhere.
+	//      profile likelihood proceeds in genotype space, whereas contour
+	//      proceeds in phenotype space, therefore the present function 
+	//      is required to work in both cases.
+	dVec gpvk = parameters.get_gp().geno(pvk);
+	for (size_t i=0;i<k.size();i++)
+	  addElement(nx,k[i],gpvk[k[i]]);
+      }
     CMASolutions rcmasol;
-    rcmasol._candidates.emplace_back(cms.best_candidate().get_fvalue(),nx);
+    rcmasol._candidates.emplace_back(cms.best_candidate().get_fvalue(),nx); // in genotype
     rcmasol._best_candidates_hist.push_back(rcmasol._candidates.at(0));
     rcmasol._nevals = cms._nevals;
     rcmasol._run_status = cms.run_status();
@@ -301,11 +317,14 @@ namespace libcmaes
 						 const CMAParameters<TGenoPheno> &parameters,
 						 const CMASolutions &cmasol,
 						 const int &k,
-						 const dVec &vk)
+						 const double &vk,
+						 const dVec &x0,
+						 const bool &pheno_x0,
+						 const bool &pheno_vk)
   {
     std::vector<int> tk = {k};
-    std::vector<double> tvk = {vk[k]};
-    return errstats<TGenoPheno>::optimize_vpk(func,parameters,cmasol,tk,tvk,vk);
+    std::vector<double> tvk = {vk};
+    return errstats<TGenoPheno>::optimize_vpk(func,parameters,cmasol,tk,tvk,x0,pheno_x0,pheno_vk);
   }
 
   template <class TGenoPheno>
@@ -321,57 +340,44 @@ namespace libcmaes
     if (!cmasol.get_pli(px,plx))
       {
 	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,px,false,samplesize,fup,delta,maxiters);
-	cmasol.get_pli(px,plx);
+	cmasol.get_pli(px,plx); // in phenotype
       }
     
     // find second two points.
     if (!cmasol.get_pli(py,ply))
       {
 	errstats<TGenoPheno>::profile_likelihood(func,parameters,cmasol,py,false,samplesize,fup,delta,maxiters);
-	cmasol.get_pli(py,ply);
+	cmasol.get_pli(py,ply); // in phenotype
       }
 
-    dVec phenox = cmasol.best_candidate().get_x_pheno_dvec(parameters);
+    dVec phenox = cmasol.best_candidate().get_x_pheno_dvec(parameters); // in phenotype
     double valx = phenox(px);
     double valy = phenox(py);
     
     // find upper y value for x parameter.
-    CMAParameters<TGenoPheno> nparameters = parameters;
-    nparameters.set_gp(parameters.get_gp());
-    nparameters.set_x0(phenox);
-    nparameters.set_fixed_p(px,valx+plx._errmax);
-    CMASolutions exy_up = cmaes(func,nparameters);
-    //std::cout << "exy_up=" << exy_up.best_candidate()._x.transpose() << std::endl;
+    CMASolutions exy_up = errstats<TGenoPheno>::optimize_pk(func,parameters,cmasol,px,valx+plx._errmax,parameters.get_x0min());
+    //std::cout << "exy_up=" << exy_up.best_candidate().get_x_dvec().transpose() << std::endl;
     
     // find lower y value for x parameter.
-    nparameters = parameters;
-    nparameters.set_x0(phenox);
-    nparameters.set_fixed_p(px,valx+plx._errmin);
-    CMASolutions exy_lo = cmaes(func,nparameters);
-    //std::cout << "exy_lo=" << exy_lo.best_candidate()._x.transpose() << std::endl;
+    CMASolutions exy_lo = errstats<TGenoPheno>::optimize_pk(func,parameters,cmasol,px,valx+plx._errmin,parameters.get_x0min());
+    //std::cout << "exy_lo=" << exy_lo.best_candidate().get_x_dvec().transpose() << std::endl;
     
     // find upper x value for y parameter.
-    TGenoPheno gp;
-    nparameters = parameters;
-    nparameters.set_x0(phenox);
-    nparameters.set_fixed_p(py,valy+ply._errmax);
-    CMASolutions eyx_up = cmaes<TGenoPheno>(func,nparameters);
-    //std::cout << "eyx_up=" << eyx_up.best_candidate()._x.transpose() << std::endl;
+    CMASolutions eyx_up = errstats<TGenoPheno>::optimize_pk(func,parameters,cmasol,py,valy+ply._errmax,parameters.get_x0min());
+    //std::cout << "eyx_up=" << eyx_up.best_candidate().get_x_dvec().transpose() << std::endl;
     
     // find lower x value for y parameter.
-    nparameters = parameters;
-    nparameters.set_x0(phenox);
-    nparameters.set_fixed_p(py,valy+ply._errmin);
-    CMASolutions eyx_lo = cmaes(func,nparameters);
-    //std::cout << "eyx_lo=" << eyx_lo.best_candidate()._x.transpose() << std::endl;
+    CMASolutions eyx_lo = errstats<TGenoPheno>::optimize_pk(func,parameters,cmasol,py,valy+ply._errmin,parameters.get_x0min());
+    //std::cout << "eyx_lo=" << eyx_lo.best_candidate().get_x_dvec().transpose() << std::endl;
     
+    // early contour in phenotype
     contour c;
     c.add_point(valx+plx._errmin,exy_lo.best_candidate().get_x_pheno_dvec(parameters)(py));
     c.add_point(eyx_lo.best_candidate().get_x_pheno_dvec(parameters)(px),valy+ply._errmin); 
     c.add_point(valx+plx._errmax,exy_up.best_candidate().get_x_pheno_dvec(parameters)(py));
     c.add_point(eyx_up.best_candidate().get_x_pheno_dvec(parameters)(px),valy+ply._errmax);
 
-    double scalx = 1.0/(plx._errmax - plx._errmin);
+    double scalx = 1.0/(plx._errmax - plx._errmin); // in phenotype
     double scaly = 1.0/(ply._errmax - ply._errmin);
 
     //debug
@@ -387,7 +393,7 @@ namespace libcmaes
 	
 	//- check on max budget, and return if exceeded.
 	
-	//- get most distant points.
+	//- get most distant points, in phenotype.
 	std::vector<std::pair<double,double>>::iterator idist1 = c._points.end()-1;
 	std::vector<std::pair<double,double>>::iterator idist2 = c._points.begin();
 	double dx = idist1->first - idist2->first;
@@ -478,7 +484,7 @@ namespace libcmaes
     //debug
     
     // get a first optimized point.
-    CMASolutions cmasol1 = errstats<TGenoPheno>::optimize_vpk(func,parameters,cmasol,par,pmid,parameters.get_x0min());
+    CMASolutions cmasol1 = errstats<TGenoPheno>::optimize_vpk(func,parameters,cmasol,par,pmid,parameters.get_x0min(),true,true); //TODO: result has wrong best candidate x set as phenotype...
     alsb[0] = 0.0;
     flsb[0] = cmasol1.best_candidate().get_fvalue();
     flsb[0] = std::max(flsb[0],aminsv+0.1*fup);
@@ -487,7 +493,7 @@ namespace libcmaes
     ipt++;
 
     //debug
-    /*std::cout << "contour / fvalue=" << cmasol1.best_candidate().get_fvalue() << " / optimized point1=" << cmasol1.best_candidate().get_x_dvec().transpose() << std::endl;*/
+    //std::cout << "contour / fvalue=" << cmasol1.best_candidate().get_fvalue() << " / optimized point1=" << cmasol1.best_candidate().get_x_pheno_dvec(parameters).transpose() << std::endl;
     //debug
     
     // update aopt and get a second optimized point.
@@ -657,7 +663,7 @@ namespace libcmaes
 	    // advance incrementally
 	    xstart(par[0]) += dxk0;
 	    xstart(par[1]) += dxk1;
-
+	    
 	    //debug
 	    //std::cout << "xstart=" << xstart.transpose() << std::endl;
 	    //debug
@@ -686,7 +692,7 @@ namespace libcmaes
 	//debug
 	//std::cout << "all points above, returning closest point as best\n";
 	//debug
-	
+
 	return fcross(flsb[ibest],
 		      nfcn,cmasols[ibest].best_candidate().get_x_pheno_dvec(parameters));
       }

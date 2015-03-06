@@ -152,7 +152,7 @@ namespace libcmaes
     int _k = -1;
     int _samplesize = 0;
     dVec _fvaluem;
-    dMat _xm;
+    dMat _xm; // in phenotype
     double _min = 0.0;
     double _max = 0.0;
     double _errmin = 0.0;
