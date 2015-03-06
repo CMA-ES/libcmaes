@@ -43,6 +43,7 @@ std::random_device rd;
 std::normal_distribution<double> norm(0.0,1.0);
 std::cauchy_distribution<double> cauch(0.0,1.0);
 std::mt19937 gen;
+std::string boundtype = "none";
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
   std::stringstream ss(s);
@@ -465,7 +466,7 @@ DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all comp
 DEFINE_uint64(seed,0,"seed for random generator");
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
-DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
+//DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_bool(quiet,false,"no intermediate output");
@@ -504,6 +505,7 @@ CMASolutions cmaes_opt()
   std::vector<double> lbounds = {FLAGS_lbound},ubounds = {FLAGS_ubound};
   if (FLAGS_lbound != std::numeric_limits<double>::max()/-1e2 || FLAGS_ubound != std::numeric_limits<double>::max()/1e2)
     {
+      boundtype = "pwq";
       lbounds = std::vector<double>(FLAGS_dim);
       ubounds = std::vector<double>(FLAGS_dim);
       for (int i=0;i<FLAGS_dim;i++)
@@ -703,13 +705,13 @@ int main(int argc, char *argv[])
       exit(1);
     }
   CMASolutions cmasols;
-  if (FLAGS_boundtype == "none")
+  if (boundtype == "none")
     {
       if (!FLAGS_linscaling)
 	cmasols = cmaes_opt<>();
       else cmasols = cmaes_opt<GenoPheno<NoBoundStrategy,linScalingStrategy>>();
     }
-  else if (FLAGS_boundtype == "pwq")
+  else if (boundtype == "pwq")
     {
       if (!FLAGS_linscaling)
 	cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
@@ -717,7 +719,7 @@ int main(int argc, char *argv[])
     }
   else
     {
-      LOG(ERROR) << "Unknown boundtype " << FLAGS_boundtype << std::endl;
+      LOG(ERROR) << "Unknown boundtype " << boundtype << std::endl;
       exit(-1);
     }
 }
