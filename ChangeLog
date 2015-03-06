@@ -1,10 +1,10 @@
-2015-02-24	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+2015-03-06	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v0.9.5
 	- step-size two-point adaptaion scheme for improved performances in some settings, ref #88
 	- important bug fixes to the ACM surrogate scheme, ref #57, #106
 	- simple high-level workflow under Python, ref #116
 	- improved performances in high dimensions, ref #97
-	- improved profile likelihood and contour computations, ref #30, #31, #48
+	- improved profile likelihood and contour computations, including under geno/pheno transforms, ref #30, #31, #48
 	- elitist mechanism for forcing best solutions during evolution, ref 103
 	- new legacy plotting function, ref #110
 	- optional initial function value, ref #100
