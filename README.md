@@ -1,5 +1,5 @@
 ## libcmaes
-libcmaes is a multithreaded C++ implementation (with Python bindings) of algorithms of CMA-ES family for optimization of nonlinear non-convex 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
+libcmaes is a multithreaded C++11 implementation (with Python bindings) of algorithms of CMA-ES family for optimization of nonlinear non-convex 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
 
 Over the past decade, both the original CMA-ES and its improved flavors have proven very effective in optimizing functions when no gradient is available. Typically, the algorithm does find the minimum value of an objective function in a minimal number of function calls, compared to other methods. For a full report of recent results, see (3).
 
