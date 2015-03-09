@@ -285,8 +285,11 @@ namespace libcmaes
     }
 
     /**
-     * \returns standard deviation vector
-     * @return standard deviation vector
+     * \returns the unscaled standard deviation vector
+     * Note: this is only useful to compare amond standard deviations
+     * To get the true rescaled estimate of the error, use errors()
+     * @param cmaparams parameter object that hold the genotype/phenotype transform
+     * @return unscaled standard deviation vector
      */
     template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
       inline dVec stds(const CMAParameters<TGenoPheno> &cmaparams) const
@@ -300,6 +303,23 @@ namespace libcmaes
       return dVec(); // should never reach here.
     }
     
+    /**
+     * \returns standard deviation vector
+     * @param cmaparams parameter object that hold the genotype/phenotype transform
+     * @return standard deviation vector
+     */
+    template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
+      inline dVec errors(const CMAParameters<TGenoPheno> &cmaparams) const
+      {
+	if (!cmaparams.is_sep() && !cmaparams.is_vd())
+	  return cmaparams.get_gp().pheno(static_cast<dVec>(std::sqrt(_sigma)*_cov.diagonal().cwiseSqrt()));
+	else if (cmaparams.is_sep())
+	  return cmaparams.get_gp().pheno(static_cast<dVec>(std::sqrt(_sigma)*_sepcov.cwiseSqrt()));
+	else if (cmaparams.is_vd())
+	  return cmaparams.get_gp().pheno(static_cast<dVec>(std::sqrt(_sigma)*(dVec::Constant(cmaparams.dim(),1.0)+_v.cwiseProduct(_v)).cwiseSqrt().cwiseProduct(_sepcov)));
+	return dVec(); // should never reach here.
+      }
+
     /**
      * \brief returns correlation matrix
      * @return correlation matrix
