@@ -1,106 +1,112 @@
-\hypertarget{classlibcmaes_1_1ESOStrategy}{\section{libcmaes\-:\-:E\-S\-O\-Strategy$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$ Class Template Reference}
-\label{classlibcmaes_1_1ESOStrategy}\index{libcmaes\-::\-E\-S\-O\-Strategy$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$@{libcmaes\-::\-E\-S\-O\-Strategy$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$}}
+\hypertarget{classlibcmaes_1_1ESOStrategy}{\section{libcmaes\+:\+:E\+S\+O\+Strategy$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$ Class Template Reference}
+\label{classlibcmaes_1_1ESOStrategy}\index{libcmaes\+::\+E\+S\+O\+Strategy$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$@{libcmaes\+::\+E\+S\+O\+Strategy$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$}}
 }
 
 
-Main class describing an evolutionary optimization strategy. Every algorithm in libcmaes descends from this class, and bring its functionalities to an \hyperlink{classlibcmaes_1_1ESOptimizer}{E\-S\-Optimizer} object.  
+Main class describing an evolutionary optimization strategy. Every algorithm in libcmaes descends from this class, and bring its functionalities to an \hyperlink{classlibcmaes_1_1ESOptimizer}{E\+S\+Optimizer} object.  
 
 
 
 
-{\ttfamily \#include $<$esostrategy.\-h$>$}
+{\ttfamily \#include $<$esostrategy.\+h$>$}
 
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classlibcmaes_1_1ESOStrategy_aeae9653bf7cec51980c239200ad5c3df}{\hyperlink{classlibcmaes_1_1ESOStrategy_aeae9653bf7cec51980c239200ad5c3df}{E\-S\-O\-Strategy} ()}\label{classlibcmaes_1_1ESOStrategy_aeae9653bf7cec51980c239200ad5c3df}
+\hypertarget{classlibcmaes_1_1ESOStrategy_aeae9653bf7cec51980c239200ad5c3df}{\hyperlink{classlibcmaes_1_1ESOStrategy_aeae9653bf7cec51980c239200ad5c3df}{E\+S\+O\+Strategy} ()}\label{classlibcmaes_1_1ESOStrategy_aeae9653bf7cec51980c239200ad5c3df}
 
 \begin{DoxyCompactList}\small\item\em dummy constructor. \end{DoxyCompactList}\item 
-\hyperlink{classlibcmaes_1_1ESOStrategy_a3736c9ce43cf708675229ff7b3ae4166}{E\-S\-O\-Strategy} (Fit\-Func \&func, T\-Parameters \&parameters)
+\hyperlink{classlibcmaes_1_1ESOStrategy_a3736c9ce43cf708675229ff7b3ae4166}{E\+S\+O\+Strategy} (Fit\+Func \&func, T\+Parameters \&parameters)
 \begin{DoxyCompactList}\small\item\em constructor \end{DoxyCompactList}\item 
-\hyperlink{classlibcmaes_1_1ESOStrategy_abb06d0491f0240f875f66e9a4863f467}{E\-S\-O\-Strategy} (Fit\-Func \&func, T\-Parameters \&parameters, const T\-Solutions \&solutions)
+\hyperlink{classlibcmaes_1_1ESOStrategy_abb06d0491f0240f875f66e9a4863f467}{E\+S\+O\+Strategy} (Fit\+Func \&func, T\+Parameters \&parameters, const T\+Solutions \&solutions)
 \begin{DoxyCompactList}\small\item\em constructor for starting from an existing solution. \end{DoxyCompactList}\item 
-d\-Mat \hyperlink{classlibcmaes_1_1ESOStrategy_af614d71ca3e8353b3027723220c9e3b4}{ask} ()
+d\+Mat \hyperlink{classlibcmaes_1_1ESOStrategy_af614d71ca3e8353b3027723220c9e3b4}{ask} ()
 \begin{DoxyCompactList}\small\item\em Generates a set of candidate points. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1ESOStrategy_a5e2e44bd0808efa95feea7ff5ef7eb91}{eval} (const d\-Mat \&candidates, const d\-Mat \&phenocandidates=d\-Mat(0, 0))
-\begin{DoxyCompactList}\small\item\em Evaluates a set of candidates against the objective function. The procedure is multithreaded and stores both the candidates and their f-\/value into the \-\_\-solutions object that bears the current set of potential solutions to the optimization problem. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1ESOStrategy_a5e2e44bd0808efa95feea7ff5ef7eb91}{eval} (const d\+Mat \&candidates, const d\+Mat \&phenocandidates=d\+Mat(0, 0))
+\begin{DoxyCompactList}\small\item\em Evaluates a set of candidates against the objective function. The procedure is multithreaded and stores both the candidates and their f-\/value into the \+\_\+solutions object that bears the current set of potential solutions to the optimization problem. \end{DoxyCompactList}\item 
 \hypertarget{classlibcmaes_1_1ESOStrategy_ad35926877abdaed3922b316f57723612}{void \hyperlink{classlibcmaes_1_1ESOStrategy_ad35926877abdaed3922b316f57723612}{tell} ()}\label{classlibcmaes_1_1ESOStrategy_ad35926877abdaed3922b316f57723612}
 
 \begin{DoxyCompactList}\small\item\em Updates the state of the stochastic search, and prepares for the next iteration. \end{DoxyCompactList}\item 
 bool \hyperlink{classlibcmaes_1_1ESOStrategy_aa99c52d17342902cc4dc9a863deb58e3}{stop} ()
 \begin{DoxyCompactList}\small\item\em Decides whether to stop the search for solutions. \end{DoxyCompactList}\item 
-int \hyperlink{classlibcmaes_1_1ESOStrategy_ab56253c2d7753bf42c11b20a0b543b8d}{optimize} (const Eval\-Func \&evalf, const Ask\-Func \&askf, const Tell\-Func \&tellf)
+int \hyperlink{classlibcmaes_1_1ESOStrategy_ab56253c2d7753bf42c11b20a0b543b8d}{optimize} (const Eval\+Func \&evalf, const Ask\+Func \&askf, const Tell\+Func \&tellf)
 \begin{DoxyCompactList}\small\item\em Finds the minimum of the objective function. It makes alternative calls to \hyperlink{classlibcmaes_1_1ESOStrategy_af614d71ca3e8353b3027723220c9e3b4}{ask()}, \hyperlink{classlibcmaes_1_1ESOStrategy_ad35926877abdaed3922b316f57723612}{tell()} and \hyperlink{classlibcmaes_1_1ESOStrategy_aa99c52d17342902cc4dc9a863deb58e3}{stop()} until one of the termination criteria triggers. \end{DoxyCompactList}\item 
-\hypertarget{classlibcmaes_1_1ESOStrategy_a8eda694f97058ca603f8f31e5bb1bc05}{void \hyperlink{classlibcmaes_1_1ESOStrategy_a8eda694f97058ca603f8f31e5bb1bc05}{inc\-\_\-iter} ()}\label{classlibcmaes_1_1ESOStrategy_a8eda694f97058ca603f8f31e5bb1bc05}
+\hypertarget{classlibcmaes_1_1ESOStrategy_a8eda694f97058ca603f8f31e5bb1bc05}{void \hyperlink{classlibcmaes_1_1ESOStrategy_a8eda694f97058ca603f8f31e5bb1bc05}{inc\+\_\+iter} ()}\label{classlibcmaes_1_1ESOStrategy_a8eda694f97058ca603f8f31e5bb1bc05}
 
 \begin{DoxyCompactList}\small\item\em increment iteration count. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1ESOStrategy_a9cfe783dc0284fce441c8757cd5222c3}{update\-\_\-fevals} (const int \&evals)
+void \hyperlink{classlibcmaes_1_1ESOStrategy_a9cfe783dc0284fce441c8757cd5222c3}{update\+\_\+fevals} (const int \&evals)
 \begin{DoxyCompactList}\small\item\em updates the consumed budget of objective function evaluations. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1ESOStrategy_aecb8aeecb2053868a7d9237223067267}{set\-\_\-gradient\-\_\-func} (Grad\-Func \&gfunc)
+void \hyperlink{classlibcmaes_1_1ESOStrategy_aecb8aeecb2053868a7d9237223067267}{set\+\_\+gradient\+\_\+func} (Grad\+Func \&gfunc)
 \begin{DoxyCompactList}\small\item\em sets the gradient function, if available. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}{set\-\_\-progress\-\_\-func} (Progress\-Func$<$ T\-Parameters, T\-Solutions $>$ \&pfunc)
+void \hyperlink{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}{set\+\_\+progress\+\_\+func} (Progress\+Func$<$ T\+Parameters, T\+Solutions $>$ \&pfunc)
 \begin{DoxyCompactList}\small\item\em Sets the possibly custom progress function, that is called in between every search step, and gives an outside user a simple way to witness progress of the algorithm, as well as to add custom termination criteria. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1ESOStrategy_afa0e2a388dae01ec485c3dd8d80bb5ed}{start\-\_\-from\-\_\-solution} (const T\-Solutions \&sol)
+void \hyperlink{classlibcmaes_1_1ESOStrategy_afa0e2a388dae01ec485c3dd8d80bb5ed}{start\+\_\+from\+\_\+solution} (const T\+Solutions \&sol)
 \begin{DoxyCompactList}\small\item\em starts optimization from a given solution object. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}{set\-\_\-plot\-\_\-func} (Plot\-Func$<$ T\-Parameters, T\-Solutions $>$ \&pffunc)
+void \hyperlink{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}{set\+\_\+plot\+\_\+func} (Plot\+Func$<$ T\+Parameters, T\+Solutions $>$ \&pffunc)
 \begin{DoxyCompactList}\small\item\em Sets the possibly custom plot to file function, that is useful for storing into file various possibly custom variable values for each step until termination. \end{DoxyCompactList}\item 
-d\-Vec \hyperlink{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}{gradf} (const d\-Vec \&x)
+d\+Vec \hyperlink{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}{gradf} (const d\+Vec \&x)
 \begin{DoxyCompactList}\small\item\em returns numerical gradient of objective function at x. \end{DoxyCompactList}\item 
-d\-Vec \hyperlink{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}{gradgp} (const d\-Vec \&x) const 
+d\+Vec \hyperlink{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}{gradgp} (const d\+Vec \&x) const 
 \begin{DoxyCompactList}\small\item\em returns the numerical gradient of the objective function in phenotype space \end{DoxyCompactList}\item 
 double \hyperlink{classlibcmaes_1_1ESOStrategy_a6350c635353e7b54e78abb223a5d4029}{edm} ()
-\begin{DoxyCompactList}\small\item\em computes expected distance to minimum (E\-D\-M). \end{DoxyCompactList}\item 
-T\-Solutions \& \hyperlink{classlibcmaes_1_1ESOStrategy_a0efc59c0fb25005207381cd3c45cb778}{get\-\_\-solutions} ()
+\begin{DoxyCompactList}\small\item\em computes expected distance to minimum (E\+D\+M). \end{DoxyCompactList}\item 
+T\+Solutions \& \hyperlink{classlibcmaes_1_1ESOStrategy_a0efc59c0fb25005207381cd3c45cb778}{get\+\_\+solutions} ()
 \begin{DoxyCompactList}\small\item\em returns reference to current solution object \end{DoxyCompactList}\item 
-T\-Parameters \& \hyperlink{classlibcmaes_1_1ESOStrategy_a6941ee6debca9ce43fb56eea7206ea33}{get\-\_\-parameters} ()
+T\+Parameters \& \hyperlink{classlibcmaes_1_1ESOStrategy_a6941ee6debca9ce43fb56eea7206ea33}{get\+\_\+parameters} ()
 \begin{DoxyCompactList}\small\item\em returns reference to current optimization parameters object \end{DoxyCompactList}\item 
 double \hyperlink{classlibcmaes_1_1ESOStrategy_a2763e44feed5c7635338fedaecb83e23}{fitfunc} (const double $\ast$x, const int N)
 \begin{DoxyCompactList}\small\item\em execute objective function \end{DoxyCompactList}\item 
-\hypertarget{classlibcmaes_1_1ESOStrategy_a81441905608aba3daa6d60a78eb47763}{\hyperlink{classlibcmaes_1_1Candidate}{Candidate} {\bfseries best\-\_\-solution} () const }\label{classlibcmaes_1_1ESOStrategy_a81441905608aba3daa6d60a78eb47763}
+\hypertarget{classlibcmaes_1_1ESOStrategy_a44ba5db44668ae752aa9d1050784989d}{void \hyperlink{classlibcmaes_1_1ESOStrategy_a44ba5db44668ae752aa9d1050784989d}{uncertainty\+\_\+handling} ()}\label{classlibcmaes_1_1ESOStrategy_a44ba5db44668ae752aa9d1050784989d}
+
+\begin{DoxyCompactList}\small\item\em uncertainty handling scheme that computes and uncertainty level based on a dual candidate ranking. \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1ESOStrategy_a68254de1be47abf4ec22e4692e5aeb32}{void \hyperlink{classlibcmaes_1_1ESOStrategy_a68254de1be47abf4ec22e4692e5aeb32}{tpa\+\_\+update} ()}\label{classlibcmaes_1_1ESOStrategy_a68254de1be47abf4ec22e4692e5aeb32}
+
+\begin{DoxyCompactList}\small\item\em updates the two-\/point adaptation average rank difference for the step-\/size adaptation mechanism \end{DoxyCompactList}\item 
+\hypertarget{classlibcmaes_1_1ESOStrategy_a81441905608aba3daa6d60a78eb47763}{\hyperlink{classlibcmaes_1_1Candidate}{Candidate} {\bfseries best\+\_\+solution} () const }\label{classlibcmaes_1_1ESOStrategy_a81441905608aba3daa6d60a78eb47763}
 
 \item 
-\hypertarget{classlibcmaes_1_1ESOStrategy_a059cdb2676a9e9933ac8b9dad32a1938}{void {\bfseries set\-\_\-initial\-\_\-elitist} (const bool \&e)}\label{classlibcmaes_1_1ESOStrategy_a059cdb2676a9e9933ac8b9dad32a1938}
+\hypertarget{classlibcmaes_1_1ESOStrategy_a059cdb2676a9e9933ac8b9dad32a1938}{void {\bfseries set\+\_\+initial\+\_\+elitist} (const bool \&e)}\label{classlibcmaes_1_1ESOStrategy_a059cdb2676a9e9933ac8b9dad32a1938}
 
 \end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
-Fit\-Func \hyperlink{classlibcmaes_1_1ESOStrategy_a1a29d4c30bbdb6021920275e81fa4dc4}{\-\_\-func}
+Fit\+Func \hyperlink{classlibcmaes_1_1ESOStrategy_a1a29d4c30bbdb6021920275e81fa4dc4}{\+\_\+func}
 \item 
-int \hyperlink{classlibcmaes_1_1ESOStrategy_a19667f1e69856e7cfd6219b63cbaa59d}{\-\_\-nevals}
+int \hyperlink{classlibcmaes_1_1ESOStrategy_a19667f1e69856e7cfd6219b63cbaa59d}{\+\_\+nevals}
 \item 
-int \hyperlink{classlibcmaes_1_1ESOStrategy_aaf5c063558da34826ea1f976423ccfbb}{\-\_\-niter}
+int \hyperlink{classlibcmaes_1_1ESOStrategy_aaf5c063558da34826ea1f976423ccfbb}{\+\_\+niter}
 \item 
-T\-Solutions \hyperlink{classlibcmaes_1_1ESOStrategy_a8fe0f8dc2201951e9e4ed2768b5a09ab}{\-\_\-solutions}
+T\+Solutions \hyperlink{classlibcmaes_1_1ESOStrategy_a8fe0f8dc2201951e9e4ed2768b5a09ab}{\+\_\+solutions}
 \item 
-T\-Parameters \hyperlink{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}{\-\_\-parameters}
+T\+Parameters \hyperlink{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}{\+\_\+parameters}
 \item 
-Progress\-Func$<$ T\-Parameters, \\*
-T\-Solutions $>$ \hyperlink{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}{\-\_\-pfunc}
+Progress\+Func$<$ T\+Parameters, \\*
+T\+Solutions $>$ \hyperlink{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}{\+\_\+pfunc}
 \item 
-Grad\-Func \hyperlink{classlibcmaes_1_1ESOStrategy_a76926e49a2ca941a22362167bc230093}{\-\_\-gfunc} = nullptr
+Grad\+Func \hyperlink{classlibcmaes_1_1ESOStrategy_a76926e49a2ca941a22362167bc230093}{\+\_\+gfunc} = nullptr
 \item 
-Plot\-Func$<$ T\-Parameters, T\-Solutions $>$ \hyperlink{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}{\-\_\-pffunc}
+Plot\+Func$<$ T\+Parameters, T\+Solutions $>$ \hyperlink{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}{\+\_\+pffunc}
 \item 
-\hypertarget{classlibcmaes_1_1ESOStrategy_a3b59faa95ebae7336607b9b4ebd0c266}{Fit\-Func {\bfseries \-\_\-funcaux}}\label{classlibcmaes_1_1ESOStrategy_a3b59faa95ebae7336607b9b4ebd0c266}
+\hypertarget{classlibcmaes_1_1ESOStrategy_a3b59faa95ebae7336607b9b4ebd0c266}{Fit\+Func {\bfseries \+\_\+funcaux}}\label{classlibcmaes_1_1ESOStrategy_a3b59faa95ebae7336607b9b4ebd0c266}
 
 \item 
-bool \hyperlink{classlibcmaes_1_1ESOStrategy_a1ee27b35458c52501bebf5bdc42de385}{\-\_\-initial\-\_\-elitist} = false
+bool \hyperlink{classlibcmaes_1_1ESOStrategy_a1ee27b35458c52501bebf5bdc42de385}{\+\_\+initial\+\_\+elitist} = false
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-\subsubsection*{template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$class libcmaes\-::\-E\-S\-O\-Strategy$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$}
+\subsubsection*{template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$class libcmaes\+::\+E\+S\+O\+Strategy$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$}
 
-Main class describing an evolutionary optimization strategy. Every algorithm in libcmaes descends from this class, and bring its functionalities to an \hyperlink{classlibcmaes_1_1ESOptimizer}{E\-S\-Optimizer} object. 
+Main class describing an evolutionary optimization strategy. Every algorithm in libcmaes descends from this class, and bring its functionalities to an \hyperlink{classlibcmaes_1_1ESOptimizer}{E\+S\+Optimizer} object. 
 
 \subsection{Constructor \& Destructor Documentation}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a3736c9ce43cf708675229ff7b3ae4166}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!E\-S\-O\-Strategy@{E\-S\-O\-Strategy}}
-\index{E\-S\-O\-Strategy@{E\-S\-O\-Strategy}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{E\-S\-O\-Strategy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions , class T\-Stop\-Criteria $>$ {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::{\bf E\-S\-O\-Strategy} (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a3736c9ce43cf708675229ff7b3ae4166}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!E\+S\+O\+Strategy@{E\+S\+O\+Strategy}}
+\index{E\+S\+O\+Strategy@{E\+S\+O\+Strategy}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{E\+S\+O\+Strategy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions , class T\+Stop\+Criteria $>$ {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::{\bf E\+S\+O\+Strategy} (
 \begin{DoxyParamCaption}
-\item[{Fit\-Func \&}]{func, }
-\item[{T\-Parameters \&}]{parameters}
+\item[{Fit\+Func \&}]{func, }
+\item[{T\+Parameters \&}]{parameters}
 \end{DoxyParamCaption}
 )}}\label{classlibcmaes_1_1ESOStrategy_a3736c9ce43cf708675229ff7b3ae4166}
 
@@ -114,13 +120,13 @@ constructor
 {\em parameters} & optimization parameters \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1ESOStrategy_abb06d0491f0240f875f66e9a4863f467}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!E\-S\-O\-Strategy@{E\-S\-O\-Strategy}}
-\index{E\-S\-O\-Strategy@{E\-S\-O\-Strategy}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{E\-S\-O\-Strategy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria $>$ {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::{\bf E\-S\-O\-Strategy} (
+\hypertarget{classlibcmaes_1_1ESOStrategy_abb06d0491f0240f875f66e9a4863f467}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!E\+S\+O\+Strategy@{E\+S\+O\+Strategy}}
+\index{E\+S\+O\+Strategy@{E\+S\+O\+Strategy}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{E\+S\+O\+Strategy}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria $>$ {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::{\bf E\+S\+O\+Strategy} (
 \begin{DoxyParamCaption}
-\item[{Fit\-Func \&}]{func, }
-\item[{T\-Parameters \&}]{parameters, }
-\item[{const T\-Solutions \&}]{solutions}
+\item[{Fit\+Func \&}]{func, }
+\item[{T\+Parameters \&}]{parameters, }
+\item[{const T\+Solutions \&}]{solutions}
 \end{DoxyParamCaption}
 )}}\label{classlibcmaes_1_1ESOStrategy_abb06d0491f0240f875f66e9a4863f467}
 
@@ -139,9 +145,9 @@ constructor for starting from an existing solution.
 
 
 \subsection{Member Function Documentation}
-\hypertarget{classlibcmaes_1_1ESOStrategy_af614d71ca3e8353b3027723220c9e3b4}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!ask@{ask}}
-\index{ask@{ask}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{ask}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ d\-Mat {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::ask (
+\hypertarget{classlibcmaes_1_1ESOStrategy_af614d71ca3e8353b3027723220c9e3b4}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!ask@{ask}}
+\index{ask@{ask}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{ask}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ d\+Mat {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::ask (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -153,31 +159,31 @@ Generates a set of candidate points.
 \begin{DoxyReturn}{Returns}
 \hyperlink{classA}{A} matrix whose rows contain the candidate points. 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a6350c635353e7b54e78abb223a5d4029}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!edm@{edm}}
-\index{edm@{edm}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{edm}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters , class T\-Solutions , class T\-Stop\-Criteria $>$ double {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::edm (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a6350c635353e7b54e78abb223a5d4029}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!edm@{edm}}
+\index{edm@{edm}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{edm}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters , class T\+Solutions , class T\+Stop\+Criteria $>$ double {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::edm (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
 )}}\label{classlibcmaes_1_1ESOStrategy_a6350c635353e7b54e78abb223a5d4029}
 
 
-computes expected distance to minimum (E\-D\-M). 
+computes expected distance to minimum (E\+D\+M). 
 
 \begin{DoxyReturn}{Returns}
-E\-D\-M 
+E\+D\+M 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a5e2e44bd0808efa95feea7ff5ef7eb91}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!eval@{eval}}
-\index{eval@{eval}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{eval}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters , class T\-Solutions , class T\-Stop\-Criteria $>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::eval (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a5e2e44bd0808efa95feea7ff5ef7eb91}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!eval@{eval}}
+\index{eval@{eval}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{eval}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters , class T\+Solutions , class T\+Stop\+Criteria $>$ void {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::eval (
 \begin{DoxyParamCaption}
-\item[{const d\-Mat \&}]{candidates, }
-\item[{const d\-Mat \&}]{phenocandidates = {\ttfamily dMat(0,0)}}
+\item[{const d\+Mat \&}]{candidates, }
+\item[{const d\+Mat \&}]{phenocandidates = {\ttfamily dMat(0,0)}}
 \end{DoxyParamCaption}
 )}}\label{classlibcmaes_1_1ESOStrategy_a5e2e44bd0808efa95feea7ff5ef7eb91}
 
 
-Evaluates a set of candidates against the objective function. The procedure is multithreaded and stores both the candidates and their f-\/value into the \-\_\-solutions object that bears the current set of potential solutions to the optimization problem. 
+Evaluates a set of candidates against the objective function. The procedure is multithreaded and stores both the candidates and their f-\/value into the \+\_\+solutions object that bears the current set of potential solutions to the optimization problem. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -186,9 +192,9 @@ Evaluates a set of candidates against the objective function. The procedure is m
 {\em phenocandidates} & The candidates transformed into phenotype, leave empty if no pheno transform. \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a2763e44feed5c7635338fedaecb83e23}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!fitfunc@{fitfunc}}
-\index{fitfunc@{fitfunc}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{fitfunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ double {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::fitfunc (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a2763e44feed5c7635338fedaecb83e23}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!fitfunc@{fitfunc}}
+\index{fitfunc@{fitfunc}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{fitfunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ double {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::fitfunc (
 \begin{DoxyParamCaption}
 \item[{const double $\ast$}]{x, }
 \item[{const int}]{N}
@@ -208,9 +214,9 @@ execute objective function
 \begin{DoxyReturn}{Returns}
 objective function value at x 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a6941ee6debca9ce43fb56eea7206ea33}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!get\-\_\-parameters@{get\-\_\-parameters}}
-\index{get\-\_\-parameters@{get\-\_\-parameters}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{get\-\_\-parameters}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ T\-Parameters\& {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::get\-\_\-parameters (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a6941ee6debca9ce43fb56eea7206ea33}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!get\+\_\+parameters@{get\+\_\+parameters}}
+\index{get\+\_\+parameters@{get\+\_\+parameters}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{get\+\_\+parameters}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ T\+Parameters\& {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::get\+\_\+parameters (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -222,9 +228,9 @@ returns reference to current optimization parameters object
 \begin{DoxyReturn}{Returns}
 current optimization parameters object 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a0efc59c0fb25005207381cd3c45cb778}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!get\-\_\-solutions@{get\-\_\-solutions}}
-\index{get\-\_\-solutions@{get\-\_\-solutions}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{get\-\_\-solutions}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ T\-Solutions\& {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::get\-\_\-solutions (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a0efc59c0fb25005207381cd3c45cb778}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!get\+\_\+solutions@{get\+\_\+solutions}}
+\index{get\+\_\+solutions@{get\+\_\+solutions}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{get\+\_\+solutions}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ T\+Solutions\& {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::get\+\_\+solutions (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -236,11 +242,11 @@ returns reference to current solution object
 \begin{DoxyReturn}{Returns}
 current solution object 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!gradf@{gradf}}
-\index{gradf@{gradf}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{gradf}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters , class T\-Solutions , class T\-Stop\-Criteria $>$ d\-Vec {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::gradf (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!gradf@{gradf}}
+\index{gradf@{gradf}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{gradf}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters , class T\+Solutions , class T\+Stop\+Criteria $>$ d\+Vec {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::gradf (
 \begin{DoxyParamCaption}
-\item[{const d\-Vec \&}]{x}
+\item[{const d\+Vec \&}]{x}
 \end{DoxyParamCaption}
 )}}\label{classlibcmaes_1_1ESOStrategy_a43bd0b30c43445bc4ee2257963eebf47}
 
@@ -255,11 +261,11 @@ returns numerical gradient of objective function at x.
 \begin{DoxyReturn}{Returns}
 vector of numerical gradient of the objective function at x. 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!gradgp@{gradgp}}
-\index{gradgp@{gradgp}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{gradgp}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters , class T\-Solutions , class T\-Stop\-Criteria $>$ d\-Vec {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::gradgp (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!gradgp@{gradgp}}
+\index{gradgp@{gradgp}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{gradgp}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters , class T\+Solutions , class T\+Stop\+Criteria $>$ d\+Vec {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::gradgp (
 \begin{DoxyParamCaption}
-\item[{const d\-Vec \&}]{x}
+\item[{const d\+Vec \&}]{x}
 \end{DoxyParamCaption}
 ) const}}\label{classlibcmaes_1_1ESOStrategy_a8a0581ead7ca7fac1f414c92ed030317}
 
@@ -274,13 +280,13 @@ returns the numerical gradient of the objective function in phenotype space
 \begin{DoxyReturn}{Returns}
 vector of numerical gradient computed in phenotype space 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_ab56253c2d7753bf42c11b20a0b543b8d}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!optimize@{optimize}}
-\index{optimize@{optimize}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{optimize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ int {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::optimize (
+\hypertarget{classlibcmaes_1_1ESOStrategy_ab56253c2d7753bf42c11b20a0b543b8d}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!optimize@{optimize}}
+\index{optimize@{optimize}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{optimize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ int {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::optimize (
 \begin{DoxyParamCaption}
-\item[{const Eval\-Func \&}]{evalf, }
-\item[{const Ask\-Func \&}]{askf, }
-\item[{const Tell\-Func \&}]{tellf}
+\item[{const Eval\+Func \&}]{evalf, }
+\item[{const Ask\+Func \&}]{askf, }
+\item[{const Tell\+Func \&}]{tellf}
 \end{DoxyParamCaption}
 )}}\label{classlibcmaes_1_1ESOStrategy_ab56253c2d7753bf42c11b20a0b543b8d}
 
@@ -297,13 +303,13 @@ Finds the minimum of the objective function. It makes alternative calls to \hype
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-success or error code, as defined in \hyperlink{opti__err_8h_source}{opti\-\_\-err.\-h} 
+success or error code, as defined in \hyperlink{opti__err_8h_source}{opti\+\_\+err.\+h} 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_aecb8aeecb2053868a7d9237223067267}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!set\-\_\-gradient\-\_\-func@{set\-\_\-gradient\-\_\-func}}
-\index{set\-\_\-gradient\-\_\-func@{set\-\_\-gradient\-\_\-func}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{set\-\_\-gradient\-\_\-func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::set\-\_\-gradient\-\_\-func (
+\hypertarget{classlibcmaes_1_1ESOStrategy_aecb8aeecb2053868a7d9237223067267}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!set\+\_\+gradient\+\_\+func@{set\+\_\+gradient\+\_\+func}}
+\index{set\+\_\+gradient\+\_\+func@{set\+\_\+gradient\+\_\+func}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{set\+\_\+gradient\+\_\+func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ void {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::set\+\_\+gradient\+\_\+func (
 \begin{DoxyParamCaption}
-\item[{Grad\-Func \&}]{gfunc}
+\item[{Grad\+Func \&}]{gfunc}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOStrategy_aecb8aeecb2053868a7d9237223067267}
 
@@ -315,11 +321,11 @@ sets the gradient function, if available.
 {\em gfunc} & gradient function \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!set\-\_\-plot\-\_\-func@{set\-\_\-plot\-\_\-func}}
-\index{set\-\_\-plot\-\_\-func@{set\-\_\-plot\-\_\-func}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{set\-\_\-plot\-\_\-func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::set\-\_\-plot\-\_\-func (
+\hypertarget{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!set\+\_\+plot\+\_\+func@{set\+\_\+plot\+\_\+func}}
+\index{set\+\_\+plot\+\_\+func@{set\+\_\+plot\+\_\+func}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{set\+\_\+plot\+\_\+func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ void {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::set\+\_\+plot\+\_\+func (
 \begin{DoxyParamCaption}
-\item[{Plot\-Func$<$ T\-Parameters, T\-Solutions $>$ \&}]{pffunc}
+\item[{Plot\+Func$<$ T\+Parameters, T\+Solutions $>$ \&}]{pffunc}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOStrategy_ac0cdfca8b5614843661af4153e8c6b51}
 
@@ -331,11 +337,11 @@ Sets the possibly custom plot to file function, that is useful for storing into 
 {\em pffunc} & a stream to file output function \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!set\-\_\-progress\-\_\-func@{set\-\_\-progress\-\_\-func}}
-\index{set\-\_\-progress\-\_\-func@{set\-\_\-progress\-\_\-func}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{set\-\_\-progress\-\_\-func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::set\-\_\-progress\-\_\-func (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!set\+\_\+progress\+\_\+func@{set\+\_\+progress\+\_\+func}}
+\index{set\+\_\+progress\+\_\+func@{set\+\_\+progress\+\_\+func}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{set\+\_\+progress\+\_\+func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ void {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::set\+\_\+progress\+\_\+func (
 \begin{DoxyParamCaption}
-\item[{Progress\-Func$<$ T\-Parameters, T\-Solutions $>$ \&}]{pfunc}
+\item[{Progress\+Func$<$ T\+Parameters, T\+Solutions $>$ \&}]{pfunc}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOStrategy_a9d44ba79106b6afbd5881c4f33800840}
 
@@ -347,11 +353,11 @@ Sets the possibly custom progress function, that is called in between every sear
 {\em pfunc} & a progress function \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1ESOStrategy_afa0e2a388dae01ec485c3dd8d80bb5ed}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!start\-\_\-from\-\_\-solution@{start\-\_\-from\-\_\-solution}}
-\index{start\-\_\-from\-\_\-solution@{start\-\_\-from\-\_\-solution}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{start\-\_\-from\-\_\-solution}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::start\-\_\-from\-\_\-solution (
+\hypertarget{classlibcmaes_1_1ESOStrategy_afa0e2a388dae01ec485c3dd8d80bb5ed}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!start\+\_\+from\+\_\+solution@{start\+\_\+from\+\_\+solution}}
+\index{start\+\_\+from\+\_\+solution@{start\+\_\+from\+\_\+solution}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{start\+\_\+from\+\_\+solution}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ void {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::start\+\_\+from\+\_\+solution (
 \begin{DoxyParamCaption}
-\item[{const T\-Solutions \&}]{sol}
+\item[{const T\+Solutions \&}]{sol}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1ESOStrategy_afa0e2a388dae01ec485c3dd8d80bb5ed}
 
@@ -363,9 +369,9 @@ starts optimization from a given solution object.
 {\em sol} & the solution object to start search from. \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1ESOStrategy_aa99c52d17342902cc4dc9a863deb58e3}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!stop@{stop}}
-\index{stop@{stop}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{stop}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ bool {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::stop (
+\hypertarget{classlibcmaes_1_1ESOStrategy_aa99c52d17342902cc4dc9a863deb58e3}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!stop@{stop}}
+\index{stop@{stop}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{stop}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ bool {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::stop (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -377,9 +383,9 @@ Decides whether to stop the search for solutions.
 \begin{DoxyReturn}{Returns}
 true if search must stop, false otherwise. 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a9cfe783dc0284fce441c8757cd5222c3}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!update\-\_\-fevals@{update\-\_\-fevals}}
-\index{update\-\_\-fevals@{update\-\_\-fevals}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{update\-\_\-fevals}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters , class T\-Solutions , class T\-Stop\-Criteria $>$ void {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::update\-\_\-fevals (
+\hypertarget{classlibcmaes_1_1ESOStrategy_a9cfe783dc0284fce441c8757cd5222c3}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!update\+\_\+fevals@{update\+\_\+fevals}}
+\index{update\+\_\+fevals@{update\+\_\+fevals}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{update\+\_\+fevals}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters , class T\+Solutions , class T\+Stop\+Criteria $>$ void {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::update\+\_\+fevals (
 \begin{DoxyParamCaption}
 \item[{const int \&}]{evals}
 \end{DoxyParamCaption}
@@ -396,36 +402,36 @@ updates the consumed budget of objective function evaluations.
 
 
 \subsection{Member Data Documentation}
-\hypertarget{classlibcmaes_1_1ESOStrategy_a1a29d4c30bbdb6021920275e81fa4dc4}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-func@{\-\_\-func}}
-\index{\-\_\-func@{\-\_\-func}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ Fit\-Func {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-func\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a1a29d4c30bbdb6021920275e81fa4dc4}
-the objective function. \hypertarget{classlibcmaes_1_1ESOStrategy_a76926e49a2ca941a22362167bc230093}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-gfunc@{\-\_\-gfunc}}
-\index{\-\_\-gfunc@{\-\_\-gfunc}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-gfunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ Grad\-Func {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-gfunc = nullptr\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a76926e49a2ca941a22362167bc230093}
-gradient function, when available. \hypertarget{classlibcmaes_1_1ESOStrategy_a1ee27b35458c52501bebf5bdc42de385}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-initial\-\_\-elitist@{\-\_\-initial\-\_\-elitist}}
-\index{\-\_\-initial\-\_\-elitist@{\-\_\-initial\-\_\-elitist}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-initial\-\_\-elitist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ bool {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-initial\-\_\-elitist = false\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a1ee27b35458c52501bebf5bdc42de385}
-restarts from and re-\/injects best seen solution if not the final one. \hypertarget{classlibcmaes_1_1ESOStrategy_a19667f1e69856e7cfd6219b63cbaa59d}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-nevals@{\-\_\-nevals}}
-\index{\-\_\-nevals@{\-\_\-nevals}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-nevals}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ int {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-nevals\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a19667f1e69856e7cfd6219b63cbaa59d}
-number of function evaluations. \hypertarget{classlibcmaes_1_1ESOStrategy_aaf5c063558da34826ea1f976423ccfbb}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-niter@{\-\_\-niter}}
-\index{\-\_\-niter@{\-\_\-niter}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-niter}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ int {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-niter\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_aaf5c063558da34826ea1f976423ccfbb}
-number of iterations. \hypertarget{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-parameters@{\-\_\-parameters}}
-\index{\-\_\-parameters@{\-\_\-parameters}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-parameters}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ T\-Parameters {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-parameters\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}
-the optimizer's set of static parameters, from inputs or internal. \hypertarget{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-pffunc@{\-\_\-pffunc}}
-\index{\-\_\-pffunc@{\-\_\-pffunc}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-pffunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ Plot\-Func$<$T\-Parameters,T\-Solutions$>$ {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-pffunc\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}
-possibly custom stream data to file function. \hypertarget{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-pfunc@{\-\_\-pfunc}}
-\index{\-\_\-pfunc@{\-\_\-pfunc}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-pfunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ Progress\-Func$<$T\-Parameters,T\-Solutions$>$ {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-pfunc\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}
-possibly custom progress function. \hypertarget{classlibcmaes_1_1ESOStrategy_a8fe0f8dc2201951e9e4ed2768b5a09ab}{\index{libcmaes\-::\-E\-S\-O\-Strategy@{libcmaes\-::\-E\-S\-O\-Strategy}!\-\_\-solutions@{\-\_\-solutions}}
-\index{\-\_\-solutions@{\-\_\-solutions}!libcmaes::ESOStrategy@{libcmaes\-::\-E\-S\-O\-Strategy}}
-\subsubsection[{\-\_\-solutions}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Parameters, class T\-Solutions, class T\-Stop\-Criteria$>$ T\-Solutions {\bf libcmaes\-::\-E\-S\-O\-Strategy}$<$ T\-Parameters, T\-Solutions, T\-Stop\-Criteria $>$\-::\-\_\-solutions\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a8fe0f8dc2201951e9e4ed2768b5a09ab}
+\hypertarget{classlibcmaes_1_1ESOStrategy_a1a29d4c30bbdb6021920275e81fa4dc4}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+func@{\+\_\+func}}
+\index{\+\_\+func@{\+\_\+func}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+func}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ Fit\+Func {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+func\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a1a29d4c30bbdb6021920275e81fa4dc4}
+the objective function. \hypertarget{classlibcmaes_1_1ESOStrategy_a76926e49a2ca941a22362167bc230093}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+gfunc@{\+\_\+gfunc}}
+\index{\+\_\+gfunc@{\+\_\+gfunc}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+gfunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ Grad\+Func {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+gfunc = nullptr\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a76926e49a2ca941a22362167bc230093}
+gradient function, when available. \hypertarget{classlibcmaes_1_1ESOStrategy_a1ee27b35458c52501bebf5bdc42de385}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+initial\+\_\+elitist@{\+\_\+initial\+\_\+elitist}}
+\index{\+\_\+initial\+\_\+elitist@{\+\_\+initial\+\_\+elitist}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+initial\+\_\+elitist}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ bool {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+initial\+\_\+elitist = false\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a1ee27b35458c52501bebf5bdc42de385}
+restarts from and re-\/injects best seen solution if not the final one. \hypertarget{classlibcmaes_1_1ESOStrategy_a19667f1e69856e7cfd6219b63cbaa59d}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+nevals@{\+\_\+nevals}}
+\index{\+\_\+nevals@{\+\_\+nevals}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+nevals}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ int {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+nevals\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a19667f1e69856e7cfd6219b63cbaa59d}
+number of function evaluations. \hypertarget{classlibcmaes_1_1ESOStrategy_aaf5c063558da34826ea1f976423ccfbb}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+niter@{\+\_\+niter}}
+\index{\+\_\+niter@{\+\_\+niter}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+niter}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ int {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+niter\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_aaf5c063558da34826ea1f976423ccfbb}
+number of iterations. \hypertarget{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+parameters@{\+\_\+parameters}}
+\index{\+\_\+parameters@{\+\_\+parameters}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+parameters}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ T\+Parameters {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+parameters\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a295e49238ceef8f11b3fb35296a8364a}
+the optimizer's set of static parameters, from inputs or internal. \hypertarget{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+pffunc@{\+\_\+pffunc}}
+\index{\+\_\+pffunc@{\+\_\+pffunc}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+pffunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ Plot\+Func$<$T\+Parameters,T\+Solutions$>$ {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+pffunc\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_af2c9909de76f98e4b9c207bda577255d}
+possibly custom stream data to file function. \hypertarget{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+pfunc@{\+\_\+pfunc}}
+\index{\+\_\+pfunc@{\+\_\+pfunc}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+pfunc}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ Progress\+Func$<$T\+Parameters,T\+Solutions$>$ {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+pfunc\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a25d597189596f434a2530887fddea189}
+possibly custom progress function. \hypertarget{classlibcmaes_1_1ESOStrategy_a8fe0f8dc2201951e9e4ed2768b5a09ab}{\index{libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}!\+\_\+solutions@{\+\_\+solutions}}
+\index{\+\_\+solutions@{\+\_\+solutions}!libcmaes\+::\+E\+S\+O\+Strategy@{libcmaes\+::\+E\+S\+O\+Strategy}}
+\subsubsection[{\+\_\+solutions}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Parameters, class T\+Solutions, class T\+Stop\+Criteria$>$ T\+Solutions {\bf libcmaes\+::\+E\+S\+O\+Strategy}$<$ T\+Parameters, T\+Solutions, T\+Stop\+Criteria $>$\+::\+\_\+solutions\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1ESOStrategy_a8fe0f8dc2201951e9e4ed2768b5a09ab}
 holder of the current set of solutions and the dynamic elemenst of the search state in general. 
 
-The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-src/esostrategy.\-h\item 
-src/esostrategy.\-cc\end{DoxyCompactItemize}
+src/esostrategy.\+h\item 
+src/esostrategy.\+cc\end{DoxyCompactItemize}

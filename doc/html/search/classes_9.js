@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['opthopstrategy',['OptHopStrategy',['../classlibcmaes_1_1OptHopStrategy.html',1,'libcmaes']]]
+  ['lastevalstruct',['lastEvalStruct',['../structlastEvalStruct.html',1,'']]],
+  ['legacycmaoutput',['LegacyCMAOutput',['../classLegacyCMAOutput.html',1,'']]],
+  ['linscalingstrategy',['linScalingStrategy',['../classlibcmaes_1_1linScalingStrategy.html',1,'libcmaes']]]
 ];

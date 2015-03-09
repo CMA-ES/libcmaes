@@ -4,24 +4,24 @@
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-class \hyperlink{classEigen_1_1EigenMultivariateNormal}{Eigen\-Multivariate\-Normal}
+class \hyperlink{classEigen_1_1EigenMultivariateNormal}{Eigen\+Multivariate\+Normal}
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 Multivariate Normal distribution sampling using C++11 and \hyperlink{namespaceEigen}{Eigen} matrices.
 
-This is taken from \href{http://stackoverflow.com/questions/16361226/error-while-creating-object-from-templated-class}{\tt http\-://stackoverflow.\-com/questions/16361226/error-\/while-\/creating-\/object-\/from-\/templated-\/class} (also see \href{http://lost-found-wandering.blogspot.fr/2011/05/sampling-from-multivariate-normal-in-c.html}{\tt http\-://lost-\/found-\/wandering.\-blogspot.\-fr/2011/05/sampling-\/from-\/multivariate-\/normal-\/in-\/c.\-html})
+This is taken from \href{http://stackoverflow.com/questions/16361226/error-while-creating-object-from-templated-class}{\tt http\+://stackoverflow.\+com/questions/16361226/error-\/while-\/creating-\/object-\/from-\/templated-\/class} (also see \href{http://lost-found-wandering.blogspot.fr/2011/05/sampling-from-multivariate-normal-in-c.html}{\tt http\+://lost-\/found-\/wandering.\+blogspot.\+fr/2011/05/sampling-\/from-\/multivariate-\/normal-\/in-\/c.\+html})
 
-I have been unable to contact the original author, and I've performed the following modifications to the original code\-:
+I have been unable to contact the original author, and I've performed the following modifications to the original code\+:
 \begin{DoxyItemize}
 \item removal of the dependency to Boost, in favor of straight C++11;
 \item ability to choose from Solver or Cholesky decomposition (supposedly faster);
-\item fixed Cholesky by using L\-L\-T decomposition instead of L\-D\-L\-T that was not yielding a correctly rotated variance (see this \href{http://stats.stackexchange.com/questions/48749/how-to-sample-from-a-multivariate-normal-given-the-pt-ldlt-p-decomposition-o}{\tt http\-://stats.\-stackexchange.\-com/questions/48749/how-\/to-\/sample-\/from-\/a-\/multivariate-\/normal-\/given-\/the-\/pt-\/ldlt-\/p-\/decomposition-\/o} ) Copyright (c) 2014 by Emmanuel Benazera \href{mailto:beniz@droidnik.fr}{\tt beniz@droidnik.\-fr}, All rights reserved.
+\item fixed Cholesky by using L\+L\+T decomposition instead of L\+D\+L\+T that was not yielding a correctly rotated variance (see this \href{http://stats.stackexchange.com/questions/48749/how-to-sample-from-a-multivariate-normal-given-the-pt-ldlt-p-decomposition-o}{\tt http\+://stats.\+stackexchange.\+com/questions/48749/how-\/to-\/sample-\/from-\/a-\/multivariate-\/normal-\/given-\/the-\/pt-\/ldlt-\/p-\/decomposition-\/o} ) Copyright (c) 2014 by Emmanuel Benazera \href{mailto:beniz@droidnik.fr}{\tt beniz@droidnik.\+fr}, All rights reserved.
 \end{DoxyItemize}
 
-This library is free software; you can redistribute it and/or modify it under the terms of the G\-N\-U Lesser General Public License as published by the Free Software Foundation; either version 3.\-0 of the License, or (at your option) any later version.
+This library is free software; you can redistribute it and/or modify it under the terms of the G\+N\+U Lesser General Public License as published by the Free Software Foundation; either version 3.\+0 of the License, or (at your option) any later version.
 
-This library is distributed in the hope that it will be useful, but W\-I\-T\-H\-O\-U\-T A\-N\-Y W\-A\-R\-R\-A\-N\-T\-Y; without even the implied warranty of M\-E\-R\-C\-H\-A\-N\-T\-A\-B\-I\-L\-I\-T\-Y or F\-I\-T\-N\-E\-S\-S F\-O\-R \hyperlink{classA}{A} P\-A\-R\-T\-I\-C\-U\-L\-A\-R P\-U\-R\-P\-O\-S\-E. See the G\-N\-U Lesser General Public License for more details.
+This library is distributed in the hope that it will be useful, but W\+I\+T\+H\+O\+U\+T A\+N\+Y W\+A\+R\+R\+A\+N\+T\+Y; without even the implied warranty of M\+E\+R\+C\+H\+A\+N\+T\+A\+B\+I\+L\+I\+T\+Y or F\+I\+T\+N\+E\+S\+S F\+O\+R \hyperlink{classA}{A} P\+A\+R\+T\+I\+C\+U\+L\+A\+R P\+U\+R\+P\+O\+S\+E. See the G\+N\+U Lesser General Public License for more details.
 
-You should have received a copy of the G\-N\-U Lesser General Public License along with this library. 
+You should have received a copy of the G\+N\+U Lesser General Public License along with this library. 

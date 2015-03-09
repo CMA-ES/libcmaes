@@ -1,5 +1,5 @@
-\hypertarget{classlibcmaes_1_1Candidate}{\section{libcmaes\-:\-:Candidate Class Reference}
-\label{classlibcmaes_1_1Candidate}\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}}
+\hypertarget{classlibcmaes_1_1Candidate}{\section{libcmaes\+:\+:Candidate Class Reference}
+\label{classlibcmaes_1_1Candidate}\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
 }
 
 
@@ -8,46 +8,71 @@ candidate solution point, in function parameter space.
 
 
 
-{\ttfamily \#include $<$candidate.\-h$>$}
+{\ttfamily \#include $<$candidate.\+h$>$}
 
+Inheritance diagram for libcmaes\+:\+:Candidate\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classlibcmaes_1_1Candidate}
+\end{center}
+\end{figure}
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hypertarget{classlibcmaes_1_1Candidate_a40fca2abb2e1bcec470a79fa5ae6525f}{\hyperlink{classlibcmaes_1_1Candidate_a40fca2abb2e1bcec470a79fa5ae6525f}{Candidate} ()}\label{classlibcmaes_1_1Candidate_a40fca2abb2e1bcec470a79fa5ae6525f}
 
 \begin{DoxyCompactList}\small\item\em empty constructor. \end{DoxyCompactList}\item 
-\hyperlink{classlibcmaes_1_1Candidate_aa15c585a460bcc7e0537b8f8defea205}{Candidate} (const double \&fvalue, const d\-Vec \&x)
+\hyperlink{classlibcmaes_1_1Candidate_aa15c585a460bcc7e0537b8f8defea205}{Candidate} (const double \&fvalue, const d\+Vec \&x)
 \begin{DoxyCompactList}\small\item\em constructor. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1Candidate_abdd1a7661c05f4cf236925bcf2b7f0cc}{set\-\_\-fvalue} (const double \&fval)
+void \hyperlink{classlibcmaes_1_1Candidate_abdd1a7661c05f4cf236925bcf2b7f0cc}{set\+\_\+fvalue} (const double \&fval)
 \begin{DoxyCompactList}\small\item\em set candidate's function value. \end{DoxyCompactList}\item 
-double \hyperlink{classlibcmaes_1_1Candidate_aeca2ab3de5182036093745ec7f82834d}{get\-\_\-fvalue} () const 
+double \hyperlink{classlibcmaes_1_1Candidate_aeca2ab3de5182036093745ec7f82834d}{get\+\_\+fvalue} () const 
 \begin{DoxyCompactList}\small\item\em get function value of this candidate. \end{DoxyCompactList}\item 
-void \hyperlink{classlibcmaes_1_1Candidate_a4a668920522fa13235fd7feb64aae6b8}{set\-\_\-x} (const d\-Vec \&x)
+void \hyperlink{classlibcmaes_1_1Candidate_a4a668920522fa13235fd7feb64aae6b8}{set\+\_\+x} (const d\+Vec \&x)
 \begin{DoxyCompactList}\small\item\em sets parameter vector of this candidate. \end{DoxyCompactList}\item 
-d\-Vec \hyperlink{classlibcmaes_1_1Candidate_a6155af392159bfc4d10722a7a0abf420}{get\-\_\-x\-\_\-dvec} () const 
+d\+Vec \hyperlink{classlibcmaes_1_1Candidate_a6155af392159bfc4d10722a7a0abf420}{get\+\_\+x\+\_\+dvec} () const 
 \begin{DoxyCompactList}\small\item\em get parameter vector of this candidate in \hyperlink{namespaceEigen}{Eigen} vector format. \end{DoxyCompactList}\item 
-d\-Vec \& \hyperlink{classlibcmaes_1_1Candidate_a2d007a084655a3d0f3176293f929bfdb}{get\-\_\-x\-\_\-dvec\-\_\-ref} ()
+d\+Vec \& \hyperlink{classlibcmaes_1_1Candidate_a2d007a084655a3d0f3176293f929bfdb}{get\+\_\+x\+\_\+dvec\+\_\+ref} ()
 \begin{DoxyCompactList}\small\item\em get reference parameter vector of this candidate in \hyperlink{namespaceEigen}{Eigen} vector format. \end{DoxyCompactList}\item 
-const double $\ast$ \hyperlink{classlibcmaes_1_1Candidate_ace56d764d7d88d5f11f96e9ee6cb775d}{get\-\_\-x\-\_\-ptr} () const 
-\begin{DoxyCompactList}\small\item\em get parameter vector pointer of this candidate as array. D\-O N\-O\-T U\-S\-E from temporary candidate object. \end{DoxyCompactList}\item 
-std\-::vector$<$ double $>$ \hyperlink{classlibcmaes_1_1Candidate_af6374f304455c3245913d03cfac221b7}{get\-\_\-x} () const 
+const double $\ast$ \hyperlink{classlibcmaes_1_1Candidate_ace56d764d7d88d5f11f96e9ee6cb775d}{get\+\_\+x\+\_\+ptr} () const 
+\begin{DoxyCompactList}\small\item\em get parameter vector pointer of this candidate as array. D\+O N\+O\+T U\+S\+E from temporary candidate object. \end{DoxyCompactList}\item 
+std\+::vector$<$ double $>$ \hyperlink{classlibcmaes_1_1Candidate_af6374f304455c3245913d03cfac221b7}{get\+\_\+x} () const 
 \begin{DoxyCompactList}\small\item\em get parameter vector copy for this candidate. \end{DoxyCompactList}\item 
-unsigned int \hyperlink{classlibcmaes_1_1Candidate_acafc0cd2e517e0edea82b3af7dea885f}{get\-\_\-x\-\_\-size} () const 
+unsigned int \hyperlink{classlibcmaes_1_1Candidate_acafc0cd2e517e0edea82b3af7dea885f}{get\+\_\+x\+\_\+size} () const 
 \begin{DoxyCompactList}\small\item\em get x vector size \end{DoxyCompactList}\item 
-{\footnotesize template$<$class T\-Geno\-Pheno $>$ }\\d\-Vec \hyperlink{classlibcmaes_1_1Candidate_a99fac12003c21735f384322743c4dbf1}{get\-\_\-x\-\_\-pheno\-\_\-dvec} (const \hyperlink{classlibcmaes_1_1CMAParameters}{C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&p) const 
-\begin{DoxyCompactList}\small\item\em get pheno transform of parameter vector of this candidate in \hyperlink{namespaceEigen}{Eigen} vector format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+{\footnotesize template$<$class T\+Geno\+Pheno $>$ }\\d\+Vec \hyperlink{classlibcmaes_1_1Candidate_a99fac12003c21735f384322743c4dbf1}{get\+\_\+x\+\_\+pheno\+\_\+dvec} (const \hyperlink{classlibcmaes_1_1CMAParameters}{C\+M\+A\+Parameters}$<$ T\+Geno\+Pheno $>$ \&p) const 
+\begin{DoxyCompactList}\small\item\em get pheno transform of parameter vector of this candidate in \hyperlink{namespaceEigen}{Eigen} vector format. \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1Candidate_aa0c3ad54c914f6bff4917e5cf65d20aa}{set\+\_\+id} (const int \&id)
+\begin{DoxyCompactList}\small\item\em set candidate id \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1Candidate_a19771115fe14459f23cb445dc5e93fcb}{get\+\_\+id} () const 
+\begin{DoxyCompactList}\small\item\em get candidate id \end{DoxyCompactList}\item 
+void \hyperlink{classlibcmaes_1_1Candidate_a945db7b42af583473c6debae5b0d0562}{set\+\_\+rank} (const int \&r)
+\begin{DoxyCompactList}\small\item\em set candidate rank \end{DoxyCompactList}\item 
+int \hyperlink{classlibcmaes_1_1Candidate_ad23e0d3f374b16cccff1d74b8136e9b6}{get\+\_\+rank} () const 
+\begin{DoxyCompactList}\small\item\em get candidate rank \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{classlibcmaes_1_1Candidate_af8797627514ae7e137317337372fb67d}{\+\_\+fvalue}
+\item 
+d\+Vec \hyperlink{classlibcmaes_1_1Candidate_a0cded1d38ec7288e8064414c78023fe4}{\+\_\+x}
+\item 
+int \hyperlink{classlibcmaes_1_1Candidate_a9737d4522cdf968ea575d8e989bfe4ac}{\+\_\+id} = -\/1
+\item 
+int \hyperlink{classlibcmaes_1_1Candidate_a776ee8e4864d5e5322f1593dc4242619}{\+\_\+r} = -\/1
+\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 candidate solution point, in function parameter space. 
 
 \subsection{Constructor \& Destructor Documentation}
-\hypertarget{classlibcmaes_1_1Candidate_aa15c585a460bcc7e0537b8f8defea205}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!Candidate@{Candidate}}
-\index{Candidate@{Candidate}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{Candidate}]{\setlength{\rightskip}{0pt plus 5cm}libcmaes\-::\-Candidate\-::\-Candidate (
+\hypertarget{classlibcmaes_1_1Candidate_aa15c585a460bcc7e0537b8f8defea205}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!Candidate@{Candidate}}
+\index{Candidate@{Candidate}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{Candidate}]{\setlength{\rightskip}{0pt plus 5cm}libcmaes\+::\+Candidate\+::\+Candidate (
 \begin{DoxyParamCaption}
 \item[{const double \&}]{fvalue, }
-\item[{const d\-Vec \&}]{x}
+\item[{const d\+Vec \&}]{x}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_aa15c585a460bcc7e0537b8f8defea205}
 
@@ -64,9 +89,9 @@ constructor.
 
 
 \subsection{Member Function Documentation}
-\hypertarget{classlibcmaes_1_1Candidate_aeca2ab3de5182036093745ec7f82834d}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!get\-\_\-fvalue@{get\-\_\-fvalue}}
-\index{get\-\_\-fvalue@{get\-\_\-fvalue}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{get\-\_\-fvalue}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\-::\-Candidate\-::get\-\_\-fvalue (
+\hypertarget{classlibcmaes_1_1Candidate_aeca2ab3de5182036093745ec7f82834d}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+fvalue@{get\+\_\+fvalue}}
+\index{get\+\_\+fvalue@{get\+\_\+fvalue}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+fvalue}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\+::\+Candidate\+::get\+\_\+fvalue (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -78,9 +103,37 @@ get function value of this candidate.
 \begin{DoxyReturn}{Returns}
 function value 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Candidate_af6374f304455c3245913d03cfac221b7}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!get\-\_\-x@{get\-\_\-x}}
-\index{get\-\_\-x@{get\-\_\-x}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{get\-\_\-x}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$double$>$ libcmaes\-::\-Candidate\-::get\-\_\-x (
+\hypertarget{classlibcmaes_1_1Candidate_a19771115fe14459f23cb445dc5e93fcb}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+id@{get\+\_\+id}}
+\index{get\+\_\+id@{get\+\_\+id}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\+::\+Candidate\+::get\+\_\+id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_a19771115fe14459f23cb445dc5e93fcb}
+
+
+get candidate id 
+
+\begin{DoxyReturn}{Returns}
+candidate id 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1Candidate_ad23e0d3f374b16cccff1d74b8136e9b6}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+rank@{get\+\_\+rank}}
+\index{get\+\_\+rank@{get\+\_\+rank}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+rank}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\+::\+Candidate\+::get\+\_\+rank (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_ad23e0d3f374b16cccff1d74b8136e9b6}
+
+
+get candidate rank 
+
+\begin{DoxyReturn}{Returns}
+candidate rank 
+\end{DoxyReturn}
+\hypertarget{classlibcmaes_1_1Candidate_af6374f304455c3245913d03cfac221b7}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+x@{get\+\_\+x}}
+\index{get\+\_\+x@{get\+\_\+x}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+x}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$double$>$ libcmaes\+::\+Candidate\+::get\+\_\+x (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -92,9 +145,9 @@ get parameter vector copy for this candidate.
 \begin{DoxyReturn}{Returns}
 parameter vector copy 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Candidate_a6155af392159bfc4d10722a7a0abf420}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!get\-\_\-x\-\_\-dvec@{get\-\_\-x\-\_\-dvec}}
-\index{get\-\_\-x\-\_\-dvec@{get\-\_\-x\-\_\-dvec}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{get\-\_\-x\-\_\-dvec}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec libcmaes\-::\-Candidate\-::get\-\_\-x\-\_\-dvec (
+\hypertarget{classlibcmaes_1_1Candidate_a6155af392159bfc4d10722a7a0abf420}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+x\+\_\+dvec@{get\+\_\+x\+\_\+dvec}}
+\index{get\+\_\+x\+\_\+dvec@{get\+\_\+x\+\_\+dvec}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+x\+\_\+dvec}]{\setlength{\rightskip}{0pt plus 5cm}d\+Vec libcmaes\+::\+Candidate\+::get\+\_\+x\+\_\+dvec (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -106,9 +159,9 @@ get parameter vector of this candidate in \hyperlink{namespaceEigen}{Eigen} vect
 \begin{DoxyReturn}{Returns}
 parameter vector in \hyperlink{namespaceEigen}{Eigen} vector format 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Candidate_a2d007a084655a3d0f3176293f929bfdb}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!get\-\_\-x\-\_\-dvec\-\_\-ref@{get\-\_\-x\-\_\-dvec\-\_\-ref}}
-\index{get\-\_\-x\-\_\-dvec\-\_\-ref@{get\-\_\-x\-\_\-dvec\-\_\-ref}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{get\-\_\-x\-\_\-dvec\-\_\-ref}]{\setlength{\rightskip}{0pt plus 5cm}d\-Vec\& libcmaes\-::\-Candidate\-::get\-\_\-x\-\_\-dvec\-\_\-ref (
+\hypertarget{classlibcmaes_1_1Candidate_a2d007a084655a3d0f3176293f929bfdb}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+x\+\_\+dvec\+\_\+ref@{get\+\_\+x\+\_\+dvec\+\_\+ref}}
+\index{get\+\_\+x\+\_\+dvec\+\_\+ref@{get\+\_\+x\+\_\+dvec\+\_\+ref}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+x\+\_\+dvec\+\_\+ref}]{\setlength{\rightskip}{0pt plus 5cm}d\+Vec\& libcmaes\+::\+Candidate\+::get\+\_\+x\+\_\+dvec\+\_\+ref (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -120,11 +173,11 @@ get reference parameter vector of this candidate in \hyperlink{namespaceEigen}{E
 \begin{DoxyReturn}{Returns}
 reference to parameter vector in \hyperlink{namespaceEigen}{Eigen} vector format 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Candidate_a99fac12003c21735f384322743c4dbf1}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!get\-\_\-x\-\_\-pheno\-\_\-dvec@{get\-\_\-x\-\_\-pheno\-\_\-dvec}}
-\index{get\-\_\-x\-\_\-pheno\-\_\-dvec@{get\-\_\-x\-\_\-pheno\-\_\-dvec}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{get\-\_\-x\-\_\-pheno\-\_\-dvec}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\-Geno\-Pheno $>$ d\-Vec libcmaes\-::\-Candidate\-::get\-\_\-x\-\_\-pheno\-\_\-dvec (
+\hypertarget{classlibcmaes_1_1Candidate_a99fac12003c21735f384322743c4dbf1}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+x\+\_\+pheno\+\_\+dvec@{get\+\_\+x\+\_\+pheno\+\_\+dvec}}
+\index{get\+\_\+x\+\_\+pheno\+\_\+dvec@{get\+\_\+x\+\_\+pheno\+\_\+dvec}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+x\+\_\+pheno\+\_\+dvec}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T\+Geno\+Pheno $>$ d\+Vec libcmaes\+::\+Candidate\+::get\+\_\+x\+\_\+pheno\+\_\+dvec (
 \begin{DoxyParamCaption}
-\item[{const {\bf C\-M\-A\-Parameters}$<$ T\-Geno\-Pheno $>$ \&}]{p}
+\item[{const {\bf C\+M\+A\+Parameters}$<$ T\+Geno\+Pheno $>$ \&}]{p}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_a99fac12003c21735f384322743c4dbf1}
 
@@ -134,23 +187,23 @@ get pheno transform of parameter vector of this candidate in \hyperlink{namespac
 \begin{DoxyReturn}{Returns}
 pheno transform of parameter vector in \hyperlink{namespaceEigen}{Eigen} vector format 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Candidate_ace56d764d7d88d5f11f96e9ee6cb775d}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!get\-\_\-x\-\_\-ptr@{get\-\_\-x\-\_\-ptr}}
-\index{get\-\_\-x\-\_\-ptr@{get\-\_\-x\-\_\-ptr}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{get\-\_\-x\-\_\-ptr}]{\setlength{\rightskip}{0pt plus 5cm}const double$\ast$ libcmaes\-::\-Candidate\-::get\-\_\-x\-\_\-ptr (
+\hypertarget{classlibcmaes_1_1Candidate_ace56d764d7d88d5f11f96e9ee6cb775d}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+x\+\_\+ptr@{get\+\_\+x\+\_\+ptr}}
+\index{get\+\_\+x\+\_\+ptr@{get\+\_\+x\+\_\+ptr}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+x\+\_\+ptr}]{\setlength{\rightskip}{0pt plus 5cm}const double$\ast$ libcmaes\+::\+Candidate\+::get\+\_\+x\+\_\+ptr (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
 ) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_ace56d764d7d88d5f11f96e9ee6cb775d}
 
 
-get parameter vector pointer of this candidate as array. D\-O N\-O\-T U\-S\-E from temporary candidate object. 
+get parameter vector pointer of this candidate as array. D\+O N\+O\+T U\+S\+E from temporary candidate object. 
 
 \begin{DoxyReturn}{Returns}
 parameter vector pointer 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Candidate_acafc0cd2e517e0edea82b3af7dea885f}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!get\-\_\-x\-\_\-size@{get\-\_\-x\-\_\-size}}
-\index{get\-\_\-x\-\_\-size@{get\-\_\-x\-\_\-size}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{get\-\_\-x\-\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int libcmaes\-::\-Candidate\-::get\-\_\-x\-\_\-size (
+\hypertarget{classlibcmaes_1_1Candidate_acafc0cd2e517e0edea82b3af7dea885f}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!get\+\_\+x\+\_\+size@{get\+\_\+x\+\_\+size}}
+\index{get\+\_\+x\+\_\+size@{get\+\_\+x\+\_\+size}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{get\+\_\+x\+\_\+size}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int libcmaes\+::\+Candidate\+::get\+\_\+x\+\_\+size (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
@@ -162,9 +215,9 @@ get x vector size
 \begin{DoxyReturn}{Returns}
 x vector size 
 \end{DoxyReturn}
-\hypertarget{classlibcmaes_1_1Candidate_abdd1a7661c05f4cf236925bcf2b7f0cc}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!set\-\_\-fvalue@{set\-\_\-fvalue}}
-\index{set\-\_\-fvalue@{set\-\_\-fvalue}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{set\-\_\-fvalue}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\-::\-Candidate\-::set\-\_\-fvalue (
+\hypertarget{classlibcmaes_1_1Candidate_abdd1a7661c05f4cf236925bcf2b7f0cc}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!set\+\_\+fvalue@{set\+\_\+fvalue}}
+\index{set\+\_\+fvalue@{set\+\_\+fvalue}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{set\+\_\+fvalue}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\+::\+Candidate\+::set\+\_\+fvalue (
 \begin{DoxyParamCaption}
 \item[{const double \&}]{fval}
 \end{DoxyParamCaption}
@@ -178,11 +231,43 @@ set candidate's function value.
 {\em fval} & function value \\
 \hline
 \end{DoxyParams}
-\hypertarget{classlibcmaes_1_1Candidate_a4a668920522fa13235fd7feb64aae6b8}{\index{libcmaes\-::\-Candidate@{libcmaes\-::\-Candidate}!set\-\_\-x@{set\-\_\-x}}
-\index{set\-\_\-x@{set\-\_\-x}!libcmaes::Candidate@{libcmaes\-::\-Candidate}}
-\subsubsection[{set\-\_\-x}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\-::\-Candidate\-::set\-\_\-x (
+\hypertarget{classlibcmaes_1_1Candidate_aa0c3ad54c914f6bff4917e5cf65d20aa}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!set\+\_\+id@{set\+\_\+id}}
+\index{set\+\_\+id@{set\+\_\+id}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{set\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\+::\+Candidate\+::set\+\_\+id (
 \begin{DoxyParamCaption}
-\item[{const d\-Vec \&}]{x}
+\item[{const int \&}]{id}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_aa0c3ad54c914f6bff4917e5cf65d20aa}
+
+
+set candidate id 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & candidate id \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1Candidate_a945db7b42af583473c6debae5b0d0562}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!set\+\_\+rank@{set\+\_\+rank}}
+\index{set\+\_\+rank@{set\+\_\+rank}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{set\+\_\+rank}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\+::\+Candidate\+::set\+\_\+rank (
+\begin{DoxyParamCaption}
+\item[{const int \&}]{r}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_a945db7b42af583473c6debae5b0d0562}
+
+
+set candidate rank 
+
+
+\begin{DoxyParams}{Parameters}
+{\em r} & candidate rank \\
+\hline
+\end{DoxyParams}
+\hypertarget{classlibcmaes_1_1Candidate_a4a668920522fa13235fd7feb64aae6b8}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!set\+\_\+x@{set\+\_\+x}}
+\index{set\+\_\+x@{set\+\_\+x}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{set\+\_\+x}]{\setlength{\rightskip}{0pt plus 5cm}void libcmaes\+::\+Candidate\+::set\+\_\+x (
+\begin{DoxyParamCaption}
+\item[{const d\+Vec \&}]{x}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [inline]}}}\label{classlibcmaes_1_1Candidate_a4a668920522fa13235fd7feb64aae6b8}
 
@@ -196,6 +281,21 @@ sets parameter vector of this candidate.
 \end{DoxyParams}
 
 
-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\subsection{Member Data Documentation}
+\hypertarget{classlibcmaes_1_1Candidate_af8797627514ae7e137317337372fb67d}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!\+\_\+fvalue@{\+\_\+fvalue}}
+\index{\+\_\+fvalue@{\+\_\+fvalue}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{\+\_\+fvalue}]{\setlength{\rightskip}{0pt plus 5cm}double libcmaes\+::\+Candidate\+::\+\_\+fvalue\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1Candidate_af8797627514ae7e137317337372fb67d}
+function value. \hypertarget{classlibcmaes_1_1Candidate_a9737d4522cdf968ea575d8e989bfe4ac}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!\+\_\+id@{\+\_\+id}}
+\index{\+\_\+id@{\+\_\+id}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\+::\+Candidate\+::\+\_\+id = -\/1\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1Candidate_a9737d4522cdf968ea575d8e989bfe4ac}
+candidate id, used for identification after ranking, when needed. \hypertarget{classlibcmaes_1_1Candidate_a776ee8e4864d5e5322f1593dc4242619}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!\+\_\+r@{\+\_\+r}}
+\index{\+\_\+r@{\+\_\+r}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{\+\_\+r}]{\setlength{\rightskip}{0pt plus 5cm}int libcmaes\+::\+Candidate\+::\+\_\+r = -\/1\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1Candidate_a776ee8e4864d5e5322f1593dc4242619}
+candidate rank. \hypertarget{classlibcmaes_1_1Candidate_a0cded1d38ec7288e8064414c78023fe4}{\index{libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}!\+\_\+x@{\+\_\+x}}
+\index{\+\_\+x@{\+\_\+x}!libcmaes\+::\+Candidate@{libcmaes\+::\+Candidate}}
+\subsubsection[{\+\_\+x}]{\setlength{\rightskip}{0pt plus 5cm}d\+Vec libcmaes\+::\+Candidate\+::\+\_\+x\hspace{0.3cm}{\ttfamily [protected]}}}\label{classlibcmaes_1_1Candidate_a0cded1d38ec7288e8064414c78023fe4}
+function parameter vector. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-src/candidate.\-h\end{DoxyCompactItemize}
+src/candidate.\+h\end{DoxyCompactItemize}

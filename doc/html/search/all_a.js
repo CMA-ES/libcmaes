@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['max_5feigenv',['max_eigenv',['../classlibcmaes_1_1CMASolutions.html#a600c62ab2769f9eab18951c49846e003',1,'libcmaes::CMASolutions']]],
-  ['min_5feigenv',['min_eigenv',['../classlibcmaes_1_1CMASolutions.html#af0b9acecd0f092ce781d4bb1119f5844',1,'libcmaes::CMASolutions']]]
+  ['lambda',['lambda',['../classlibcmaes_1_1Parameters.html#a3d569987e9a5eb61bc781ee75b2ab18a',1,'libcmaes::Parameters']]],
+  ['lastevalstruct',['lastEvalStruct',['../structlastEvalStruct.html',1,'']]],
+  ['legacycmaoutput',['LegacyCMAOutput',['../classLegacyCMAOutput.html',1,'']]],
+  ['libcmaes',['libcmaes',['../namespacelibcmaes.html',1,'']]],
+  ['linscalingstrategy',['linScalingStrategy',['../classlibcmaes_1_1linScalingStrategy.html',1,'libcmaes']]]
 ];

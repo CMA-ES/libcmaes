@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['fcross',['fcross',['../classlibcmaes_1_1fcross.html',1,'libcmaes']]],
-  ['functor_5ftraits_3c_20scalar_5fnormal_5fdist_5fop_3c_20scalar_20_3e_20_3e',['functor_traits&lt; scalar_normal_dist_op&lt; Scalar &gt; &gt;',['../structEigen_1_1internal_1_1functor__traits_3_01scalar__normal__dist__op_3_01Scalar_01_4_01_4.html',1,'Eigen::internal']]]
+  ['eigenmultivariatenormal',['EigenMultivariateNormal',['../classEigen_1_1EigenMultivariateNormal.html',1,'Eigen']]],
+  ['eigenmultivariatenormal_3c_20double_20_3e',['EigenMultivariateNormal&lt; double &gt;',['../classEigen_1_1EigenMultivariateNormal.html',1,'Eigen']]],
+  ['errstats',['errstats',['../classlibcmaes_1_1errstats.html',1,'libcmaes']]],
+  ['esoptimizer',['ESOptimizer',['../classlibcmaes_1_1ESOptimizer.html',1,'libcmaes']]],
+  ['esostrategy',['ESOStrategy',['../classlibcmaes_1_1ESOStrategy.html',1,'libcmaes']]],
+  ['esostrategy_3c_20cmaparameters_3c_20tgenopheno_20_3e_2c_20cmasolutions_2c_20cmastopcriteria_3c_20tgenopheno_20_3e_20_3e',['ESOStrategy&lt; CMAParameters&lt; TGenoPheno &gt;, CMASolutions, CMAStopCriteria&lt; TGenoPheno &gt; &gt;',['../classlibcmaes_1_1ESOStrategy.html',1,'libcmaes']]]
 ];

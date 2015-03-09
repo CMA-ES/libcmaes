@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['nevals',['nevals',['../classlibcmaes_1_1CMASolutions.html#a225f3f00557469d3cf7567d0dd301fc0',1,'libcmaes::CMASolutions']]],
-  ['niter',['niter',['../classlibcmaes_1_1CMASolutions.html#aceb58df5ee91f159e626b51ee788c381',1,'libcmaes::CMASolutions']]],
-  ['noboundstrategy',['NoBoundStrategy',['../classlibcmaes_1_1NoBoundStrategy.html',1,'libcmaes']]],
-  ['noscalingstrategy',['NoScalingStrategy',['../classlibcmaes_1_1NoScalingStrategy.html',1,'libcmaes']]]
+  ['max_5feigenv',['max_eigenv',['../classlibcmaes_1_1CMASolutions.html#a600c62ab2769f9eab18951c49846e003',1,'libcmaes::CMASolutions']]],
+  ['min_5feigenv',['min_eigenv',['../classlibcmaes_1_1CMASolutions.html#af0b9acecd0f092ce781d4bb1119f5844',1,'libcmaes::CMASolutions']]]
 ];
