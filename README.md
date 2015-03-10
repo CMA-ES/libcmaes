@@ -207,3 +207,6 @@ See (7) for more information and details.
 - (8) Y. Akimoto, A. Auger and N. Hansen (2014). Comparison-Based Natural Gradient Optimization in High Dimension. In Proceedings of Genetic and Evolutionary Computation Conference 2014
 - (9) https://github.com/beniz/libcmaes/issues/82
 - (10) Loshchilov I. (2013) Surrogate-Assisted Evolutionary Algorithms, PhD-Thesis, University Paris-Sud, https://www.lri.fr/~ilya/phd.html
+
+### Funding
+This work was supported by the ANR-2010-COSI-002 grant of the French NationalA Research Agency.
