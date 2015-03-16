@@ -294,13 +294,16 @@ namespace libcmaes
     template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
       inline dVec stds(const CMAParameters<TGenoPheno> &cmaparams) const
     {
+      dVec phen_xmean = cmaparams.get_gp().pheno(_xmean);
+      dVec stds;
       if (!cmaparams.is_sep() && !cmaparams.is_vd())
-	return cmaparams.get_gp().pheno(static_cast<dVec>(_cov.diagonal().cwiseSqrt()));
+	stds = _cov.diagonal().cwiseSqrt();
       else if (cmaparams.is_sep())
-	return cmaparams.get_gp().pheno(static_cast<dVec>(_sepcov.cwiseSqrt()));
+	stds = _sepcov.cwiseSqrt();
       else if (cmaparams.is_vd())
-	return cmaparams.get_gp().pheno(static_cast<dVec>((dVec::Constant(cmaparams.dim(),1.0)+_v.cwiseProduct(_v)).cwiseSqrt().cwiseProduct(_sepcov)));
-      return dVec(); // should never reach here.
+	stds = (dVec::Constant(cmaparams.dim(),1.0)+_v.cwiseProduct(_v)).cwiseSqrt().cwiseProduct(_sepcov);
+      dVec phen_xmean_std = cmaparams.get_gp().pheno(static_cast<dVec>(_xmean + stds));
+      return (phen_xmean_std - phen_xmean).cwiseAbs();
     }
     
     /**
@@ -311,13 +314,7 @@ namespace libcmaes
     template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
       inline dVec errors(const CMAParameters<TGenoPheno> &cmaparams) const
       {
-	if (!cmaparams.is_sep() && !cmaparams.is_vd())
-	  return cmaparams.get_gp().pheno(static_cast<dVec>(std::sqrt(_sigma)*_cov.diagonal().cwiseSqrt()));
-	else if (cmaparams.is_sep())
-	  return cmaparams.get_gp().pheno(static_cast<dVec>(std::sqrt(_sigma)*_sepcov.cwiseSqrt()));
-	else if (cmaparams.is_vd())
-	  return cmaparams.get_gp().pheno(static_cast<dVec>(std::sqrt(_sigma)*(dVec::Constant(cmaparams.dim(),1.0)+_v.cwiseProduct(_v)).cwiseSqrt().cwiseProduct(_sepcov)));
-	return dVec(); // should never reach here.
+	return std::sqrt(_sigma)*stds(cmaparams);
       }
 
     /**
