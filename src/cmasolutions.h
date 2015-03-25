@@ -339,6 +339,15 @@ namespace libcmaes
     }
 
     /**
+     * \brief sets new step-size value, use with care
+     * @param sigma step-size value
+     */
+    inline void set_sigma(const double &sigma)
+    {
+      _sigma = sigma;
+    }
+
+    /**
      * \brief returns current distribution's mean in parameter space
      * @return mean
      */
@@ -463,7 +472,7 @@ namespace libcmaes
     {
       return _leigenvectors;
     }
-
+    
     /**
      * \brief print the solution object out.
      * @param out output stream
