@@ -1,0 +1,20 @@
+In order to use the original CMA-ES plotting capabilities, which are
+available across a range of applications, do the following:
+
+- from C++ or Python, generate a 'full' output with:
+  * C++ set_full_fplot(true) to the CMAParameters object
+  * Python set_full_fplot(TRUE) to the CMAParametersXX object
+  
+  Example:
+  with 'test_function', do:
+  ./test_functions -fname fsphere -ftarget 1e-8 -dim 20 -x0 5 -sigma0 5 -full_fplot -fplot fsphere_full.dat
+  
+- convert the output with:
+  python python/cma_legacyplt.py fsphere_full.dat
+  This generates the 'outcmaes*.dat' files.
+  
+- get the legacy script:
+  git clone https://github.com/CMA-ES/plotting-cma-data
+
+- plot with legacy script
+  python cmaplt.py

@@ -19,16 +19,17 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cmaes.h"
 #include "surrogatestrategy.h"
 #include "opti_err.h"
-//#include "surrogates/rankingsvm.hpp"
-//#include "surrogates/rsvm_surr_strategy.hpp"
 #include "surrcmaes.h"
 #include <map>
 #include <iostream>
 
 #include <gflags/gflags.h>
+
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
 
 using namespace libcmaes;
 
@@ -72,6 +73,7 @@ DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, a
 DEFINE_double(ftarget,-std::numeric_limits<double>::infinity(),"objective function target when known");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
+DEFINE_bool(noisy,false,"whether the objective function is noisy, automatically fits certain parameters");
 DEFINE_bool(no_exploit,false,"whether to exploit the surrogate model");
 DEFINE_int32(l,-1,"training set size (number of points)");
 DEFINE_int32(lambdaprime,-1,"true objective function calls per iteration");
@@ -97,7 +99,7 @@ int main(int argc, char *argv[])
   mfuncs["elli"]=elli;
   mfuncs["rosenbrock"]=rosenbrock;
   
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
   
   CMAParameters<> cmaparams(x0,FLAGS_sigma0);
@@ -107,6 +109,12 @@ int main(int argc, char *argv[])
   cmaparams.set_fplot(FLAGS_fplot);
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
-  CMASolutions cmasols = surrcmaes<>(mfuncs[FLAGS_fname],cmaparams);
+  if (FLAGS_noisy)
+    cmaparams.set_noisy();
+  ESOptimizer<RSVMSurrogateStrategy<CMAStrategy,CovarianceUpdate>,CMAParameters<>> optim(mfuncs[FLAGS_fname],cmaparams);
+  set_optim_options(optim);
+  optim.optimize();
+  CMASolutions cmasols = optim.get_solutions();
+  //CMASolutions cmasols = surrcmaes<>(mfuncs[FLAGS_fname],cmaparams); // can be used directly instead of defining ESOptimizer
   std::cout << cmasols << std::endl;
 }

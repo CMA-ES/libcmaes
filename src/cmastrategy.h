@@ -113,7 +113,7 @@ namespace libcmaes
 		      std::bind(&CMAStrategy<TCovarianceUpdate,TGenoPheno>::ask,this),
 		      std::bind(&CMAStrategy<TCovarianceUpdate,TGenoPheno>::tell,this));
     }
-    
+
       /**
        * \brief Stream the internal state of the search into an output file, 
        *        as defined in the _parameters object.

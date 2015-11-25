@@ -77,7 +77,7 @@ namespace libcmaes
     
     if (static_cast<CMAParameters<TGenoPheno>&>(p)._vd)
       {
-	Eigen::EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(time(nullptr)));
+	Eigen::EigenMultivariateNormal<double> esolver(false,static_cast<uint64_t>(p._seed));
 	esolver.set_covar(_sepcov);
 	_v = esolver.samples_ind(1) / std::sqrt(p._dim);
       }
@@ -112,10 +112,84 @@ namespace libcmaes
       _median_fvalues.erase(_median_fvalues.begin());
 
     // store best seen candidate.
-    if (_niter == 0 || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
+    if ((_niter == 0 && !_best_seen_candidate.get_x_size()) || _candidates.at(0).get_fvalue() < _best_seen_candidate.get_fvalue())
       {
 	_best_seen_candidate = _candidates.at(0);
 	_best_seen_iter = _niter;
+      }
+
+    // store the worst seen candidate.
+    if ((_niter == 0 && !_worst_seen_candidate.get_x_size()) || _candidates.back().get_fvalue() > _worst_seen_candidate.get_fvalue())
+      {
+	_worst_seen_candidate = _candidates.back();
+      }
+  }
+
+  dMat CMASolutions::full_cov() const
+  {
+    if (_cov.size() > 0)
+      return _cov;
+    else if (_v.size()) // vd
+      return _sepcov.asDiagonal()*(dMat::Identity(_sepcov.rows(),_sepcov.rows())+_v*_v.transpose())*(_sepcov.asDiagonal());
+    else // sep
+      return _sepcov.asDiagonal();
+  }
+
+  dMat CMASolutions::corr() const
+  {
+    dMat corr, dinvcov;
+    if (_cov.size() > 0) // full cov
+      {
+	dinvcov = _cov.diagonal().cwiseSqrt().cwiseInverse();
+	corr = dMat(_cov.rows(),_cov.cols());
+	for (int i=0;i<_cov.cols();i++)
+	  corr.col(i) = _cov.col(i).cwiseProduct(dinvcov);
+	for (int i=0;i<_cov.rows();i++)
+	  corr.row(i) = corr.row(i).cwiseProduct(dinvcov.transpose());
+      }
+    else if (_v.size() > 0) // vd
+      {
+	// we need to compute the full covariance matrix, which is counter productive in large-scale settings
+	dMat cov = _sepcov.asDiagonal()*(dMat::Identity(_sepcov.rows(),_sepcov.rows())+_v*_v.transpose())*(_sepcov.asDiagonal());
+	dinvcov = cov.diagonal().cwiseSqrt().cwiseInverse();
+	corr = dMat(cov.rows(),cov.cols());
+	for (int i=0;i<cov.cols();i++)
+	  corr.col(i) = cov.col(i).cwiseProduct(dinvcov);
+	for (int i=0;i<cov.rows();i++)
+	  corr.row(i) = corr.row(i).cwiseProduct(dinvcov.transpose());
+      }
+    else return dMat::Constant(_sepcov.rows(),1,1.0); // sep
+    return corr;
+  }
+
+  double CMASolutions::corr(const int &i, const int &j) const
+  {
+    if (i == j)
+      return 1.0;
+    if (_cov.size() > 0) //  ful cov
+      {
+	CMAParameters<> cp; // fake parameter with identity gp, since correlation is independent from unit
+	dVec st = stds(cp);
+	return _cov(i,j)/(st(i)*st(j));
+      }
+    else if (_v.size() > 0) // vd
+      {
+	CMAParameters<> cp(std::vector<double>(_v.size()),1.0);
+	cp.set_str_algo("vdcma");
+	cp.set_vd();
+	dVec st = stds(cp);
+	dVec sc(2);
+	dVec v(2);
+	sc(0) = _sepcov(i,0);
+	sc(1) = _sepcov(j,0);
+	v(0) = _v(i);
+	v(1) = _v(j);
+	dMat c = sc.asDiagonal()*(dMat::Identity(2,2)+v*v.transpose())*(sc.asDiagonal()); // compute cov matrix for i & j
+	return c(0,1)/(st(i)*st(j));
+      }
+    else // sep 
+      {
+	return 0.0; // XXX: could return nan instead, since value is unknown
       }
   }
 

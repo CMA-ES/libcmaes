@@ -26,6 +26,10 @@
 #include <iostream>
 #include <gflags/gflags.h>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 using namespace libcmaes;
 
 double background(const double *x, const double *par)
@@ -90,7 +94,7 @@ DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, a
 
 int main(int argc, char *argv[])
 {
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
   double x0[6] = {1,1,1,6,.03,1};
   int dim = 6;
   loaddata("lorentzpeakbench.dat");

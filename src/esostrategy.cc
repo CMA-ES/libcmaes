@@ -87,19 +87,20 @@ namespace libcmaes
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
 #endif
-    
     // one candidate per row.
 #pragma omp parallel for if (_parameters._mt_feval)
     for (int r=0;r<candidates.cols();r++)
       {
 	_solutions._candidates.at(r).set_x(candidates.col(r));
+	_solutions._candidates.at(r).set_id(r);
 	if (phenocandidates.size())
 	  _solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
 	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
 	
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
       }
-
+    int nfcalls = candidates.cols();
+    
     // evaluation step of uncertainty handling scheme.
     if (_parameters._uh)
       {
@@ -114,7 +115,7 @@ namespace libcmaes
 	else _solutions._lambda_reev = lr_l;
 	if (_solutions._lambda_reev == 0)
 	  _solutions._lambda_reev = 1;
-
+	
 	// mutate candidates.
 	dMat ncandidates;
 	if (phenocandidates.size())
@@ -133,30 +134,46 @@ namespace libcmaes
 	      {
 		double nfvalue = _func(ncandidates.col(r).data(),ncandidates.rows());
 		nvcandidates.emplace_back(nfvalue,_solutions._candidates.at(r),r);
+		nfcalls++;
 	      }
 	    else nvcandidates.emplace_back(_solutions._candidates.at(r).get_fvalue(),_solutions._candidates.at(r),r);
 	  }
 	_solutions._candidates_uh = nvcandidates;
       }
 
-    // if initial elitist, reinject initial solution as needed.
-    if (_initial_elitist)
+    // if an elitist is active, reinject initial solution as needed.
+    if (_niter > 0 && (_parameters._elitist || _parameters._initial_elitist || (_initial_elitist && _parameters._initial_elitist_on_restart)))
       {
+	// get reference values.
+	double ref_fvalue = std::numeric_limits<double>::max();
+	Candidate ref_candidate;
+	
+	if (_parameters._initial_elitist_on_restart || _parameters._initial_elitist)
+	  {
+	    ref_fvalue = _solutions._initial_candidate.get_fvalue();
+	    ref_candidate = _solutions._initial_candidate;
+	  }
+	else if (_parameters._elitist)
+	  {
+	    ref_fvalue = _solutions._best_seen_candidate.get_fvalue();
+	    ref_candidate = _solutions._best_seen_candidate;
+	  }
+
 	// reinject intial solution if half or more points have value above that of the initial point candidate.
 	int count = 0;
 	for (int r=0;r<candidates.cols();r++)
-	  if (_solutions._candidates.at(r).get_fvalue() < _solutions._initial_candidate.get_fvalue())
+	  if (_solutions._candidates.at(r).get_fvalue() < ref_fvalue)
 	    ++count;
 	if (count/2.0 < candidates.cols()/2)
 	  {
 #ifdef HAVE_DEBUG
-	    std::cout << "reinjecting initial solution\n";
+	    std::cout << "reinjecting solution=" << ref_fvalue << std::endl;
 #endif
-	    _solutions._candidates.at(1) = _solutions._initial_candidate;
+	    _solutions._candidates.at(1) = ref_candidate;
 	  }
       }
     
-    update_fevals(candidates.cols());
+    update_fevals(nfcalls);
     
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
@@ -336,6 +353,31 @@ namespace libcmaes
 	++vit;
       }
     _solutions._candidates = ncandidates;
+  }
+  
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::tpa_update()
+  {
+    int r1 = -1;
+    int r2 = -1;
+    for (size_t i=0;i<_solutions._candidates.size();i++)
+      {
+	if (r1 == -1 && _solutions._candidates.at(i).get_id() == _solutions._tpa_p1)
+	{
+	    r1 = i;
+	  }
+	if (r2 == -1 && _solutions._candidates.at(i).get_id() == _solutions._tpa_p2)
+	  {
+	    r2 = i;
+	  }
+	if (r1 != -1 && r2 != -1)
+	  {
+	    break;
+	  }
+      }
+    int rank_diff = r2-r1;
+    _solutions._tpa_s = (1.0 - _parameters._tpa_csigma) * _solutions._tpa_s
+      + _parameters._tpa_csigma * rank_diff / (_parameters._lambda - 1.0);
   }
   
   template<class TParameters,class TSolutions,class TStopCriteria>

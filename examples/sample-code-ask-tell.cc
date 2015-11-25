@@ -66,7 +66,7 @@ public:
   
   void tell()
   {
-    return CMAStrategy<CovarianceUpdate>::tell();
+    CMAStrategy<CovarianceUpdate>::tell();
   }
 
   bool stop()

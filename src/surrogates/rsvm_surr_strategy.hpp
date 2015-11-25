@@ -32,10 +32,12 @@ namespace libcmaes
 
   // Interfacing candidates with an Eigen matrix of double x and a vector of objective function value.
   void to_mat_vec(std::vector<Candidate> &cp,
-		  dMat &x, dVec &fvalues)
+		  dMat &x, dVec &fvalues,
+		  const bool &train)
   {
-    std::sort(cp.begin(),cp.end(),
-	      [](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() > c2.get_fvalue();}); // descending sort
+    if (train)
+      std::sort(cp.begin(),cp.end(),
+		[](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() > c2.get_fvalue();}); // descending sort
     x = dMat(cp.at(0).get_x_size(),cp.size());
     fvalues = dVec(cp.size());
     for (int i=0;i<(int)cp.size();i++)
@@ -62,7 +64,7 @@ namespace libcmaes
 	dMat x;
 	dVec fvalues;
 	std::vector<Candidate> cp = c;
-	to_mat_vec(cp,x,fvalues);
+	to_mat_vec(cp,x,fvalues,true);
 	dVec xmean = eostrat<TGenoPheno>::get_solutions().xmean();
 	_rsvm = RankingSVM<RBFKernel>();
 	_rsvm._encode = true;
@@ -78,7 +80,7 @@ namespace libcmaes
 	dMat x_train;
 	dVec fvalues;
 	std::vector<Candidate> tset = this->_tset;
-	to_mat_vec(tset,x_train,fvalues);
+	to_mat_vec(tset,x_train,fvalues,true);
 	
 	dVec fit;
 	dVec xmean = eostrat<TGenoPheno>::get_solutions().xmean();
@@ -90,7 +92,7 @@ namespace libcmaes
       };
     }
       
-      ~RSVMSurrogateStrategy() {};
+      ~RSVMSurrogateStrategy() {}
       
       RankingSVM<RBFKernel> _rsvm;
       int _rsvm_iter = 1e6; /**< number of iterations for optimizing the ranking SVM */

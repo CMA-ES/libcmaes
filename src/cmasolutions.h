@@ -75,7 +75,7 @@ namespace libcmaes
      */
     void sort_candidates()
     {
-      std::sort(_candidates.begin(),_candidates.end(),
+      std::stable_sort(_candidates.begin(),_candidates.end(),
 		[](Candidate const &c1, Candidate const &c2){return c1.get_fvalue() < c2.get_fvalue();});
     }
 
@@ -97,12 +97,36 @@ namespace libcmaes
     /**
      * \brief returns current best solution candidate.
      *        NOTE: candidates MUST be sorted
-     * @return currentbest candidate
+     * @return current best candidate
      * @see CMASolutions::sort_candidates
      */
     inline Candidate best_candidate() const
     {
+      if (_best_candidates_hist.empty()) // iter = 0
+	{
+	  if (_initial_candidate.get_x_size())
+	    return _initial_candidate;
+	  else return Candidate(std::numeric_limits<double>::quiet_NaN(),_xmean);
+	}
       return _best_candidates_hist.back();
+    }
+
+    /**
+     * \brief returns the best seen candidate.
+     * @return best seen candidate
+     */
+    inline Candidate get_best_seen_candidate() const
+    {
+      return _best_seen_candidate;
+    }
+
+    /**
+     * \brief returns the worst seen candidate.
+     * @return worst seen candidate
+     */
+    inline Candidate get_worst_seen_candidate() const
+    {
+      return _worst_seen_candidate;
     }
 
     /**
@@ -113,6 +137,11 @@ namespace libcmaes
       {
 	return _candidates.at(r);
       }
+
+    inline Candidate get_candidate(const int &r) const
+    {
+      return _candidates.at(r);
+    }
 
     /**
      * \brief get a reference to the full candidate set
@@ -204,6 +233,13 @@ namespace libcmaes
     }
     
     /**
+     * \brief returns full covariance matrix. Similar to cov() but in case of linear-sized
+     *        algorithms like sep and vd, returns the full covariance matrix anyways.
+     * @return full size covariance matrix
+     */
+    dMat full_cov() const;
+
+    /**
      * \brief returns separable covariance diagonal matrix, only applicable to sep-CMA-ES algorithms.
      * @return error covariance diagonal vector
      */
@@ -247,7 +283,52 @@ namespace libcmaes
     {
       return _sepcsqinv;
     }
+
+    /**
+     * \returns the unscaled standard deviation vector
+     * Note: this is only useful to compare amond standard deviations
+     * To get the true rescaled estimate of the error, use errors()
+     * @param cmaparams parameter object that hold the genotype/phenotype transform
+     * @return unscaled standard deviation vector
+     */
+    template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
+      inline dVec stds(const CMAParameters<TGenoPheno> &cmaparams) const
+    {
+      dVec phen_xmean = cmaparams.get_gp().pheno(_xmean);
+      dVec stds;
+      if (!cmaparams.is_sep() && !cmaparams.is_vd())
+	stds = _cov.diagonal().cwiseSqrt();
+      else if (cmaparams.is_sep())
+	stds = _sepcov.cwiseSqrt();
+      else if (cmaparams.is_vd())
+	stds = (dVec::Constant(cmaparams.dim(),1.0)+_v.cwiseProduct(_v)).cwiseSqrt().cwiseProduct(_sepcov);
+      dVec phen_xmean_std = cmaparams.get_gp().pheno(static_cast<dVec>(_xmean + stds));
+      return (phen_xmean_std - phen_xmean).cwiseAbs();
+    }
     
+    /**
+     * \returns standard deviation vector
+     * @param cmaparams parameter object that hold the genotype/phenotype transform
+     * @return standard deviation vector
+     */
+    template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
+      inline dVec errors(const CMAParameters<TGenoPheno> &cmaparams) const
+      {
+	return std::sqrt(_sigma)*stds(cmaparams);
+      }
+
+    /**
+     * \brief returns correlation matrix
+     * @return correlation matrix
+     */
+    dMat corr() const;
+
+    /**
+     * \brief returns correlation between parameter i and j (useful in large-scale settings)
+     * @return correlation between parameter i and j
+     */
+    double corr(const int &i, const int &j) const;
+
     /**
      * \brief returns current value of step-size sigma
      * @return current step-size
@@ -255,6 +336,15 @@ namespace libcmaes
     inline double sigma() const
     {
       return _sigma;
+    }
+
+    /**
+     * \brief sets new step-size value, use with care
+     * @param sigma step-size value
+     */
+    inline void set_sigma(const double &sigma)
+    {
+      _sigma = sigma;
     }
 
     /**
@@ -375,6 +465,15 @@ namespace libcmaes
     }
     
     /**
+     * \brief returns last computed eigenvectors
+     * @return last computed eigenvectors
+     */
+    inline dMat eigenvectors() const
+    {
+      return _leigenvectors;
+    }
+    
+    /**
      * \brief print the solution object out.
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
@@ -382,7 +481,7 @@ namespace libcmaes
     template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
     std::ostream& print(std::ostream &out,
 			const int &verb_level=0,
-			const TGenoPheno &gp=GenoPheno<NoBoundStrategy>()) const;
+			const TGenoPheno &gp=TGenoPheno()) const;
 
   private:
     dMat _cov; /**< covariance matrix. */
@@ -428,6 +527,7 @@ namespace libcmaes
 
     Candidate _best_seen_candidate; /**< best seen candidate along the run. */
     int _best_seen_iter;
+    Candidate _worst_seen_candidate;
     Candidate _initial_candidate;
     
     dVec _v; /**< complementary vector for use in vdcma. */
@@ -435,6 +535,13 @@ namespace libcmaes
     std::vector<RankedCandidate> _candidates_uh; /**< temporary set of candidates used by uncertainty handling scheme. */
     int _lambda_reev; /**< number of reevaluated solutions at current step. */
     double _suh; /**< uncertainty level computed by uncertainty handling procedure. */
+    
+    double _tpa_s = 0.0;
+    int _tpa_p1 = 0;
+    int _tpa_p2 = 1;
+    dVec _tpa_x1;
+    dVec _tpa_x2;
+    dVec _xmean_prev; /**< previous step's mean vector. */
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

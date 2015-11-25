@@ -25,6 +25,7 @@
 #include "noboundstrategy.h"
 #include "pwq_bound_strategy.h"
 #include "scaling.h"
+#include <vector>
 
 namespace libcmaes
 {
@@ -241,6 +242,16 @@ namespace libcmaes
       
     TBoundStrategy& get_boundstrategy_ref() { return _boundstrategy; }
       
+    TScalingStrategy get_scalingstrategy() const { return _scalingstrategy; }
+
+    void remove_dimensions(const std::vector<int> &k)
+      {
+	if (!_scalingstrategy.is_id())
+	  _scalingstrategy.remove_dimensions(k);
+     	if (!_boundstrategy.is_id())
+	  _boundstrategy.remove_dimensions(k);
+      }
+
     private:
     TBoundStrategy _boundstrategy;
     TransFunc _genof;

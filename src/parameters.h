@@ -60,7 +60,7 @@ namespace libcmaes
       /**
        * \brief empty constructor.
        */
-    Parameters():_dim(0),_lambda(0),_max_iter(0)
+    Parameters():_dim(0),_lambda(-1),_max_iter(0)
       {}
       
       /**
@@ -75,7 +75,7 @@ namespace libcmaes
 	       const uint64_t &seed=0, const TGenoPheno &gp=GenoPheno<NoBoundStrategy>())
       :_dim(dim),_lambda(lambda),_seed(seed),_gp(gp)
       {
-	if (_lambda == -1) // lambda is unspecified
+	if (_lambda == -1 || _lambda < 2) // lambda is unspecified
 	  _lambda = 4 + floor(3.0*log(_dim));
 	if (_seed == 0) // seed is not forced.
 	  _seed = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
@@ -144,6 +144,17 @@ namespace libcmaes
 	    _x0min(i) = x0min[i];
 	    _x0max(i) = x0max[i];
 	  }
+      }
+
+      /**
+       * \brief sets bounds on initial objective function parameter values.
+       *        Initial value is sampled uniformly within these bounds.
+       * @param x0min vector of initial lower bounds.
+       * @param x0max vector of initial upper bounds.
+       */
+      void set_x0(const std::vector<double> &x0min, const std::vector<double> &x0max)
+      {
+	set_x0(&x0min[0],&x0max[0]);
       }
       
       /**
@@ -266,7 +277,7 @@ namespace libcmaes
       void set_seed(const int &seed)
       {
 	if (_seed == 0)
-	  _seed = static_cast<uint64_t>(time(nullptr));
+	  _seed = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count());
 	else _seed = seed;
       }
       
@@ -352,7 +363,7 @@ namespace libcmaes
       
       /**
        * \brief sets the optimization algorithm.
-       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES 
+       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES, VD_CMAES, VD_IPOP_CMAES, VD_BIPOP_CMAES 
        */
       void set_algo(const int &algo)
       {
@@ -396,6 +407,15 @@ namespace libcmaes
       }
       
       /**
+       * \brief activates / deactivates the full output (for legacy plotting).
+       * @param b whether to activate / deactivate
+       */
+      void set_full_fplot(const bool &b)
+      {
+	_full_fplot = b;
+      }
+
+      /**
        * \brief returns the current output filename.
        * @return output filename
        */
@@ -412,6 +432,8 @@ namespace libcmaes
       void set_gradient(const bool &gradient)
       {
 	_with_gradient = gradient;
+	/*if (this->_tpa != 0)
+	  set_tpa(2); */ // TPA default when gradient is activated. XXX: deactivated until flaw is fixed.
       }
       
       /**
@@ -487,6 +509,15 @@ namespace libcmaes
       }
 
       /**
+       * \brief whether to compute initial objective function value (i.e. at x0)
+       * @param b activates / deactivates
+       */
+      inline void set_initial_fvalue(const bool &b)
+      {
+	_initial_fvalue = b;
+      }
+
+      /**
        * \brief activates / deactivates uncertainty handling scheme.
        * @param b activates / deactivates
        */
@@ -503,6 +534,24 @@ namespace libcmaes
       {
 	return _uh;
       }
+
+      /**
+       * \brief activates / deactivates two-point adaptation step-size mechanism
+       * @param b 0: no, 1: auto, 2: yes
+       */
+      inline void set_tpa(const int &b)
+      {
+	_tpa = b;
+      }
+
+      /**
+       * \brief get two-point adapation step-size mechanism status.
+       * @return two-point adaptation status.
+       */
+      inline int get_tpa() const
+      {
+	return _tpa;
+      }
       
     protected:
       int _dim; /**< function space dimensions. */
@@ -512,6 +561,7 @@ namespace libcmaes
       
       bool _quiet = true; /**< quiet all outputs. */
       std::string _fplot = ""; /**< plotting file, if specified. */
+      bool _full_fplot = false; /**< whether to write to file full legacy data output. */
       dVec _x0min; /**< initial mean vector min bound value for all components. */
       dVec _x0max; /**< initial mean vector max bound value for all components. */
       double _ftarget = -std::numeric_limits<double>::infinity(); /**< optional objective function target value. */
@@ -534,6 +584,8 @@ namespace libcmaes
       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
       static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
 
+      bool _initial_fvalue = false; /**< whether to compute initial objective function value (not required). */
+
       // uncertainty handling
       bool _uh = false; /**< whether to activate uncertainty handling. */
       double _rlambda; /**< fraction of solutions to be reevaluated. */
@@ -541,6 +593,10 @@ namespace libcmaes
       double _thetauh = 0.2; /**< control parameter for the acceptance threshold for the measured rank-change value. */
       double _csuh = 1.0; /**< learning rate for averaging the uncertainty measurement. */
       double _alphathuh = 1.0; /**< factor of increasing the population spread. */
+
+      // two-point adaptation
+      int _tpa = 1; /**< whether to activate two-point adaptation, 0: no (forced), 1: auto, 2: yes (forced) */
+      double _tpa_csigma = 0.3;
     };
 }
 

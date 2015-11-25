@@ -33,6 +33,7 @@
 #include <vector>
 #include <limits>
 #include <cstdlib>
+#include <random>
 #include <iostream>
 
 /**
@@ -99,7 +100,7 @@ class RBFKernel : public SVMKernel
     for (int i=0;i<x.cols();i++)
       for (int j=i+1;j<x.cols();j++)
 	avgdist += (x.col(i)-x.col(j)).norm();
-    avgdist /= (x.cols()*(x.cols()-1.0))/2.0;
+    avgdist /= 0.5*(x.cols()*(x.cols()-1.0));
     double sigma = _sigma_a * std::pow(avgdist,_sigma_pow);
     _gamma = 1.0/(2.0*sigma*sigma);
     
@@ -122,6 +123,7 @@ class RankingSVM
  public:
   RankingSVM()
   {    
+    _udist = std::uniform_real_distribution<>(0,1);
   }
   
   ~RankingSVM()
@@ -150,8 +152,8 @@ class RankingSVM
     int nalphas = x.cols()-1;
     _C = dMat::Constant(nalphas,1,_Cval);
     for (int i=0;i<nalphas;i++)
-      _C(i) = _Cval*pow(nalphas-i,3);
-    _dKij = dMat(nalphas,nalphas);
+      _C(nalphas-1-i) = _Cval*pow(nalphas-i,2);
+    _dKij = dMat::Zero(nalphas,nalphas);
     _alpha = dVec::Zero(nalphas);
     
     if (_encode)
@@ -183,7 +185,7 @@ class RankingSVM
   {
     if (_alpha.size() == 0)
       return; // model is not yet trained.
-    fit = dVec(x_test.cols());
+    fit = dVec::Zero(x_test.cols());
     if (_encode)
       {
 	encode(x_train,covinv,xmean);
@@ -254,8 +256,8 @@ class RankingSVM
 		const int &niter)
   {
     // initialization of temporary variables
-    dVec sum_alphas(_dKij.cols());
-    dMat div_dKij(_dKij.rows(),_dKij.cols());
+    dVec sum_alphas = dVec::Zero(_dKij.cols());
+    dMat div_dKij = dMat::Zero(_dKij.rows(),_dKij.cols());
 #pragma omp parallel
     {
 #pragma omp for
@@ -265,7 +267,8 @@ class RankingSVM
 	    {
 	      _dKij(i,j) = _K(i,j) - _K(i,j+1) - _K(i+1,j) + _K(i+1,j+1);
 	    }
-	  _alpha(i) = _C(i) * (0.95 + 0.05*std::rand()/(double)RAND_MAX);
+	  double fact = _udist(_rng);
+	  _alpha(i) = _C(i) * (0.95 + 0.05*fact);
 	}
 #pragma omp for
       for (int i=0;i<_dKij.rows();i++)
@@ -277,7 +280,6 @@ class RankingSVM
 	      div_dKij(i,j) = _dKij(i,j) / _dKij(j,j);
 	    }
 	  sum_alphas(i) = (_epsilon - sum_alpha) / _dKij(i,i);
-	  
 	}
     }
     
@@ -292,7 +294,7 @@ class RankingSVM
 	new_alpha = old_alpha + sum_alphas(i1);
 	new_alpha = std::max(std::min(new_alpha,_C(i1)),0.0);
 	delta_alpha = new_alpha - old_alpha;
-	double dL = delta_alpha * _dKij(i1,i1) * (sum_alphas(i1) - 0.5*delta_alpha);
+	double dL = delta_alpha * _dKij(i1,i1) * (sum_alphas(i1) - 0.5*delta_alpha + _epsilon);
 	if (dL > 0)
 	  {
 	    sum_alphas -= delta_alpha * div_dKij.row(i1);
@@ -347,10 +349,13 @@ class RankingSVM
   dVec _alpha; /**< vector of Ranking SVM parameters over ranking constraints. */
   dMat _dKij;
   dMat _C; /**< constraint violation weights. */
-  double _Cval = 10e6; /**< constraing violation base weight value. */
+  double _Cval = 1e6; /**< constraing violation base weight value. */
   double _epsilon = 1.0;
   
   TKernel _kernel; /**< kernel class. */
+
+  std::mt19937 _rng;
+  std::uniform_real_distribution<> _udist;
 };
 
 #endif

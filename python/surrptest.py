@@ -7,10 +7,10 @@ import math
 x0 = 2
 dim = 10
 x = [x0]*dim
-olambda = 10 # lambda is a reserved keyword in python, using olambda instead.
+lambda_ = 10 # lambda is a reserved keyword in python, using lambda_ instead.
 seed = 0 # 0 for seed auto-generated within the lib.
 sigma = 0.1
-p = lcmaes.make_simple_parameters(x,sigma,olambda,seed)
+p = lcmaes.make_simple_parameters(x,sigma,lambda_,seed)
 p.set_str_algo("cmaes")
 #p.set_max_iter(20)
 p.set_ftarget(1e-3)
@@ -101,8 +101,8 @@ cmasols = lcmaes.surrpcmaes(objfunc,trainfunc,predictfunc,p,True,200)
 # collect and inspect results
 bcand = cmasols.best_candidate()
 bx = lcmaes.get_candidate_x(bcand)
-print "best x=",bx," / fevals=",cmasols.fevals()
-print "distribution mean=",lcmaes.get_solution_xmean(cmasols)
+print("best x=",bx," / fevals=",cmasols.fevals())
+print("distribution mean=",lcmaes.get_solution_xmean(cmasols))
 cov = lcmaes.get_solution_cov(cmasols) # numpy array
 #print "cov=",cov
-print "elapsed time=",cmasols.elapsed_time(),"ms"
+print("elapsed time=",cmasols.elapsed_time(),"ms")
