@@ -1,0 +1,7 @@
+-I/Users/stevenjames/Documents/libcmaes/eigen
+-I/Users/stevenjames/Documents/libcmaes
+-I/usr/local/Cellar/qt/4.8.7_1/include
+-F/usr/local/Cellar/qt/4.8.7_1/lib
+-o
+/Users/stevenjames/Documents/libcmaes/demos/mandelbrot/mandelbrot.moc
+/Users/stevenjames/Documents/libcmaes/eigen/demos/mandelbrot/mandelbrot.h
