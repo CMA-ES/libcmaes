@@ -514,6 +514,7 @@ namespace libcmaes
     // status of the run.
     int _run_status = 0; /**< current status of the stochastic optimization (e.g. running, or stopped under termination criteria). */
     int _elapsed_time = 0; /**< final elapsed time of stochastic optimization. */
+<<<<<<< HEAD
     int _elapsed_last_iter = 0; /**< time consumed during last iteration. */
 #ifdef HAVE_DEBUG
     int _elapsed_eval = 0;
@@ -542,6 +543,17 @@ namespace libcmaes
     dVec _tpa_x1;
     dVec _tpa_x2;
     dVec _xmean_prev; /**< previous step's mean vector. */
+=======
+
+    dVec _xmeanold; /**< mean vector at previous step, used for KL computation only. */
+    dMat _covold; /**< covariance at previous step, used for KL computation only. */
+    double _sigmaold = 0.0; /**< sigma at previous step. */
+    double _kl = 0.0; /**< exact KL divergence. */
+    double _kl_approx_det = 0.0; /**< KL approx with det=0. */
+    double _kl_approx_trace_det = 0.0; /**< KL limited to covariance elements. */
+    double _sigma_divergence = 0.0; /**< simple sigma 'divergence'. */
+    double _maha = 0.0; /**< Mahalanobis distance for two steps of cov. */
+>>>>>>> beniz/kl
   };
 
   std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);

@@ -118,10 +118,20 @@ namespace libcmaes
        * \brief Stream the internal state of the search into an output file, 
        *        as defined in the _parameters object.
        */
+<<<<<<< HEAD
       void plot();
     
     protected:
       Eigen::EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
+=======
+      void set_progress_func(ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> &pfunc) { _defaultPFunc = pfunc; }
+
+    private:
+    void compute_kl();
+    
+    private:
+      EigenMultivariateNormal<double> _esolver;  /**< multivariate normal distribution sampler, and eigendecomposition solver. */
+>>>>>>> beniz/kl
       CMAStopCriteria<TGenoPheno> _stopcriteria; /**< holds the set of termination criteria, see reference paper. */
       std::ofstream *_fplotstream = nullptr; /**< plotting file stream, not in parameters because of copy-constructor hell. */
 

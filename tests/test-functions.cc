@@ -469,6 +469,7 @@ DEFINE_bool(lazy_update,false,"covariance lazy update");
 //DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
+<<<<<<< HEAD
 DEFINE_bool(quiet,false,"no intermediate output");
 DEFINE_bool(le,false,"whether to return profile likelihood error bounds around the minimum");
 DEFINE_double(le_fup,0.1,"deviation from the minimum as the size of the confidence interval for profile likelihood computation");
@@ -522,6 +523,11 @@ DEFINE_bool(restart_from_best,false,"whether to restart from best value in histo
 >>>>>>> master
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
+=======
+DEFINE_bool(kl,false,"whether to compute KL divergence in between two steps");
+
+template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+>>>>>>> beniz/kl
 CMASolutions cmaes_opt()
 {
   std::vector<double> lbounds = {FLAGS_lbound},ubounds = {FLAGS_ubound};
@@ -536,6 +542,7 @@ CMASolutions cmaes_opt()
 	  ubounds[i] = FLAGS_ubound;
 	}
     }
+<<<<<<< HEAD
   TGenoPheno gp(&lbounds.at(0),&ubounds.at(0),FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
   CMAParameters<TGenoPheno> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
@@ -582,6 +589,15 @@ CMASolutions cmaes_opt()
   if (FLAGS_noisy)
     cmaparams.set_noisy();
   //cmaparams.set_str_algo(FLAGS_alg);
+=======
+  TGenoPheno gp(lbounds,ubounds,FLAGS_dim);
+  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,FLAGS_lambda,FLAGS_sigma0,FLAGS_seed,gp);
+  cmaparams._max_iter = FLAGS_max_iter;
+  cmaparams._max_fevals = FLAGS_max_fevals;
+  cmaparams._fplot = FLAGS_fplot;
+  cmaparams._lazy_update = FLAGS_lazy_update;
+  cmaparams._kl = FLAGS_kl;
+>>>>>>> beniz/kl
   if (FLAGS_alg == "cmaes")
     cmaparams.set_algo(CMAES_DEFAULT);
   else if (FLAGS_alg == "ipop")
