@@ -498,9 +498,14 @@ DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
 <<<<<<< HEAD
+<<<<<<< HEAD
 DEFINE_bool(resample_upon_restart,false,"whether to resample x0 at restart (bipop only)");
 DEFINE_bool(resample_from_history,false,"whether to resample x0 from history (bipop only)");
 DEFINE_bool(restart_from_best,false,"whether to restart from best value in history (bipop only");
+=======
+DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
+DEFINE_double(tpa_dsigma,-1,"set two-point adaptation dsigma (use with care)");
+>>>>>>> beniz/master
 =======
 DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
 DEFINE_double(tpa_dsigma,-1,"set two-point adaptation dsigma (use with care)");
@@ -540,9 +545,14 @@ CMASolutions cmaes_opt()
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
 <<<<<<< HEAD
+<<<<<<< HEAD
   cmaparams.set_resample_upon_restart(FLAGS_resample_upon_restart);
   cmaparams.set_resample_from_history(FLAGS_resample_from_history);
   cmaparams.set_restart_from_best(FLAGS_restart_from_best);
+=======
+  if (FLAGS_tpa_dsigma > 0.0)
+    cmaparams.set_tpa_dsigma(FLAGS_tpa_dsigma);
+>>>>>>> beniz/master
 =======
   if (FLAGS_tpa_dsigma > 0.0)
     cmaparams.set_tpa_dsigma(FLAGS_tpa_dsigma);

@@ -240,6 +240,7 @@ namespace libcmaes
        *             has better fitness, in its majority
        */
 <<<<<<< HEAD
+<<<<<<< HEAD
       inline void set_elitist(const bool &e) { _elitist = e; }
 
       inline void set_resample_upon_restart(const bool &r) { _resample_upon_restart = r; }
@@ -247,6 +248,8 @@ namespace libcmaes
       inline void set_restart_from_best(const bool &r) { _restart_from_best = r; }
 
 =======
+=======
+>>>>>>> beniz/master
       inline void set_elitism(const int &e)
       {
 	if (e == 0)
@@ -268,6 +271,9 @@ namespace libcmaes
 	  }
       }
       
+<<<<<<< HEAD
+>>>>>>> beniz/master
+=======
 >>>>>>> beniz/master
       /**
        * \brief all stopping criteria are active by default, this allows to control
@@ -328,10 +334,16 @@ namespace libcmaes
       bool _vd = false;
       
 <<<<<<< HEAD
+<<<<<<< HEAD
       bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
       bool _resample_upon_restart = false; /**< resample x0 upon restart (e.g. bipop). */
       bool _resample_from_history = false;
       bool _restart_from_best = false;
+=======
+      bool _elitist = false; /**< re-inject the best-ever seen solution. */
+      bool _initial_elitist = false; /**< re-inject x0. */
+      bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+>>>>>>> beniz/master
 =======
       bool _elitist = false; /**< re-inject the best-ever seen solution. */
       bool _initial_elitist = false; /**< re-inject x0. */

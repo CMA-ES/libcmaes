@@ -43,6 +43,23 @@ namespace libcmaes
   template <class TCovarianceUpdate, class TGenoPheno>
   ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = &pfuncdef_impl<TCovarianceUpdate,TGenoPheno>;
   
+<<<<<<< HEAD
+  template<class TCovarianceUpdate, class TGenoPheno>
+  int fpfuncdef_full_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+  {
+    std::string sep = " ";
+    if (cmasols.niter() == 0)
+      {
+	std::chrono::time_point<std::chrono::system_clock> tnow = std::chrono::system_clock::now();
+	std::time_t tdate = std::chrono::system_clock::to_time_t(tnow);
+	fplotstream << cmaparams.dim() << sep << cmaparams.get_seed() << " / " << std::ctime(&tdate) << std::endl; // date and seed
+      }
+    fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << (cmasols.min_eigenv() == 0 ? 1.0 : sqrt(cmasols.max_eigenv()/cmasols.min_eigenv())) << sep;
+    fplotstream << cmasols.get_best_seen_candidate().get_fvalue() << sep << cmasols.get_candidate(cmasols.size() / 2).get_fvalue() << sep << cmasols.get_worst_seen_candidate().get_fvalue() << sep << cmasols.min_eigenv() << sep << cmasols.max_eigenv() << sep; // best ever fvalue, median fvalue, worst fvalue, max eigen, min eigen
+    if (cmasols.get_best_seen_candidate().get_x_size())
+      fplotstream << cmasols.get_best_seen_candidate().get_x_dvec().transpose() << sep;  // xbest
+    else fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+=======
   template<class TCovarianceUpdate, class TGenoPheno>
   int fpfuncdef_full_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
   {
@@ -75,6 +92,7 @@ namespace libcmaes
   {
     std::string sep = " ";
     fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << (cmasols.min_eigenv() == 0 ? 1.0 : sqrt(cmasols.max_eigenv()/cmasols.min_eigenv())) << sep;
+>>>>>>> beniz/master
     if (!cmasols.eigenvalues().size())
       fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
     else fplotstream << cmasols.eigenvalues().transpose() << sep;
@@ -88,6 +106,26 @@ namespace libcmaes
     return 0;
     }
   template<class TCovarianceUpdate, class TGenoPheno>
+<<<<<<< HEAD
+  int fpfuncdef_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+  {
+    std::string sep = " ";
+    fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << (cmasols.min_eigenv() == 0 ? 1.0 : sqrt(cmasols.max_eigenv()/cmasols.min_eigenv())) << sep;
+    if (!cmasols.eigenvalues().size())
+      fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+    else fplotstream << cmasols.eigenvalues().transpose() << sep;
+    fplotstream << cmasols.stds(cmaparams).transpose() << sep;
+    fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
+    fplotstream << sep << cmasols.elapsed_last_iter();
+#ifdef HAVE_DEBUG
+    fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
+#endif
+    fplotstream << std::endl;
+    return 0;
+    }
+  template<class TCovarianceUpdate, class TGenoPheno>
+=======
+>>>>>>> beniz/master
   PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultFPFunc = &fpfuncdef_impl<TCovarianceUpdate,TGenoPheno>;
 
   template <class TCovarianceUpdate, class TGenoPheno>

@@ -65,11 +65,15 @@ void tokenize(const std::string &str,
 std::mutex fmtx; // WARNING: bbob function calls are NOT thread-safe (learnt the hard way...).
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 bool resample_upon_restart = false;
 bool resample_from_history = false;
 bool restart_from_best = false;
 
 void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient)
+=======
+void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient, int withtpa)
+>>>>>>> beniz/master
 =======
 void MY_OPTIMIZER(double(*fitnessfunction)(double*), unsigned int dim, double ftarget, double maxfunevals, int alg, bool noisy, bool withnumgradient, int withtpa)
 >>>>>>> beniz/master
@@ -120,9 +124,13 @@ DEFINE_double(maxfunevals,1e6,"maximum number of function evaluations");
 DEFINE_double(minfunevals,-1,"minimum number of function evaluations, -1 for automatic definition based on dimension");
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 <<<<<<< HEAD
+<<<<<<< HEAD
 DEFINE_bool(resample_upon_restart,false,"whether to resample x0 at restart (bipop only)");
 DEFINE_bool(resample_from_history,false,"whether to resample x0 from history (bipop only)");
 DEFINE_bool(restart_from_best,false,"whether to restart from best value in history (bipop only");
+=======
+DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
+>>>>>>> beniz/master
 =======
 DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
 >>>>>>> beniz/master
