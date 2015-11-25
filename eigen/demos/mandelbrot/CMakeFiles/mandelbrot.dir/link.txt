@@ -1,0 +1,1 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib CMakeFiles/mandelbrot.dir/mandelbrot.o  -o mandelbrot -F/usr/local/Cellar/qt/4.8.7_1/lib  -framework QtCore -framework QtGui 

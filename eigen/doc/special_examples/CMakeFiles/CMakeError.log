@@ -1,0 +1,99 @@
+Determining if the Q_WS_X11 exist failed with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_5d7b4/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_5d7b4.dir/build.make CMakeFiles/cmTC_5d7b4.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_5d7b4.dir/CheckSymbolExists.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -I/usr/local/Cellar/qt/4.8.7_1/include -F/usr/local/Cellar/qt/4.8.7_1/lib   -o CMakeFiles/cmTC_5d7b4.dir/CheckSymbolExists.cxx.o -c /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: use of undeclared identifier 'Q_WS_X11'
+  return ((int*)(&Q_WS_X11))[argc];
+                  ^
+1 error generated.
+CMakeFiles/cmTC_5d7b4.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_5d7b4.dir/CheckSymbolExists.cxx.o' failed
+gmake[1]: *** [CMakeFiles/cmTC_5d7b4.dir/CheckSymbolExists.cxx.o] Error 1
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_5d7b4/fast' failed
+gmake: *** [cmTC_5d7b4/fast] Error 2
+
+File /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_X11
+  return ((int*)(&Q_WS_X11))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_WIN exist failed with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_0460e/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_0460e.dir/build.make CMakeFiles/cmTC_0460e.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_0460e.dir/CheckSymbolExists.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -I/usr/local/Cellar/qt/4.8.7_1/include -F/usr/local/Cellar/qt/4.8.7_1/lib   -o CMakeFiles/cmTC_0460e.dir/CheckSymbolExists.cxx.o -c /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: use of undeclared identifier 'Q_WS_WIN'
+  return ((int*)(&Q_WS_WIN))[argc];
+                  ^
+1 error generated.
+CMakeFiles/cmTC_0460e.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_0460e.dir/CheckSymbolExists.cxx.o' failed
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp'
+gmake[1]: *** [CMakeFiles/cmTC_0460e.dir/CheckSymbolExists.cxx.o] Error 1
+Makefile:126: recipe for target 'cmTC_0460e/fast' failed
+gmake: *** [cmTC_0460e/fast] Error 2
+
+File /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_WIN
+  return ((int*)(&Q_WS_WIN))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_QWS exist failed with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_f69bf/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_f69bf.dir/build.make CMakeFiles/cmTC_f69bf.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_f69bf.dir/CheckSymbolExists.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -I/usr/local/Cellar/qt/4.8.7_1/include -F/usr/local/Cellar/qt/4.8.7_1/lib   -o CMakeFiles/cmTC_f69bf.dir/CheckSymbolExists.cxx.o -c /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: use of undeclared identifier 'Q_WS_QWS'
+  return ((int*)(&Q_WS_QWS))[argc];
+                  ^
+1 error generated.
+CMakeFiles/cmTC_f69bf.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_f69bf.dir/CheckSymbolExists.cxx.o' failed
+gmake[1]: *** [CMakeFiles/cmTC_f69bf.dir/CheckSymbolExists.cxx.o] Error 1
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_f69bf/fast' failed
+gmake: *** [cmTC_f69bf/fast] Error 2
+
+File /Users/stevenjames/Documents/libcmaes/eigen/doc/special_examples/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_QWS
+  return ((int*)(&Q_WS_QWS))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

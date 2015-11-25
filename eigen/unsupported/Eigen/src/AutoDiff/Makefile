@@ -48,10 +48,10 @@ RM = /usr/local/Cellar/cmake/3.4.0/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen
+CMAKE_SOURCE_DIR = /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/src/AutoDiff
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen
+CMAKE_BINARY_DIR = /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/src/AutoDiff
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -124,14 +124,14 @@ install/local/fast: install/local
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen && $(CMAKE_COMMAND) -E cmake_progress_start /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/CMakeFiles /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/src/AutoDiff/CMakeFiles/progress.marks
-	cd /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen && $(MAKE) -f CMakeFiles/Makefile2 src/AutoDiff/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/src/AutoDiff/CMakeFiles /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/src/AutoDiff/CMakeFiles/progress.marks
+	$(MAKE) -f CMakeFiles/Makefile2 all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen/src/AutoDiff/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen && $(MAKE) -f CMakeFiles/Makefile2 src/AutoDiff/clean
+	$(MAKE) -f CMakeFiles/Makefile2 clean
 .PHONY : clean
 
 # The main clean target
@@ -141,17 +141,17 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen && $(MAKE) -f CMakeFiles/Makefile2 src/AutoDiff/preinstall
+	$(MAKE) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen && $(MAKE) -f CMakeFiles/Makefile2 src/AutoDiff/preinstall
+	$(MAKE) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Help Target
@@ -177,6 +177,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/stevenjames/Documents/libcmaes/eigen/unsupported/Eigen && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

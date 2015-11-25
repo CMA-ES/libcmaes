@@ -3,7 +3,7 @@ set(CTEST_SOURCE_DIRECTORY  "/Users/stevenjames/Documents/libcmaes/eigen")
 set(CTEST_BINARY_DIRECTORY  "/Users/stevenjames/Documents/libcmaes")
 set(CTEST_CMAKE_GENERATOR   "Unix Makefiles")
 set(CTEST_BUILD_NAME        "darwin-15.0.0-llvm-clang++-7.0.0-sse2-64bit")
-set(CTEST_SITE              "stevens-macbook-pro.local")
+set(CTEST_SITE              "Stevens-MacBook-Pro.local")
 
 set(MODEL Experimental)
 if(${CTEST_SCRIPT_ARG} MATCHES Nightly)

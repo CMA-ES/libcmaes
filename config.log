@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: i486 (Intel 80486)
 Processors active: 0 1 2 3
 Primary memory available: 8.00 gigabytes
-Default processor set: 212 tasks, 845 threads, 4 processors
-Load average: 0.67, Mach factor: 3.31
+Default processor set: 214 tasks, 927 threads, 4 processors
+Load average: 1.73, Mach factor: 2.25
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -89,36 +89,36 @@ clang: error: unknown argument: '-qversion'
 clang: error: no input files
 configure:3258: $? = 1
 configure:3278: checking whether the C compiler works
-configure:3300: clang++    conftest.c  >&5
+configure:3300: clang++  -I/usr/local/opt/lapack/include -L/usr/local/opt/lapack/lib conftest.c  >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3304: $? = 0
 configure:3352: result: yes
 configure:3355: checking for C compiler default output file name
 configure:3357: result: a.out
 configure:3363: checking for suffix of executables
-configure:3370: clang++ -o conftest    conftest.c  >&5
+configure:3370: clang++ -o conftest  -I/usr/local/opt/lapack/include -L/usr/local/opt/lapack/lib conftest.c  >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3374: $? = 0
 configure:3396: result: 
 configure:3418: checking whether we are cross compiling
-configure:3426: clang++ -o conftest    conftest.c  >&5
+configure:3426: clang++ -o conftest  -I/usr/local/opt/lapack/include -L/usr/local/opt/lapack/lib conftest.c  >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3430: $? = 0
 configure:3437: ./conftest
 configure:3441: $? = 0
 configure:3456: result: no
 configure:3461: checking for suffix of object files
-configure:3483: clang++ -c   conftest.c >&5
+configure:3483: clang++ -c  -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3487: $? = 0
 configure:3508: result: o
 configure:3512: checking whether we are using the GNU C compiler
-configure:3531: clang++ -c   conftest.c >&5
+configure:3531: clang++ -c  -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3531: $? = 0
 configure:3540: result: yes
 configure:3549: checking whether clang++ accepts -g
-configure:3569: clang++ -c -g  conftest.c >&5
+configure:3569: clang++ -c -g -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3569: $? = 0
 configure: failed program was:
@@ -140,7 +140,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3584: clang++ -c   conftest.c >&5
+configure:3584: clang++ -c  -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3584: $? = 0
 configure: failed program was:
@@ -162,12 +162,12 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3600: clang++ -c -g  conftest.c >&5
+configure:3600: clang++ -c -g -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3600: $? = 0
 configure:3610: result: yes
 configure:3627: checking for clang++ option to accept ISO C89
-configure:3690: clang++  -c -g -O2  conftest.c >&5
+configure:3690: clang++  -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 conftest.c:17:17: error: C++ requires a type specifier for all declarations
 static char *e (p, i)
@@ -244,7 +244,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3690: clang++ -qlanglvl=extc89 -c -g -O2  conftest.c >&5
+configure:3690: clang++ -qlanglvl=extc89 -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: error: unknown argument: '-qlanglvl=extc89'
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3690: $? = 1
@@ -308,7 +308,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3690: clang++ -qlanglvl=ansi -c -g -O2  conftest.c >&5
+configure:3690: clang++ -qlanglvl=ansi -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: error: unknown argument: '-qlanglvl=ansi'
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3690: $? = 1
@@ -372,7 +372,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3690: clang++ -std -c -g -O2  conftest.c >&5
+configure:3690: clang++ -std -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: error: unknown argument: '-std'
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:3690: $? = 1
@@ -436,7 +436,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3690: clang++ -Ae -c -g -O2  conftest.c >&5
+configure:3690: clang++ -Ae -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 clang: warning: argument unused during compilation: '-Ae'
 conftest.c:17:17: error: C++ requires a type specifier for all declarations
@@ -514,7 +514,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3690: clang++ -Aa -D_HPUX_SOURCE -c -g -O2  conftest.c >&5
+configure:3690: clang++ -Aa -D_HPUX_SOURCE -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 clang: warning: argument unused during compilation: '-Aa'
 conftest.c:17:17: error: C++ requires a type specifier for all declarations
@@ -592,7 +592,7 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3690: clang++ -Xc -D__EXTENSIONS__ -c -g -O2  conftest.c >&5
+configure:3690: clang++ -Xc -D__EXTENSIONS__ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 clang: warning: argument unused during compilation: '-Xc'
 conftest.c:17:17: error: C++ requires a type specifier for all declarations
@@ -706,11 +706,11 @@ clang: error: unknown argument: '-qversion'
 clang: error: no input files
 configure:4105: $? = 1
 configure:4109: checking whether we are using the GNU C++ compiler
-configure:4128: clang++ -c   conftest.cpp >&5
+configure:4128: clang++ -c  -I/usr/local/opt/lapack/include conftest.cpp >&5
 configure:4128: $? = 0
 configure:4137: result: yes
 configure:4146: checking whether clang++ accepts -g
-configure:4166: clang++ -c -g  conftest.cpp >&5
+configure:4166: clang++ -c -g -I/usr/local/opt/lapack/include conftest.cpp >&5
 configure:4166: $? = 0
 configure:4207: result: yes
 configure:4232: checking dependency style of clang++
@@ -732,7 +732,7 @@ configure:4859: result: no
 configure:4871: checking for BSD- or MS-compatible name lister (nm)
 configure:4925: result: /usr/bin/nm
 configure:5055: checking the name lister (/usr/bin/nm) interface
-configure:5062: clang++ -c -g -O2  conftest.c >&5
+configure:5062: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:5065: /usr/bin/nm "conftest.o"
 configure:5068: output
@@ -760,7 +760,7 @@ configure:5916: checking for ar
 configure:5932: found /usr/bin/ar
 configure:5943: result: ar
 configure:5980: checking for archiver @FILE support
-configure:5997: clang++ -c -g -O2  conftest.c >&5
+configure:5997: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:5997: $? = 0
 configure:6000: ar cru libconftest.a @conftest.lst >&5
@@ -774,18 +774,18 @@ configure:6180: checking for ranlib
 configure:6196: found /usr/bin/ranlib
 configure:6207: result: ranlib
 configure:6309: checking command to parse /usr/bin/nm output from clang++ object
-configure:6462: clang++ -c -g -O2  conftest.c >&5
+configure:6462: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:6465: $? = 0
 configure:6469: /usr/bin/nm conftest.o \| sed -n -e 's/^.*[ ]\([BCDEGRST][BCDEGRST]*\)[ ][ ]*\([_A-Za-z][_A-Za-z0-9]*\)$/\1 \2 \2/p' | sed '/ __gnu_lto/d' \> conftest.nm
 configure:6472: $? = 0
 cannot find nm_test_var in conftest.nm
-configure:6462: clang++ -c -g -O2  conftest.c >&5
+configure:6462: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:6465: $? = 0
 configure:6469: /usr/bin/nm conftest.o \| sed -n -e 's/^.*[ ]\([BCDEGRST][BCDEGRST]*\)[ ][ ]*_\([_A-Za-z][_A-Za-z0-9]*\)$/\1 _\2 \2/p' | sed '/ __gnu_lto/d' \> conftest.nm
 configure:6472: $? = 0
-configure:6538: clang++ -o conftest -g -O2   conftest.c conftstm.o >&5
+configure:6538: clang++ -o conftest -g -O2 -I/usr/local/opt/lapack/include -L/usr/local/opt/lapack/lib conftest.c conftstm.o >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:6541: $? = 0
 configure:6579: result: ok
@@ -815,10 +815,10 @@ configure:7472: result: otool
 configure:7537: checking for otool64
 configure:7567: result: no
 configure:7612: checking for -single_module linker flag
-clang++ -g -O2  -o libconftest.dylib -dynamiclib -Wl,-single_module conftest.c
+clang++ -g -O2 -L/usr/local/opt/lapack/lib -o libconftest.dylib -dynamiclib -Wl,-single_module conftest.c
 configure:7645: result: yes
 configure:7648: checking for -exported_symbols_list linker flag
-configure:7668: clang++ -o conftest -g -O2   -Wl,-exported_symbols_list,conftest.sym conftest.c  >&5
+configure:7668: clang++ -o conftest -g -O2 -I/usr/local/opt/lapack/include -L/usr/local/opt/lapack/lib -Wl,-exported_symbols_list,conftest.sym conftest.c  >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:7668: $? = 0
 configure:7678: result: yes
@@ -827,13 +827,13 @@ clang++ -g -O2 -c -o conftest.o conftest.c
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 ar cru libconftest.a conftest.o
 ranlib libconftest.a
-clang++ -g -O2  -o conftest conftest.c -Wl,-force_load,./libconftest.a
+clang++ -g -O2 -L/usr/local/opt/lapack/lib -o conftest conftest.c -Wl,-force_load,./libconftest.a
 configure:7713: result: yes
 configure:7790: checking how to run the C preprocessor
-configure:7821: clang++ -E  conftest.c
+configure:7821: clang++ -E -I/usr/local/opt/lapack/include conftest.c
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:7821: $? = 0
-configure:7835: clang++ -E  conftest.c
+configure:7835: clang++ -E -I/usr/local/opt/lapack/include conftest.c
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 conftest.c:11:10: fatal error: 'ac_nonexistent.h' file not found
 #include <ac_nonexistent.h>
@@ -853,10 +853,10 @@ configure: failed program was:
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:7860: result: clang++ -E
-configure:7880: clang++ -E  conftest.c
+configure:7880: clang++ -E -I/usr/local/opt/lapack/include conftest.c
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:7880: $? = 0
-configure:7894: clang++ -E  conftest.c
+configure:7894: clang++ -E -I/usr/local/opt/lapack/include conftest.c
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 conftest.c:11:10: fatal error: 'ac_nonexistent.h' file not found
 #include <ac_nonexistent.h>
@@ -876,85 +876,85 @@ configure: failed program was:
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:7923: checking for ANSI C header files
-configure:7943: clang++ -c -g -O2  conftest.c >&5
+configure:7943: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:7943: $? = 0
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
-configure:8016: clang++ -o conftest -g -O2   conftest.c  >&5
+configure:8016: clang++ -o conftest -g -O2 -I/usr/local/opt/lapack/include -L/usr/local/opt/lapack/lib conftest.c  >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8016: $? = 0
 configure:8016: ./conftest
 configure:8016: $? = 0
 configure:8027: result: yes
 configure:8040: checking for sys/types.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for sys/stat.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for stdlib.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for string.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for memory.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for strings.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for inttypes.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for stdint.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8040: checking for unistd.h
-configure:8040: clang++ -c -g -O2  conftest.c >&5
+configure:8040: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8040: $? = 0
 configure:8040: result: yes
 configure:8054: checking for dlfcn.h
-configure:8054: clang++ -c -g -O2  conftest.c >&5
+configure:8054: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8054: $? = 0
 configure:8054: result: yes
 configure:8321: checking for objdir
 configure:8336: result: .libs
 configure:8596: checking if clang++ supports -fno-rtti -fno-exceptions
-configure:8614: clang++ -c -g -O2  -fno-rtti -fno-exceptions conftest.c >&5
+configure:8614: clang++ -c -g -O2 -I/usr/local/opt/lapack/include -fno-rtti -fno-exceptions conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:8618: $? = 0
 configure:8631: result: yes
 configure:8989: checking for clang++ option to produce PIC
 configure:8996: result: -fno-common -DPIC
 configure:9004: checking if clang++ PIC flag -fno-common -DPIC works
-configure:9022: clang++ -c -g -O2  -fno-common -DPIC -DPIC conftest.c >&5
+configure:9022: clang++ -c -g -O2 -I/usr/local/opt/lapack/include -fno-common -DPIC -DPIC conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:9026: $? = 0
 configure:9039: result: yes
 configure:9068: checking if clang++ static flag -static works
 configure:9096: result: no
 configure:9111: checking if clang++ supports -c -o file.o
-configure:9132: clang++ -c -g -O2  -o out/conftest2.o conftest.c >&5
+configure:9132: clang++ -c -g -O2 -I/usr/local/opt/lapack/include -o out/conftest2.o conftest.c >&5
 clang: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated
 configure:9136: $? = 0
 configure:9158: result: yes
@@ -975,9 +975,9 @@ configure:12328: result: yes
 configure:12331: checking whether to build static libraries
 configure:12335: result: yes
 configure:12358: checking how to run the C++ preprocessor
-configure:12385: clang++ -E  conftest.cpp
+configure:12385: clang++ -E -I/usr/local/opt/lapack/include conftest.cpp
 configure:12385: $? = 0
-configure:12399: clang++ -E  conftest.cpp
+configure:12399: clang++ -E -I/usr/local/opt/lapack/include conftest.cpp
 conftest.cpp:23:10: fatal error: 'ac_nonexistent.h' file not found
 #include <ac_nonexistent.h>
          ^
@@ -1008,9 +1008,9 @@ configure: failed program was:
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
 configure:12424: result: clang++ -E
-configure:12444: clang++ -E  conftest.cpp
+configure:12444: clang++ -E -I/usr/local/opt/lapack/include conftest.cpp
 configure:12444: $? = 0
-configure:12458: clang++ -E  conftest.cpp
+configure:12458: clang++ -E -I/usr/local/opt/lapack/include conftest.cpp
 conftest.cpp:23:10: fatal error: 'ac_nonexistent.h' file not found
 #include <ac_nonexistent.h>
          ^
@@ -1046,18 +1046,18 @@ configure:12694: checking if the linker (/Applications/Xcode.app/Contents/Develo
 configure:12709: result: no
 configure:12764: checking whether the clang++ linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) supports shared libraries
 configure:13837: result: yes
-configure:13873: clang++ -c -g -O2  conftest.cpp >&5
+configure:13873: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.cpp >&5
 configure:13876: $? = 0
 configure:14357: checking for clang++ option to produce PIC
 configure:14364: result: -fno-common -DPIC
 configure:14372: checking if clang++ PIC flag -fno-common -DPIC works
-configure:14390: clang++ -c -g -O2  -fno-common -DPIC -DPIC conftest.cpp >&5
+configure:14390: clang++ -c -g -O2 -I/usr/local/opt/lapack/include -fno-common -DPIC -DPIC conftest.cpp >&5
 configure:14394: $? = 0
 configure:14407: result: yes
 configure:14430: checking if clang++ static flag -static works
 configure:14458: result: no
 configure:14470: checking if clang++ supports -c -o file.o
-configure:14491: clang++ -c -g -O2  -o out/conftest2.o conftest.cpp >&5
+configure:14491: clang++ -c -g -O2 -I/usr/local/opt/lapack/include -o out/conftest2.o conftest.cpp >&5
 configure:14495: $? = 0
 configure:14517: result: yes
 configure:14522: checking if clang++ supports -c -o file.o
@@ -1069,7 +1069,7 @@ configure:15525: result: darwin15.0.0 dyld
 configure:15590: checking how to hardcode library paths into programs
 configure:15615: result: immediate
 configure:15726: checking whether clang++ supports C++11 features by default
-configure:15760: clang++ -c -g -O2  conftest.cpp >&5
+configure:15760: clang++ -c -g -O2 -I/usr/local/opt/lapack/include conftest.cpp >&5
 conftest.cpp:27:21: error: expected parameter declarator
       static_assert(sizeof(int) <= sizeof(T), "not big enough");
                     ^
@@ -1162,7 +1162,7 @@ configure: failed program was:
 | 
 configure:15767: result: no
 configure:15776: checking whether clang++ supports C++11 features with -std=gnu++11
-configure:15812: clang++ -c -g -O2 -std=gnu++11  conftest.cpp >&5
+configure:15812: clang++ -c -g -O2 -std=gnu++11 -I/usr/local/opt/lapack/include conftest.cpp >&5
 configure:15812: $? = 0
 configure:15821: result: yes
 configure:15920: checking for eigen3
@@ -1171,7 +1171,7 @@ configure:15945: result: no
 configure:15950: checking for /usr/local/include/eigen3
 configure:15963: result: no
 configure:15977: checking Eigen/Dense usability
-configure:15977: clang++ -c -g -O2 -std=gnu++11  -I/usr/include/eigen3 conftest.cpp >&5
+configure:15977: clang++ -c -g -O2 -std=gnu++11 -I/usr/local/opt/lapack/include -I/usr/include/eigen3 conftest.cpp >&5
 conftest.cpp:56:10: fatal error: 'Eigen/Dense' file not found
 #include <Eigen/Dense>
          ^
@@ -1236,7 +1236,7 @@ configure: failed program was:
 | #include <Eigen/Dense>
 configure:15977: result: no
 configure:15977: checking Eigen/Dense presence
-configure:15977: clang++ -E  -I/usr/include/eigen3 conftest.cpp
+configure:15977: clang++ -E -I/usr/local/opt/lapack/include -I/usr/include/eigen3 conftest.cpp
 conftest.cpp:23:10: fatal error: 'Eigen/Dense' file not found
 #include <Eigen/Dense>
          ^
@@ -1284,8 +1284,8 @@ ac_cv_env_CC_set=
 ac_cv_env_CC_value=
 ac_cv_env_CFLAGS_set=
 ac_cv_env_CFLAGS_value=
-ac_cv_env_CPPFLAGS_set=
-ac_cv_env_CPPFLAGS_value=
+ac_cv_env_CPPFLAGS_set=set
+ac_cv_env_CPPFLAGS_value=-I/usr/local/opt/lapack/include
 ac_cv_env_CPP_set=
 ac_cv_env_CPP_value=
 ac_cv_env_CXXCPP_set=
@@ -1294,8 +1294,8 @@ ac_cv_env_CXXFLAGS_set=
 ac_cv_env_CXXFLAGS_value=
 ac_cv_env_CXX_set=
 ac_cv_env_CXX_value=
-ac_cv_env_LDFLAGS_set=
-ac_cv_env_LDFLAGS_value=
+ac_cv_env_LDFLAGS_set=set
+ac_cv_env_LDFLAGS_value=-L/usr/local/opt/lapack/lib
 ac_cv_env_LIBS_set=
 ac_cv_env_LIBS_value=
 ac_cv_env_LT_SYS_LIBRARY_PATH_set=
@@ -1412,7 +1412,7 @@ CC='clang++'
 CCDEPMODE='depmode=gcc3'
 CFLAGS='-g -O2'
 CPP='clang++ -E'
-CPPFLAGS=''
+CPPFLAGS='-I/usr/local/opt/lapack/include'
 CXX='clang++'
 CXXCPP='clang++ -E'
 CXXDEPMODE='depmode=gcc3'
@@ -1456,7 +1456,7 @@ INSTALL_PROGRAM='${INSTALL}'
 INSTALL_SCRIPT='${INSTALL}'
 INSTALL_STRIP_PROGRAM='$(install_sh) -c -s'
 LD='/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld'
-LDFLAGS=''
+LDFLAGS='-L/usr/local/opt/lapack/lib'
 LIBOBJS=''
 LIBS=''
 LIBTOOL='$(SHELL) $(top_builddir)/libtool'

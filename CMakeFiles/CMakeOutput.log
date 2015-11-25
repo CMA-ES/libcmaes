@@ -1202,3 +1202,526 @@ int main(int argc, char** argv)
 #endif
 }
 
+Performing C++ SOURCE FILE Test standard_math_library_linked_to_automatically succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_6bc9e/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_6bc9e.dir/build.make CMakeFiles/cmTC_6bc9e.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_6bc9e.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -Dstandard_math_library_linked_to_automatically   -o CMakeFiles/cmTC_6bc9e.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx:2:14: warning: ignoring return value of function declared with const attribute [-Wunused-value]
+int main() { std::sin(0.0); std::log(0.0f); }
+             ^~~~~~~~ ~~~
+1 warning generated.
+Linking CXX executable cmTC_6bc9e
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_6bc9e.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -Dstandard_math_library_linked_to_automatically -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_6bc9e.dir/src.cxx.o  -o cmTC_6bc9e  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+#include<cmath>
+int main() { std::sin(0.0); std::log(0.0f); }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_WERROR succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_ecb1f/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_ecb1f.dir/build.make CMakeFiles/cmTC_ecb1f.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_ecb1f.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -DCOMPILER_SUPPORT_WERROR   -Werror -o CMakeFiles/cmTC_ecb1f.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_ecb1f
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ecb1f.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -DCOMPILER_SUPPORT_WERROR -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_ecb1f.dir/src.cxx.o  -o cmTC_ecb1f  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_pedantic succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_0c748/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_0c748.dir/build.make CMakeFiles/cmTC_0c748.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_0c748.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -DCOMPILER_SUPPORT_pedantic -Werror   -pedantic -o CMakeFiles/cmTC_0c748.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_0c748
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0c748.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -DCOMPILER_SUPPORT_pedantic -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_0c748.dir/src.cxx.o  -o cmTC_0c748  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wall succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_73610/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_73610.dir/build.make CMakeFiles/cmTC_73610.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_73610.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -DCOMPILER_SUPPORT_Wall -Werror   -Wall -o CMakeFiles/cmTC_73610.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_73610
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_73610.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -DCOMPILER_SUPPORT_Wall -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_73610.dir/src.cxx.o  -o cmTC_73610  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wextra succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_3506e/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_3506e.dir/build.make CMakeFiles/cmTC_3506e.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_3506e.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -DCOMPILER_SUPPORT_Wextra -Werror   -Wextra -o CMakeFiles/cmTC_3506e.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_3506e
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3506e.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -DCOMPILER_SUPPORT_Wextra -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_3506e.dir/src.cxx.o  -o cmTC_3506e  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wundef succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_f1f05/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_f1f05.dir/build.make CMakeFiles/cmTC_f1f05.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_f1f05.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -DCOMPILER_SUPPORT_Wundef -Werror   -Wundef -o CMakeFiles/cmTC_f1f05.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_f1f05
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f1f05.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -DCOMPILER_SUPPORT_Wundef -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_f1f05.dir/src.cxx.o  -o cmTC_f1f05  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wcastalign succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_c40f5/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_c40f5.dir/build.make CMakeFiles/cmTC_c40f5.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_c40f5.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -DCOMPILER_SUPPORT_Wcastalign -Werror   -Wcast-align -o CMakeFiles/cmTC_c40f5.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_c40f5
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c40f5.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -DCOMPILER_SUPPORT_Wcastalign -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_c40f5.dir/src.cxx.o  -o cmTC_c40f5  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wcharsubscripts succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_f0ef2/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_f0ef2.dir/build.make CMakeFiles/cmTC_f0ef2.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_f0ef2.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -DCOMPILER_SUPPORT_Wcharsubscripts -Werror   -Wchar-subscripts -o CMakeFiles/cmTC_f0ef2.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_f0ef2
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f0ef2.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -DCOMPILER_SUPPORT_Wcharsubscripts -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_f0ef2.dir/src.cxx.o  -o cmTC_f0ef2  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wnonvirtualdtor succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_158c3/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_158c3.dir/build.make CMakeFiles/cmTC_158c3.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_158c3.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -DCOMPILER_SUPPORT_Wnonvirtualdtor -Werror   -Wnon-virtual-dtor -o CMakeFiles/cmTC_158c3.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_158c3
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_158c3.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -DCOMPILER_SUPPORT_Wnonvirtualdtor -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_158c3.dir/src.cxx.o  -o cmTC_158c3  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wunusedlocaltypedefs succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_d3c1f/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_d3c1f.dir/build.make CMakeFiles/cmTC_d3c1f.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_d3c1f.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -DCOMPILER_SUPPORT_Wunusedlocaltypedefs -Werror   -Wunused-local-typedefs -o CMakeFiles/cmTC_d3c1f.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_d3c1f
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d3c1f.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -DCOMPILER_SUPPORT_Wunusedlocaltypedefs -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_d3c1f.dir/src.cxx.o  -o cmTC_d3c1f  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wpointerarith succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_7c2cc/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_7c2cc.dir/build.make CMakeFiles/cmTC_7c2cc.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_7c2cc.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -DCOMPILER_SUPPORT_Wpointerarith -Werror   -Wpointer-arith -o CMakeFiles/cmTC_7c2cc.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_7c2cc
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7c2cc.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -DCOMPILER_SUPPORT_Wpointerarith -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_7c2cc.dir/src.cxx.o  -o cmTC_7c2cc  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wwritestrings succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_51f17/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_51f17.dir/build.make CMakeFiles/cmTC_51f17.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_51f17.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -DCOMPILER_SUPPORT_Wwritestrings -Werror   -Wwrite-strings -o CMakeFiles/cmTC_51f17.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_51f17
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_51f17.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -DCOMPILER_SUPPORT_Wwritestrings -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_51f17.dir/src.cxx.o  -o cmTC_51f17  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wformatsecurity succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_d2bb3/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_d2bb3.dir/build.make CMakeFiles/cmTC_d2bb3.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_d2bb3.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -DCOMPILER_SUPPORT_Wformatsecurity -Werror   -Wformat-security -o CMakeFiles/cmTC_d2bb3.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_d2bb3
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d2bb3.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -DCOMPILER_SUPPORT_Wformatsecurity -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_d2bb3.dir/src.cxx.o  -o cmTC_d2bb3  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wshorten64to32 succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_7f367/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_7f367.dir/build.make CMakeFiles/cmTC_7f367.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_7f367.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -DCOMPILER_SUPPORT_Wshorten64to32 -Werror   -Wshorten-64-to-32 -o CMakeFiles/cmTC_7f367.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_7f367
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7f367.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -DCOMPILER_SUPPORT_Wshorten64to32 -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_7f367.dir/src.cxx.o  -o cmTC_7f367  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wenumconversion succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_541da/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_541da.dir/build.make CMakeFiles/cmTC_541da.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_541da.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -DCOMPILER_SUPPORT_Wenumconversion -Werror   -Wenum-conversion -o CMakeFiles/cmTC_541da.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_541da
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_541da.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -DCOMPILER_SUPPORT_Wenumconversion -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_541da.dir/src.cxx.o  -o cmTC_541da  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wcpp11extensions succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_a73c4/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_a73c4.dir/build.make CMakeFiles/cmTC_a73c4.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_a73c4.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -DCOMPILER_SUPPORT_Wcpp11extensions -Werror   -Wc++11-extensions -o CMakeFiles/cmTC_a73c4.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_a73c4
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a73c4.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -DCOMPILER_SUPPORT_Wcpp11extensions -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_a73c4.dir/src.cxx.o  -o cmTC_a73c4  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wshadow succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_f8bd3/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_f8bd3.dir/build.make CMakeFiles/cmTC_f8bd3.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_f8bd3.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -DCOMPILER_SUPPORT_Wshadow -Werror   -Wshadow -o CMakeFiles/cmTC_f8bd3.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_f8bd3
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f8bd3.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -DCOMPILER_SUPPORT_Wshadow -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_f8bd3.dir/src.cxx.o  -o cmTC_f8bd3  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wnovariadicmacros succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_e06a2/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_e06a2.dir/build.make CMakeFiles/cmTC_e06a2.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_e06a2.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -DCOMPILER_SUPPORT_Wnovariadicmacros -Werror   -Wno-variadic-macros -o CMakeFiles/cmTC_e06a2.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_e06a2
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e06a2.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -DCOMPILER_SUPPORT_Wnovariadicmacros -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_e06a2.dir/src.cxx.o  -o cmTC_e06a2  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wnolonglong succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_fd816/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_fd816.dir/build.make CMakeFiles/cmTC_fd816.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_fd816.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -DCOMPILER_SUPPORT_Wnolonglong -Werror   -Wno-long-long -o CMakeFiles/cmTC_fd816.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_fd816
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fd816.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -DCOMPILER_SUPPORT_Wnolonglong -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_fd816.dir/src.cxx.o  -o cmTC_fd816  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_fnochecknew succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_9dc24/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_9dc24.dir/build.make CMakeFiles/cmTC_9dc24.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_9dc24.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -DCOMPILER_SUPPORT_fnochecknew -Werror   -fno-check-new -o CMakeFiles/cmTC_9dc24.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_9dc24
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_9dc24.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -DCOMPILER_SUPPORT_fnochecknew -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_9dc24.dir/src.cxx.o  -o cmTC_9dc24  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_fnocommon succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_382e1/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_382e1.dir/build.make CMakeFiles/cmTC_382e1.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_382e1.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -DCOMPILER_SUPPORT_fnocommon -Werror   -fno-common -o CMakeFiles/cmTC_382e1.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_382e1
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_382e1.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -DCOMPILER_SUPPORT_fnocommon -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_382e1.dir/src.cxx.o  -o cmTC_382e1  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_fstrictaliasing succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_e7eb0/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_e7eb0.dir/build.make CMakeFiles/cmTC_e7eb0.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_e7eb0.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -DCOMPILER_SUPPORT_fstrictaliasing -Werror   -fstrict-aliasing -o CMakeFiles/cmTC_e7eb0.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_e7eb0
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e7eb0.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -DCOMPILER_SUPPORT_fstrictaliasing -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_e7eb0.dir/src.cxx.o  -o cmTC_e7eb0  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Qunusedarguments succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_81726/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_81726.dir/build.make CMakeFiles/cmTC_81726.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_81726.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -DCOMPILER_SUPPORT_Qunusedarguments -Werror   -Qunused-arguments -o CMakeFiles/cmTC_81726.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_81726
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_81726.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -DCOMPILER_SUPPORT_Qunusedarguments -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_81726.dir/src.cxx.o  -o cmTC_81726  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_ansi succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_bdc43/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_bdc43.dir/build.make CMakeFiles/cmTC_bdc43.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_bdc43.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -DCOMPILER_SUPPORT_ansi -Werror   -ansi -o CMakeFiles/cmTC_bdc43.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_bdc43
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bdc43.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -DCOMPILER_SUPPORT_ansi -Werror -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_bdc43.dir/src.cxx.o  -o cmTC_bdc43  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_OPENMP succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_3e442/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_3e442.dir/build.make CMakeFiles/cmTC_3e442.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_3e442.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DCOMPILER_SUPPORT_OPENMP   -fopenmp -o CMakeFiles/cmTC_3e442.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_3e442
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3e442.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DCOMPILER_SUPPORT_OPENMP -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_3e442.dir/src.cxx.o  -o cmTC_3e442  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Determining if the Q_WS_MAC exist passed with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_57e2c/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_57e2c.dir/build.make CMakeFiles/cmTC_57e2c.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_57e2c.dir/CheckSymbolExists.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -I/usr/local/Cellar/qt/4.8.7_1/include -F/usr/local/Cellar/qt/4.8.7_1/lib  -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi    -o CMakeFiles/cmTC_57e2c.dir/CheckSymbolExists.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+Linking CXX executable cmTC_57e2c
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_57e2c.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi  -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_57e2c.dir/CheckSymbolExists.cxx.o  -o cmTC_57e2c  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+File /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_MAC
+  return ((int*)(&Q_WS_MAC))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the QT_MAC_USE_COCOA exist passed with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_41e57/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_41e57.dir/build.make CMakeFiles/cmTC_41e57.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_41e57.dir/CheckSymbolExists.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -I/usr/local/Cellar/qt/4.8.7_1/include -F/usr/local/Cellar/qt/4.8.7_1/lib  -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi    -o CMakeFiles/cmTC_41e57.dir/CheckSymbolExists.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+Linking CXX executable cmTC_41e57
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_41e57.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi  -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_41e57.dir/CheckSymbolExists.cxx.o  -o cmTC_41e57  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+File /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qconfig.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef QT_MAC_USE_COCOA
+  return ((int*)(&QT_MAC_USE_COCOA))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Performing C++ SOURCE FILE Test EIGEN_COMPILER_SUPPORT_CPP11 succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_2408f/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_2408f.dir/build.make CMakeFiles/cmTC_2408f.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_2408f.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DEIGEN_COMPILER_SUPPORT_CPP11   -std=c++11 -o CMakeFiles/cmTC_2408f.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_2408f
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2408f.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DEIGEN_COMPILER_SUPPORT_CPP11 -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_2408f.dir/src.cxx.o  -o cmTC_2408f  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test EIGEN_COMPILER_SUPPORT_CXX11 succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_98e74/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_98e74.dir/build.make CMakeFiles/cmTC_98e74.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_98e74.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DEIGEN_COMPILER_SUPPORT_CXX11   -std=c++11 -o CMakeFiles/cmTC_98e74.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_98e74
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_98e74.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DEIGEN_COMPILER_SUPPORT_CXX11 -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_98e74.dir/src.cxx.o  -o cmTC_98e74  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_FASTMATH succeded with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_3111e/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_3111e.dir/build.make CMakeFiles/cmTC_3111e.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_3111e.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++     -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DCOMPILER_SUPPORT_FASTMATH   -ffast-math -o CMakeFiles/cmTC_3111e.dir/src.cxx.o -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_3111e
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3111e.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++    -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wshorten-64-to-32 -Wenum-conversion -Wc++11-extensions -Wshadow -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Qunused-arguments -ansi -DCOMPILER_SUPPORT_FASTMATH -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_3111e.dir/src.cxx.o  -o cmTC_3111e  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0; }
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_45468/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_45468.dir/build.make CMakeFiles/cmTC_45468.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_45468.dir/CheckIncludeFile.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc     -o CMakeFiles/cmTC_45468.dir/CheckIncludeFile.c.o   -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_45468
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_45468.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_45468.dir/CheckIncludeFile.c.o  -o cmTC_45468  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+
+Determining if the pthread_create exist passed with the following output:
+Change Dir: /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/local/bin/gmake" "cmTC_332ab/fast"
+/usr/local/bin/gmake -f CMakeFiles/cmTC_332ab.dir/build.make CMakeFiles/cmTC_332ab.dir/build
+gmake[1]: Entering directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_332ab.dir/CheckSymbolExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc     -o CMakeFiles/cmTC_332ab.dir/CheckSymbolExists.c.o   -c /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_332ab
+/usr/local/Cellar/cmake/3.4.0/bin/cmake -E cmake_link_script CMakeFiles/cmTC_332ab.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -L/usr/local/opt/lapack/lib  CMakeFiles/cmTC_332ab.dir/CheckSymbolExists.c.o  -o cmTC_332ab  
+gmake[1]: Leaving directory '/Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp'
+
+File /Users/stevenjames/Documents/libcmaes/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

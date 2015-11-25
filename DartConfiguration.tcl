@@ -11,7 +11,7 @@ BuildDirectory: /Users/stevenjames/Documents/libcmaes
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: stevens-macbook-pro.local
+Site: Stevens-MacBook-Pro.local
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: darwin-15.0.0-llvm-clang++-7.0.0-sse2-64bit
