@@ -497,8 +497,14 @@ DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
 DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
+<<<<<<< HEAD
 DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
 DEFINE_double(tpa_dsigma,-1,"set two-point adaptation dsigma (use with care)");
+=======
+DEFINE_bool(resample_upon_restart,false,"whether to resample x0 at restart (bipop only)");
+DEFINE_bool(resample_from_history,false,"whether to resample x0 from history (bipop only)");
+DEFINE_bool(restart_from_best,false,"whether to restart from best value in history (bipop only");
+>>>>>>> origin/bipop_89
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -533,8 +539,14 @@ CMASolutions cmaes_opt()
   cmaparams.set_elitism(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
+<<<<<<< HEAD
   if (FLAGS_tpa_dsigma > 0.0)
     cmaparams.set_tpa_dsigma(FLAGS_tpa_dsigma);
+=======
+  cmaparams.set_resample_upon_restart(FLAGS_resample_upon_restart);
+  cmaparams.set_resample_from_history(FLAGS_resample_from_history);
+  cmaparams.set_restart_from_best(FLAGS_restart_from_best);
+>>>>>>> origin/bipop_89
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)

@@ -239,6 +239,7 @@ namespace libcmaes
        *             the final solution and reinjects the best solution until the population
        *             has better fitness, in its majority
        */
+<<<<<<< HEAD
       inline void set_elitism(const int &e)
       {
 	if (e == 0)
@@ -260,6 +261,14 @@ namespace libcmaes
 	  }
       }
       
+=======
+      inline void set_elitist(const bool &e) { _elitist = e; }
+
+      inline void set_resample_upon_restart(const bool &r) { _resample_upon_restart = r; }
+      inline void set_resample_from_history(const bool &r) { _resample_from_history = r; }
+      inline void set_restart_from_best(const bool &r) { _restart_from_best = r; }
+
+>>>>>>> origin/bipop_89
       /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
@@ -318,9 +327,16 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
+<<<<<<< HEAD
       bool _elitist = false; /**< re-inject the best-ever seen solution. */
       bool _initial_elitist = false; /**< re-inject x0. */
       bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+=======
+      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      bool _resample_upon_restart = false; /**< resample x0 upon restart (e.g. bipop). */
+      bool _resample_from_history = false;
+      bool _restart_from_best = false;
+>>>>>>> origin/bipop_89
       
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
