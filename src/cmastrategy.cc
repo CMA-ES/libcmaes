@@ -349,12 +349,19 @@ namespace libcmaes
 	this->update_fevals(1);
       }
     
+    auto mit = _historyb.begin();
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
     while(!stop())
       {
 	dMat candidates = askf();
 	evalf(candidates,eostrat<TGenoPheno>::_parameters._gp.pheno(candidates));
 	tellf();
+	if (eostrat<TGenoPheno>::_parameters._resample_from_history)
+	  {
+	    _history.push_back(eostrat<TGenoPheno>::_solutions.best_candidate());
+	    if ((mit = _historyb.find(this->_solutions.best_candidate().get_fvalue()))==_historyb.end())
+              _historyb.insert(std::pair<double,Candidate>(this->_solutions.best_candidate().get_fvalue(),this->_solutions.best_candidate()));
+	  }
 	eostrat<TGenoPheno>::inc_iter();
 	std::chrono::time_point<std::chrono::system_clock> tstop = std::chrono::system_clock::now();
 	eostrat<TGenoPheno>::_solutions._elapsed_last_iter = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
