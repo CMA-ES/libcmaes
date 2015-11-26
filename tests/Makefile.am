@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = subdir-objects
-bin_PROGRAMS=simple_test edm
+bin_PROGRAMS=simple_test edm test_rlcma
 if HAVE_GFLAGS
 bin_PROGRAMS += test_functions tpa_tests
 if HAVE_SURROG
@@ -11,6 +11,7 @@ tpa_tests_SOURCES=tpa-tests.cc
 endif
 simple_test_SOURCES=simple-test.cc
 edm_SOURCES=edm.cc
+test_rlcma_SOURCES=test-rlcma.cc
 if HAVE_BBOB
 libbbobdir = $(libdir)
 libbbob_LIBRARIES=libbbob.a
