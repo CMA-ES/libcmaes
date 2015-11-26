@@ -23,6 +23,7 @@
 #define PWQ_BOUND_STRATEGY_H
 
 #include "eo_matrix.h"
+#include <vector>
 
 namespace libcmaes
 {
@@ -50,6 +51,13 @@ namespace libcmaes
 
     double getAL(const int &k) const { return _al[k]; }
     double getAU(const int &k) const { return _au[k]; }
+
+    void remove_dimensions(const std::vector<int> &k);
+
+    bool is_id() const
+    {
+      return _id;
+    }
     
   private:
     dVec _lbounds;
@@ -61,6 +69,7 @@ namespace libcmaes
     dVec _r;
     dVec _phenolbounds; /**< differ from _lbounds when another geno/pheno transform applies before bounds. */
     dVec _phenoubounds; /**< differ from _ubounds when another geno/pheno transform applies before bounds. */
+    bool _id = false;
   };
 }
 

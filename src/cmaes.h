@@ -182,7 +182,8 @@ namespace libcmaes
 	}
 	case sepCMAES:
 	{
-	  parameters.set_sep();
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
 	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<CMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
@@ -206,7 +207,8 @@ namespace libcmaes
 	}
 	case sepIPOP_CMAES:
 	{
-	  parameters.set_sep();
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
 	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<IPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
@@ -230,7 +232,8 @@ namespace libcmaes
 	}
 	case sepBIPOP_CMAES:
 	{
-	  parameters.set_sep();
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
 	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<CovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
@@ -253,7 +256,8 @@ namespace libcmaes
 	}
 	case sepaCMAES:
 	{
-	  parameters.set_sep();
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
 	  if (solutions.cov().size()==0)
 	    {
 	      ESOptimizer<CMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> sepcmaes(func,parameters);
@@ -276,7 +280,8 @@ namespace libcmaes
 	}
 	case sepaIPOP_CMAES:
 	{
-	  parameters.set_sep();
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
 	  if (solutions.cov().size() == 0)
 	    {
 	      ESOptimizer<IPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> ipop(func,parameters);
@@ -299,7 +304,8 @@ namespace libcmaes
 	}
 	case sepaBIPOP_CMAES:
 	{
-	  parameters.set_sep();
+	  if (!parameters.is_sep())
+	    parameters.set_sep();
 	  if (solutions.cov().size() == 0)
 	    {
 	      ESOptimizer<BIPOPCMAStrategy<ACovarianceUpdate,TGenoPheno>,CMAParameters<TGenoPheno>,CMASolutions> bipop(func,parameters);
@@ -322,7 +328,8 @@ namespace libcmaes
 	}
 	case VD_CMAES:
 	{
-	  parameters.set_vd();
+	  if (!parameters.is_vd())
+	    parameters.set_vd();
 	  ESOptimizer<CMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> vdcma(func,parameters);
 	  if (gfunc != nullptr)
 	    vdcma.set_gradient_func(gfunc);
@@ -333,7 +340,8 @@ namespace libcmaes
 	}
 	case VD_IPOP_CMAES:
 	{
-	  parameters.set_vd();
+	  if (!parameters.is_vd())
+	    parameters.set_vd();
 	  ESOptimizer<IPOPCMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> ipop(func,parameters);
 	  if (gfunc != nullptr)
 	    ipop.set_gradient_func(gfunc);
@@ -344,7 +352,8 @@ namespace libcmaes
 	}
 	case VD_BIPOP_CMAES:
 	{
-	  parameters.set_vd();
+	  if (!parameters.is_vd())
+	    parameters.set_vd();
 	  ESOptimizer<BIPOPCMAStrategy<VDCMAUpdate,TGenoPheno>,CMAParameters<TGenoPheno>> bipop(func,parameters);
 	  if (gfunc != nullptr)
 	    bipop.set_gradient_func(gfunc);

@@ -23,6 +23,7 @@
 #define NOBOUNDSTRATEGY_H
 
 #include "eo_matrix.h"
+#include <vector>
 #include <limits>
 
 namespace libcmaes
@@ -55,10 +56,23 @@ namespace libcmaes
       (void)y;
     }
 
+    void remove_dimensions(const std::vector<int> &k)
+    {
+      (void)k;
+    }
+
+    bool is_id() const
+    {
+      return _id;
+    }
+
     double getLBound(const int &k) const { (void)k;return -std::numeric_limits<double>::max(); }
     double getUBound(const int &k) const { (void)k;return std::numeric_limits<double>::max(); }
     double getPhenoLBound(const int &k) const { (void)k;return -std::numeric_limits<double>::max(); }
     double getPhenoUBound(const int &k) const { (void)k;return std::numeric_limits<double>::max(); }
+    
+  private:
+    bool _id = true;
   };
 }
 

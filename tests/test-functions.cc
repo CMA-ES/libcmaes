@@ -31,6 +31,10 @@
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>
 
+#ifndef GFLAGS_GFLAGS_H_
+namespace gflags = google;
+#endif  // GFLAGS_GFLAGS_H_
+
 #include <assert.h>
 
 using namespace libcmaes;
@@ -39,6 +43,7 @@ std::random_device rd;
 std::normal_distribution<double> norm(0.0,1.0);
 std::cauchy_distribution<double> cauch(0.0,1.0);
 std::mt19937 gen;
+std::string boundtype = "none";
 
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
   std::stringstream ss(s);
@@ -245,7 +250,7 @@ FitFunc rastrigin = [](const double *x, const int N)
   return val;
 };
 std::vector<double> rastx0(10,-std::numeric_limits<double>::max()); // auto x0 in [-4,4].
-CMAParameters<> rastrigin_params(10,&rastx0.front(),5.0,400,1234); // 1234 is seed.
+CMAParameters<> rastrigin_params(rastx0,5.0,400,1234); // 1234 is seed.
 
 FitFunc elli = [](const double *x, const int N)
 {
@@ -455,12 +460,13 @@ DEFINE_bool(list,false,"returns a list of available functions");
 DEFINE_bool(all,false,"test on all functions");
 DEFINE_double(epsilon,1e-10,"epsilon on function result testing, with --all");
 DEFINE_string(fplot,"","file where to store data for later plotting of results and internal states");
+DEFINE_bool(full_fplot,false,"whether to activate full legacy plot");
 DEFINE_double(sigma0,-1.0,"initial value for step-size sigma (-1.0 for automated value)");
 DEFINE_double(x0,-std::numeric_limits<double>::max(),"initial value for all components of the mean vector (-DBL_MAX for automated value)");
 DEFINE_uint64(seed,0,"seed for random generator");
 DEFINE_string(alg,"cmaes","algorithm, among cmaes, ipop, bipop, acmaes, aipop, abipop, sepcmaes, sepipop, sepbipop, sepacmaes, sepaipop, sepabipop");
 DEFINE_bool(lazy_update,false,"covariance lazy update");
-DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
+//DEFINE_string(boundtype,"none","treatment applied to bounds, none or pwq (piecewise linear / quadratic) transformation");
 DEFINE_double(lbound,std::numeric_limits<double>::max()/-1e2,"lower bound to parameter vector");
 DEFINE_double(ubound,std::numeric_limits<double>::max()/1e2,"upper bound to parameter vector");
 DEFINE_bool(quiet,false,"no intermediate output");
@@ -479,14 +485,20 @@ DEFINE_int32(restarts,9,"maximum number of restarts, applies to IPOP and BIPOP a
 DEFINE_bool(with_gradient,false,"whether to use the function gradient when available in closed form");
 DEFINE_bool(with_num_gradient,false,"whether to use numerical gradient injection");
 DEFINE_bool(with_edm,false,"whether to compute expected distance to minimum when optimization has completed");
+DEFINE_bool(with_stds,false,"whether to compute and print the standard deviation for every parameter");
+DEFINE_bool(with_errors,false,"whether to compute the errors");
+DEFINE_bool(with_corr,false,"whether to compute and print the correlation matrix (may not fit in memory in large-scale settings)");
 DEFINE_bool(mt,false,"whether to use parallel evaluation of objective function");
-DEFINE_bool(elitist,false,"whether to activate elistist scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
+DEFINE_bool(initial_fvalue,false,"whether to compute initial objective function value at x0");
+DEFINE_int32(elitist,0,"whether to activate elistism, 0: deactivated, 1: reinjects best seen candidate, 2: initial elitism, reinjects x0, 3: on restart scheme, useful when optimizer appears to converge to a value that is higher than the best value reported along the way");
 DEFINE_int32(max_hist,-1,"maximum stored history, helps mitigate the memory usage though preventing the 'stagnation' criteria to trigger");
 DEFINE_bool(no_stagnation,false,"deactivate stagnation stopping criteria");
 DEFINE_bool(no_tolx,false,"deactivate tolX stopping criteria");
 DEFINE_bool(no_automaxiter,false,"deactivate automaxiter stopping criteria");
 DEFINE_bool(no_tolupsigma,false,"deactivate tolupsigma stopping criteria");
 DEFINE_bool(uh,false,"activate uncertainty handling of objective function");
+DEFINE_int32(tpa,1,"whether to use two-point adapation for step-size update, 0: no, 1: auto, 2: yes");
+DEFINE_double(tpa_dsigma,-1,"set two-point adaptation dsigma (use with care)");
 
 template <class TGenoPheno=GenoPheno<NoBoundStrategy,NoScalingStrategy>>
 CMASolutions cmaes_opt()
@@ -494,6 +506,7 @@ CMASolutions cmaes_opt()
   std::vector<double> lbounds = {FLAGS_lbound},ubounds = {FLAGS_ubound};
   if (FLAGS_lbound != std::numeric_limits<double>::max()/-1e2 || FLAGS_ubound != std::numeric_limits<double>::max()/1e2)
     {
+      boundtype = "pwq";
       lbounds = std::vector<double>(FLAGS_dim);
       ubounds = std::vector<double>(FLAGS_dim);
       for (int i=0;i<FLAGS_dim;i++)
@@ -504,19 +517,24 @@ CMASolutions cmaes_opt()
     }
   TGenoPheno gp(&lbounds.at(0),&ubounds.at(0),FLAGS_dim);
   std::vector<double> x0(FLAGS_dim,FLAGS_x0);
-  CMAParameters<TGenoPheno> cmaparams(FLAGS_dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
+  CMAParameters<TGenoPheno> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda,FLAGS_seed,gp);
   cmaparams.set_max_iter(FLAGS_max_iter);
   cmaparams.set_max_fevals(FLAGS_max_fevals);
   cmaparams.set_restarts(FLAGS_restarts);
   cmaparams.set_fplot(FLAGS_fplot);
+  cmaparams.set_full_fplot(FLAGS_full_fplot);
   cmaparams.set_lazy_update(FLAGS_lazy_update);
   cmaparams.set_quiet(FLAGS_quiet);
+  cmaparams.set_tpa(FLAGS_tpa);
   cmaparams.set_gradient(FLAGS_with_gradient || FLAGS_with_num_gradient);
   cmaparams.set_edm(FLAGS_with_edm);
   cmaparams.set_mt_feval(FLAGS_mt);
-  cmaparams.set_elitist(FLAGS_elitist);
+  cmaparams.set_initial_fvalue(FLAGS_initial_fvalue);
+  cmaparams.set_elitism(FLAGS_elitist);
   cmaparams.set_max_hist(FLAGS_max_hist);
   cmaparams.set_uh(FLAGS_uh);
+  if (FLAGS_tpa_dsigma > 0.0)
+    cmaparams.set_tpa_dsigma(FLAGS_tpa_dsigma);
   if (FLAGS_ftarget != -std::numeric_limits<double>::infinity())
     cmaparams.set_ftarget(FLAGS_ftarget);
   if (FLAGS_noisy)
@@ -613,12 +631,18 @@ CMASolutions cmaes_opt()
     }
   if (FLAGS_with_edm)
     LOG(INFO) << "EDM=" << cmasols.edm() << " / EDM/fm=" << cmasols.edm() / cmasols.best_candidate().get_fvalue() << std::endl;
+  if (FLAGS_with_stds)
+    std::cout << "stds=" << cmasols.stds(cmaparams).transpose() << std::endl;
+  if (FLAGS_with_errors)
+    std::cout << "errors=" << cmasols.errors(cmaparams).transpose() << std::endl;
+  if (FLAGS_with_corr)
+    std::cout << "correlation=" << cmasols.corr() << std::endl;
   return cmasols;
 }
 
 int main(int argc, char *argv[])
 {
-  google::ParseCommandLineFlags(&argc, &argv, true);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
 #ifdef HAVE_GLOG
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr=1;
@@ -648,7 +672,7 @@ int main(int argc, char *argv[])
 	    }
 	  int dim = msols[(*mit).first].get_x_dvec().rows();
 	  std::vector<double> x0(dim,FLAGS_x0);
-	  CMAParameters<> cmaparams(dim,&x0.front(),FLAGS_sigma0,FLAGS_lambda);
+	  CMAParameters<> cmaparams(x0,FLAGS_sigma0,FLAGS_lambda);
 	  cmaparams.set_max_iter(FLAGS_max_iter);
 	  if ((pmit=mparams.find((*mit).first))!=mparams.end())
 	    cmaparams = (*pmit).second;
@@ -684,13 +708,13 @@ int main(int argc, char *argv[])
       exit(1);
     }
   CMASolutions cmasols;
-  if (FLAGS_boundtype == "none")
+  if (boundtype == "none")
     {
       if (!FLAGS_linscaling)
 	cmasols = cmaes_opt<>();
       else cmasols = cmaes_opt<GenoPheno<NoBoundStrategy,linScalingStrategy>>();
     }
-  else if (FLAGS_boundtype == "pwq")
+  else if (boundtype == "pwq")
     {
       if (!FLAGS_linscaling)
 	cmasols = cmaes_opt<GenoPheno<pwqBoundStrategy>>();
@@ -698,7 +722,7 @@ int main(int argc, char *argv[])
     }
   else
     {
-      LOG(ERROR) << "Unknown boundtype " << FLAGS_boundtype << std::endl;
+      LOG(ERROR) << "Unknown boundtype " << boundtype << std::endl;
       exit(-1);
     }
 }

@@ -46,9 +46,9 @@ int main(int argc, char *argv[])
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
+  CMAParameters<> cmaparams(x0,sigma);
   cmaparams.set_fplot("pffunc.dat"); // DON'T MISS: mandatory output file name.
-  CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,cmasols,plotf);
+  CMASolutions cmasols = cmaes<>(rosenbrock,cmaparams,CMAStrategy<CovarianceUpdate>::_defaultPFunc,nullptr,CMASolutions(),plotf);
   std::cout << "best solution: " << cmasols << std::endl;
   std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   return cmasols.run_status();

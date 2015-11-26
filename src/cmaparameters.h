@@ -63,7 +63,7 @@ namespace libcmaes
 		    const double &sigma,
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
-		    const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
+		    const TGenoPheno &gp=TGenoPheno());
       
       /**
        * \brief Constructor.
@@ -78,7 +78,7 @@ namespace libcmaes
 		    const double &sigma,
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
-		    const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
+		    const TGenoPheno &gp=TGenoPheno());
       
       /**
        * \brief Constructor.
@@ -113,7 +113,28 @@ namespace libcmaes
       
       /**
        * \brief sets the optimization algorithm.
-       * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop
+       *        Note: overrides Parameters::set_algo
+       * @param algo from CMAES_DEFAULT, IPOP_CMAES, BIPOP_CMAES, aCMAES, aIPOP_CMAES, aBIPOP_CMAES, sepCMAES, sepIPOP_CMAES, sepBIPOP_CMAES, sepaCMAES, sepaIPOP_CMAES, sepaBIPOP_CMAES, VD_CMAES, VD_IPOP_CMAES, VD_BIPOP_CMAES 
+       */
+      void set_algo(const int &algo)
+      {
+	this->_algo = algo;
+	/*if (this->_tpa != 0
+	    && (this->_algo == 6 // sepCMAES
+		|| this->_algo == 7 //sepIPOP_CMAES
+		|| this->_algo == 8 //sepBIPOP_CMAES
+		|| this->_algo == 9 //sepaCMAES
+		|| this->_algo == 10 //sepaIPOP_CMAES
+		|| this->_algo == 11 //sepBIPOP_CMAES
+		|| this->_algo == 12 //VD_CMAES
+		|| this->_algo == 13 //VD_IPOP_CMAES
+		|| this->_algo == 14)) //VD_BIPOP_CMAES
+		set_tpa(2); */ // XXX: deactivated until flaw is fixed
+      }
+
+      /**
+       * \brief sets the optimization algorithm.
+       * @param algo as string from cmaes,ipop,bipop,acmaes,aipop,abipop,sepcmaes,sepipop,sepbipop,sepacmaes,sepaipop,sepabipop,vdcma,vdipopcma,vdbipopcma
        */
       void set_str_algo(const std::string &algo)
       {
@@ -125,6 +146,28 @@ namespace libcmaes
 	  set_sep();
 	if (algo.find("vd")!=std::string::npos)
 	  set_vd();
+      }
+
+      /**
+       * \brief returns initial sigma value
+       * @return initial sigma value
+       */
+      double get_sigma_init() const
+      {
+	return _sigma_init;
+      }
+
+      /**
+       * \brief activates the gradient injection scheme. 
+       *        If no gradient function is defined, injects a numerical gradient solution instead
+       *        Note: overrides Parameters::set_gradient
+       * @param gradient true/false
+       */
+      void set_gradient(const bool &gradient)
+      {
+	this->_with_gradient = gradient;
+	/*if (this->_tpa != 0)
+	  set_tpa(2);*/ // TPA default when gradient is activated.
       }
       
       /**
@@ -150,7 +193,7 @@ namespace libcmaes
       bool is_vd() const { return _vd; }
       
       /**
-       * \brief freezes a parameter to a given value during optimization.
+       * \brief freezes a parameter to a given value in genotype during optimization.
        *        Adapts some generic parameters as well.
        * @param index dimension index of the parameter to be frozen
        * @param value frozen value of the parameter
@@ -188,13 +231,35 @@ namespace libcmaes
       inline bool get_lazy_update() { return _lazy_update; }
 
       /**
-       * \brief sets initial elitist scheme: restart if best encountered solution is not
-       *        the final solution and reinjects the best solution until the population
-       *        has better fitness, in its majority
-       * @param e whether to activate the initial elitist scheme
+       * \brief sets elitism:
+       *        0 -> no elitism
+       *        1 -> elitism: reinjects the best-ever seen solution
+       *        2 -> initial elitism: reinject x0 as long as it is not improved upon
+       *        3 -> initial elitism on restart: restart if best encountered solution is not the
+       *             the final solution and reinjects the best solution until the population
+       *             has better fitness, in its majority
        */
-      inline void set_elitist(const bool &e) { _elitist = e; }
-
+      inline void set_elitism(const int &e)
+      {
+	if (e == 0)
+	  _elitist = _initial_elitist = _initial_elitist_on_restart;
+	else if (e == 1)
+	  {
+	    _elitist = true;
+	    _initial_elitist = _initial_elitist_on_restart = false;
+	  }
+	else if (e == 2)
+	  {
+	    _initial_elitist = true;
+	    _elitist = _initial_elitist_on_restart = false;
+	  }
+	else if (e == 3)
+	  {
+	    _initial_elitist_on_restart = true;
+	    _elitist = _initial_elitist = false;
+	  }
+      }
+      
       /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
@@ -206,6 +271,19 @@ namespace libcmaes
       {
 	_stoppingcrit.insert(std::pair<int,bool>(criteria,active));
       }
+
+      /**
+       * \brief activates / deactivates two-point adaptation step-size mechanism.
+       *        Overrides parameters::set_tpa by automatically setting dsigma value.
+       * @param b 0: no, 1: auto, 2: yes
+       */
+      void set_tpa(const int &b); // overrides def in parameters.h in order to reset dsigma
+
+      /**
+       * \brief sets dsigma value, use with care.
+       * @param d dsigma
+       */
+      void set_tpa_dsigma(const double &d) { _dsigma = d; }
       
     private:
       int _mu; /**< number of candidate solutions used to update the distribution parameters. */
@@ -240,7 +318,9 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
-      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      bool _elitist = false; /**< re-inject the best-ever seen solution. */
+      bool _initial_elitist = false; /**< re-inject x0. */
+      bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
       
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */

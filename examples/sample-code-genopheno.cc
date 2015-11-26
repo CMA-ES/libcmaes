@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
   double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
   GenoPheno<> gp(genof,phenof);
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma,-1,0,gp); // -1 for automatically decided lambda.
+  CMAParameters<> cmaparams(x0,sigma,-1,0,gp); // -1 for automatically decided lambda.
   //cmaparams._algo = BIPOP_CMAES;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;

@@ -26,36 +26,42 @@
 #include "llogging.h"
 #include <iostream>
 #include <chrono>
+#include <ctime>
 #include <iomanip>
 
 namespace libcmaes
 {
 
-  /*template <typename T> int sgn(T val) {
-    return (T(0) < val) - (val < T(0));
-    }*/
-
   template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
   
   template <class TCovarianceUpdate, class TGenoPheno>
-  ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
+  int pfuncdef_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
   {
     LOG_IF(INFO,!cmaparams.quiet()) << std::setprecision(std::numeric_limits<double>::digits10) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / last_iter=" << cmasols.elapsed_last_iter() << std::endl;
     return 0;
-  };
-
+  }
+  template <class TCovarianceUpdate, class TGenoPheno>
+  ProgressFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultPFunc = &pfuncdef_impl<TCovarianceUpdate,TGenoPheno>;
+  
   template<class TCovarianceUpdate, class TGenoPheno>
-  PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultFPFunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+  int fpfuncdef_full_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
   {
     std::string sep = " ";
-    fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
-    fplotstream << cmasols.eigenvalues().transpose() << sep;
-    if (!cmaparams.is_sep() && !cmaparams.is_vd())
-      fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-    else if (cmaparams.is_sep())
-      fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
-    else if (cmaparams.is_vd())
-      fplotstream << cmasols.sepcov().transpose() << sep; // C = D(I+vv')D, and we print out D^2 as an approx
+    if (cmasols.niter() == 0)
+      {
+	std::chrono::time_point<std::chrono::system_clock> tnow = std::chrono::system_clock::now();
+	std::time_t tdate = std::chrono::system_clock::to_time_t(tnow);
+	fplotstream << cmaparams.dim() << sep << cmaparams.get_seed() << " / " << std::ctime(&tdate) << std::endl; // date and seed
+      }
+    fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << (cmasols.min_eigenv() == 0 ? 1.0 : sqrt(cmasols.max_eigenv()/cmasols.min_eigenv())) << sep;
+    fplotstream << cmasols.get_best_seen_candidate().get_fvalue() << sep << cmasols.get_candidate(cmasols.size() / 2).get_fvalue() << sep << cmasols.get_worst_seen_candidate().get_fvalue() << sep << cmasols.min_eigenv() << sep << cmasols.max_eigenv() << sep; // best ever fvalue, median fvalue, worst fvalue, max eigen, min eigen
+    if (cmasols.get_best_seen_candidate().get_x_size())
+      fplotstream << cmasols.get_best_seen_candidate().get_x_dvec().transpose() << sep;  // xbest
+    else fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+    if (!cmasols.eigenvalues().size())
+      fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+    else fplotstream << cmasols.eigenvalues().transpose() << sep;
+    fplotstream << cmasols.stds(cmaparams).transpose() << sep;
     fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
     fplotstream << sep << cmasols.elapsed_last_iter();
 #ifdef HAVE_DEBUG
@@ -63,7 +69,26 @@ namespace libcmaes
 #endif
     fplotstream << std::endl;
     return 0;
-  };
+    }
+  template<class TCovarianceUpdate, class TGenoPheno>
+  int fpfuncdef_impl(const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
+  {
+    std::string sep = " ";
+    fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << (cmasols.min_eigenv() == 0 ? 1.0 : sqrt(cmasols.max_eigenv()/cmasols.min_eigenv())) << sep;
+    if (!cmasols.eigenvalues().size())
+      fplotstream << dVec::Zero(cmaparams.dim()).transpose() << sep;
+    else fplotstream << cmasols.eigenvalues().transpose() << sep;
+    fplotstream << cmasols.stds(cmaparams).transpose() << sep;
+    fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
+    fplotstream << sep << cmasols.elapsed_last_iter();
+#ifdef HAVE_DEBUG
+    fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
+#endif
+    fplotstream << std::endl;
+    return 0;
+    }
+  template<class TCovarianceUpdate, class TGenoPheno>
+  PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> CMAStrategy<TCovarianceUpdate,TGenoPheno>::_defaultFPFunc = &fpfuncdef_impl<TCovarianceUpdate,TGenoPheno>;
 
   template <class TCovarianceUpdate, class TGenoPheno>
   CMAStrategy<TCovarianceUpdate,TGenoPheno>::CMAStrategy()
@@ -76,32 +101,12 @@ namespace libcmaes
 							 CMAParameters<TGenoPheno> &parameters)
     :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >(func,parameters)
   {
-    eostrat<TGenoPheno>::_pfunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
-      {
-	LOG_IF(INFO,!cmaparams.quiet()) << std::setprecision(std::numeric_limits<double>::digits10) << "iter=" << cmasols.niter() << " / evals=" << cmasols.fevals() << " / f-value=" << cmasols.best_candidate().get_fvalue() <<  " / sigma=" << cmasols.sigma() << " / last_iter=" << cmasols.elapsed_last_iter() << std::endl;
-	return 0;
-      };
-    eostrat<TGenoPheno>::_pffunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
-      {
-	std::string sep = " ";
-	fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep;
-	fplotstream << cmasols.eigenvalues().transpose() << sep;
-	if (!cmaparams.is_sep() && !cmaparams.is_vd())
-	  fplotstream << cmasols.cov().sqrt().diagonal().transpose() << sep; // max deviation in all main axes
-	else if (cmaparams.is_sep())
-	  fplotstream << cmasols.sepcov().cwiseSqrt().transpose() << sep;
-	else if (cmaparams.is_vd())
-	fplotstream << cmasols.sepcov().transpose() << sep; // C = D(I+vv')D, and we print out D^2 as an approx
-	fplotstream << cmaparams.get_gp().pheno(cmasols.xmean()).transpose();
-	fplotstream << sep << cmasols.elapsed_last_iter();
-#ifdef HAVE_DEBUG
-	fplotstream << sep << cmasols._elapsed_eval << sep << cmasols._elapsed_ask << sep << cmasols._elapsed_tell << sep << cmasols._elapsed_stop;
-#endif
-	fplotstream << std::endl;
-	return 0;
-      };
+    eostrat<TGenoPheno>::_pfunc = _defaultPFunc;
+    if (!parameters._full_fplot)
+      eostrat<TGenoPheno>::_pffunc = _defaultFPFunc;
+    else eostrat<TGenoPheno>::_pffunc = &fpfuncdef_full_impl<TCovarianceUpdate,TGenoPheno>;
     _esolver = Eigen::EigenMultivariateNormal<double>(false,eostrat<TGenoPheno>::_parameters._seed); // seeding the multivariate normal generator.
-    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / lazy_update=" << eostrat<TGenoPheno>::_parameters._lazy_update << " / threads=" << Eigen::nbThreads() << std::endl;
+    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / tpa=" << (eostrat<TGenoPheno>::_parameters._tpa==2) << " / threads=" << Eigen::nbThreads() << std::endl;
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       {
 	_fplotstream = new std::ofstream(eostrat<TGenoPheno>::_parameters._fplot);
@@ -121,11 +126,10 @@ namespace libcmaes
 							 const CMASolutions &cmasols)
     :ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >(func,parameters,cmasols)
   {
-    eostrat<TGenoPheno>::_pfunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols)
-      {
-	LOG_IF(INFO,!cmaparams._quiet) << "iter=" << cmasols._niter << " / evals=" << cmaparams._lambda * cmasols._niter << " / f-value=" << cmasols._best_candidates_hist.back().get_fvalue() <<  " / sigma=" << cmasols._sigma << (cmaparams._lazy_update && cmasols._updated_eigen ? " / cupdate="+std::to_string(cmasols.updated_eigen()) : "") << " " << cmasols._elapsed_last_iter;
-	return 0;
-      };
+    eostrat<TGenoPheno>::_pfunc = _defaultPFunc;
+    if (!parameters._full_fplot)
+      eostrat<TGenoPheno>::_pffunc = _defaultFPFunc;
+    else eostrat<TGenoPheno>::_pffunc = &fpfuncdef_full_impl<TCovarianceUpdate,TGenoPheno>;
     _esolver = Eigen::EigenMultivariateNormal<double>(false,eostrat<TGenoPheno>::_parameters._seed); // seeding the multivariate normal generator.
     LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "CMA-ES / dim=" << eostrat<TGenoPheno>::_parameters._dim << " / lambda=" << eostrat<TGenoPheno>::_parameters._lambda << " / sigma0=" << eostrat<TGenoPheno>::_solutions._sigma << " / mu=" << eostrat<TGenoPheno>::_parameters._mu << " / mueff=" << eostrat<TGenoPheno>::_parameters._muw << " / c1=" << eostrat<TGenoPheno>::_parameters._c1 << " / cmu=" << eostrat<TGenoPheno>::_parameters._cmu << " / lazy_update=" << eostrat<TGenoPheno>::_parameters._lazy_update << std::endl;
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
@@ -215,6 +219,32 @@ namespace libcmaes
 	    pop.col(0) = nx;
 	  }
       }
+
+    // tpa: fill up two first (or second in case of gradient) points with candidates usable for tpa computation
+    if (eostrat<TGenoPheno>::_parameters._tpa == 2  && eostrat<TGenoPheno>::_niter > 0)
+      {
+	dVec mean_shift = eostrat<TGenoPheno>::_solutions._xmean - eostrat<TGenoPheno>::_solutions._xmean_prev;
+	double mean_shift_norm = 1.0;
+	if (!eostrat<TGenoPheno>::_parameters._sep && !eostrat<TGenoPheno>::_parameters._vd)
+	  mean_shift_norm = (_esolver._eigenSolver.eigenvalues().cwiseSqrt().cwiseInverse().cwiseProduct(_esolver._eigenSolver.eigenvectors().transpose()*mean_shift)).norm() / eostrat<TGenoPheno>::_solutions._sigma;
+	else mean_shift_norm = eostrat<TGenoPheno>::_solutions._sepcov.cwiseSqrt().cwiseInverse().cwiseProduct(mean_shift).norm() / eostrat<TGenoPheno>::_solutions._sigma;
+	//std::cout << "mean_shift_norm=" << mean_shift_norm << " / sqrt(N)=" << std::sqrt(std::sqrt(eostrat<TGenoPheno>::_parameters._dim)) << std::endl;
+
+	dMat rz = _esolver.samples_ind(1);
+	double mfactor = rz.norm();
+	dVec z = mfactor * (mean_shift / mean_shift_norm);
+	eostrat<TGenoPheno>::_solutions._tpa_x1 = eostrat<TGenoPheno>::_solutions._xmean + z;
+	eostrat<TGenoPheno>::_solutions._tpa_x2 = eostrat<TGenoPheno>::_solutions._xmean - z;
+	
+	// if gradient is in col 0, move tpa vectors to pos 1 & 2
+	if (eostrat<TGenoPheno>::_parameters._with_gradient)
+	  {
+	    eostrat<TGenoPheno>::_solutions._tpa_p1 = 1;
+	    eostrat<TGenoPheno>::_solutions._tpa_p2 = 2;
+	  }
+	pop.col(eostrat<TGenoPheno>::_solutions._tpa_p1) = eostrat<TGenoPheno>::_solutions._tpa_x1;
+	pop.col(eostrat<TGenoPheno>::_solutions._tpa_p2) = eostrat<TGenoPheno>::_solutions._tpa_x2;
+      }
     
     // if some parameters are fixed, reset them.
     if (!eostrat<TGenoPheno>::_parameters._fixed_p.empty())
@@ -253,8 +283,12 @@ namespace libcmaes
     // sort candidates.
     if (!eostrat<TGenoPheno>::_parameters._uh)
       eostrat<TGenoPheno>::_solutions.sort_candidates();
-    else this->uncertainty_handling();
+    else eostrat<TGenoPheno>::uncertainty_handling();
     
+    // call on tpa computation of s(t)
+    if (eostrat<TGenoPheno>::_parameters._tpa == 2 && eostrat<TGenoPheno>::_niter > 0)
+      eostrat<TGenoPheno>::tpa_update();
+
     // update function value history, as needed.
     eostrat<TGenoPheno>::_solutions.update_best_candidates();
     
@@ -283,15 +317,15 @@ namespace libcmaes
     if (eostrat<TGenoPheno>::_solutions._run_status < 0) // an error occured, most likely out of memory at cov matrix creation.
       return true;
     
-    if (eostrat<TGenoPheno>::_niter == 0)
-      return false;
-    
     if (eostrat<TGenoPheno>::_pfunc(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) // progress function.
       return true; // end on progress function internal termination, possibly custom.
     
     if (!eostrat<TGenoPheno>::_parameters._fplot.empty())
       plot();
     
+    if (eostrat<TGenoPheno>::_niter == 0)
+      return false;
+
     if ((eostrat<TGenoPheno>::_solutions._run_status = _stopcriteria.stop(eostrat<TGenoPheno>::_parameters,eostrat<TGenoPheno>::_solutions)) != CONT)
       return true;
     else return false;
@@ -304,10 +338,15 @@ namespace libcmaes
     //DLOG(INFO) << "optimize()\n";
     //debug
 
-    if (eostrat<TGenoPheno>::_initial_elitist)
+    if (eostrat<TGenoPheno>::_initial_elitist 
+	|| eostrat<TGenoPheno>::_parameters._initial_elitist
+	|| eostrat<TGenoPheno>::_parameters._elitist
+	|| eostrat<TGenoPheno>::_parameters._initial_fvalue)
       {
-	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_solutions._xmean.data(),eostrat<TGenoPheno>::_parameters._dim),
+	eostrat<TGenoPheno>::_solutions._initial_candidate = Candidate(eostrat<TGenoPheno>::_func(eostrat<TGenoPheno>::_parameters._gp.pheno(eostrat<TGenoPheno>::_solutions._xmean).data(),eostrat<TGenoPheno>::_parameters._dim),
 								       eostrat<TGenoPheno>::_solutions._xmean);
+	eostrat<TGenoPheno>::_solutions._best_seen_candidate = eostrat<TGenoPheno>::_solutions._initial_candidate;
+	this->update_fevals(1);
       }
     
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
@@ -325,14 +364,14 @@ namespace libcmaes
       eostrat<TGenoPheno>::edm();
 
     // test on final value wrt. to best candidate value and number of iterations in between.
-    if (eostrat<TGenoPheno>::_parameters._elitist)
+    if (eostrat<TGenoPheno>::_parameters._initial_elitist_on_restart)
       {
-	if (eostrat<TGenoPheno>::_parameters._elitist
+	if (eostrat<TGenoPheno>::_parameters._initial_elitist_on_restart
 	    && eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue()
 	    < eostrat<TGenoPheno>::_solutions.best_candidate().get_fvalue()
 	    && eostrat<TGenoPheno>::_niter - eostrat<TGenoPheno>::_solutions._best_seen_iter >= 3) // elitist
 	  {
-	    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "Starting elitist: bfvalue=" << eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue() << " / biter=" << eostrat<TGenoPheno>::_solutions._best_seen_iter << std::endl;
+	    LOG_IF(INFO,!eostrat<TGenoPheno>::_parameters._quiet) << "Starting elitist on restart: bfvalue=" << eostrat<TGenoPheno>::_solutions._best_seen_candidate.get_fvalue() << " / biter=" << eostrat<TGenoPheno>::_solutions._best_seen_iter << std::endl;
 	    this->set_initial_elitist(true);
 
 	    // reinit solution and re-optimize.

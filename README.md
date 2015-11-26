@@ -1,22 +1,24 @@
 ## libcmaes
-libcmaes is a multithreaded C++ implementation (with Python bindings) of the CMA-ES algorithm for optimization of nonlinear non-convex 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
+libcmaes is a multithreaded C++11 implementation (with Python bindings) of algorithms of the CMA-ES family for optimization of nonlinear non-convex 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
 
 Over the past decade, both the original CMA-ES and its improved flavors have proven very effective in optimizing functions when no gradient is available. Typically, the algorithm does find the minimum value of an objective function in a minimal number of function calls, compared to other methods. For a full report of recent results, see (3).
 
 CMA-ES is mostly the work of Nikolaus Hansen (4) and a few others (8). Other implementations can be found in (5).
 
 Main functionalities:
-At the moment, the library implements a vanilla version of CMA-ES (1).
+At the moment, the library implements many of the most effective CMA-ES algorihms, and defaults to the 'vanilla' version (1).
 Current features include:
 
 - high-level API for simple use in external applications;
-- implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES and VD-CMA (linear time & space complexity) along with support for IPOP and BIPOP flavors as well;
+- implements several flavors of CMA-ES, IPOP-CMA-ES, BIPOP-CMA-ES, active CMA-ES, active IPOP and BIPOP restart strategies, sep-CMA-ES and VD-CMA (both with linear time & space complexity), IPOP/BIPOP sep and VD-CMA;
 - high performances, the fastest implementation (9), some operations benefit from multicores;
-- scales up to millions of dimensions;
+- some algorithms can scale up to millions of dimensions;
 - support for objective function gradient, when available;
 - support for [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model)(10);
-- a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems.
-- python bindings
+- support for elitism and uncertainty handling;
+- support for profile likelihood and contour of objective functions;
+- a control exe in the command line for running the algorithm over a range of classical single-objective optimization problems;
+- Python bindings along with high-level easy-to-use interface.
 
 Documentation:
 
@@ -29,16 +31,17 @@ Dependencies:
 - [glog](https://code.google.com/p/google-glog/) for logging events and debug (optional);
 - [gflags](https://code.google.com/p/gflags/) for command line parsing (optional);
 - [gtest](https://code.google.com/p/googletest/) for unit testing (optional);
-- [libboost-python](http://www.boost.org/doc/libs/1_56_0/libs/python/doc/) for Python bindings (optional).
+- [libboost-python](http://www.boost.org/doc/libs/1_56_0/libs/python/doc/) for Python bindings (optional);
+- [numpy](http://www.numpy.org/) for Python bindings (optional).
 
 Implementation:
-The library makes use of C++ policy design for modularity, performance and putting the maximum burden onto the compile-time checks. The implementation closely follows the algorithms described in (2) and (6).
+The library makes use of C++ policy design for modularity, performance and putting the maximum burden on the checks at compile time. The implementation closely follows the algorithms described in (2), (6) and few other publications.
 
 ### Authors
-libcmaes is designed and implemented by Emmanuel Benazera on behalf of Inria Saclay / Research group TAO / LAL Appstats.
+libcmaes is designed and implemented by Emmanuel Benazera with help of Nikolaus Hansen, on behalf of Inria Saclay / Research group TAO and Laboratoir de l'Accélérateur linéaire, research group Appstats.
 
 ### Build
-Below are instruction for Linux systems, for building on Mac, see https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX
+Below are instruction for Linux systems, for building on Mac OSX, see https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX
 
 Beware of dependencies, typically on Debian/Ubuntu Linux, do:
 
@@ -73,7 +76,7 @@ gnuplot -e "filename='out.dat'" cma_multiplt.dem
 ```
 to plot results with matplotlib instead
 ```
-python cma_multiplt.py out.dat
+python ../python/cma_multiplt.py out.dat
 ```
 to run a check across a range of classical single-objective optimization functions:
 ```
@@ -106,7 +109,7 @@ int main(int argc, char *argv[])
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
-  CMAParameters<> cmaparams(dim,&x0.front(),sigma);
+  CMAParameters<> cmaparams(x0,sigma);
   //cmaparams.set_algo(BIPOP_CMAES);
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
@@ -116,7 +119,7 @@ int main(int argc, char *argv[])
 ```
 
 ### Python bindings
-To build the Python bindings and use libcmaes from Python code:
+To build the Python bindings and use libcmaes from Python code, see instructions below, and for more details, see https://github.com/beniz/libcmaes/wiki/Python-bindings
 - install 'boost-python', on Debian/Ubuntu systems:
 ```
 sudo apt-get install libboost-python-dev
@@ -177,7 +180,7 @@ CMA-ES requires two components from the user:
 
 In short: the optimum that is looked after should better not be far away from the interval [x0 - sigma0, x0 + sigma0] in each dimension, where distance is defined by sigma0.
 
-See https://www.lri.fr/~hansen/cmaes_inmatlab.html#practical for more detailed useful advices using CMA-ES.
+See https://github.com/beniz/libcmaes/wiki/Practical-hints and https://www.lri.fr/~hansen/cmaes_inmatlab.html#practical for more detailed useful advices using CMA-ES.
 
 ### Run BBOB 2013 Black-Box Optimization Benchmark
 
@@ -204,3 +207,6 @@ See (7) for more information and details.
 - (8) Y. Akimoto, A. Auger and N. Hansen (2014). Comparison-Based Natural Gradient Optimization in High Dimension. In Proceedings of Genetic and Evolutionary Computation Conference 2014
 - (9) https://github.com/beniz/libcmaes/issues/82
 - (10) Loshchilov I. (2013) Surrogate-Assisted Evolutionary Algorithms, PhD-Thesis, University Paris-Sud, https://www.lri.fr/~ilya/phd.html
+
+### Funding
+This work was supported by the ANR-2010-COSI-002 grant of the French NationalA Research Agency.

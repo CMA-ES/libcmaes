@@ -1,6 +1,7 @@
 # configure for libcmaes
 # author
-AC_INIT(libcmaes,0.9.3)
+AC_INIT(libcmaes,0.9.5)
+AC_MSG_NOTICE([libcmaes $PACKAGE_VERSION])
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_CONFIG_HEADER([libcmaes_config.h])
@@ -13,8 +14,9 @@ AC_CONFIG_FILES(libcmaes.pc)
 AC_PROG_INSTALL
 AC_CANONICAL_HOST
 
-AC_PROG_CC(g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
-AC_PROG_CXX
+AC_PROG_CC(clang++ g++ c++) # force c++ compiler on C files, otherwise BBOB lib doesn't link properly
+AC_PROG_CXX(clang++ g++ c++)
+AM_CONDITIONAL(HAVE_CLANG, test x"$CXX" = xclang++)
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
@@ -64,6 +66,7 @@ else
   GFLAGS_LIBS=
 fi
 AC_SUBST(GFLAGS_LIBS)
+AC_SUBST(GFLAGS_CFLAGS)
 AM_CONDITIONAL(HAVE_GFLAGS, test x"$ac_cv_have_libgflags" = x"1")
 
 # Check if there is google-glog library installed.
@@ -127,6 +130,19 @@ if test x"$python" = x"true"; then
     fi
 fi
 
+# Check for numpy
+if test x"$python" = x"true"; then
+AC_MSG_CHECKING([for Numpy include directory])
+CPPFLAGS=$PYTHON_CPPFLAGS $CPPFLAGS
+NUMPY_INCLUDE_DIR=`echo "import numpy; print numpy.get_include()" | $PYTHON - 2>/dev/null`
+AC_SUBST(NUMPY_INCLUDE_DIR)
+AC_CHECK_HEADER([${NUMPY_INCLUDE_DIR}/numpy/arrayobject.h],
+                [NUMPY_HEADER=yes],
+			[AC_MSG_ERROR([Numpy extension header not found])],
+			   		          [#include "Python.h"])
+AC_SUBST(NUMPY_HEADER)
+fi
+
 # Whether to only compile the library, without exe (e.g. tests and examples).
 AC_ARG_ENABLE(onlylib,
 AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and examples (default is NO)]),
@@ -136,6 +152,19 @@ AC_HELP_STRING([--enable-onlylib],[Compile the library alone without tests and e
 	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-onlylib) ;;
 esac],[onlylib=false])
 AM_CONDITIONAL(HAVE_ONLYLIB, test x$onlylib = xtrue)
+
+# Whether to compile support for surrogates
+AC_ARG_ENABLE(surrog,
+AC_HELP_STRING([--enable-surrog],[Compile the library with support for surrogates (default is YES)]),
+[case "${enableval}" in 
+	yes) surrog=true ;;
+	no) surrog=false ;;
+	*) AC_MSG_ERROR(bad_value ${enableval} for --enable-surrog) ;;
+esac],[surrog=true])
+AM_CONDITIONAL(HAVE_SURROG, test x$surrog = xtrue)
+if test x"$surrog" = x"true"; then
+   AC_DEFINE(HAVE_SURROG, 1, [surrog])
+fi
 
 # Whether debug mode
 AC_ARG_ENABLE(debug,

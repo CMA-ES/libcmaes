@@ -1,3 +1,31 @@
+2015-03-06	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.9.5
+	- step-size two-point adaptaion scheme for improved performances in some settings, ref #88
+	- important bug fixes to the ACM surrogate scheme, ref #57, #106
+	- simple high-level workflow under Python, ref #116
+	- improved performances in high dimensions, ref #97
+	- improved profile likelihood and contour computations, including under geno/pheno transforms, ref #30, #31, #48
+	- elitist mechanism for forcing best solutions during evolution, ref 103
+	- new legacy plotting function, ref #110
+	- optional initial function value, ref #100
+	- improved C++ API, ref #89
+	- fixed seed control of random vector in VD-CMA, ref #105
+	- new namespace support for gflags 2.1 and above, ref #108
+	- Python bindings support with Anaconda, ref #111
+	- configure script now tries to detect numpy when building Python bindings, ref #113
+	- Python bindings now have embedded documentation, ref #114
+	- workaround bad values of lambda, ref #119
+	- support for Travis continuou integration, ref #122
+	- lower resolution random seed initialization
+	
+2015-01-08	Emmanuel Benazera <emmanuel.benazera at inria.fr>
+	* libcmaes v0.9.4
+	- work around clang bug, now working with clang, ref #19
+	- easier build on OSX
+	- added uncertainty handling scheme for noisy objective functions, ref #65
+	- optional support for surrogates at compile time, reducing the overal lib size, ref #90
+	- fixed uninstall of python bindings
+	
 2014-11-17	Emmanuel Benazera <emmanuel.benazera at inria.fr>
 	* libcmaes v0.9.3:
 	- full support for surrogates, allowing optimization of costly objective functions, ref #57
