@@ -212,6 +212,12 @@ namespace libcmaes
      */
     void uncertainty_handling();
 
+		/**
+		 * \brief ucertainty handling scheme that reevaluate the solutions.
+		 */
+		void perform_uh(const dMat& candidates, const dMat& phenocandidates, int& nfcalls);
+
+
     /**
      * \brief updates the two-point adaptation average rank difference for
      *        the step-size adaptation mechanism
