@@ -324,13 +324,15 @@ namespace libcmaes
   template<class TParameters,class TSolutions,class TStopCriteria>
   void ESOStrategy<TParameters,TSolutions,TStopCriteria>::perform_uh(const dMat& candidates, const dMat& phenocandidates, int& nfcalls)
 	{
-		dMat reev_candidates;
-		select_reev_candidates(candidates, phenocandidates, reev_candidates);
-		eval_reev_candidates(candidates,reev_candidates,nfcalls);
+		dMat candidates_uh;
+		select_candidates_uh(candidates, phenocandidates, candidates_uh);
+		std::vector<RankedCandidate> nvcandidates;
+		eval_candidates_uh(candidates,candidates_uh,nvcandidates,nfcalls);
+		set_candidates_uh(nvcandidates);
 	}
 
   template<class TParameters,class TSolutions,class TStopCriteria>
-  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::select_reev_candidates(const dMat& candidates, const dMat& phenocandidates, dMat& reev_candidates)
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::select_candidates_uh(const dMat& candidates, const dMat& phenocandidates, dMat& candidates_uh)
 	{
 	// compute the number of solutions to re-evaluate
 	_solutions._lambda_reev = 0.0;
@@ -346,29 +348,33 @@ namespace libcmaes
 	
 	// mutate candidates.
 	if (phenocandidates.size())
-	  reev_candidates = phenocandidates.block(0,0,phenocandidates.rows(),_solutions._lambda_reev);
-	else reev_candidates = candidates.block(0,0,candidates.rows(),_solutions._lambda_reev);
+	  candidates_uh = phenocandidates.block(0,0,phenocandidates.rows(),_solutions._lambda_reev);
+	else candidates_uh = candidates.block(0,0,candidates.rows(),_solutions._lambda_reev);
 	if (_solutions._sepcov.size())
 	  _uhesolver.set_covar(_solutions._sepcov);
 	else _uhesolver.set_covar(_solutions._cov);
-	reev_candidates += _parameters._epsuh * _solutions._sigma * _uhesolver.samples_ind(_solutions._lambda_reev);
+	candidates_uh += _parameters._epsuh * _solutions._sigma * _uhesolver.samples_ind(_solutions._lambda_reev);
 	}
 
   template<class TParameters,class TSolutions,class TStopCriteria>
-  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::eval_reev_candidates(const dMat& candidates, const dMat& reev_candidates, int& nfcalls)
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::eval_candidates_uh(const dMat& candidates, const dMat& candidates_uh, std::vector<RankedCandidate>& nvcandidates, int& nfcalls)
 	{
 	// re-evaluate
-	std::vector<RankedCandidate> nvcandidates;
 	for (int r=0;r<candidates.cols();r++)
 	  {
 	    if (r < _solutions._lambda_reev)
 	      {
-		double nfvalue = _func(reev_candidates.col(r).data(),reev_candidates.rows());
+		double nfvalue = _func(candidates_uh.col(r).data(),candidates_uh.rows());
 		nvcandidates.emplace_back(nfvalue,_solutions._candidates.at(r),r);
 		nfcalls++;
 	      }
 	    else nvcandidates.emplace_back(_solutions._candidates.at(r).get_fvalue(),_solutions._candidates.at(r),r);
 	  }
+	}
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::set_candidates_uh(const std::vector<RankedCandidate>& nvcandidates)
+	{
 	_solutions._candidates_uh = nvcandidates;
 	}
   
