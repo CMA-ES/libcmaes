@@ -216,6 +216,8 @@ namespace libcmaes
 		 * \brief ucertainty handling scheme that reevaluate the solutions.
 		 */
 		void perform_uh(const dMat& candidates, const dMat& phenocandidates, int& nfcalls);
+		void select_reev_candidates(const dMat& candidates, const dMat& phenocandidates, dMat& reev_candidates);
+		void eval_reev_candidates(const dMat& candidates, const dMat& reev_candidates, int& nfcalls);
 
 
     /**

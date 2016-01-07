@@ -324,6 +324,14 @@ namespace libcmaes
   template<class TParameters,class TSolutions,class TStopCriteria>
   void ESOStrategy<TParameters,TSolutions,TStopCriteria>::perform_uh(const dMat& candidates, const dMat& phenocandidates, int& nfcalls)
 	{
+		dMat reev_candidates;
+		select_reev_candidates(candidates, phenocandidates, reev_candidates);
+		eval_reev_candidates(candidates,reev_candidates,nfcalls);
+	}
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::select_reev_candidates(const dMat& candidates, const dMat& phenocandidates, dMat& reev_candidates)
+	{
 	// compute the number of solutions to re-evaluate
 	_solutions._lambda_reev = 0.0;
 	double r_l = _parameters._rlambda * _parameters._lambda;
@@ -337,22 +345,25 @@ namespace libcmaes
 	  _solutions._lambda_reev = 1;
 	
 	// mutate candidates.
-	dMat ncandidates;
 	if (phenocandidates.size())
-	  ncandidates = phenocandidates.block(0,0,phenocandidates.rows(),_solutions._lambda_reev);
-	else ncandidates = candidates.block(0,0,candidates.rows(),_solutions._lambda_reev);
+	  reev_candidates = phenocandidates.block(0,0,phenocandidates.rows(),_solutions._lambda_reev);
+	else reev_candidates = candidates.block(0,0,candidates.rows(),_solutions._lambda_reev);
 	if (_solutions._sepcov.size())
 	  _uhesolver.set_covar(_solutions._sepcov);
 	else _uhesolver.set_covar(_solutions._cov);
-	ncandidates += _parameters._epsuh * _solutions._sigma * _uhesolver.samples_ind(_solutions._lambda_reev);
-	
+	reev_candidates += _parameters._epsuh * _solutions._sigma * _uhesolver.samples_ind(_solutions._lambda_reev);
+	}
+
+  template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::eval_reev_candidates(const dMat& candidates, const dMat& reev_candidates, int& nfcalls)
+	{
 	// re-evaluate
 	std::vector<RankedCandidate> nvcandidates;
 	for (int r=0;r<candidates.cols();r++)
 	  {
 	    if (r < _solutions._lambda_reev)
 	      {
-		double nfvalue = _func(ncandidates.col(r).data(),ncandidates.rows());
+		double nfvalue = _func(reev_candidates.col(r).data(),reev_candidates.rows());
 		nvcandidates.emplace_back(nfvalue,_solutions._candidates.at(r),r);
 		nfcalls++;
 	      }
