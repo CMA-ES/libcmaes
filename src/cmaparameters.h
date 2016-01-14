@@ -33,6 +33,7 @@ namespace libcmaes
    */
   template <class TGenoPheno=GenoPheno<NoBoundStrategy> >
   class CMAParameters : public Parameters<TGenoPheno>
+<<<<<<< HEAD
     {
       friend class CMASolutions;
       template <class U, class V> friend class CMAStrategy;
@@ -239,6 +240,20 @@ namespace libcmaes
        *             the final solution and reinjects the best solution until the population
        *             has better fitness, in its majority
        */
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+      inline void set_elitist(const bool &e) { _elitist = e; }
+
+      inline void set_resample_upon_restart(const bool &r) { _resample_upon_restart = r; }
+      inline void set_resample_from_history(const bool &r) { _resample_from_history = r; }
+      inline void set_restart_from_best(const bool &r) { _restart_from_best = r; }
+
+=======
+=======
+>>>>>>> beniz/master
+=======
+>>>>>>> master
       inline void set_elitism(const int &e)
       {
 	if (e == 0)
@@ -260,6 +275,21 @@ namespace libcmaes
 	  }
       }
       
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> beniz/master
+=======
+>>>>>>> beniz/master
+=======
+=======
+      inline void set_elitist(const bool &e) { _elitist = e; }
+
+      inline void set_resample_upon_restart(const bool &r) { _resample_upon_restart = r; }
+      inline void set_resample_from_history(const bool &r) { _resample_from_history = r; }
+      inline void set_restart_from_best(const bool &r) { _restart_from_best = r; }
+
+>>>>>>> origin/bipop_89
+>>>>>>> master
       /**
        * \brief all stopping criteria are active by default, this allows to control
        *        them
@@ -318,9 +348,33 @@ namespace libcmaes
       bool _sep = false; /**< whether to use diagonal covariance matrix. */
       bool _vd = false;
       
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
       bool _elitist = false; /**< re-inject the best-ever seen solution. */
       bool _initial_elitist = false; /**< re-inject x0. */
       bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+=======
+>>>>>>> master
+      bool _elitist = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      bool _resample_upon_restart = false; /**< resample x0 upon restart (e.g. bipop). */
+      bool _resample_from_history = false;
+      bool _restart_from_best = false;
+<<<<<<< HEAD
+=======
+      bool _elitist = false; /**< re-inject the best-ever seen solution. */
+      bool _initial_elitist = false; /**< re-inject x0. */
+      bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+>>>>>>> beniz/master
+=======
+      bool _elitist = false; /**< re-inject the best-ever seen solution. */
+      bool _initial_elitist = false; /**< re-inject x0. */
+      bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+>>>>>>> beniz/master
+=======
+>>>>>>> origin/bipop_89
+>>>>>>> master
       
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
@@ -328,6 +382,58 @@ namespace libcmaes
 
   template<class TGenoPheno>
     std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11},{"vdcma",12},{"vdipopcma",13},{"vdbipopcma",14}};
+=======
+  {
+  public:
+    CMAParameters() {}; //TODO: var init even if this constructor is not supposed to be used for now.
+
+    /**
+     * \brief Constructor.
+     * @param dim problem dimensions
+     * @param lambda number of offsprings sampled at each step
+     * @param sigma_init initial value of the step size sigma
+     * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
+     * @param gp genotype / phenotype object
+     */
+    CMAParameters(const int &dim, const int &lambda=-1,
+		  const double &sigma_init=-1.0,
+		  const uint64_t &seed=0,
+		  const TGenoPheno &gp=GenoPheno<NoBoundStrategy>());
+    ~CMAParameters();
+    
+    int _mu; /**< number of candidate solutions used to update the distribution parameters. */
+    dVec _weights; /**< offsprings weighting scheme. */
+    double _csigma; /**< cumulation constant for step size. */
+    double _c1; /**< covariance matrix learning rate for the rank one update using pc. */
+    double _cmu; /**< covariance matrix learning reate for the rank mu update. */
+    double _cc; /**< cumulation constant for pc. */
+    double _muw; /**< \sum^\mu _weights .*/
+    double _dsigma; /**< step size damping factor. */
+    
+    // computed once at init for speeding up operations.
+    double _fact_ps;
+    double _fact_pc;
+    double _chi; /**< norm of N(0,I) */
+
+    double _sigma_init = -1.0; /**< initial sigma value. */
+
+    int _nrestarts; /**< maximum number of restart, when applicable. */
+    bool _lazy_update; /**< covariance lazy update. */
+    double _lazy_value; /**< reference trigger for lazy update. */
+
+    // active cma.
+    double _cm; /**< learning rate for the mean. */
+    double _alphacov; /**< = 2 (active CMA only) */
+    double _alphaminusold; /**< in [0,1] (active CMA only) */
+    double _deltamaxsigma; /**< infinite (active CMA only) */
+    double _lambdamintarget; /**< = 0.66 (active CMA only) */
+    double _alphaminusmin; /**< = 1 (active CMA only) */
+
+    // kl.
+    bool _kl = false;
+  };
+  
+>>>>>>> beniz/kl
 }
 
 #endif

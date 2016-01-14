@@ -83,6 +83,7 @@ namespace libcmaes
 	  {
 	    r2();
 	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(0.5*budgets[0]);
+	    resample_x0();
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
 	    budgets[1] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
@@ -91,6 +92,7 @@ namespace libcmaes
 	if (r > 0) // use lambda_def on first call.
 	  {
 	    r1();
+	    resample_x0();
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	  }
 	CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(_max_fevals); // resets the budget
@@ -125,6 +127,43 @@ namespace libcmaes
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda = nlambda;
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._sigma_init = nsigma;
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.initialize_parameters();
+  }
+
+  template <class TCovarianceUpdate, class TGenoPheno>
+  void BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::resample_x0()
+  {
+    if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._resample_upon_restart)
+      {
+	if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._resample_from_history)
+	  {
+	    Candidate startc;
+	    if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._restart_from_best)
+	      startc = (*this->_historyb.begin()).second;
+	    else
+	      {
+		int pt;
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<int> dist(0,this->_historyb.size()-1);
+		pt = dist(gen);
+		//std::cout << "resampling x0 from history point #" << pt << std::endl;
+		//startc = this->_history.at(pt);
+		int c = 0;
+		auto mit = this->_historyb.begin();
+		while(mit!=this->_historyb.end())
+		  {
+		    if (c == pt)
+		      break;
+		    ++c;
+		    ++mit;
+		  }
+		startc = (*mit).second;
+	      }
+	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_x0(startc.get_x_dvec());
+	  }
+	else CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_x0(-std::numeric_limits<double>::max()); //TODO: user controlled resampling rule
+      }
+    //std::cout << "x0=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.get_x0max().transpose() << std::endl;
   }
 
   template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;

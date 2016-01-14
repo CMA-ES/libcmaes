@@ -91,6 +91,7 @@ namespace libcmaes
   protected:
     void r1();
     void r2();
+    void resample_x0();
 
   private:
     std::mt19937 _gen;

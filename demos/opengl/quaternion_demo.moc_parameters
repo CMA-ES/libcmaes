@@ -1,0 +1,16 @@
+-I/Users/stevenjames/Documents/libcmaes/eigen
+-I/Users/stevenjames/Documents/libcmaes
+-I/usr/local/Cellar/qt/4.8.7_1/include
+-F/usr/local/Cellar/qt/4.8.7_1/lib
+-I/usr/local/Cellar/qt/4.8.7_1/include/QtOpenGL
+-I/usr/local/Cellar/qt/4.8.7_1/include/QtGui
+-I/usr/local/Cellar/qt/4.8.7_1/lib/QtCore.framework/Headers
+-I/usr/local/Cellar/qt/4.8.7_1/include
+-F/usr/local/Cellar/qt/4.8.7_1/lib
+-D$<$<NOT:$<CONFIG:Debug>>:QT_NO_DEBUG>
+-DQT_OPENGL_LIB
+-DQT_GUI_LIB
+-DQT_CORE_LIB
+-o
+/Users/stevenjames/Documents/libcmaes/demos/opengl/quaternion_demo.moc
+/Users/stevenjames/Documents/libcmaes/eigen/demos/opengl/quaternion_demo.h

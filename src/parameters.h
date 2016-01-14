@@ -54,8 +54,13 @@ namespace libcmaes
 #ifdef HAVE_SURROG
       template <template <class X,class Y> class U, class V, class W> friend class SimpleSurrogateStrategy;
       template <template <class X,class Y> class U, class V, class W> friend class ACMSurrogateStrategy;
+<<<<<<< HEAD
+      template <class U, class V> friend class RLCMAStrategy;
+      
+=======
 #endif      
 
+>>>>>>> beniz/master
     public:
       /**
        * \brief empty constructor.
