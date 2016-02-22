@@ -24,15 +24,14 @@
 using namespace libcmaes;
 
 //TODO do something more complex here that depends on action
-void worldFunc(int& x,int action,int& inputs)
+void worldFunc(int& x,int action,std::vector<int>& inputs)
 {
 	x++;
 }
 
-//TODO write a little NN implem
 void controller(std::vector<double> params, std::vector<double> inputs, int& action)
 {
-	return 1;
+	//TODO write a little NN implem
 }
 
 FitFunc computeFitness = [](const double *x, const int N)
@@ -45,6 +44,7 @@ FitFunc computeFitness = [](const double *x, const int N)
 	val = val / (double)N;
   return val;
 };
+
 
 class customCMAStrategy : public CMAStrategy<CovarianceUpdate>
 {
@@ -63,25 +63,38 @@ public:
   }
 
   void eval(const dMat &candidates,
-	    const dMat &phenocandidates=dMat(0,0))
-  {
-    // custom eval.
-    for (int r=0;r<candidates.cols();r++)
-      {
-	_solutions.get_candidate(r).set_x(candidates.col(r));
-	if (phenocandidates.size()) // if candidates in phenotype space are given
-	  _solutions.get_candidate(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
-	else _solutions.get_candidate(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
-	
-	//std::cerr << "candidate x: " << _solutions.get_candidate(r).get_x_dvec().transpose() << std::endl;
-      }
+	    const dMat &phenocandidates)
+	{
+		// custom eval.
+		for (int r=0;r<candidates.cols();r++)
+		{
+			_solutions.get_candidate(r).set_x(candidates.col(r));
+			_solutions.get_candidate(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
+		}
 
-    int nfcalls = candidates.cols();
-    // evaluation step of uncertainty handling scheme.
-		perform_uh(candidates,phenocandidates,nfcalls);
+		int nfcalls = candidates.cols();
+		// evaluation step of uncertainty handling scheme.
 
-    update_fevals(nfcalls);
-  }
+		CMAStrategy<CovarianceUpdate>::select_candidates_uh(candidates,dMat(0,0),candidates_uh);
+		candidates_uh_set = true;
+	}
+
+	void end_eval(std::vector<RankedCandidate> nvcandidates)
+	{
+		candidates_uh_set = false;
+		CMAStrategy<CovarianceUpdate>::set_candidates_uh(nvcandidates);
+		update_fevals(nfcalls);
+	}
+
+	dMat get_candidates_uh()
+	{
+		return candidates_uh;
+	}
+
+	void increase_nfcalls()
+	{
+		nfcalls ++;
+	}
   
   void tell()
   {
@@ -94,6 +107,88 @@ public:
   }
   
 };
+
+std::vector<double> evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>> optim, std::vector<double>& params, int& individual, int prevPosition, int position, int timeStep)
+{
+	int evaluationTime = 100;
+	dMat candidates = optim.ask();
+	int popSize = candidates.cols();
+  
+	dMat phenotypes = dMat(evaluationTime,popSize);
+	dMat phenotypes_uh = dMat(evaluationTime,popSize);
+
+  if(!optim.stop())
+	{
+		double fitness = position - prevPosition;
+		//TODO turn this as a minimisation pb
+
+		if(individual < popSize)
+		{
+			phenotypes(timeStep,individual) = fitness;
+		}
+		else
+		{
+			phenotypes_uh(timeStep,individual-popSize) = fitness;
+		}
+
+		if((timeStep % evaluationTime) == 0)
+		{
+			individual++;
+
+			if ((individual == popSize) && (optim.isset_candidates_uh() == false))
+			{
+				optim.eval(candidates,phenotypes);
+				nvcandidates.clear();
+			}
+
+			if ((individual == popSize + optim.get_candidates_uh().cols()) && (optim.isset_candidates_uh() == true))
+			{
+
+				for (int r=0;r<candidates.cols();r++)
+				{
+					if (r < optim.get_candidates_uh().cols())
+					{
+						double nfvalue = computeFitness(phenotypes_uh.col(r).data(),phenotypes_uh.rows());
+						Candidate tmp(nfvalue,dVec(candidates.col(r)));
+						nvcandidates.emplace_back(nfvalue,tmp,r);
+						optim.increase_nfcalls();
+					}
+					else
+					{	
+						double nfvalue = computeFitness(phenotypes.col(r).data(),phenotypes_uh.rows());
+						Candidate tmp(nfvalue,dVec(candidates.col(r)));
+						nvcandidates.emplace_back(nfvalue,tmp,r);
+					}
+				}
+
+				optim.end_eval(nvcandidates);
+
+				optim.tell();
+				optim.inc_iter(); 
+				if(!optim.stop())
+				{
+					candidates = optim.ask();
+					individual = 0;
+				}
+			}
+		}
+
+		//TODO check these lines, it probably does not work. Idea is to get all columns of individual
+		if (individual < popSize)
+		{
+			parameters = candidates(,individual);
+		}
+		else
+		{
+			parameters = candidates(,individual-popSize);
+		}
+	}
+
+	if (optim.stop() == true)
+	{
+		parameters = optim.get_solutions().best_candidate().get_x_dvec();
+	}
+}
 
 int main(int argc, char *argv[])
 {
@@ -114,9 +209,8 @@ int main(int argc, char *argv[])
 
 	//init evolutionary engine
   CMAParameters<> cmaparams(x0,sigma);
-  //ESOptimizer<CMAStrategy<CovarianceUpdate>,CMAParameters<>> optim(fsphere,cmaparams);
 	cmaparams.set_uh(true);
-  ESOptimizer<customCMAStrategy,CMAParameters<>> optim(fsphere,cmaparams);
+  ESOptimizer<customCMAStrategy,CMAParameters<>> optim(computeFitness,cmaparams);
 
 	//TODO init the parameters
 
@@ -131,47 +225,7 @@ int main(int argc, char *argv[])
 		worldFunc(position,action,inputs);
 
 		//call cma to get the new parameters
-		evoStep(optim,params,indivual,prevPosition,position,i);
+		evoStep(optim,params,individual,prevPosition,position,i);
 	}
 }
 
-std::vector<double> evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>> optim, std::vector<double>& params, int& individual, int prevPosition, int position, int timeStep)
-{
-	int evaluationLength = 100;
-	dMat candidates = optim.ask();
-	int popSize = candidates.cols();
-  
-  if(!optim.stop())
-	{
-		double fitness = position - prevPosition;
-		//TODO turn this as a minimisation pb
-
-		if(individual < popSize)
-		{
-			phenotypes(timeStep,individual) = fitness;
-		}
-		else
-		{
-			phenotypes_uh(timeStep,individual-popSize) = fitness;
-		}
-
-		if((i % evaluationLength) == 0)
-		{
-			individual++;
-
-			if ((individual == popSize) && (optim.isset_candidates_uh() == false))
-			{
-				optim.eval(candidates,phenotypes);
-				nvcandidates.clear();
-			}
-		}
-
-
-
-		//TODO check that line, it probably does not work. Idea is to get all columns of individual
-
-
-
-	}
-  std::cout << optim.get_solutions() << std::endl;
-}
