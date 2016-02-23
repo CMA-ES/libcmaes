@@ -21,27 +21,82 @@
 #include "cmaes.h"
 #include <iostream>
 
+#include <random>
+#include <math.h>
+
 using namespace libcmaes;
 
-//TODO do something more complex here that depends on action
-void worldFunc(int& x,int action,std::vector<int>& inputs)
+void worldFunc(std::vector<double>& world, int & x,int action,std::uniform_real_distribution<> dis,std::mt19937& gen,std::vector<double>& inputs)
 {
-	x++;
+	//advance in the world if the action is in the direction of the slope
+	if ((world[x+1] - world[x] > 0.0) && (action == 1))
+	{
+		//move one step
+		x++;
+		//get randomly the new element
+		world.push_back(dis(gen));
+		//update the input
+		inputs[0] = world[x-1];
+		inputs[1] = world[x];
+		inputs[2] = world[x+1];
+	}
+	else if ((world[x+1] - world[x] < 0.0) && (action == -1))
+	{
+		//move one step
+		x++;
+		//get randomly the new element
+		world.push_back(dis(gen));
+		//update the input
+		inputs[0] = world[x-1];
+		inputs[1] = world[x];
+		inputs[2] = world[x+1];
+	}
 }
 
 void controller(std::vector<double> params, std::vector<double> inputs, int& action)
 {
-	//TODO write a little NN implem
+	int idParam = 0;
+
+	double outputNeg = 0.0;
+	for(unsigned int i = 0 ; i < inputs.size() ; i++)
+	{
+		outputNeg += params[idParam] * inputs[i];
+		idParam++;
+	}
+	outputNeg = tanh(outputNeg);
+
+	double outputPos = 0.0;
+	for(unsigned int i = 0 ; i < inputs.size() ; i++)
+	{
+		outputPos += params[idParam] * inputs[i];
+		idParam++;
+	}
+	outputPos = tanh(outputPos);
+
+	if(outputPos > outputNeg)
+	{
+		action = 1;
+	}
+	else
+	{
+		action = -1;
+	}
+
 }
 
 FitFunc computeFitness = [](const double *x, const int N)
 {
+	//sum up the fitnesses computed
   double val = 0.0;
+	std::cout << "size " << N << std::endl;
   for (int i=0;i<N;i++)
 	{
     val += x[i];
 	}
-	val = val / (double)N;
+
+	//turn the problem as a minimization
+	val = 1 / val;
+	std::cout << "fitness " << val << std::endl;
   return val;
 };
 
@@ -52,8 +107,10 @@ public:
   customCMAStrategy(FitFunc &func,
 		    CMAParameters<> &parameters)
     :CMAStrategy<CovarianceUpdate>(func,parameters)
-  {
-  }
+	{
+		candidates_uh_set = false;
+		nfcalls = 0;
+	}
 
   ~customCMAStrategy() {}
 
@@ -72,7 +129,7 @@ public:
 			_solutions.get_candidate(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
 		}
 
-		int nfcalls = candidates.cols();
+		nfcalls = candidates.cols();
 		// evaluation step of uncertainty handling scheme.
 
 		CMAStrategy<CovarianceUpdate>::select_candidates_uh(candidates,dMat(0,0),candidates_uh);
@@ -95,6 +152,11 @@ public:
 	{
 		nfcalls ++;
 	}
+
+	bool isset_candidates_uh()
+	{
+		return candidates_uh_set;
+	}
   
   void tell()
   {
@@ -105,30 +167,28 @@ public:
   {
     return CMAStrategy<CovarianceUpdate>::stop();
   }
+
+protected:
+	dMat candidates_uh;
+  bool candidates_uh_set;
+	int nfcalls;
   
 };
 
-std::vector<double> evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>> optim, std::vector<double>& params, int& individual, int prevPosition, int position, int timeStep)
+void evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>>& optim, dMat& candidates, std::vector<RankedCandidate>& nvcandidates, dMat& phenotypes, dMat& phenotypes_uh, int evaluationTime, int popSize, std::vector<double>& params, int& individual, int prevPosition, int position, int timeStep)
 {
-	int evaluationTime = 100;
-	dMat candidates = optim.ask();
-	int popSize = candidates.cols();
-  
-	dMat phenotypes = dMat(evaluationTime,popSize);
-	dMat phenotypes_uh = dMat(evaluationTime,popSize);
 
   if(!optim.stop())
 	{
 		double fitness = position - prevPosition;
-		//TODO turn this as a minimisation pb
 
 		if(individual < popSize)
 		{
-			phenotypes(timeStep,individual) = fitness;
+			phenotypes((timeStep%evaluationTime),individual) = fitness;
 		}
 		else
 		{
-			phenotypes_uh(timeStep,individual-popSize) = fitness;
+			phenotypes_uh((timeStep%evaluationTime),individual-popSize) = fitness;
 		}
 
 		if((timeStep % evaluationTime) == 0)
@@ -143,7 +203,6 @@ std::vector<double> evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>> optim
 
 			if ((individual == popSize + optim.get_candidates_uh().cols()) && (optim.isset_candidates_uh() == true))
 			{
-
 				for (int r=0;r<candidates.cols();r++)
 				{
 					if (r < optim.get_candidates_uh().cols())
@@ -165,54 +224,95 @@ std::vector<double> evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>> optim
 
 				optim.tell();
 				optim.inc_iter(); 
+
 				if(!optim.stop())
 				{
 					candidates = optim.ask();
 					individual = 0;
 				}
 			}
+
+			std::cout << "next ind: " << individual << "/" << popSize << std::endl;
 		}
 
-		//TODO check these lines, it probably does not work. Idea is to get all columns of individual
 		if (individual < popSize)
 		{
-			parameters = candidates(,individual);
+			params.clear();
+			for(int i = 0 ; i < candidates.rows() ; i++)
+			{
+				params.push_back(candidates(i,individual));
+			}
 		}
 		else
 		{
-			parameters = candidates(,individual-popSize);
+			params.clear();
+			for(int i = 0 ; i < candidates.rows() ; i++)
+			{
+				params.push_back(candidates(i,individual-popSize));
+			}
 		}
 	}
 
 	if (optim.stop() == true)
 	{
-		parameters = optim.get_solutions().best_candidate().get_x_dvec();
+		params.clear();
+		dVec tmp = optim.get_solutions().best_candidate().get_x_dvec();
+		for(int i = 0 ; i < tmp.cols() ; i++)
+		{
+			params.push_back(tmp(i));
+		}
 	}
 }
 
 int main(int argc, char *argv[])
 {
+	//random generator
+  std::random_device rd;	
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<> dis(0, 1);
+
 	//world parameters
-	int nbSimulationsStep = 1000;
+	int nbSimulationsStep = 100000;
 	std::vector<double> params ; 
 	int prevPosition = 0;
 	int position = 0;
 	int action = 0;
+	std::vector<double> world;
+	//generate the elements of the world
+	world.push_back(dis(gen));
+	world.push_back(dis(gen));
+	world.push_back(dis(gen));
+	//initialize the inputs
 	std::vector<double> inputs;
-	//TODO initialise the inputs to empty
+	inputs.push_back(world[0]);
+	inputs.push_back(world[1]);
+	inputs.push_back(world[2]);
 
 	//evolution parameters
-  int dim = 10; // problem dimensions.
-  std::vector<double> x0(dim,10.0);
+  int dim = 6; // problem dimensions.
+  std::vector<double> x0(dim,0.5);
   double sigma = 0.1;
 	int individual = 0;
 
 	//init evolutionary engine
+	std::vector<RankedCandidate> nvcandidates;
   CMAParameters<> cmaparams(x0,sigma);
 	cmaparams.set_uh(true);
   ESOptimizer<customCMAStrategy,CMAParameters<>> optim(computeFitness,cmaparams);
 
-	//TODO init the parameters
+	//get the parameters of the evo engine
+	int evaluationTime = 100;
+	dMat candidates = optim.ask();
+	int popSize = candidates.cols();
+	dMat phenotypes = dMat(evaluationTime,popSize);
+	dMat phenotypes_uh = dMat(evaluationTime,popSize);
+
+	//init the parameters
+	params.clear();
+	for(int i = 0 ; i < candidates.rows() ; i++)
+	{
+		params.push_back(candidates(i,individual));
+	}
 
 	//run the simulation
 	for(int i = 0 ; i < nbSimulationsStep ; i++)
@@ -222,10 +322,21 @@ int main(int argc, char *argv[])
 
 		//update the position of the agent according to its actions
 		prevPosition = position;
-		worldFunc(position,action,inputs);
+		worldFunc(world,position,action,dis,gen,inputs);
 
 		//call cma to get the new parameters
-		evoStep(optim,params,individual,prevPosition,position,i);
+		evoStep(optim,candidates,nvcandidates,phenotypes,phenotypes_uh,evaluationTime,popSize,params,individual,prevPosition,position,i);
+
+		if(optim.stop() == true)
+		{
+			dVec tmp = optim.get_solutions().best_candidate().get_x_dvec();
+			for(int i = 0 ; i < tmp.cols() ; i++)
+			{
+				std::cout << tmp(i) << " " ;
+			}
+			std::cout << std::endl;
+			break;
+		}
 	}
 }
 
