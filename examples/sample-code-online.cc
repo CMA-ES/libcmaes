@@ -36,20 +36,18 @@ void worldFunc(std::vector<double>& world, int & x,int action,std::uniform_real_
 		//get randomly the new element
 		world.push_back(dis(gen));
 		//update the input
-		inputs[0] = world[x-1];
-		inputs[1] = world[x];
-		inputs[2] = world[x+1];
+		inputs[0] = world[x]-world[x-1];
+		inputs[1] = world[x+1]-world[x];
 	}
-	else if ((world[x+1] - world[x] < 0.0) && (action == -1))
+	else if ((world[x+1] - world[x] <= 0.0) && (action == -1))
 	{
 		//move one step
 		x++;
 		//get randomly the new element
 		world.push_back(dis(gen));
 		//update the input
-		inputs[0] = world[x-1];
-		inputs[1] = world[x];
-		inputs[2] = world[x+1];
+		inputs[0] = world[x]-world[x-1];
+		inputs[1] = world[x+1]-world[x];
 	}
 }
 
@@ -57,23 +55,15 @@ void controller(std::vector<double> params, std::vector<double> inputs, int& act
 {
 	int idParam = 0;
 
-	double outputNeg = 0.0;
+	double output = 0.0;
 	for(unsigned int i = 0 ; i < inputs.size() ; i++)
 	{
-		outputNeg += params[idParam] * inputs[i];
+		output += params[idParam] * inputs[i];
 		idParam++;
 	}
-	outputNeg = tanh(outputNeg);
+	output = tanh(output);
 
-	double outputPos = 0.0;
-	for(unsigned int i = 0 ; i < inputs.size() ; i++)
-	{
-		outputPos += params[idParam] * inputs[i];
-		idParam++;
-	}
-	outputPos = tanh(outputPos);
-
-	if(outputPos > outputNeg)
+	if(output > 0.0)
 	{
 		action = 1;
 	}
@@ -88,15 +78,15 @@ FitFunc computeFitness = [](const double *x, const int N)
 {
 	//sum up the fitnesses computed
   double val = 0.0;
-	std::cout << "size " << N << std::endl;
   for (int i=0;i<N;i++)
 	{
     val += x[i];
 	}
 
 	//turn the problem as a minimization
-	val = 1 / val;
-	std::cout << "fitness " << val << std::endl;
+	//val = 1 / val;
+	val = -log(val+1) + log(100);
+	std::cout << val << std::endl;
   return val;
 };
 
@@ -232,7 +222,6 @@ void evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>>& optim, dMat& candid
 				}
 			}
 
-			std::cout << "next ind: " << individual << "/" << popSize << std::endl;
 		}
 
 		if (individual < popSize)
@@ -272,10 +261,10 @@ int main(int argc, char *argv[])
 	std::uniform_real_distribution<> dis(0, 1);
 
 	//world parameters
-	int nbSimulationsStep = 100000;
+	int nbSimulationsStep = 10000000;
 	std::vector<double> params ; 
-	int prevPosition = 0;
-	int position = 0;
+	int prevPosition = 1;
+	int position = 1;
 	int action = 0;
 	std::vector<double> world;
 	//generate the elements of the world
@@ -284,14 +273,13 @@ int main(int argc, char *argv[])
 	world.push_back(dis(gen));
 	//initialize the inputs
 	std::vector<double> inputs;
-	inputs.push_back(world[0]);
-	inputs.push_back(world[1]);
-	inputs.push_back(world[2]);
+	inputs.push_back(world[1]-world[0]);
+	inputs.push_back(world[2]-world[1]);
 
 	//evolution parameters
-  int dim = 6; // problem dimensions.
+  int dim = 2; // problem dimensions.
   std::vector<double> x0(dim,0.5);
-  double sigma = 0.1;
+  double sigma = 1.0;
 	int individual = 0;
 
 	//init evolutionary engine
