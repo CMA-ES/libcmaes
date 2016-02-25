@@ -29,22 +29,20 @@ using namespace libcmaes;
 void worldFunc(std::vector<double>& world, int & x,int action,std::uniform_real_distribution<> dis,std::mt19937& gen,std::vector<double>& inputs)
 {
 	//advance in the world if the action is in the direction of the slope
-	if ((world[x+1] - world[x] > 0.0) && (action == 1))
+	if (((world[x+1] - world[x] > 0.0) && (action == 1)) || ((world[x+1] - world[x] <= 0.0) && (action == -1)))
 	{
 		//move one step
 		x++;
+
 		//get randomly the new element
-		world.push_back(dis(gen));
-		//update the input
-		inputs[0] = world[x]-world[x-1];
-		inputs[1] = world[x+1]-world[x];
-	}
-	else if ((world[x+1] - world[x] <= 0.0) && (action == -1))
-	{
-		//move one step
-		x++;
-		//get randomly the new element
-		world.push_back(dis(gen));
+		double propNewPos = dis(gen);
+		//generate position until the difference is big enough
+		while(fabs(propNewPos - world[x]) < 0.05)
+		{
+			propNewPos = dis(gen);
+		}
+		world.push_back(propNewPos);
+
 		//update the input
 		inputs[0] = world[x]-world[x-1];
 		inputs[1] = world[x+1]-world[x];
@@ -71,7 +69,6 @@ void controller(std::vector<double> params, std::vector<double> inputs, int& act
 	{
 		action = -1;
 	}
-
 }
 
 FitFunc computeFitness = [](const double *x, const int N)
@@ -84,9 +81,7 @@ FitFunc computeFitness = [](const double *x, const int N)
 	}
 
 	//turn the problem as a minimization
-	//val = 1 / val;
-	val = -log(val+1) + log(100);
-	std::cout << val << std::endl;
+	val = -log(val+1);
   return val;
 };
 
@@ -317,8 +312,9 @@ int main(int argc, char *argv[])
 
 		if(optim.stop() == true)
 		{
+			std::cout << "stop" << std::endl;
 			dVec tmp = optim.get_solutions().best_candidate().get_x_dvec();
-			for(int i = 0 ; i < tmp.cols() ; i++)
+			for(int i = 0 ; i < tmp.rows() ; i++)
 			{
 				std::cout << tmp(i) << " " ;
 			}
