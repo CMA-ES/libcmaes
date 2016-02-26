@@ -1,5 +1,6 @@
 /**
  * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+ * Demonstration of online optimisation
  * Author: Jean-Marc Montanier <montanier.jeanmarc@gmail.com>
  *
  * This file is part of libcmaes.
@@ -86,18 +87,32 @@ FitFunc computeFitness = [](const double *x, const int N)
 };
 
 
-class customCMAStrategy : public CMAStrategy<CovarianceUpdate>
+class onlineCMAStrategy : public CMAStrategy<CovarianceUpdate>
 {
 public:
-  customCMAStrategy(FitFunc &func,
+  onlineCMAStrategy(FitFunc &func,
 		    CMAParameters<> &parameters)
     :CMAStrategy<CovarianceUpdate>(func,parameters)
 	{
 		candidates_uh_set = false;
 		nfcalls = 0;
+		genotype = 0;
+
 	}
 
-  ~customCMAStrategy() {}
+  ~onlineCMAStrategy() {}
+
+	void init(int inEvaluationTime)
+	{
+		evaluationTime = inEvaluationTime;
+		//init the parameters of the evo engine
+		candidates = ask();
+		popSize = candidates.cols();
+		phenotypes = dMat(evaluationTime,popSize);
+		phenotypes_uh = dMat(evaluationTime,popSize);
+
+		nvcandidates.clear();
+	}
 
   dMat ask()
   {
@@ -153,99 +168,137 @@ public:
     return CMAStrategy<CovarianceUpdate>::stop();
   }
 
+	void setFitness(int timeStep, double fitness)
+	{
+		if(genotype < popSize)
+		{
+			phenotypes((timeStep%evaluationTime),genotype) = fitness;
+		}
+		else
+		{
+			phenotypes_uh((timeStep%evaluationTime),(genotype-popSize)) = fitness;
+		}
+	}
+
+	void completeEvaluation()
+	{
+		genotype++;
+
+		//if we are at the end of the regular evaluation, perform the evals
+		//eval will set the candidates_uh
+		if ((genotype == popSize) && (candidates_uh_set == false))
+		{
+			eval(candidates,phenotypes);
+			nvcandidates.clear();
+		}
+
+		//if we are at the end of the re-evaluations we have to  place the result
+		//and get the new generation
+		if ((genotype == popSize + candidates_uh.cols()) && (candidates_uh_set == true))
+		{
+			for (int r=0;r<candidates.cols();r++)
+			{
+				//place the result of  the re-evaluation of re-evaluated genotypes
+				if (r < candidates_uh.cols())
+				{
+					double nfvalue = computeFitness(phenotypes_uh.col(r).data(),phenotypes_uh.rows());
+					Candidate tmp(nfvalue,dVec(candidates.col(r)));
+					nvcandidates.emplace_back(nfvalue,tmp,r);
+					increase_nfcalls();
+				}
+				//place the results previously obtained for the other genotypes
+				else
+				{	
+					double nfvalue = computeFitness(phenotypes.col(r).data(),phenotypes_uh.rows());
+					Candidate tmp(nfvalue,dVec(candidates.col(r)));
+					nvcandidates.emplace_back(nfvalue,tmp,r);
+				}
+			}
+
+			//finish the evaluation
+			end_eval(nvcandidates);
+			tell();
+			inc_iter(); 
+
+			//if we have not finish prepare the next generation
+			if(!stop())
+			{
+				candidates = ask();
+				genotype = 0;
+			}
+		}
+	}
+
+	std::vector<double> getParams()
+	{
+		std::vector<double> params;
+		if (stop() == true)
+		{
+			dVec tmp = get_solutions().best_candidate().get_x_dvec();
+			for(int i = 0 ; i < tmp.cols() ; i++)
+			{
+				params.push_back(tmp(i));
+			}
+		}
+		else
+		{
+			if (genotype < popSize)
+			{
+				params.clear();
+				for(int i = 0 ; i < candidates.rows() ; i++)
+				{
+					params.push_back(candidates(i,genotype));
+				}
+			}
+			else
+			{
+				params.clear();
+				for(int i = 0 ; i < candidates.rows() ; i++)
+				{
+					params.push_back(candidates(i,genotype-popSize));
+				}
+			}
+		}
+		return params;
+	}
+
 protected:
+	dMat candidates;
 	dMat candidates_uh;
   bool candidates_uh_set;
 	int nfcalls;
-  
+
+	int genotype;
+	int popSize;
+	int evaluationTime;
+	
+	dMat phenotypes;
+	dMat phenotypes_uh;
+
+  std::vector<RankedCandidate> nvcandidates;
 };
 
-void evoStep(ESOptimizer<customCMAStrategy,CMAParameters<>>& optim, dMat& candidates, std::vector<RankedCandidate>& nvcandidates, dMat& phenotypes, dMat& phenotypes_uh, int evaluationTime, int popSize, std::vector<double>& params, int& individual, int prevPosition, int position, int timeStep)
+void evoStep(ESOptimizer<onlineCMAStrategy,CMAParameters<>>& optim, int evaluationTime, std::vector<double>& params, int prevPosition, int position, int timeStep)
 {
 
   if(!optim.stop())
 	{
+		//compute the fitness for this timestep
 		double fitness = position - prevPosition;
+		
+		//set the fitness
+		optim.setFitness(timeStep, fitness);
 
-		if(individual < popSize)
-		{
-			phenotypes((timeStep%evaluationTime),individual) = fitness;
-		}
-		else
-		{
-			phenotypes_uh((timeStep%evaluationTime),individual-popSize) = fitness;
-		}
-
+		//if we have reach  the end of evaluation time, ask to CMA-ES to do its job
 		if((timeStep % evaluationTime) == 0)
 		{
-			individual++;
-
-			if ((individual == popSize) && (optim.isset_candidates_uh() == false))
-			{
-				optim.eval(candidates,phenotypes);
-				nvcandidates.clear();
-			}
-
-			if ((individual == popSize + optim.get_candidates_uh().cols()) && (optim.isset_candidates_uh() == true))
-			{
-				for (int r=0;r<candidates.cols();r++)
-				{
-					if (r < optim.get_candidates_uh().cols())
-					{
-						double nfvalue = computeFitness(phenotypes_uh.col(r).data(),phenotypes_uh.rows());
-						Candidate tmp(nfvalue,dVec(candidates.col(r)));
-						nvcandidates.emplace_back(nfvalue,tmp,r);
-						optim.increase_nfcalls();
-					}
-					else
-					{	
-						double nfvalue = computeFitness(phenotypes.col(r).data(),phenotypes_uh.rows());
-						Candidate tmp(nfvalue,dVec(candidates.col(r)));
-						nvcandidates.emplace_back(nfvalue,tmp,r);
-					}
-				}
-
-				optim.end_eval(nvcandidates);
-
-				optim.tell();
-				optim.inc_iter(); 
-
-				if(!optim.stop())
-				{
-					candidates = optim.ask();
-					individual = 0;
-				}
-			}
-
-		}
-
-		if (individual < popSize)
-		{
-			params.clear();
-			for(int i = 0 ; i < candidates.rows() ; i++)
-			{
-				params.push_back(candidates(i,individual));
-			}
-		}
-		else
-		{
-			params.clear();
-			for(int i = 0 ; i < candidates.rows() ; i++)
-			{
-				params.push_back(candidates(i,individual-popSize));
-			}
+			optim.completeEvaluation();
 		}
 	}
 
-	if (optim.stop() == true)
-	{
-		params.clear();
-		dVec tmp = optim.get_solutions().best_candidate().get_x_dvec();
-		for(int i = 0 ; i < tmp.cols() ; i++)
-		{
-			params.push_back(tmp(i));
-		}
-	}
+	//get the parameters from CMA-ES
+	params = optim.getParams();
+
 }
 
 int main(int argc, char *argv[])
@@ -262,11 +315,11 @@ int main(int argc, char *argv[])
 	int position = 1;
 	int action = 0;
 	std::vector<double> world;
-	//generate the elements of the world
+	//generate the three first elements of the world
 	world.push_back(dis(gen));
 	world.push_back(dis(gen));
 	world.push_back(dis(gen));
-	//initialize the inputs
+	//initialize the inputs of the controller
 	std::vector<double> inputs;
 	inputs.push_back(world[1]-world[0]);
 	inputs.push_back(world[2]-world[1]);
@@ -275,27 +328,16 @@ int main(int argc, char *argv[])
   int dim = 2; // problem dimensions.
   std::vector<double> x0(dim,0.5);
   double sigma = 1.0;
-	int individual = 0;
+	int evaluationTime = 100;
 
-	//init evolutionary engine
-	std::vector<RankedCandidate> nvcandidates;
+	//initialize CMA-ES
   CMAParameters<> cmaparams(x0,sigma);
 	cmaparams.set_uh(true);
-  ESOptimizer<customCMAStrategy,CMAParameters<>> optim(computeFitness,cmaparams);
+  ESOptimizer<onlineCMAStrategy,CMAParameters<>> optim(computeFitness,cmaparams);
+	optim.init(evaluationTime);
 
-	//get the parameters of the evo engine
-	int evaluationTime = 100;
-	dMat candidates = optim.ask();
-	int popSize = candidates.cols();
-	dMat phenotypes = dMat(evaluationTime,popSize);
-	dMat phenotypes_uh = dMat(evaluationTime,popSize);
-
-	//init the parameters
-	params.clear();
-	for(int i = 0 ; i < candidates.rows() ; i++)
-	{
-		params.push_back(candidates(i,individual));
-	}
+	//initalize the parameters of the controller
+	params = optim.getParams();
 
 	//run the simulation
 	for(int i = 0 ; i < nbSimulationsStep ; i++)
@@ -304,12 +346,14 @@ int main(int argc, char *argv[])
 		controller(params,inputs,action);
 
 		//update the position of the agent according to its actions
+		//this will generate the next world element if needed, i.e. if the agent is moving
 		prevPosition = position;
 		worldFunc(world,position,action,dis,gen,inputs);
 
-		//call cma to get the new parameters
-		evoStep(optim,candidates,nvcandidates,phenotypes,phenotypes_uh,evaluationTime,popSize,params,individual,prevPosition,position,i);
+		//Run the evolutionary step
+		evoStep(optim,evaluationTime,params,prevPosition,position,i);
 
+		//if the optimization is done, display the result
 		if(optim.stop() == true)
 		{
 			std::cout << "stop" << std::endl;
