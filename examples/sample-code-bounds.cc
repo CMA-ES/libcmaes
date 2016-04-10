@@ -47,7 +47,9 @@ int main(int argc, char *argv[])
   CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(x0,sigma,-1,0,gp); // -1 for automatically decided lambda, 0 is for random seeding of the internal generator.
   cmaparams.set_algo(aCMAES);
   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy>>(fsphere,cmaparams);
-  std::cout << "best solution: " << cmasols << std::endl;
+  std::cout << "best solution: ";
+  cmasols.print(std::cout,0,gp);
+  std::cout << std::endl;
   std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
   return cmasols.run_status();
 }
