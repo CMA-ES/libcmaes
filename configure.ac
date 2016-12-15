@@ -134,7 +134,7 @@ fi
 if test x"$python" = x"true"; then
 AC_MSG_CHECKING([for Numpy include directory])
 CPPFLAGS=$PYTHON_CPPFLAGS $CPPFLAGS
-NUMPY_INCLUDE_DIR=`echo "import numpy; print numpy.get_include()" | $PYTHON - 2>/dev/null`
+NUMPY_INCLUDE_DIR=`echo "import numpy; print(numpy.get_include())" | $PYTHON - 2>/dev/null`
 AC_SUBST(NUMPY_INCLUDE_DIR)
 AC_CHECK_HEADER([${NUMPY_INCLUDE_DIR}/numpy/arrayobject.h],
                 [NUMPY_HEADER=yes],
