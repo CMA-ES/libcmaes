@@ -11,7 +11,7 @@ $(TARGET).o: $(TARGET).cc
 all:lcmaes.so
 
 install: all
-	$(INSTALL) lcmaes.so $(libdir)
+	$(INSTALL) lcmaes.so $(DESTDIR)$(libdir)
 
 uninstall-hook:
 	rm $(libdir)/lcmaes.so
