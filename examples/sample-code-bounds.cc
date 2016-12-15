@@ -34,7 +34,7 @@ FitFunc fsphere = [](const double *x, const int N)
 
 int main(int argc, char *argv[])
 {
-  int dim = 10; // problem dimensions.
+  const int dim = 10; // problem dimensions.
   double sigma = 0.1;
   double lbounds[dim],ubounds[dim]; // arrays for lower and upper parameter bounds, respectively
   for (int i=0;i<dim;i++)
