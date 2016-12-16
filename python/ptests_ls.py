@@ -5,8 +5,8 @@ x = [3]*10
 lambda_ = 10 # lambda is a reserved keyword in python, using lambda_ instead.
 seed = 0 # 0 for seed auto-generated within the lib.
 sigma = 0.1
-scaling = [int(1000*random.random()) for i in xrange(10)]
-shift = [int(1000*random.random()) for i in xrange(10)]
+scaling = [int(1000*random.random()) for i in range(10)]
+shift = [int(1000*random.random()) for i in range(10)]
 gp = lcmaes.make_genopheno_ls(scaling,shift)
 p = lcmaes.make_parameters_ls(x,sigma,gp,lambda_,seed)
 
