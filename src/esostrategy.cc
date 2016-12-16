@@ -25,6 +25,7 @@
 #include "cmasolutions.h"
 #include "cmastopcriteria.h"
 #include <iostream>
+#include <numeric>
 #include "llogging.h"
 
 #ifdef HAVE_DEBUG
