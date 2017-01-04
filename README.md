@@ -56,6 +56,12 @@ For compiling with basic options enabled:
 make
 ```
 
+For compiling with CMake:
+```
+cmake -DCMAKE_INSTALL_PREFIX=~/.local/ .
+make install -j2
+```
+
 ### Run examples
 ```
 cd tests
