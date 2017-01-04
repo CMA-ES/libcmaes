@@ -58,8 +58,11 @@ make
 
 For compiling with CMake:
 ```
-cmake -DCMAKE_INSTALL_PREFIX=~/.local/ .
-make install -j2
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/ .
+make -j2
+make install
 ```
 
 ### Run examples
