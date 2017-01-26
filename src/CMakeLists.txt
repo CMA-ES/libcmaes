@@ -25,6 +25,12 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library (cmaes ${LIBCMAES_SOURCES})
 
+
+if(MSVC)
+  target_compile_options(cmaes PRIVATE "/bigobj")
+endif()
+
+
 set_target_properties (cmaes PROPERTIES SOVERSION 0)
 set_target_properties (cmaes PROPERTIES VERSION 0.0.0)
 set_target_properties (cmaes PROPERTIES POSITION_INDEPENDENT_CODE ON)
