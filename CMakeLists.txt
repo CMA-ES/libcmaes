@@ -104,7 +104,8 @@ if (BUILD_PYTHON)
   endif ()
 
   # boost-python
-  set (BOOST_PYTHON_COMPONENT_NAMES python${PYTHON_VERSION_MAJOR} python)
+  set (BOOST_PYTHON_COMPONENT_NAMES
+    python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} python)
   foreach (NAME ${BOOST_PYTHON_COMPONENT_NAMES})
     if (NOT Boost_FOUND)
       message (STATUS "Looking for component ${NAME}")
