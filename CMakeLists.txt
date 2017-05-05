@@ -89,7 +89,19 @@ if (BUILD_PYTHON)
 
   # python site dir
   if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_DIR)
-    execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${CMAKE_INSTALL_PREFIX}'))"
+    # $ENV{VIRTUAL_ENV} does not work because not exported by activate :/
+    execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "
+import sys;
+if 'real_prefix' in dir(sys):
+    print(sys.prefix)"
+    # sys.real_prefix is only defined when in virtualenv
+      OUTPUT_VARIABLE SITE_DIR_PREFIX
+      RESULT_VARIABLE _exit_code
+      OUTPUT_STRIP_TRAILING_WHITESPACE )
+    if (${SITE_DIR_PREFIX}) # if not set, back to previous behaviour
+      set (SITE_DIR_PREFIX ${CMAKE_INSTALL_PREFIX})
+    endif ()
+    execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${SITE_DIR_PREFIX}'))"
                          OUTPUT_VARIABLE _ABS_PYTHON_SITE_DIR
                          RESULT_VARIABLE _exit_code
                          OUTPUT_STRIP_TRAILING_WHITESPACE )
