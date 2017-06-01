@@ -14,7 +14,7 @@ edm_SOURCES=edm.cc
 if HAVE_BBOB
 libbbobdir = $(libdir)
 libbbob_LIBRARIES=libbbob.a
-libbbob_a_SOURCES= bbob.v13.09/c/benchmarksdeclare.c bbob.v13.09/c/benchmarkshelper.c bbob.v13.09/c/benchmarks.c bbob.v13.09/c/benchmarksnoisy.c bbob.v13.09/c/fgeneric.c bbob.v13.09/c/dirOK.c 
+libbbob_a_SOURCES= bbob.v13.09/c/benchmarksdeclare.c bbob.v13.09/c/benchmarkshelper.c bbob.v13.09/c/benchmarks.c bbob.v13.09/c/benchmarksnoisy.c bbob.v13.09/c/fgeneric.c bbob.v13.09/c/dirOK.c
 bin_PROGRAMS += bbobexperiment
 bbobexperiment_SOURCES=bbobexperiment.cc
 endif
@@ -28,7 +28,7 @@ ut_scaling_SOURCES=ut-scaling.cc
 endif
 
 AM_CPPFLAGS=-I$(top_srcdir)/src/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
-AM_CXXFLAGS=-g -Wall
+AM_CXXFLAGS=-Wall -Wextra -g -O3 -mavx -mfma
 if !HAVE_CLANG
 AM_CXXFLAGS += -fopenmp
 endif

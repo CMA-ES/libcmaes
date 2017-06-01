@@ -58,13 +58,9 @@ check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # eigen
-find_package (Eigen3 NO_MODULE)
-if (EIGEN3_FOUND)
-  include (${EIGEN3_USE_FILE})
-else ()
-  find_package (Eigen3 REQUIRED)
-  include_directories (${EIGEN3_INCLUDE_DIRS})
-endif()
+find_package (Eigen3 REQUIRED)
+include_directories (${EIGEN3_INCLUDE_DIRS})
+message(STATUS "Eigen3 found: ${EIGEN3_INCLUDE_DIRS}")
 
 # omp
 if (USE_OPENMP)
@@ -81,6 +77,8 @@ if (CMAKE_VERSION VERSION_LESS 3.1 OR NOT USE_COMPILE_FEATURES)
     set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
   endif ()
 endif ()
+
+set (CMAKE_CXX_FLAGS "-O3 -g -mavx -mfma ${CMAKE_CXX_FLAGS}")
 
 if (BUILD_PYTHON)
   find_package (PythonInterp)
