@@ -14,7 +14,7 @@ nobase_libcmaesinclude_HEADERS += surrcmaes.h surrogatestrategy.h surrogates/ran
 endif
 
 AM_CPPFLAGS=-I$(EIGEN3_INC)
-AM_CXXFLAGS=-Wall -Wextra -g
+AM_CXXFLAGS=-Wall -Wextra -g -O3 -mavx -mfma
 if !HAVE_CLANG
 AM_CXXFLAGS += -fopenmp
 endif
