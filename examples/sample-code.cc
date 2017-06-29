@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
+#define OMP_NUM_THREADS 8
 
 #include "cmaes.h"
 #include <iostream>
@@ -27,18 +28,27 @@ using namespace libcmaes;
 FitFunc fsphere = [](const double *x, const int N)
 {
   double val = 0.0;
+
+  for(int k=0;k<10000;k++)
+  {
+    val = 0.0;
   for (int i=0;i<N;i++)
     val += x[i]*x[i];
+  }
   return val;
 };
 
 int main(int argc, char *argv[])
 {
-  int dim = 10; // problem dimensions.
+#ifdef USE_TBB
+  std::cout<<"TBB"<<std::endl;
+#endif
+  int dim = 100; // problem dimensions.
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
   //int lambda = 100; // offsprings at each generation.
   CMAParameters<> cmaparams(x0,sigma);
+  cmaparams.set_mt_feval(true);
   //cmaparams._algo = BIPOP_CMAES;
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;

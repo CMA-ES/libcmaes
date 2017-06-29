@@ -98,6 +98,11 @@ namespace libcmaes
     void eval(const dMat &candidates,
 	      const dMat &phenocandidates=dMat(0,0));
 
+    void parallel_candidate_evaluation(const dMat &candidates,
+	      const dMat &phenocandidates=dMat(0,0));
+    void candidate_evaluation(const dMat &candidates,
+	      const dMat &phenocandidates=dMat(0,0));
+
     /**
      * \brief Updates the state of the stochastic search, and prepares
      *        for the next iteration.

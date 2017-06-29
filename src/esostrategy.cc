@@ -32,6 +32,12 @@
 #include <chrono>
 #endif
 
+#ifdef USE_TBB
+// Quick hack for definition of 'I' in <complex.h>
+#undef I
+#include <tbb/parallel_for.h>
+#endif
+
 namespace libcmaes
 {
   template <typename T> int sgn(T val) {
@@ -88,18 +94,11 @@ namespace libcmaes
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
 #endif
-    // one candidate per row.
-#pragma omp parallel for if (_parameters._mt_feval)
-    for (int r=0;r<candidates.cols();r++)
-      {
-	_solutions._candidates.at(r).set_x(candidates.col(r));
-	_solutions._candidates.at(r).set_id(r);
-	if (phenocandidates.size())
-	  _solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
-	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
-	
-	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
-      }
+		if (_parameters._mt_feval)
+			parallel_candidate_evaluation(candidates, phenocandidates);
+		else
+			candidate_evaluation(candidates, phenocandidates);
+
     int nfcalls = candidates.cols();
     
     // evaluation step of uncertainty handling scheme.
@@ -108,7 +107,7 @@ namespace libcmaes
 				perform_uh(candidates,phenocandidates,nfcalls);
       }
 
-    // if an elitist is active, reinject initial solution as needed.
+    // if an elitist is active, re-inject initial solution as needed.
     if (_niter > 0 && (_parameters._elitist || _parameters._initial_elitist || (_initial_elitist && _parameters._initial_elitist_on_restart)))
       {
 	// get reference values.
@@ -126,7 +125,7 @@ namespace libcmaes
 	    ref_candidate = _solutions._best_seen_candidate;
 	  }
 
-	// reinject intial solution if half or more points have value above that of the initial point candidate.
+	// re-inject initial solution if half or more points have value above that of the initial point candidate.
 	int count = 0;
 	for (int r=0;r<candidates.cols();r++)
 	  {
@@ -149,6 +148,48 @@ namespace libcmaes
     _solutions._elapsed_eval = std::chrono::duration_cast<std::chrono::milliseconds>(tstop-tstart).count();
 #endif
   }
+
+	template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::parallel_candidate_evaluation(const dMat &candidates,
+							       const dMat &phenocandidates)
+	{
+		// one candidate per row.
+#ifdef USE_TBB
+		tbb::parallel_for(size_t(0), size_t(candidates.cols()), size_t(1), [&](size_t r) {
+#else
+		// the if check is not needed, but keep it as a safety
+		#pragma omp parallel for if (_parameters._mt_feval)
+    for (int r=0;r<candidates.cols();r++)
+		{
+#endif
+			_solutions._candidates.at(r).set_x(candidates.col(r));
+			_solutions._candidates.at(r).set_id(r);
+			if (phenocandidates.size())
+				_solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
+			else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
+
+			//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
+		}
+#ifdef USE_TBB
+		);
+#endif	
+	}
+
+	template<class TParameters,class TSolutions,class TStopCriteria>
+  void ESOStrategy<TParameters,TSolutions,TStopCriteria>::candidate_evaluation(const dMat &candidates,
+							       const dMat &phenocandidates)
+	{
+    for (int r=0;r<candidates.cols();r++)
+		{
+			_solutions._candidates.at(r).set_x(candidates.col(r));
+			_solutions._candidates.at(r).set_id(r);
+			if (phenocandidates.size())
+				_solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
+			else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
+
+			//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
+		}	
+	}
 
   template<class TParameters,class TSolutions,class TStopCriteria>
   void ESOStrategy<TParameters,TSolutions,TStopCriteria>::inc_iter()
@@ -362,6 +403,7 @@ namespace libcmaes
   template<class TParameters,class TSolutions,class TStopCriteria>
   void ESOStrategy<TParameters,TSolutions,TStopCriteria>::eval_candidates_uh(const dMat& candidates, const dMat& candidates_uh, std::vector<RankedCandidate>& nvcandidates, int& nfcalls)
 	{
+	// TO-DO: Maybe parallelize this also
 	// re-evaluate
 	for (int r=0;r<candidates.cols();r++)
 	  {
