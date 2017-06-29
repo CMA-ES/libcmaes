@@ -17,7 +17,7 @@ set (PYINSTALLCHECK_ENVIRONMENT "PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}")
 
 
 macro (cmaes_add_pytest name)
-  add_test (NAME ${name} COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.py ${LIBCMAES_DEPS})
+  add_test (NAME ${name} COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/${name}.py)
   set_tests_properties (${name} PROPERTIES ENVIRONMENT "${PYINSTALLCHECK_ENVIRONMENT}")
 endmacro ()
 
