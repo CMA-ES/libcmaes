@@ -34,6 +34,11 @@ AM_CXXFLAGS += -fopenmp
 endif
 AM_LDFLAGS=-L../src
 LDADD=-lcmaes -lm $(GLOG_LIBS) $(GFLAGS_LIBS)
+if HAVE_TBB
+AM_CPPFLAGS += -I$(TBB_INC) -DUSE_TBB
+AM_LDFLAGS += -L$(TBB_LIB)
+LDADD += -ltbb
+endif
 if HAVE_BBOB
 AM_CPPFLAGS += -Ibbob.v13.09/c
 AM_LDFLAGS += -L.

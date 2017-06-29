@@ -48,6 +48,33 @@ AC_MSG_ERROR([Cannot find Eigen3])
 fi
 AM_CONDITIONAL(HAVE_EIGEN3, test x"$lib_eig_avail" = xyes)
 
+AC_MSG_CHECKING([for tbb])
+AC_ARG_WITH(tbb,
+AC_HELP_STRING([--with-tbb=DIR], [Path to the TBB]),
+					    [tbb_dirs=$withval],
+					    [tbb_dirs=/usr])
+AC_CHECK_FILE($tbb_dirs/include/tbb/tbb.h,,
+	[AC_CHECK_FILE(/usr/local/include,[tbb_incs=/usr/local/include])])
+AC_CHECK_FILE($tbb_dirs/lib/libtbb.so,,
+	[AC_CHECK_FILE(/usr/local/lib,[tbb_libs=/usr/local/lib])])
+
+tbb_ac_save_cppflags=$CPPFLAGS
+CPPFLAGS="$CPPFLAGS -I$tbb_dirs/include"
+
+lib_tbb_avail=no
+AC_CHECK_HEADER(tbb/tbb.h,
+	lib_tbb_avail=yes,)
+
+CPPFLAGS=$tbb_ac_save_cppflags
+
+if test x"$lib_tbb_avail" = xyes; then
+   AC_SUBST([TBB_INC], [$tbb_dirs/include])
+   AC_SUBST([TBB_LIB], [$tbb_dirs/lib])
+else
+AC_MSG_WARN([Cannot find TBB])
+fi
+AM_CONDITIONAL(HAVE_TBB, test x"$lib_tbb_avail" = xyes)
+
 # Check if there is google-gflags library installed.
 AC_ARG_WITH(gflags, AS_HELP_STRING[--with-gflags=GFLAGS_DIR],
   GFLAGS_CFLAGS="-I${with_gflags}/include"
