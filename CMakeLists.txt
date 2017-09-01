@@ -58,9 +58,14 @@ check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # eigen
-find_package (Eigen3 REQUIRED)
-include_directories (${EIGEN3_INCLUDE_DIRS})
-message(STATUS "Eigen3 found: ${EIGEN3_INCLUDE_DIRS}")
+find_package (Eigen3 NO_MODULE)
+if (EIGEN3_FOUND)
+  include (${EIGEN3_USE_FILE})
+  message(STATUS "Eigen3 found: ${EIGEN3_INCLUDE_DIRS}")
+else ()
+  find_package (Eigen3 REQUIRED)
+  include_directories (${EIGEN3_INCLUDE_DIRS})
+endif()
 
 # omp
 if (USE_OPENMP)
@@ -78,15 +83,13 @@ if (CMAKE_VERSION VERSION_LESS 3.1 OR NOT USE_COMPILE_FEATURES)
   endif ()
 endif ()
 
-set (CMAKE_CXX_FLAGS "-O3 -g -mavx -mfma ${CMAKE_CXX_FLAGS}")
-
 if (BUILD_PYTHON)
   find_package (PythonInterp)
   find_package (PythonLibs)
   find_package (NumPy)
 
   # python site dir
-  if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_DIR)
+  if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
     # $ENV{VIRTUAL_ENV} does not work because not exported by activate :/
     execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "
 import sys;
@@ -100,14 +103,14 @@ if 'real_prefix' in dir(sys):
       set (SITE_DIR_PREFIX ${CMAKE_INSTALL_PREFIX})
     endif ()
     execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${SITE_DIR_PREFIX}'))"
-                         OUTPUT_VARIABLE _ABS_PYTHON_SITE_DIR
+                         OUTPUT_VARIABLE _ABS_PYTHON_SITE_PACKAGES
                          RESULT_VARIABLE _exit_code
                          OUTPUT_STRIP_TRAILING_WHITESPACE )
 
     if (NOT ${_exit_code})
-      get_filename_component (_ABS_PYTHON_SITE_DIR ${_ABS_PYTHON_SITE_DIR} ABSOLUTE)
-      file (RELATIVE_PATH _REL_PYTHON_SITE_DIR ${CMAKE_INSTALL_PREFIX} ${_ABS_PYTHON_SITE_DIR})
-      set (PYTHON_SITE_DIR ${_REL_PYTHON_SITE_DIR})
+      get_filename_component (_ABS_PYTHON_SITE_PACKAGES ${_ABS_PYTHON_SITE_PACKAGES} ABSOLUTE)
+      file (RELATIVE_PATH _REL_PYTHON_SITE_PACKAGES ${CMAKE_INSTALL_PREFIX} ${_ABS_PYTHON_SITE_PACKAGES})
+      set (PYTHON_SITE_PACKAGES ${_REL_PYTHON_SITE_PACKAGES})
     else ()
       message (SEND_ERROR "Could not run ${PYTHON_EXECUTABLE}")
     endif ()
