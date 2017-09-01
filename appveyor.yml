@@ -1,0 +1,19 @@
+clone_folder: C:\projects\libcmaes
+environment:
+  matrix:
+    - CMAKE_PLATFORM: "Visual Studio 14 2015"
+    - CMAKE_PLATFORM: "Visual Studio 14 2015 Win64"
+install:
+  - cinstall: python
+  - appveyor-retry appveyor DownloadFile https://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz
+  - 7z x 3.3.4.tar.gz -oc:\projects > nul
+  - 7z x c:\projects\3.3.4.tar -oc:\projects > nul
+  - cd c:\projects\eigen-eigen-5a0156e40feb
+  - mkdir build && cd build
+  - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\eigen -DCMAKE_BUILD_TYPE=Release ..
+  - cmake --build . --config Release --target install
+  - cd c:\projects\libcmaes
+  - mkdir build && cd build
+  - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\libcmaes -DCMAKE_BUILD_TYPE=Release -DEigen3_DIR=c:\Libraries\eigen\share\eigen3\cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_PYTHON=OFF ..
+  - cmake --build . --config Release --target install
+  - ctest -C Release
