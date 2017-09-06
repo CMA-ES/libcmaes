@@ -2,6 +2,7 @@
 include_directories (${PROJECT_SOURCE_DIR}/src)
 include_directories (${PYTHON_INCLUDE_DIR})
 include_directories (${NUMPY_INCLUDE_DIRS})
+include_directories (${Boost_INCLUDE_DIRS})
 
 python_add_module (lcmaes lcmaes.cc)
 target_link_libraries(lcmaes cmaes ${Boost_LIBRARIES})
