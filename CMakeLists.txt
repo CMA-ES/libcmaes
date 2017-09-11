@@ -118,7 +118,7 @@ if 'real_prefix' in dir(sys):
 
   # boost-python
   set (BOOST_PYTHON_COMPONENT_NAMES
-    python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} python)
+    python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} python${PYTHON_VERSION_MAJOR} python)
   foreach (NAME ${BOOST_PYTHON_COMPONENT_NAMES})
     if (NOT Boost_FOUND)
       message (STATUS "Looking for component ${NAME}")
