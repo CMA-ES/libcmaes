@@ -725,8 +725,8 @@ namespace libcmaes
     return fcross();
   }
   
-  template class errstats<GenoPheno<NoBoundStrategy>>;
-  template class errstats<GenoPheno<pwqBoundStrategy>>;
-  template class errstats<GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class errstats<GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class CMAES_EXPORT errstats<GenoPheno<NoBoundStrategy> >;
+  template class CMAES_EXPORT errstats<GenoPheno<pwqBoundStrategy> >;
+  template class CMAES_EXPORT errstats<GenoPheno<NoBoundStrategy,linScalingStrategy> >;
+  template class CMAES_EXPORT errstats<GenoPheno<pwqBoundStrategy,linScalingStrategy> >;
 }

@@ -24,6 +24,7 @@
 
 #include "parameters.h"
 #include "eo_matrix.h"
+#include "cmaes_export.h"
 #include <float.h>
 
 namespace libcmaes
@@ -32,7 +33,7 @@ namespace libcmaes
    * \brief Parameters for various flavors of the CMA-ES algorithm.
    */
   template <class TGenoPheno=GenoPheno<NoBoundStrategy> >
-  class CMAParameters : public Parameters<TGenoPheno>
+  class CMAES_EXPORT CMAParameters : public Parameters<TGenoPheno>
     {
       friend class CMASolutions;
       template <class U, class V> friend class CMAStrategy;

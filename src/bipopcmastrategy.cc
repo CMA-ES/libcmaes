@@ -127,16 +127,16 @@ namespace libcmaes
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.initialize_parameters();
   }
 
-  template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy>>;
-  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy>>;
-  template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy>>;
-  template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy>>;
-  template class BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
-  template class BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
-  template class BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy>>;
+  template class CMAES_EXPORT BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<NoBoundStrategy,linScalingStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<CovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<ACovarianceUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy> >;
+  template class CMAES_EXPORT BIPOPCMAStrategy<VDCMAUpdate,GenoPheno<pwqBoundStrategy,linScalingStrategy> >;
 }

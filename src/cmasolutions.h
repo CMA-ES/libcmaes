@@ -38,7 +38,7 @@ namespace libcmaes
    * \brief Holder of the set of evolving solutions from running an instance
    *        of CMA-ES.
    */
-  class CMASolutions
+  class CMAES_EXPORT CMASolutions
   {
     template <class U, class V> friend class CMAStrategy;
     template <class U, class V, class W> friend class ESOptimizer;
@@ -65,7 +65,7 @@ namespace libcmaes
      * \brief initializes solutions from stochastic optimization parameters.
      * @param p parameters
      */
-    template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
+    template<class TGenoPheno=GenoPheno<NoBoundStrategy> >
     CMASolutions(Parameters<TGenoPheno> &p);
     
     ~CMASolutions();
@@ -291,7 +291,7 @@ namespace libcmaes
      * @param cmaparams parameter object that hold the genotype/phenotype transform
      * @return unscaled standard deviation vector
      */
-    template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
+    template<class TGenoPheno=GenoPheno<NoBoundStrategy> >
       inline dVec stds(const CMAParameters<TGenoPheno> &cmaparams) const
     {
       dVec phen_xmean = cmaparams.get_gp().pheno(_xmean);
@@ -311,7 +311,7 @@ namespace libcmaes
      * @param cmaparams parameter object that hold the genotype/phenotype transform
      * @return standard deviation vector
      */
-    template<class TGenoPheno=GenoPheno<NoBoundStrategy>>
+    template<class TGenoPheno=GenoPheno<NoBoundStrategy> >
       inline dVec errors(const CMAParameters<TGenoPheno> &cmaparams) const
       {
 	return std::sqrt(_sigma)*stds(cmaparams);
@@ -478,7 +478,7 @@ namespace libcmaes
      * @param out output stream
      * @param verb_level verbosity level: 0 for short, 1 for debug.
      */
-    template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
+    template <class TGenoPheno=GenoPheno<NoBoundStrategy> >
     std::ostream& print(std::ostream &out,
 			const int &verb_level=0,
 			const TGenoPheno &gp=TGenoPheno()) const;
@@ -544,8 +544,7 @@ namespace libcmaes
     dVec _xmean_prev; /**< previous step's mean vector. */
   };
 
-  std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);
-  
+  CMAES_EXPORT std::ostream& operator<<(std::ostream &out,const CMASolutions &cmas);
 }
 
 #endif

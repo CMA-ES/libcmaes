@@ -30,7 +30,7 @@ namespace libcmaes
 {
   
   template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
-  class errstats
+  class CMAES_EXPORT errstats
     {
     public:
     /*- profile likelihood -*/

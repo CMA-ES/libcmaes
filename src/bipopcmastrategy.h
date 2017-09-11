@@ -34,7 +34,7 @@ namespace libcmaes
    *        global searches for the objective.
    */
   template <class TCovarianceUpdate, class TGenoPheno>
-    class BIPOPCMAStrategy : public IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>
+    class CMAES_EXPORT BIPOPCMAStrategy : public IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>
   {
   public:
     /**

@@ -23,11 +23,12 @@
 #define PWQ_BOUND_STRATEGY_H
 
 #include "eo_matrix.h"
+#include "cmaes_export.h"
 #include <vector>
 
 namespace libcmaes
 {
-  class pwqBoundStrategy
+  class CMAES_EXPORT pwqBoundStrategy
   {
   public:
     pwqBoundStrategy(); // dummy constructor, required for non-pointer default object in GenoPheno.

@@ -48,7 +48,7 @@ namespace libcmaes
    *        its functionalities to an ESOptimizer object.
    */
   template<class TParameters,class TSolutions,class TStopCriteria>
-    class ESOStrategy
+    class CMAES_EXPORT ESOStrategy
   {
   public:
     /**
