@@ -35,7 +35,7 @@ namespace libcmaes
    *  Gradient Optimization in High Dimension. In Proceedings of Genetic
    *  and Evolutionary Computation Conference (2014)
    */
-  class VDCMAUpdate
+  class CMAES_EXPORT VDCMAUpdate
   {
   public:
     template <class TGenoPheno>

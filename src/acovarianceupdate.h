@@ -35,7 +35,7 @@ namespace libcmaes
    *        N. Hansen, R. Ros, "Benchmarking a Weighted Negative Covariance Matrix 
    *                            Update on the BBOB-2010 Noiseless Testbed", GECCO'10, 2010.
    */
-  class ACovarianceUpdate
+  class CMAES_EXPORT ACovarianceUpdate
   {
   public:
     template <class TGenoPheno>

@@ -72,7 +72,7 @@ namespace libcmaes
    * \brief CMA-ES termination criteria, see reference paper in cmastrategy.h
    */
   template <class TGenoPheno=NoBoundStrategy>
-  class CMAStopCriteria
+  class CMAES_EXPORT CMAStopCriteria
   {
     friend class CMASolutions;
 
@@ -105,21 +105,6 @@ namespace libcmaes
     bool _active; /**< whether these termination criteria are active. */
     static std::map<int,std::string> _scriterias;
   };
-  
-  template <class TGenoPheno>
-    std::map<int,std::string> CMAStopCriteria<TGenoPheno>::_scriterias = {{CONT,"OK"},
-									  {AUTOMAXITER,"The automatically set maximal number of iterations per run has been reached"},
-									  {TOLHISTFUN,"[Success] The optimization has converged"},
-									  {EQUALFUNVALS,"[Partial Success] The objective function values are the same over too many iterations, check the formulation of your objective function"},
-									  {TOLX,"[Partial Success] All components of covariance matrix are very small (e.g. < 1e-12)"},
-									  {TOLUPSIGMA,"[Error] Mismatch between step size increase and decrease of all eigenvalues in covariance matrix. Try to restart the optimization."},
-									  {STAGNATION,"[Partial Success] Median of newest values is not smaller than the median of older values"},
-									  {CONDITIONCOV,"[Error] The covariance matrix's condition number exceeds 1e14. Check out the formulation of your problem"},
-									  {NOEFFECTAXIS,"[Partial Success] Mean remains constant along search axes"},
-									  {NOEFFECTCOOR,"[Partial Success] Mean remains constant in coordinates"},
-									  {MAXFEVALS,"The maximum number of function evaluations allowed for optimization has been reached"},
-									  {MAXITER,"The maximum number of iterations specified for optimization has been reached"},
-									  {FTARGET,"[Success] The objective function target value has been reached"}};
 
 }
 

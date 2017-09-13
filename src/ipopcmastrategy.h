@@ -32,7 +32,7 @@ namespace libcmaes
    *        update of the distribution parameters.
    */
   template <class TCovarianceUpdate, class TGenoPheno>
-    class IPOPCMAStrategy : public CMAStrategy<TCovarianceUpdate, TGenoPheno>
+    class CMAES_EXPORT IPOPCMAStrategy : public CMAStrategy<TCovarianceUpdate, TGenoPheno>
   {
   public:
     /**

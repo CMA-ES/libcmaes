@@ -292,14 +292,14 @@ namespace libcmaes
     cmas.print(out,0);
         return out;
   }
-  
-  template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy>>&);
-  template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy>>&);
-  template CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy,linScalingStrategy>>&);
-  template CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>&);
 
-  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy>&) const;
-  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy>&) const;
-  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy,linScalingStrategy>&) const;
-  template std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy,linScalingStrategy>&) const;
+  template CMAES_EXPORT CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy> >&);
+  template CMAES_EXPORT CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy> >&);
+  template CMAES_EXPORT CMASolutions::CMASolutions(Parameters<GenoPheno<NoBoundStrategy,linScalingStrategy> >&);
+  template CMAES_EXPORT CMASolutions::CMASolutions(Parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy> >&);
+
+  template CMAES_EXPORT std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy>&) const;
+  template CMAES_EXPORT std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy>&) const;
+  template CMAES_EXPORT std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<NoBoundStrategy, linScalingStrategy>&) const;
+  template CMAES_EXPORT std::ostream& CMASolutions::print(std::ostream&,const int&,const GenoPheno<pwqBoundStrategy, linScalingStrategy>&) const;
 }

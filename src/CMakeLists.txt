@@ -22,6 +22,7 @@ if (ENABLE_SURROG)
 endif ()
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
+include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
 add_library (cmaes ${LIBCMAES_SOURCES})
 
@@ -40,6 +41,9 @@ if (CMAKE_VERSION VERSION_GREATER 3.1 AND USE_COMPILE_FEATURES)
   target_compile_features (cmaes PUBLIC cxx_nonstatic_member_init)
 endif ()
 
+include (GenerateExportHeader)
+generate_export_header (cmaes)
+
 install ( TARGETS cmaes
           EXPORT  LibcmaesLibraryDepends
           RUNTIME DESTINATION ${RELATIVE_INSTALL_BIN_DIR}
@@ -47,7 +51,9 @@ install ( TARGETS cmaes
           ARCHIVE DESTINATION ${RELATIVE_INSTALL_LIB_DIR}
         )
 
-install (FILES ${LIBCMAES_HEADERS} DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
+install (FILES ${LIBCMAES_HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/cmaes_export.h
+         DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
+
 if (ENABLE_SURROG)
   install (DIRECTORY surrogates DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 endif ()

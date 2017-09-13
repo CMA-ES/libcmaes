@@ -42,7 +42,7 @@ namespace libcmaes
    * See https://www.lri.fr/~hansen/publications.html for more information.
    */
   template <class TCovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
-    class CMAStrategy : public ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >
+    class CMAES_EXPORT CMAStrategy : public ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >
     {
     public:
       /**

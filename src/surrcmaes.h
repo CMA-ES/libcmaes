@@ -28,8 +28,8 @@
 
 namespace libcmaes
 {
-  template <class TGenoPheno=GenoPheno<NoBoundStrategy>>
-  CMASolutions surrcmaes(FitFunc &func,
+  template <class TGenoPheno=GenoPheno<NoBoundStrategy> >
+  CMASolutions CMAES_EXPORT surrcmaes(FitFunc &func,
 			 CMAParameters<TGenoPheno> &parameters)
     {
       switch(parameters.get_algo())

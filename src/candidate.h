@@ -147,7 +147,7 @@ namespace libcmaes
    int _r = -1; /**< candidate rank. */
   };
 
-  class RankedCandidate : public Candidate
+  class CMAES_EXPORT RankedCandidate : public Candidate
   {
   public:
     RankedCandidate(const double &fvalue_mut,
