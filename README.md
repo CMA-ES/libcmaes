@@ -52,6 +52,7 @@ sudo apt-get install autoconf automake libtool libgoogle-glog-dev libgflags-dev 
 For compiling with basic options enabled:
 ```
 ./autogen.sh
+echo "#define CMAES_EXPORT" > cmaes_export.h
 ./configure
 make
 ```
