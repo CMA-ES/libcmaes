@@ -6,9 +6,9 @@ include_directories (${NUMPY_INCLUDE_DIRS})
 include_directories (${Boost_INCLUDE_DIRS})
 
 python_add_module (lcmaes lcmaes.cc)
-target_link_libraries(lcmaes cmaes ${Boost_LIBRARIES} ${LIBCMAES_DEPS})
+target_link_libraries (lcmaes cmaes ${Boost_LIBRARIES})
 if (LINK_PYTHON)
-  target_link_libraries(lcmaes ${PYTHON_LIBRARIES} ${LIBCMAES_DEPS})
+  target_link_libraries (lcmaes ${PYTHON_LIBRARIES})
 endif ()
 
 install (TARGETS lcmaes DESTINATION ${PYTHON_SITE_PACKAGES})

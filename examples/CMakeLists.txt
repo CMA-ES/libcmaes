@@ -4,7 +4,7 @@ include_directories (${PROJECT_BINARY_DIR}/src)
 
 macro (cmaes_add_example name)
   add_executable (sample-${name} sample-${name}.cc)
-  target_link_libraries (sample-${name} cmaes ${LIBCMAES_DEPS})
+  target_link_libraries (sample-${name} cmaes)
 endmacro ()
 
 cmaes_add_example (code)

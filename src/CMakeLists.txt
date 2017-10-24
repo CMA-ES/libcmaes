@@ -25,7 +25,11 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
 add_library (cmaes ${LIBCMAES_SOURCES})
-target_link_libraries(cmaes ${LIBCMAES_DEPS})
+if (TBB_FOUND)
+  target_compile_definitions (cmaes PUBLIC ${TBB_DEFS})
+  target_include_directories (cmaes PUBLIC ${TBB_INCLUDE_DIRS})
+  target_link_libraries (cmaes PUBLIC ${LIBCMAES_DEPS})
+endif ()
 
 
 if(MSVC)
