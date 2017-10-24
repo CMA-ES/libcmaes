@@ -27,7 +27,7 @@
 #include "ipopcmastrategy.h"
 #include "bipopcmastrategy.h"
 
-#ifdef USE_TBB
+#ifdef HAVE_TBB
 // Quick hack for definition of 'I' in <complex.h>
 #undef I
 #include <tbb/task_scheduler_init.h>
@@ -46,7 +46,7 @@ namespace libcmaes
 		     const CMASolutions &solutions=CMASolutions(),
 		     PlotFunc<CMAParameters<TGenoPheno>,CMASolutions> &pffunc=CMAStrategy<CovarianceUpdate,TGenoPheno>::_defaultFPFunc)
     {
-#ifdef USE_TBB
+#ifdef HAVE_TBB
 			static tbb::task_scheduler_init init;
 #endif
       switch(parameters.get_algo())

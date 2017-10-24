@@ -27,7 +27,7 @@
 #include "scaling.h"
 #include <vector>
 
-#ifdef USE_TBB
+#ifdef HAVE_TBB
 // Quick hack for definition of 'I' in <complex.h>
 #undef I
 #include <tbb/parallel_for.h>
@@ -106,7 +106,7 @@ namespace libcmaes
       if (!_id)
 	{
 	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(candidates.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for if (candidates.cols() >= 100)
@@ -117,7 +117,7 @@ namespace libcmaes
 	      _phenof(candidates.col(i).data(),ext.data(),candidates.rows());
 	      ncandidates.col(i) = ext;
 	    }
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
 	  return ncandidates;
@@ -130,7 +130,7 @@ namespace libcmaes
       if (!_id)
 	{
 	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(candidates.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for if (candidates.cols() >= 100)
@@ -141,7 +141,7 @@ namespace libcmaes
 	      _genof(candidates.col(i).data(),in.data(),candidates.rows());
 	      ncandidates.col(i) = in;
 	    }
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
 	  return ncandidates;
@@ -156,7 +156,7 @@ namespace libcmaes
       dMat ncandidates = pheno_candidates(candidates);
 
       // apply bounds.
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(ncandidates.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for if (ncandidates.cols() >= 100)
@@ -167,14 +167,14 @@ namespace libcmaes
 	  _boundstrategy.to_f_representation(ncandidates.col(i),ycoli);
 	  ncandidates.col(i) = ycoli;
 	}
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
       
       // apply scaling.
       if (!_scalingstrategy._id)
 	{
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(ncandidates.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for if (ncandidates.cols() >= 100)
@@ -185,7 +185,7 @@ namespace libcmaes
 	      _scalingstrategy.scale_to_f(ncandidates.col(i),ycoli);
 	      ncandidates.col(i) = ycoli;
 	    }
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
 	}
@@ -198,7 +198,7 @@ namespace libcmaes
       dMat ncandidates = candidates;
       if (!_scalingstrategy._id)
 	{
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(ncandidates.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for if (ncandidates.cols() >= 100)
@@ -209,13 +209,13 @@ namespace libcmaes
 	      _scalingstrategy.scale_to_internal(ycoli,ncandidates.col(i));
 	      ncandidates.col(i) = ycoli;
 	    }
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
 	}
       
       // reverse bounds.
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(ncandidates.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for if (ncandidates.cols() >= 100)
@@ -226,7 +226,7 @@ namespace libcmaes
 	  _boundstrategy.to_internal_representation(ycoli,ncandidates.col(i));
 	  ncandidates.col(i) = ycoli;
 	}
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
 
@@ -371,7 +371,7 @@ namespace libcmaes
       else ncandidates = candidates;
       
       // apply scaling.
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(ncandidates.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for if (ncandidates.cols() >= 100)
@@ -382,7 +382,7 @@ namespace libcmaes
 	  _scalingstrategy.scale_to_f(ncandidates.col(i),ycoli);
 	  ncandidates.col(i) = ycoli;
 	}
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
       return ncandidates;

@@ -32,7 +32,7 @@
 #include <chrono>
 #endif
 
-#ifdef USE_TBB
+#ifdef HAVE_TBB
 // Quick hack for definition of 'I' in <complex.h>
 #undef I
 #include <tbb/parallel_for.h>
@@ -154,7 +154,7 @@ namespace libcmaes
 							       const dMat &phenocandidates)
 	{
 		// one candidate per row.
-#ifdef USE_TBB
+#ifdef HAVE_TBB
 		tbb::parallel_for(size_t(0), size_t(candidates.cols()), size_t(1), [&](size_t r) {
 #else
 		// the if check is not needed, but keep it as a safety
@@ -170,7 +170,7 @@ namespace libcmaes
 
 			//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
 		}
-#ifdef USE_TBB
+#ifdef HAVE_TBB
 		);
 #endif	
 	}

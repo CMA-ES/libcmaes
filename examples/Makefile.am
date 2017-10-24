@@ -34,7 +34,7 @@ endif
 AM_LDFLAGS=-L../src
 LDADD=-lcmaes -lm $(GLOG_LIBS) $(GFLAGS_LIBS)
 if HAVE_TBB
-AM_CPPFLAGS += -I$(TBB_INC) -DUSE_TBB
+AM_CPPFLAGS += -I$(TBB_INC) -DHAVE_TBB
 AM_LDFLAGS += -L$(TBB_LIB)
 LDADD += -ltbb
 endif

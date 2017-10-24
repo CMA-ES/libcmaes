@@ -36,7 +36,7 @@
 #include <random>
 #include <iostream>
 
-#ifdef USE_TBB
+#ifdef HAVE_TBB
 // Quick hack for definition of 'I' in <complex.h>
 #undef I
 #include <tbb/parallel_for.h>
@@ -197,7 +197,7 @@ class RankingSVM
 	encode(x_train,covinv,xmean);
 	encode(x_test,covinv,xmean);
       }
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(x_test.cols()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for
@@ -212,7 +212,7 @@ class RankingSVM
 	  curfit += _alpha(j) * (Kvals(j)-Kvals(j+1));
 	fit(i) = curfit;
       }
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
     
@@ -250,7 +250,7 @@ class RankingSVM
   {
     _kernel.init(x);
     _K = dMat::Zero(x.cols(),x.cols());
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     tbb::parallel_for(size_t(0), size_t(_K.rows()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel for
@@ -258,7 +258,7 @@ class RankingSVM
 #endif
 	for (int j=i;j<_K.cols();j++)
 	  _K(i,j)=_K(j,i)=_kernel.K(x.col(i),x.col(j));
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     });
 #endif
   
@@ -278,7 +278,7 @@ class RankingSVM
     // initialization of temporary variables
     dVec sum_alphas = dVec::Zero(_dKij.cols());
     dMat div_dKij = dMat::Zero(_dKij.rows(),_dKij.cols());
-#ifdef USE_TBB
+#ifdef HAVE_TBB
   tbb::parallel_for(size_t(0), size_t(_dKij.rows()), size_t(1), [&](size_t i) {
 #else
 #pragma omp parallel
@@ -294,11 +294,11 @@ class RankingSVM
 	  double fact = _udist(_rng);
 	  _alpha(i) = _C(i) * (0.95 + 0.05*fact);
 	}
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #endif
 
-#ifdef USE_TBB
+#ifdef HAVE_TBB
   tbb::parallel_for(size_t(0), size_t(_dKij.rows()), size_t(1), [&](size_t i) {
 #else
 #pragma omp for
@@ -313,7 +313,7 @@ class RankingSVM
 	    }
 	  sum_alphas(i) = (_epsilon - sum_alpha) / _dKij(i,i);
 	}
-#ifdef USE_TBB
+#ifdef HAVE_TBB
     );
 #else
     }

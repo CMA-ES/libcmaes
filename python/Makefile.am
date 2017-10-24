@@ -7,7 +7,7 @@ if !HAVE_CLANG
 endif
 
 if HAVE_TBB
-TBB_INCS = -I$(TBB_INC) -DUSE_TBB
+TBB_INCS = -I$(TBB_INC) -DHAVE_TBB
 TBB_LIBS = -L$(TBB_LIB)
 TBB_LINKS = -ltbb
 endif
