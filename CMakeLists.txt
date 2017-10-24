@@ -83,9 +83,12 @@ if (USE_TBB)
   if (TBB_FOUND)
     add_definitions (-DUSE_TBB)
     include_directories (${TBB_INCLUDE_DIRS})
-    # should use ${TBB_LIBRARIES} but it is not working properly
-    set (LIBCMAES_DEPS "tbb")
+    set (LIBCMAES_DEPS "${TBB_LIBRARIES}")
   endif ()
+endif ()
+
+if (OPENMP_FOUND AND TBB_FOUND)
+message (FATAL_ERROR "You should not use both OpenMP and TBB for parallelization!")
 endif ()
 
 if (CMAKE_VERSION VERSION_LESS 3.1 OR NOT USE_COMPILE_FEATURES)
