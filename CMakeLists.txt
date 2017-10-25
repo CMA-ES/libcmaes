@@ -76,15 +76,8 @@ if (USE_OPENMP)
   endif ()
 endif ()
 
-set (LIBCMAES_DEPS "")
-set (TBB_DEFS "")
-
 if (USE_TBB)
   find_package (TBB)
-  if (TBB_FOUND)
-    set (TBB_DEFS "-DHAVE_TBB")
-    set (LIBCMAES_DEPS "${TBB_LIBRARIES}")
-  endif ()
 endif ()
 
 if (OPENMP_FOUND AND TBB_FOUND)
@@ -97,8 +90,6 @@ if (CMAKE_VERSION VERSION_LESS 3.1 OR NOT USE_COMPILE_FEATURES)
     set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
   endif ()
 endif ()
-
-set (CMAKE_CXX_FLAGS "-O3 -g -march=native ${CMAKE_CXX_FLAGS}")
 
 if (BUILD_PYTHON)
   find_package (PythonInterp)
