@@ -98,7 +98,7 @@ if (CMAKE_VERSION VERSION_LESS 3.1 OR NOT USE_COMPILE_FEATURES)
   endif ()
 endif ()
 
-set (CMAKE_CXX_FLAGS "-O3 -g -mavx -mfma ${CMAKE_CXX_FLAGS}")
+set (CMAKE_CXX_FLAGS "-O3 -g -march=native ${CMAKE_CXX_FLAGS}")
 
 if (BUILD_PYTHON)
   find_package (PythonInterp)
