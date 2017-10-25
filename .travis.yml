@@ -10,7 +10,7 @@ compiler:
   - clang
 
 before_install:
-  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update -qq && sudo apt-get install -qq autoconf automake libtool libboost-python-dev python-numpy && sudo rm -r /opt/python/*; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update -qq && sudo apt-get install -qq autoconf automake libtool libboost-python-dev python-numpy libtbb-dev && sudo rm -r /opt/python/*; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install boost-python gflags; export CXX=clang++; fi
   - wget http://bitbucket.org/eigen/eigen/get/3.2.4.tar.bz2
   - tar xvjf 3.2.4.tar.bz2
@@ -23,10 +23,15 @@ before_install:
 before_script:
   - ./autogen.sh
   - echo "#define CMAES_EXPORT" > cmaes_export.h
+
+script:
   - if [ $TRAVIS_OS_NAME == linux ]; then ./configure --enable-python; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then ./configure --enable-python LDFLAGS="-L/usr/local/lib/"; fi
-
-script: make
+  - make
+  - make clean
+  - if [ $TRAVIS_OS_NAME == linux ]; then ./configure --enable-python --enable-tbb; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then ./configure --enable-python --enable-tbb LDFLAGS="-L/usr/local/lib/"; fi
+  - make
 
 os: 
  - linux
