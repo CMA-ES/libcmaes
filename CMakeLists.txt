@@ -59,7 +59,7 @@ check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # eigen
-find_package (Eigen3 NO_MODULE QUIET)
+find_package (Eigen3 NO_MODULE)
 if (EIGEN3_FOUND)
   include (${EIGEN3_USE_FILE})
   message(STATUS "Eigen3 found: ${EIGEN3_INCLUDE_DIRS}")
