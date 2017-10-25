@@ -56,4 +56,6 @@ int main(int argc, char *argv[])
   CMASolutions cmasols = cmaes<>(fsphere,cmaparams);
   std::cout << "best solution: " << cmasols << std::endl;
   std::cout << "optimization took " << cmasols.elapsed_time() / 1000.0 << " seconds\n";
+
+  return 0;
 }
