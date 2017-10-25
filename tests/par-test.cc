@@ -24,6 +24,12 @@
 #include <chrono>
 #include <thread>
 
+#ifdef HAVE_TBB
+// Quick hack for definition of 'I' in <complex.h>
+#undef I
+#include <tbb/task_scheduler_init.h>
+#endif
+
 using namespace libcmaes;
 
 FitFunc fsphere = [](const double *x, const int N)
@@ -37,6 +43,9 @@ FitFunc fsphere = [](const double *x, const int N)
 
 int main(int argc, char *argv[])
 {
+#ifdef HAVE_TBB
+  static tbb::task_scheduler_init init;
+#endif
   int dim = 10; // problem dimensions.
   std::vector<double> x0(dim,10.0);
   double sigma = 0.1;
