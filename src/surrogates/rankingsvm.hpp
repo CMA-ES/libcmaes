@@ -36,12 +36,6 @@
 #include <random>
 #include <iostream>
 
-#ifdef HAVE_TBB
-// Quick hack for definition of 'I' in <complex.h>
-#undef I
-#include <tbb/parallel_for.h>
-#endif
-
 /**
  * \brief Kernel base class
  */
@@ -197,13 +191,9 @@ class RankingSVM
 	encode(x_train,covinv,xmean);
 	encode(x_test,covinv,xmean);
       }
-#ifdef HAVE_TBB
-    tbb::parallel_for(size_t(0), size_t(x_test.cols()), size_t(1), [&](size_t i) {
-#else
 #pragma omp parallel for
     for (int i=0;i<x_test.cols();i++)
       {
-#endif
 	dVec Kvals(x_train.cols());
 	for (int j=0;j<x_train.cols();j++)
 	  Kvals(j) = _kernel.K(x_test.col(i),x_train.col(j));
@@ -212,9 +202,6 @@ class RankingSVM
 	  curfit += _alpha(j) * (Kvals(j)-Kvals(j+1));
 	fit(i) = curfit;
       }
-#ifdef HAVE_TBB
-    );
-#endif
     
     //debug
     //std::cout << "fit=" << fit.transpose() << std::endl;
@@ -250,17 +237,10 @@ class RankingSVM
   {
     _kernel.init(x);
     _K = dMat::Zero(x.cols(),x.cols());
-#ifdef HAVE_TBB
-    tbb::parallel_for(size_t(0), size_t(_K.rows()), size_t(1), [&](size_t i) {
-#else
 #pragma omp parallel for
       for (int i=0;i<_K.rows();i++)
-#endif
 	for (int j=i;j<_K.cols();j++)
 	  _K(i,j)=_K(j,i)=_kernel.K(x.col(i),x.col(j));
-#ifdef HAVE_TBB
-    });
-#endif
   
     //debug
     //std::cout << "K=" << _K << std::endl;
@@ -278,15 +258,11 @@ class RankingSVM
     // initialization of temporary variables
     dVec sum_alphas = dVec::Zero(_dKij.cols());
     dMat div_dKij = dMat::Zero(_dKij.rows(),_dKij.cols());
-#ifdef HAVE_TBB
-  tbb::parallel_for(size_t(0), size_t(_dKij.rows()), size_t(1), [&](size_t i) {
-#else
 #pragma omp parallel
     {
 #pragma omp for
       for (int i=0;i<_dKij.rows();i++)
 	{
-#endif
 	  for (int j=0;j<_dKij.cols();j++)
 	    {
 	      _dKij(i,j) = _K(i,j) - _K(i,j+1) - _K(i+1,j) + _K(i+1,j+1);
@@ -294,17 +270,10 @@ class RankingSVM
 	  double fact = _udist(_rng);
 	  _alpha(i) = _C(i) * (0.95 + 0.05*fact);
 	}
-#ifdef HAVE_TBB
-    );
-#endif
 
-#ifdef HAVE_TBB
-  tbb::parallel_for(size_t(0), size_t(_dKij.rows()), size_t(1), [&](size_t i) {
-#else
 #pragma omp for
       for (int i=0;i<_dKij.rows();i++)
 	{
-#endif
 	  double sum_alpha = 0.0;
 	  for (int j=0;j<_dKij.cols();j++)
 	    {
@@ -313,11 +282,7 @@ class RankingSVM
 	    }
 	  sum_alphas(i) = (_epsilon - sum_alpha) / _dKij(i,i);
 	}
-#ifdef HAVE_TBB
-    );
-#else
     }
-#endif
     
     // optimize for niter
     double L=0.0;
