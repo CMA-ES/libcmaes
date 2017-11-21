@@ -99,7 +99,7 @@ if 'real_prefix' in dir(sys):
       OUTPUT_VARIABLE SITE_DIR_PREFIX
       RESULT_VARIABLE _exit_code
       OUTPUT_STRIP_TRAILING_WHITESPACE )
-    if (${SITE_DIR_PREFIX}) # if not set, back to previous behaviour
+    if (NOT SITE_DIR_PREFIX) # if not set, back to previous behaviour
       set (SITE_DIR_PREFIX ${CMAKE_INSTALL_PREFIX})
     endif ()
     execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${SITE_DIR_PREFIX}'))"
