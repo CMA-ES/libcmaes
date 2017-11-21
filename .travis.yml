@@ -28,7 +28,8 @@ script:
   - ./configure --enable-python LDFLAGS="-L/usr/local/lib/"
   - make
   - mkdir build; cd build
-  - cmake -DCMAKE_INSTALL_PREFIX=~/.local ..
+  - if test "${CC}" = "clang"; then OMP=OFF; else OMP=ON; fi
+  - cmake -DCMAKE_INSTALL_PREFIX=~/.local -DUSE_OPENMP=${OMP} ..
   - make install
   - ctest --output-on-failure --timeout 100
 
