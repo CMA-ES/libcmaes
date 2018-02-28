@@ -31,7 +31,7 @@ script:
   - if test "${CC}" = "clang"; then OMP=OFF; else OMP=ON; fi
   - cmake -DCMAKE_INSTALL_PREFIX=~/.local -DUSE_OPENMP=${OMP} ..
   - make install
-  - LD_LIBRARY_PATH=~/.local/lib ctest --output-on-failure --timeout 100
+  - LD_LIBRARY_PATH=~/.local/lib DYLD_FALLBACK_LIBRARY_PATH=~/.local/lib ctest --output-on-failure --timeout 100
 
 os: 
  - linux
