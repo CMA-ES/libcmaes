@@ -13,6 +13,7 @@ install:
   - mkdir build && cd build
   - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\eigen -DCMAKE_BUILD_TYPE=Release ..
   - cmake --build . --config Release --target install
+  - dir
 
 build_script:
   - cd c:\projects\libcmaes
@@ -23,4 +24,6 @@ build_script:
 
 artifacts:
   - path: 'build\*.dll'
+    name: libs
+  - path: 'build\*.lib'
     name: libs
