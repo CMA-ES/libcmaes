@@ -23,7 +23,9 @@ build_script:
   - ctest -C Release
 
 artifacts:
-  - path: 'build\*.dll'
+  - path: 'build\**\*.dll'
     name: libs
-  - path: 'build\*.lib'
+  - path: 'build\**\*.lib'
     name: libs
+  - path: 'build\**\*.exe'
+    name: binaries
