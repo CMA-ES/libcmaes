@@ -2,9 +2,12 @@ clone_folder: C:\projects\libcmaes
 environment:
   matrix:
     - CMAKE_PLATFORM: "Visual Studio 14 2015"
+      PYTHON: "C:\\Miniconda3"
     - CMAKE_PLATFORM: "Visual Studio 14 2015 Win64"
+      PYTHON: "C:\\Miniconda3-x64"
 
 install:
+  - "SET PATH=%PATH%;%PYTHON%;%PYTHON%\\Scripts"
   - cinstall: python
   - appveyor-retry appveyor DownloadFile https://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz
   - 7z x 3.3.4.tar.gz -oc:\projects > nul
@@ -21,11 +24,12 @@ build_script:
   - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\libcmaes -DEigen3_DIR=c:\Libraries\eigen\share\eigen3\cmake -DBOOST_ROOT="C:/Libraries/boost_1_63_0" ..
   - cmake --build . --config Release --target install
   - ctest -C Release
+  - 
 
 artifacts:
-  - path: 'build\**\*.dll'
+  - path:'build\src\Release\*'
     name: libs
-  - path: 'build\**\*.lib'
-    name: libs
-  - path: 'build\**\*.exe'
-    name: binaries
+  - path: 'build\examples\Release\*'
+    name: examples
+  - path: 'build\tests\Release\*'
+    name: tests
