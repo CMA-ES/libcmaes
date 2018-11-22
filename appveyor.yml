@@ -16,7 +16,6 @@ install:
   - mkdir build && cd build
   - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\eigen -DCMAKE_BUILD_TYPE=Release ..
   - cmake --build . --config Release --target install
-  - dir
 
 build_script:
   - cd c:\projects\libcmaes
@@ -24,7 +23,6 @@ build_script:
   - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\libcmaes -DEigen3_DIR=c:\Libraries\eigen\share\eigen3\cmake -DBOOST_ROOT="C:/Libraries/boost_1_63_0" ..
   - cmake --build . --config Release --target install
   - ctest -C Release
-  - 
 
 artifacts:
   - path:'build\src\Release\*'
