@@ -8,6 +8,8 @@ environment:
 
 install:
   - "SET PATH=%PATH%;%PYTHON%;%PYTHON%\\Scripts"
+  - "set CFLAGS=/wd4251"
+  - "set CXXFLAGS=/wd4251"
   - cinstall: python
   - appveyor-retry appveyor DownloadFile https://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz
   - 7z x 3.3.4.tar.gz -oc:\projects > nul
