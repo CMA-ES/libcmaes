@@ -12,8 +12,6 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
 install:
-  - dir "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\"
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars%BITNESS%.bat"
   - "SET PATH=%PATH%;%PYTHON%;%PYTHON%\\Scripts"
   - "set CFLAGS=/wd4251"
   - "set CXXFLAGS=/wd4251"
