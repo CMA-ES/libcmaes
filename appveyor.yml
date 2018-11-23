@@ -4,14 +4,14 @@ environment:
     - CMAKE_PLATFORM: "Visual Studio 15 2017"
       PYTHON: "C:\\Miniconda3"
       BITNESS: "32"
-      VS: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community"
+      VS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community"
     - CMAKE_PLATFORM: "Visual Studio 15 2017 Win64"
       PYTHON: "C:\\Miniconda3-x64"
       BITNESS: "64"
-      VS: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community"
+      VS: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community"
 
 install:
-  - "call %VS%\VC\Auxiliary\Build\vcvars%BITNESS%.bat"
+  - "call %VS%\\VC\\Auxiliary\\Build\\vcvars%BITNESS%.bat"
   - "SET PATH=%PATH%;%PYTHON%;%PYTHON%\\Scripts"
   - "set CFLAGS=/wd4251"
   - "set CXXFLAGS=/wd4251"
