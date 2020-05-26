@@ -6,10 +6,15 @@ include_directories (${NUMPY_INCLUDE_DIRS})
 include_directories (${Boost_INCLUDE_DIRS})
 
 python_add_module (lcmaes lcmaes.cc)
+
 target_link_libraries(lcmaes cmaes ${Boost_LIBRARIES})
-if (LINK_PYTHON)
+
+if (WIN32)
   target_link_libraries(lcmaes ${PYTHON_LIBRARIES})
+elseif (APPLE)
+  set_target_properties(lcmaes PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
 endif ()
+
 
 install (TARGETS lcmaes DESTINATION ${PYTHON_SITE_PACKAGES})
 
