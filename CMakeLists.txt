@@ -17,7 +17,6 @@ option (USE_OPENMP "Use OpenMP for multithreading" ON)
 option (ENABLE_SURROG "support for surrogates" ON)
 set (HAVE_SURROG ${ENABLE_SURROG})
 option (USE_COMPILE_FEATURES "use cmake>=3.1 cxx11 detection" ON)
-option (LINK_PYTHON "link python libraries" ON)
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR     lib${LIB_SUFFIX} CACHE PATH "Installation directory for libraries")
