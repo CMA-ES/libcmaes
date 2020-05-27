@@ -7,7 +7,7 @@ macro (cmaes_add_test name)
   target_link_libraries (t_${name} cmaes)
   add_test (NAME ${name} COMMAND t_${name})
   if (WIN32)
-    set_tests_properties (${name} PROPERTIES ENVIRONMENT "PATH=${PROJECT_BINARY_DIR}\\src\\${CMAKE_BUILD_TYPE};$ENV{PATH}")  # to load dll
+    set_tests_properties (${name} PROPERTIES ENVIRONMENT "PATH=${PROJECT_BINARY_DIR}\\src\\${CMAKE_BUILD_TYPE};${PROJECT_BINARY_DIR}\\src;$ENV{PATH}")  # to load dll
   endif ()
 endmacro ()
 
