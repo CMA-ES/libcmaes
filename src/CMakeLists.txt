@@ -29,6 +29,9 @@ endif()
 
 target_include_directories(cmaes PUBLIC ${PROJECT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(cmaes PUBLIC Eigen3::Eigen)
+if(USE_OPENMP)
+  target_link_libraries(cmaes PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
 target_compile_features (cmaes PUBLIC cxx_nonstatic_member_init)
 if (${CMAKE_VERSION} VERSION_GREATER 3.8)

@@ -53,12 +53,18 @@ check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # ---------- dependencies ----------
 find_package (Eigen3 REQUIRED)
-# omp
+
+
 if (USE_OPENMP)
   find_package (OpenMP)
-  if (OPENMP_FOUND)
-    set (CMAKE_CXX_FLAGS "${OpenMP_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
-  endif ()
+  if(NOT TARGET OpenMP::OpenMP_CXX AND OpenMP_FOUND)
+    find_package(Threads REQUIRED)
+    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_CXX_FLAGS})
+    set_property(TARGET OpenMP::OpenMP_CXX
+                 PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_CXX_FLAGS} Threads::Threads)
+  endif()
 endif ()
 
 if (BUILD_PYTHON)
