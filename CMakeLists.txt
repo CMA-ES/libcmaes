@@ -77,10 +77,6 @@ if (BUILD_PYTHON)
   endif()
 
   find_package (NumPy)
-  if(NOT TARGET Python::NumPy AND NUMPY_FOUND)
-    add_library(Python::NumPy INTERFACE IMPORTED)
-    target_include_directories(Python::NumPy INTERFACE ${NUMPY_INCLUDE_DIRS})
-  endif()
 
   # python site dir
   if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
