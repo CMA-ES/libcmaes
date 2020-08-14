@@ -8,11 +8,17 @@ endif ()
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
+set(LIBCMAES_TOP_LEVEL NO)
+if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+  set(LIBCMAES_TOP_LEVEL YES)
+endif()
+
+
 # ---------- options ----------
 option (LIBCMAES_BUILD_SHARED_LIBS "Build libcmaes as a shared library" ON)
-option (LIBCMAES_BUILD_PYTHON "build python bindings" ON)
-option (LIBCMAES_BUILD_TESTS "build tests" ON)
-option (LIBCMAES_BUILD_EXAMPLES "build examples" ON)
+option (LIBCMAES_BUILD_PYTHON "build python bindings" ${LIBCMAES_TOP_LEVEL})
+option (LIBCMAES_BUILD_TESTS "build tests" ${LIBCMAES_TOP_LEVEL})
+option (LIBCMAES_BUILD_EXAMPLES "build examples" ${LIBCMAES_TOP_LEVEL})
 option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
 
