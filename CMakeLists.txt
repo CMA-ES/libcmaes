@@ -8,8 +8,8 @@ endif ()
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-
-option (BUILD_SHARED_LIBS "Build libcmaes as a shared library" ON)
+# ---------- options ----------
+option (LIBCMAES_BUILD_SHARED_LIBS "Build libcmaes as a shared library" ON)
 option (BUILD_PYTHON "build python bindings" ON)
 option (BUILD_TESTS "build tests" ON)
 option (BUILD_EXAMPLES "build examples" ON)
@@ -37,7 +37,7 @@ endforeach ()
 set (CMAKE_INSTALL_RPATH ${INSTALL_LIB_DIR})
 set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-
+# ----------- required include files ----------
 include (CheckIncludeFile)
 
 check_include_file (dlfcn.h HAVE_DLFCN_H)
@@ -51,16 +51,8 @@ check_include_file (stdint.h HAVE_STDINT_H)
 check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
-# eigen
-find_package (Eigen3 NO_MODULE)
-if (EIGEN3_FOUND)
-  include (${EIGEN3_USE_FILE})
-  message(STATUS "Eigen3 found: ${EIGEN3_INCLUDE_DIRS}")
-else ()
-  find_package (Eigen3 REQUIRED)
-  include_directories (${EIGEN3_INCLUDE_DIRS})
-endif()
-
+# ---------- dependencies ----------
+find_package (Eigen3 REQUIRED)
 # omp
 if (USE_OPENMP)
   find_package (OpenMP)
@@ -68,9 +60,6 @@ if (USE_OPENMP)
     set (CMAKE_CXX_FLAGS "${OpenMP_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
   endif ()
 endif ()
-
-
-set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 if (BUILD_PYTHON)
   find_package (PythonInterp)
@@ -120,11 +109,6 @@ if 'real_prefix' in dir(sys):
   endif ()
 endif ()
 
-
-configure_file (libcmaes_config.h.cmake.in libcmaes_config.h)
-install (FILES ${PROJECT_BINARY_DIR}/libcmaes_config.h DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
-include_directories (${CMAKE_CURRENT_BINARY_DIR})
-
 if (NOT MSVC)
   set (prefix ${CMAKE_INSTALL_PREFIX})
   set (exec_prefix ${prefix})
@@ -136,13 +120,17 @@ if (NOT MSVC)
 endif ()
 
 
-enable_testing ()
+# ---------- configuration ----------
+configure_file (libcmaes_config.h.cmake.in libcmaes_config.h)
+install (FILES ${PROJECT_BINARY_DIR}/libcmaes_config.h DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 
+# ---------- subdirectories ----------
 add_subdirectory (src)
 if (BUILD_EXAMPLES)
   add_subdirectory (examples)
 endif ()
 if (BUILD_TESTS)
+  enable_testing ()
   add_subdirectory (tests)
 endif ()
 

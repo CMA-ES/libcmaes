@@ -21,25 +21,32 @@ if (ENABLE_SURROG)
   list (APPEND LIBCMAES_HEADERS surrcmaes.h surrogatestrategy.h)
 endif ()
 
-include_directories (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories (${CMAKE_CURRENT_BINARY_DIR})
+if(LIBCMAES_BUILD_SHARED_LIBS)
+  add_library (cmaes SHARED ${LIBCMAES_SOURCES})
+else()
+  add_library (cmaes STATIC ${LIBCMAES_SOURCES})
+endif()
 
-add_library (cmaes ${LIBCMAES_SOURCES})
+target_include_directories(cmaes PUBLIC ${PROJECT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(cmaes PUBLIC Eigen3::Eigen)
 
+target_compile_features (cmaes PUBLIC cxx_nonstatic_member_init)
+if (${CMAKE_VERSION} VERSION_GREATER 3.8)
+  target_compile_features(cmaes PUBLIC cxx_std_11)
+  set_target_properties(cmaes PROPERTIES CXX_EXTENSIONS OFF)
+else ()
+  set_target_properties(cmaes PROPERTIES
+      CXX_STANDARD 11
+      CXX_STANDARD_REQUIRED YES
+      CXX_EXTENSIONS OFF
+  )
+endif ()
 
 if(MSVC)
   target_compile_options(cmaes PRIVATE "/bigobj")
 endif()
 
-
-set_target_properties (cmaes PROPERTIES SOVERSION 0)
-set_target_properties (cmaes PROPERTIES VERSION 0.0.0)
-set_target_properties (cmaes PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-# cxx feature detection was unsupported with clang compiler
-if (CMAKE_VERSION VERSION_GREATER 3.1 AND USE_COMPILE_FEATURES)
-  target_compile_features (cmaes PUBLIC cxx_nonstatic_member_init)
-endif ()
+set_target_properties (cmaes PROPERTIES SOVERSION 0 VERSION 0.0.0 POSITION_INDEPENDENT_CODE ON)
 
 include (GenerateExportHeader)
 generate_export_header (cmaes)
