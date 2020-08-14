@@ -174,6 +174,6 @@ install(
 configure_file(libcmaesConfig.cmake.in libcmaesConfig.cmake @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
-              "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindNumPy.cmake"
+              "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
         DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR}
         )
