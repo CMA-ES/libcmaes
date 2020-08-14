@@ -1,7 +1,3 @@
-
-include_directories (${PROJECT_SOURCE_DIR}/src)
-include_directories (${PROJECT_BINARY_DIR}/src)
-
 macro (cmaes_add_test name)
   add_executable (t_${name} ${name}.cc)
   target_link_libraries (t_${name} cmaes)
