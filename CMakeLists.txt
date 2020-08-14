@@ -10,12 +10,11 @@ list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # ---------- options ----------
 option (LIBCMAES_BUILD_SHARED_LIBS "Build libcmaes as a shared library" ON)
-option (BUILD_PYTHON "build python bindings" ON)
-option (BUILD_TESTS "build tests" ON)
-option (BUILD_EXAMPLES "build examples" ON)
-option (USE_OPENMP "Use OpenMP for multithreading" ON)
-option (ENABLE_SURROG "support for surrogates" ON)
-set (HAVE_SURROG ${ENABLE_SURROG})
+option (LIBCMAES_BUILD_PYTHON "build python bindings" ON)
+option (LIBCMAES_BUILD_TESTS "build tests" ON)
+option (LIBCMAES_BUILD_EXAMPLES "build examples" ON)
+option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
+option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR     lib${LIB_SUFFIX} CACHE PATH "Installation directory for libraries")
@@ -67,7 +66,7 @@ if (USE_OPENMP)
   endif()
 endif ()
 
-if (BUILD_PYTHON)
+if (LIBCMAES_BUILD_PYTHON)
   find_package (PythonInterp)
   find_package (PythonLibs)
   if(NOT TARGET Python::Module AND PYTHONLIBS_FOUND)
@@ -138,19 +137,20 @@ endif ()
 
 
 # ---------- configuration ----------
+set (HAVE_SURROG ${LIBCMAES_ENABLE_SURROG})
 configure_file (libcmaes_config.h.cmake.in libcmaes_config.h)
 install (FILES ${PROJECT_BINARY_DIR}/libcmaes_config.h DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 
 # ---------- subdirectories ----------
 add_subdirectory (src)
-if (BUILD_EXAMPLES)
+if (LIBCMAES_BUILD_EXAMPLES)
   add_subdirectory (examples)
 endif ()
-if (BUILD_TESTS)
+if (LIBCMAES_BUILD_TESTS)
   enable_testing ()
   add_subdirectory (tests)
 endif ()
 
-if (Boost_FOUND AND NUMPY_FOUND)
+if (Boost_FOUND AND NumPy_FOUND)
   add_subdirectory (python)
 endif ()
