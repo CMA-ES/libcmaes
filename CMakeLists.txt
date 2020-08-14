@@ -70,7 +70,17 @@ endif ()
 if (BUILD_PYTHON)
   find_package (PythonInterp)
   find_package (PythonLibs)
+  if(NOT TARGET Python::Module AND PYTHONLIBS_FOUND)
+    add_library(Python::Module UNKNOWN IMPORTED)
+    target_include_directories(Python::Module INTERFACE ${PYTHON_INCLUDE_DIRS})
+    set_target_properties(Python::Module PROPERTIES IMPORTED_LOCATION ${PYTHON_LIBRARIES})
+  endif()
+
   find_package (NumPy)
+  if(NOT TARGET Python::NumPy AND NUMPY_FOUND)
+    add_library(Python::NumPy INTERFACE IMPORTED)
+    target_include_directories(Python::NumPy INTERFACE ${NUMPY_INCLUDE_DIRS})
+  endif()
 
   # python site dir
   if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
@@ -83,7 +93,7 @@ if 'real_prefix' in dir(sys):
       OUTPUT_VARIABLE SITE_DIR_PREFIX
       RESULT_VARIABLE _exit_code
       OUTPUT_STRIP_TRAILING_WHITESPACE )
-    if (${SITE_DIR_PREFIX}) # if not set, back to previous behaviour
+    if (NOT ${SITE_DIR_PREFIX}) # if not set, back to previous behaviour
       set (SITE_DIR_PREFIX ${CMAKE_INSTALL_PREFIX})
     endif ()
     execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${SITE_DIR_PREFIX}'))"
@@ -111,6 +121,11 @@ if 'real_prefix' in dir(sys):
   endforeach ()
   if (Boost_FOUND)
     set (HAVE_BOOST_PYTHON TRUE)
+    if(NOT TARGET Boost::python)
+      add_library(Boost::python UNKNOWN IMPORTED)
+      target_include_directories(Boost::python INTERFACE ${Boost_INCLUDE_DIRS})
+      set_target_properties(Python::Module PROPERTIES IMPORTED_LOCATION ${Boost_LIBRARIES})
+    endif()
     message(STATUS "Found boost-python: ${Boost_LIBRARIES}")
   endif ()
 endif ()

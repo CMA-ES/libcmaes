@@ -1,17 +1,8 @@
-
-include_directories (${PROJECT_SOURCE_DIR}/src)
-include_directories (${PROJECT_BINARY_DIR}/src)
-include_directories (${PYTHON_INCLUDE_DIR})
-include_directories (${NUMPY_INCLUDE_DIRS})
-include_directories (${Boost_INCLUDE_DIRS})
-
 python_add_module (lcmaes lcmaes.cc)
 
-target_link_libraries(lcmaes cmaes ${Boost_LIBRARIES})
+target_link_libraries(lcmaes cmaes Python::Module Python::NumPy Boost::python)
 
-if (WIN32)
-  target_link_libraries(lcmaes ${PYTHON_LIBRARIES})
-elseif (APPLE)
+if (APPLE)
   set_target_properties(lcmaes PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
 endif ()
 
