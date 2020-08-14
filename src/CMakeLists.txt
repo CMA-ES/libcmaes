@@ -1,3 +1,6 @@
+set (HAVE_SURROG ${LIBCMAES_ENABLE_SURROG})
+configure_file (libcmaes_config.h.cmake.in libcmaes_config.h)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/libcmaes_config.h DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 
 set (LIBCMAES_SOURCES
 acovarianceupdate.cc
