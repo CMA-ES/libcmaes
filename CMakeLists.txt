@@ -54,7 +54,7 @@ check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 find_package (Eigen3 REQUIRED)
 
 
-if (USE_OPENMP)
+if (LIBCMAES_USE_OPENMP)
   find_package (OpenMP)
   if(NOT TARGET OpenMP::OpenMP_CXX AND OpenMP_FOUND)
     find_package(Threads REQUIRED)
@@ -148,3 +148,26 @@ endif ()
 if (Boost_FOUND AND NumPy_FOUND)
   add_subdirectory (python)
 endif ()
+
+# ------------ export ------------
+add_library(libcmaes::cmaes ALIAS cmaes)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  libcmaesConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    )
+
+install(
+  EXPORT libcmaesTargets
+  FILE libcmaesTargets.cmake
+  NAMESPACE libcmaes::
+  DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
+
+configure_file(libcmaesConfig.cmake.in libcmaesConfig.cmake @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfig.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
+              "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindNumPy.cmake"
+        DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR}
+        )

@@ -19,7 +19,7 @@ surrogatestrategy.cc)
 
 set (LIBCMAES_HEADERS cmaes.h opti_err.h eo_matrix.h cmastrategy.h esoptimizer.h esostrategy.h cmasolutions.h parameters.h cmaparameters.h cmastopcriteria.h ipopcmastrategy.h bipopcmastrategy.h covarianceupdate.h acovarianceupdate.h vdcmaupdate.h pwq_bound_strategy.h eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h llogging.h errstats.h pli.h contour.h)
 
-if (ENABLE_SURROG)
+if (LIBCMAES_ENABLE_SURROG)
   list (APPEND LIBCMAES_SOURCES surrogatestrategy.cc)
   list (APPEND LIBCMAES_HEADERS surrcmaes.h surrogatestrategy.h)
 endif ()
@@ -30,9 +30,10 @@ else()
   add_library (cmaes STATIC ${LIBCMAES_SOURCES})
 endif()
 
-target_include_directories(cmaes PUBLIC ${PROJECT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(cmaes
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 target_link_libraries(cmaes PUBLIC Eigen3::Eigen)
-if(USE_OPENMP)
+if(LIBCMAES_USE_OPENMP)
   target_link_libraries(cmaes PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
@@ -58,15 +59,16 @@ include (GenerateExportHeader)
 generate_export_header (cmaes)
 
 install ( TARGETS cmaes
-          EXPORT  LibcmaesLibraryDepends
+          EXPORT  libcmaesTargets
           RUNTIME DESTINATION ${RELATIVE_INSTALL_BIN_DIR}
           LIBRARY DESTINATION ${RELATIVE_INSTALL_LIB_DIR}
           ARCHIVE DESTINATION ${RELATIVE_INSTALL_LIB_DIR}
+          INCLUDES DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}
         )
 
 install (FILES ${LIBCMAES_HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/cmaes_export.h
          DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 
-if (ENABLE_SURROG)
+if (LIBCMAES_ENABLE_SURROG)
   install (DIRECTORY surrogates DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 endif ()
