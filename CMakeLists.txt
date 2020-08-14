@@ -1,10 +1,10 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.1)
+
+project (libcmaes VERSION 0.9.6.1 LANGUAGES CXX)
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif ()
-
-project (libcmaes)
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -16,7 +16,6 @@ option (BUILD_EXAMPLES "build examples" ON)
 option (USE_OPENMP "Use OpenMP for multithreading" ON)
 option (ENABLE_SURROG "support for surrogates" ON)
 set (HAVE_SURROG ${ENABLE_SURROG})
-option (USE_COMPILE_FEATURES "use cmake>=3.1 cxx11 detection" ON)
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR     lib${LIB_SUFFIX} CACHE PATH "Installation directory for libraries")
@@ -37,13 +36,9 @@ endforeach ()
 
 set (CMAKE_INSTALL_RPATH ${INSTALL_LIB_DIR})
 set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-if (POLICY CMP0042)
-  # Set MACOSX_RPATH to ON
-  cmake_policy (SET CMP0042 NEW)
-endif()
+
 
 include (CheckIncludeFile)
-include (CheckCXXCompilerFlag)
 
 check_include_file (dlfcn.h HAVE_DLFCN_H)
 check_include_file (unistd.h HAVE_UNISTD_H)
@@ -75,12 +70,7 @@ if (USE_OPENMP)
 endif ()
 
 
-if (CMAKE_VERSION VERSION_LESS 3.1 OR NOT USE_COMPILE_FEATURES)
-  check_cxx_compiler_flag ("-std=c++11" SUPPORTS_STDCXX11)
-  if (SUPPORTS_STDCXX11)
-    set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-  endif ()
-endif ()
+set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 if (BUILD_PYTHON)
   find_package (PythonInterp)
@@ -129,12 +119,6 @@ if 'real_prefix' in dir(sys):
     message(STATUS "Found boost-python: ${Boost_LIBRARIES}")
   endif ()
 endif ()
-
-set (LIBCMAES_MAJOR_VERSION "0")
-set (LIBCMAES_MINOR_VERSION "9")
-set (LIBCMAES_BUGFIX_VERSION "5")
-set (LIBCMAES_VERSION_STRING ${LIBCMAES_MAJOR_VERSION}.${LIBCMAES_MINOR_VERSION}.${LIBCMAES_BUGFIX_VERSION})
-
 
 
 configure_file (libcmaes_config.h.cmake.in libcmaes_config.h)
