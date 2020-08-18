@@ -59,7 +59,7 @@ check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # ---------- dependencies ----------
-find_package (Eigen3 REQUIRED)
+find_package (Eigen3 3.0.0 REQUIRED)
 
 if (LIBCMAES_USE_OPENMP)
   find_package (OpenMP)
