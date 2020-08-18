@@ -176,6 +176,9 @@ write_basic_package_version_file (
   libcmaesConfigVersion.cmake VERSION ${PACKAGE_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
+# export target to build directory
+export (TARGETS cmaes NAMESPACE libcmaes:: FILE libcmaesTargets.cmake)
+# export target on install
 install (
   EXPORT libcmaesTargets
   FILE libcmaesTargets.cmake
