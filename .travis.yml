@@ -22,12 +22,12 @@ before_install:
 
 before_script:
   - ./autogen.sh
-  - echo "#define CMAES_EXPORT" > cmaes_export.h
+  - echo "#define CMAES_EXPORT" > include/libcmaes/cmaes_export.h
   - if [ $TRAVIS_OS_NAME == linux ]; then ./configure --enable-python; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then ./configure --enable-python LDFLAGS="-L/usr/local/lib/"; fi
 
 script: make
 
-os: 
+os:
  - linux
  - osx

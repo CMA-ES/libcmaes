@@ -19,7 +19,7 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cmaes.h"
+#include <libcmaes/cmaes.h>
 #include <iostream>
 
 using namespace libcmaes;

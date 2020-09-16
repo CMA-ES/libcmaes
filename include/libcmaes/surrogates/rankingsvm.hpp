@@ -29,7 +29,7 @@
 #ifndef RANKINGSVM_H
 #define RANKINGSVM_H
 
-#include "eo_matrix.h"
+#include <libcmaes/eo_matrix.h>
 #include <vector>
 #include <limits>
 #include <cstdlib>
@@ -89,7 +89,7 @@ class RBFKernel : public SVMKernel
   RBFKernel()
     :SVMKernel()
     {}
-  
+
   ~RBFKernel() {}
 
   double K(const dVec &x1, const dVec &x2) { return exp(-_gamma*((x1-x2).squaredNorm())); }
@@ -103,12 +103,12 @@ class RBFKernel : public SVMKernel
     avgdist /= 0.5*(x.cols()*(x.cols()-1.0));
     double sigma = _sigma_a * std::pow(avgdist,_sigma_pow);
     _gamma = 1.0/(2.0*sigma*sigma);
-    
+
     //debug
     //std::cout << "avgdist=" << avgdist << " / sigma=" << sigma << " / gamma=" << _gamma << std::endl;
-    //debug    
+    //debug
   }
-  
+
   double _gamma = 1.0;
   double _sigma_a = 1.0;
   double _sigma_pow = 1.0;
@@ -122,10 +122,10 @@ class RankingSVM
 {
  public:
   RankingSVM()
-  {    
+  {
     _udist = std::uniform_real_distribution<>(0,1);
   }
-  
+
   ~RankingSVM()
   {
   }
@@ -147,7 +147,7 @@ class RankingSVM
     //debug
     //std::cout << "Learning RSVM with niter=" << niter << std::endl;
     //debug
-    
+
     // init structures.
     int nalphas = x.cols()-1;
     _C = dMat::Constant(nalphas,1,_Cval);
@@ -155,12 +155,12 @@ class RankingSVM
       _C(nalphas-1-i) = _Cval*pow(nalphas-i,2);
     _dKij = dMat::Zero(nalphas,nalphas);
     _alpha = dVec::Zero(nalphas);
-    
+
     if (_encode)
       encode(x,covinv,xmean);
     compute_training_kernel(x);
     optimize(x,niter);
-    
+
     //debug
     //std::cout << "alpha=" << _alpha.transpose() << std::endl;
     //debug
@@ -202,7 +202,7 @@ class RankingSVM
 	  curfit += _alpha(j) * (Kvals(j)-Kvals(j+1));
 	fit(i) = curfit;
       }
-    
+
     //debug
     //std::cout << "fit=" << fit.transpose() << std::endl;
     //debug
@@ -241,7 +241,7 @@ class RankingSVM
       for (int i=0;i<_K.rows();i++)
 	for (int j=i;j<_K.cols();j++)
 	  _K(i,j)=_K(j,i)=_kernel.K(x.col(i),x.col(j));
-  
+
     //debug
     //std::cout << "K=" << _K << std::endl;
     //debug
@@ -282,7 +282,7 @@ class RankingSVM
 	  sum_alphas(i) = (_epsilon - sum_alpha) / _dKij(i,i);
 	}
     }
-    
+
     // optimize for niter
     double L=0.0;
     int i1 = 0;
@@ -344,14 +344,14 @@ class RankingSVM
 
  public:
   bool _encode = false; /**< whether to use encoding from inverse sqrt covariance matrix of points. */
-  
+
   dMat _K; /**< pre-computed matrix of kernel values for a given training set. */
   dVec _alpha; /**< vector of Ranking SVM parameters over ranking constraints. */
   dMat _dKij;
   dMat _C; /**< constraint violation weights. */
   double _Cval = 1e6; /**< constraing violation base weight value. */
   double _epsilon = 1.0;
-  
+
   TKernel _kernel; /**< kernel class. */
 
   std::mt19937 _rng;

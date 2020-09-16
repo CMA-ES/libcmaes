@@ -19,9 +19,9 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "surrogatestrategy.h"
-#include "ipopcmastrategy.h"
-#include "bipopcmastrategy.h"
+#include <libcmaes/surrogatestrategy.h>
+#include <libcmaes/ipopcmastrategy.h>
+#include <libcmaes/bipopcmastrategy.h>
 #include <unordered_set>
 
 namespace libcmaes

@@ -22,9 +22,9 @@
 #ifndef ERRSTATS_H
 #define ERRSTATS_H
 
-#include "pli.h"
-#include "contour.h"
-#include "cmaes.h"
+#include <libcmaes/pli.h>
+#include <libcmaes/contour.h>
+#include <libcmaes/cmaes.h>
 
 namespace libcmaes
 {

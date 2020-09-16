@@ -19,12 +19,12 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "libcmaes_config.h"
-#include "cmastopcriteria.h"
-#include "cmasolutions.h"
+#include <libcmaes/libcmaes_config.h>
+#include <libcmaes/cmastopcriteria.h>
+#include <libcmaes/cmasolutions.h>
 #include <cmath>
 #include <iterator>
-#include "llogging.h"
+#include <libcmaes/llogging.h>
 #include <limits>
 #include <iostream>
 

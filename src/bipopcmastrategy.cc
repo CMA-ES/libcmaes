@@ -19,10 +19,10 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "bipopcmastrategy.h"
-#include "opti_err.h"
+#include <libcmaes/bipopcmastrategy.h>
+#include <libcmaes/opti_err.h>
 #include <random>
-#include "llogging.h"
+#include <libcmaes/llogging.h>
 #include <ctime>
 #include <array>
 

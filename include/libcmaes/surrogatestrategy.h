@@ -22,8 +22,8 @@
 #ifndef SURROGATESTRATEGY_H
 #define SURROGATESTRATEGY_H
 
-#include "eo_matrix.h"
-#include "cmastrategy.h"
+#include <libcmaes/eo_matrix.h>
+#include <libcmaes/cmastrategy.h>
 #include <typeinfo>
 #include <random>
 

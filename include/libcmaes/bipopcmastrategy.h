@@ -19,20 +19,22 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IPOPCMASTRATEGY_H
-#define IPOPCMASTRATEGY_H
+#ifndef BIPOPCMASTRATEGY_H
+#define BIPOPCMASTRATEGY_H
 
-#include "cmastrategy.h"
+#include <libcmaes/ipopcmastrategy.h>
+#include <random>
 
 namespace libcmaes
 {
   /**
-   * \brief Implementation of the IPOP flavor of CMA-ES, with restarts
-   *        that linearly increase the population of offsprings used in the 
-   *        update of the distribution parameters.
+   * \brief Implementation of the BIPOP flavor of CMA-ES, with restarts that
+   *        control the population of offsprings used in the update of the 
+   *        distribution parameters in order to alternate between local and 
+   *        global searches for the objective.
    */
   template <class TCovarianceUpdate, class TGenoPheno>
-    class CMAES_EXPORT IPOPCMAStrategy : public CMAStrategy<TCovarianceUpdate, TGenoPheno>
+    class CMAES_EXPORT BIPOPCMAStrategy : public IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>
   {
   public:
     /**
@@ -40,8 +42,8 @@ namespace libcmaes
      * @param func objective function to minimize
      * @param parameters stochastic search parameters
      */
-    IPOPCMAStrategy(FitFunc &func,
-		    CMAParameters<TGenoPheno> &parameters);
+    BIPOPCMAStrategy(FitFunc &func,
+		     CMAParameters<TGenoPheno> &parameters);
 
     /**
      * \brief constructor.
@@ -49,16 +51,25 @@ namespace libcmaes
      * @param parameters stochastic search parameters
      * @param solutions solution to start search from
      */
-    IPOPCMAStrategy(FitFunc &func,
-		    CMAParameters<TGenoPheno> &parameters,
-		    const CMASolutions &solutions);
+    BIPOPCMAStrategy(FitFunc &func,
+		     CMAParameters<TGenoPheno> &parameters,
+		     const CMASolutions &solutions);
     
-    ~IPOPCMAStrategy();
+    ~BIPOPCMAStrategy();
 
     /**
      * \brief Updates the covariance matrix and prepares for the next iteration.
      */
     void tell();
+
+    /**
+     * \brief Finds the minimum of the objective function. It makes
+     *        alternate calls to ask(), tell() and stop() until 
+     *        one of the termination criteria triggers.
+     * @return success or error code, as defined in opti_err.h
+     * Note: the termination criteria code is held by _solutions._run_status
+     */
+    int optimize(const EvalFunc &evalf,const AskFunc &askf,const TellFunc &tellf);
 
     /**
      * \brief Finds the minimum of the objective function. It makes
@@ -70,26 +81,24 @@ namespace libcmaes
      * @return success or error code, as defined in opti_err.h
      * Note: the termination criteria code is held by _solutions._run_status
      */
-    int optimize(const EvalFunc &evalf, const AskFunc &askf,const TellFunc &tellf);
-
-    /**
-     * \brief Finds the minimum of the objective function. It makes
-     *        alternate calls to ask(), tell() and stop() until 
-     *        one of the termination criteria triggers.
-     * @return success or error code, as defined in opti_err.h
-     * Note: the termination criteria code is held by _solutions._run_status
-     */
     int optimize()
     {
-      return optimize(std::bind(&IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::eval,this,std::placeholders::_1,std::placeholders::_2),
-		      std::bind(&IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::ask,this),
-		      std::bind(&IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::tell,this));
+      return optimize(std::bind(&BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::eval,this,std::placeholders::_1,std::placeholders::_2),
+		      std::bind(&BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::ask,this),
+		      std::bind(&BIPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::tell,this));
     }
     
   protected:
-    void lambda_inc();
-    void reset_search_state();
-    void capture_best_solution(CMASolutions &best_run);
+    void r1();
+    void r2();
+
+  private:
+    std::mt19937 _gen;
+    std::uniform_real_distribution<> _unif;
+    double _lambda_def;
+    double _lambda_l;
+    double _sigma_init; // to save the original value
+    double _max_fevals; // to save the original value
   };
 }
 

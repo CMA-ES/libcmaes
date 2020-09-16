@@ -19,7 +19,7 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "covarianceupdate.h"
+#include <libcmaes/covarianceupdate.h>
 #include <iostream>
 
 namespace libcmaes

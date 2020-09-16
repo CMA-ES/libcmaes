@@ -1,6 +1,6 @@
-#include "esoptimizer.h"
-#include "cmastrategy.h"
-#include "llogging.h"
+#include <libcmaes/esoptimizer.h>
+#include <libcmaes/cmastrategy.h>
+#include <libcmaes/llogging.h>
 
 using namespace libcmaes;
 

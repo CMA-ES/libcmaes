@@ -22,10 +22,10 @@
 #ifndef CMAES_H
 #define CMAES_H
 
-#include "esoptimizer.h"
-#include "cmastrategy.h"
-#include "ipopcmastrategy.h"
-#include "bipopcmastrategy.h"
+#include <libcmaes/esoptimizer.h>
+#include <libcmaes/cmastrategy.h>
+#include <libcmaes/ipopcmastrategy.h>
+#include <libcmaes/bipopcmastrategy.h>
 
 namespace cma = libcmaes;
 

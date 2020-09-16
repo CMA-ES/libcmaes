@@ -123,7 +123,7 @@ if 'real_prefix' in dir(sys):
   endif ()
 
   # boost-python
-  FIND_PACKAGE(Boost COMPONENTS python)
+  find_package(Boost COMPONENTS python)
   if (Boost_FOUND)
     set (HAVE_BOOST_PYTHON TRUE)
     if (NOT TARGET Boost::python)
@@ -136,6 +136,11 @@ if 'real_prefix' in dir(sys):
     message (STATUS "Found boost-python: ${Boost_LIBRARIES}")
   endif ()
 endif ()
+
+set (HAVE_SURROG ${LIBCMAES_ENABLE_SURROG})
+configure_file (include/libcmaes/libcmaes_config.h.cmake.in include/libcmaes/libcmaes_config.h)
+install (FILES ${PROJECT_BINARY_DIR}/include/libcmaes/libcmaes_config.h
+  DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 
 if (NOT MSVC)
   set (prefix ${CMAKE_INSTALL_PREFIX})

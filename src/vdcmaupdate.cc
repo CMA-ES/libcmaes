@@ -25,7 +25,7 @@
  * Optimization in High Dimension, GECCO-2014.
  */
 
-#include "vdcmaupdate.h"
+#include <libcmaes/vdcmaupdate.h>
 #include <iostream>
 
 namespace libcmaes

@@ -22,9 +22,9 @@
 #ifndef GENOPHENO_H
 #define GENOPHENO_H
 
-#include "noboundstrategy.h"
-#include "pwq_bound_strategy.h"
-#include "scaling.h"
+#include <libcmaes/noboundstrategy.h>
+#include <libcmaes/pwq_bound_strategy.h>
+#include <libcmaes/scaling.h>
 #include <vector>
 
 namespace libcmaes

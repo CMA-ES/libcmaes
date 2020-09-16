@@ -19,8 +19,8 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "errstats.h"
-#include <llogging.h>
+#include <libcmaes/errstats.h>
+#include <libcmaes/llogging.h>
 #include <iostream>
 
 namespace libcmaes

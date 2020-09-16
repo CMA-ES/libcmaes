@@ -19,14 +19,14 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "libcmaes_config.h"
-#include "esostrategy.h"
-#include "cmaparameters.h" // in order to pre-instanciate template into library.
-#include "cmasolutions.h"
-#include "cmastopcriteria.h"
+#include <libcmaes/libcmaes_config.h>
+#include <libcmaes/esostrategy.h>
+#include <libcmaes/cmaparameters.h> // in order to pre-instanciate template into library.
+#include <libcmaes/cmasolutions.h>
+#include <libcmaes/cmastopcriteria.h>
 #include <iostream>
 #include <numeric>
-#include "llogging.h"
+#include <libcmaes/llogging.h>
 
 #ifdef HAVE_DEBUG
 #include <chrono>

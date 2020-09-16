@@ -9,7 +9,7 @@ SUBDIRS += python
 endif
 
 libcmaesincludedir=$(includedir)/libcmaes
-libcmaesinclude_HEADERS = libcmaes_config.h
+libcmaesinclude_HEADERS = include/libcmaes/libcmaes_config.h include/libcmaes/cmaes_export.h
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libcmaes.pc

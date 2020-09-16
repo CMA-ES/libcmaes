@@ -19,9 +19,9 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cmaes.h"
+#include "libcmaes/cmaes.h"
 #ifdef HAVE_SURROG
-#include "surrogatestrategy.h"
+#include "libcmaes/surrogatestrategy.h"
 #endif
 using namespace libcmaes;
 
@@ -409,11 +409,11 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("get_tpa",&CMAParameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>::get_tpa,"return the status of the two-point adaptation scheme")
     ;
   def("make_parameters_pwqb_ls",make_parameters<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("x0","sigma","gp","lambda","seed"),"creates a CMAParametersPBS object for problem with bounded and scaled parameters");
-    
-  /*- FitFunc -*/  
+
+  /*- FitFunc -*/
   def_function<double(const boost::python::list&,const int&)>("fitfunc_pbf","objective function for python");
   scope().attr("fitfunc_bf") = fitfunc_bf;
-  
+
   /*- solutions object -*/
   class_<CMASolutions>("CMASolutions","Object for holding results and intermediate evolving solutions from a running optimizer")
     .def(init<Parameters<GenoPheno<NoBoundStrategy>>&>())
@@ -436,7 +436,7 @@ BOOST_PYTHON_MODULE(lcmaes)
   def("get_solution_xmean",get_solution_xmean,args("sol"),"returns current mean vector of objective function parameters");
   def("get_solution_cov",get_solution_cov,args("sol"),"returns current covariance matrix");
   def("get_solution_sepcov",get_solution_sepcov,args("sol"),"returns current diagonal covariance matrix, only for sep-* and vd-* algorithms");
-  
+
   /*- solution candidate object -*/
   class_<Candidate>("Candidate","candidate solution point in objective function parameter space")
     .def("get_fvalue",&Candidate::get_fvalue,"returns candidate's objective function value")
@@ -457,7 +457,7 @@ BOOST_PYTHON_MODULE(lcmaes)
   class_<GenoPheno<pwqBoundStrategy,linScalingStrategy>>("GenoPhenoPWQBLS","genotype/phenotype transformation object for problem with bounded and scaled parameters")
     ;
   def("make_genopheno_pwqb_ls",make_genopheno<pwqBoundStrategy,linScalingStrategy>,args("lbounds","ubounds","dim"),"creates a genotype/phenotype transformation object for problem with bounded and scaled parameters");
-    
+
   /*- cmaes header -*/
   def("pcmaes",pcmaes<GenoPheno<NoBoundStrategy>>,args("fitfunc","parameters"),"optimizes a function with unbounded parameters");
   def("pcmaes_pwqb",pcmaes<GenoPheno<pwqBoundStrategy>>,args("fitfunc","parameters"),"optimizes a function with bounded parameters");
@@ -477,5 +477,5 @@ BOOST_PYTHON_MODULE(lcmaes)
   def("surrpcmaes_ls",surrpcmaes<GenoPheno<NoBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"),"optimizes a function with surrogate and scaled parameters");
   def("surrpcmaes_pwqb_ls",surrpcmaes<GenoPheno<pwqBoundStrategy,linScalingStrategy>>,args("fitfunc","trainfunc","predictfunc","parameters","exploit","l"),"optimizes a function with surrogate and both bounded and scaled parameters");
 #endif
-  
+
 } // end boost
