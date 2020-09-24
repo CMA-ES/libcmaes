@@ -67,5 +67,6 @@ find_package_handle_standard_args (
 
 if (NumPy_FOUND AND NOT TARGET Python::NumPy)
   add_library (Python::NumPy INTERFACE IMPORTED)
-  target_include_directories (Python::NumPy INTERFACE ${NumPy_INCLUDE_DIRS})
+  set_target_properties (Python::NumPy PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+                                                  ${NumPy_INCLUDE_DIRS})
 endif ()
