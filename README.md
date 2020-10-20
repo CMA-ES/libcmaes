@@ -61,7 +61,7 @@ For compiling with CMake:
 ```
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/ .
+cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/
 make -j2
 make install
 ```
@@ -141,6 +141,12 @@ sudo apt-get install libboost-python-dev
 make
 make install
 ```
+
+and with `cmake`:
+```
+cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBCMAES_BUILD_PYTHON=ON
+```
+
 - test the bindings:
 ```
 cd python

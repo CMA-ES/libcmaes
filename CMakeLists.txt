@@ -15,8 +15,8 @@ endif ()
 
 # ---------- options ----------
 option (LIBCMAES_BUILD_SHARED_LIBS "Build libcmaes as a shared library" ON)
-option (LIBCMAES_BUILD_PYTHON "build python bindings" ${LIBCMAES_TOP_LEVEL})
-option (LIBCMAES_BUILD_TESTS "build tests" ${LIBCMAES_TOP_LEVEL})
+option (LIBCMAES_BUILD_PYTHON "build python bindings" OFF)
+option (LIBCMAES_BUILD_TESTS "build tests" OFF)
 option (LIBCMAES_BUILD_EXAMPLES "build examples" ${LIBCMAES_TOP_LEVEL})
 option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
@@ -78,10 +78,11 @@ if (LIBCMAES_BUILD_PYTHON)
   find_package (PythonInterp)
   find_package (PythonLibs)
   if (NOT TARGET Python::Module AND PYTHONLIBS_FOUND)
-    add_library (Python::Module UNKNOWN IMPORTED)
-    target_include_directories (Python::Module INTERFACE ${PYTHON_INCLUDE_DIRS})
-    set_target_properties (Python::Module PROPERTIES IMPORTED_LOCATION
-                                                     ${PYTHON_LIBRARIES})
+    add_library (Python::Module SHARED IMPORTED)
+    set_target_properties (
+      Python::Module
+      PROPERTIES IMPORTED_LOCATION ${PYTHON_LIBRARIES}
+                 INTERFACE_INCLUDE_DIRECTORIES ${PYTHON_INCLUDE_DIRS})
   endif ()
 
   find_package (NumPy)
@@ -122,22 +123,15 @@ if 'real_prefix' in dir(sys):
   endif ()
 
   # boost-python
-  set (BOOST_PYTHON_COMPONENT_NAMES
-       python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}
-       python${PYTHON_VERSION_MAJOR} python)
-  foreach (NAME ${BOOST_PYTHON_COMPONENT_NAMES})
-    if (NOT Boost_FOUND)
-      message (STATUS "Looking for component ${NAME}")
-      find_package (Boost QUIET COMPONENTS ${NAME})
-    endif ()
-  endforeach ()
+  FIND_PACKAGE(Boost COMPONENTS python)
   if (Boost_FOUND)
     set (HAVE_BOOST_PYTHON TRUE)
     if (NOT TARGET Boost::python)
-      add_library (Boost::python UNKNOWN IMPORTED)
-      target_include_directories (Boost::python INTERFACE ${Boost_INCLUDE_DIRS})
-      set_target_properties (Python::Module PROPERTIES IMPORTED_LOCATION
-                                                       ${Boost_LIBRARIES})
+      add_library (Boost::python SHARED IMPORTED)
+      set_target_properties (
+        Boost::python
+        PROPERTIES IMPORTED_LOCATION ${Boost_LIBRARIES}
+                   INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
     endif ()
     message (STATUS "Found boost-python: ${Boost_LIBRARIES}")
   endif ()
