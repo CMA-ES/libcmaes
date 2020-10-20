@@ -6,9 +6,9 @@ environment:
 
 install:
   - cinstall: python
-  - appveyor-retry appveyor DownloadFile https://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz
-  - 7z x 3.3.4.tar.gz -oc:\projects > nul
-  - 7z x c:\projects\3.3.4.tar -oc:\projects > nul
+  - appveyor-retry appveyor DownloadFile https://gitlab.com/libeigen/eigen/-/archive/3.3.4/eigen-3.3.4.tar.gz
+  - 7z x eigen-3.3.4.tar.gz -oc:\projects > nul
+  - 7z x c:\projects\eigen-3.3.4.tar -oc:\projects > nul
   - cd c:\projects\eigen-eigen-5a0156e40feb
   - mkdir build && cd build
   - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\eigen -DCMAKE_BUILD_TYPE=Release ..
