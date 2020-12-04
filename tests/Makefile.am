@@ -27,7 +27,7 @@ ut_errstats_SOURCES=ut-errstats.cc
 ut_scaling_SOURCES=ut-scaling.cc
 endif
 
-AM_CPPFLAGS=-I$(top_srcdir)/src/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
+AM_CPPFLAGS=-I$(top_srcdir)/include/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
 AM_CXXFLAGS=-Wall -Wextra -g -O3
 if !HAVE_CLANG
 AM_CXXFLAGS += -fopenmp

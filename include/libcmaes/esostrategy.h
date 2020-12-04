@@ -22,9 +22,9 @@
 #ifndef ESOSTRATEGY_H
 #define ESOSTRATEGY_H
 
-#include "eo_matrix.h" // to include Eigen everywhere.
-#include "candidate.h"
-#include "eigenmvn.h"
+#include <libcmaes/eo_matrix.h> // to include Eigen everywhere.
+#include <libcmaes/candidate.h>
+#include <libcmaes/eigenmvn.h>
 #include <random>
 
 namespace libcmaes

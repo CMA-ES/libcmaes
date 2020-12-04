@@ -22,9 +22,9 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include "eo_matrix.h"
-#include "genopheno.h"
-#include "llogging.h"
+#include <libcmaes/eo_matrix.h>
+#include <libcmaes/genopheno.h>
+#include <libcmaes/llogging.h>
 #include <string>
 #include <cmath>
 #include <limits>

@@ -26,7 +26,7 @@ sample_code_surrogate_rsvm_SOURCES=surrogates/sample-code-surrogate-rsvm.cc
 endif
 endif
 
-AM_CPPFLAGS=-I$(top_srcdir)/src/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
+AM_CPPFLAGS=-I$(top_srcdir)/include/ -I$(EIGEN3_INC) $(GFLAGS_CFLAGS)
 AM_CXXFLAGS=-Wall -Wextra -g -O3 -mavx -mfma
 if !HAVE_CLANG
 AM_CXXFLAGS+=-fopenmp

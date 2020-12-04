@@ -22,9 +22,9 @@
 #ifndef CMAPARAMETERS_H
 #define CMAPARAMETERS_H
 
-#include "parameters.h"
-#include "eo_matrix.h"
-#include "cmaes_export.h"
+#include <libcmaes/parameters.h>
+#include <libcmaes/eo_matrix.h>
+#include <libcmaes/cmaes_export.h>
 #include <float.h>
 
 namespace libcmaes

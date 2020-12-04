@@ -19,9 +19,9 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ipopcmastrategy.h"
-#include "opti_err.h"
-#include "llogging.h"
+#include <libcmaes/ipopcmastrategy.h>
+#include <libcmaes/opti_err.h>
+#include <libcmaes/llogging.h>
 #include <iostream>
 
 namespace libcmaes

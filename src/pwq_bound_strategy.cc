@@ -25,8 +25,8 @@
  * https://www.lri.fr/~hansen/cmaes_inmatlab.html#C
  */
 
-#include "pwq_bound_strategy.h"
-#include "llogging.h"
+#include <libcmaes/pwq_bound_strategy.h>
+#include <libcmaes/llogging.h>
 #include <limits>
 #include <iostream>
 

@@ -27,7 +27,7 @@
 #ifndef LSCALING_H
 #define LSCALING_H
 
-#include "eo_matrix.h"
+#include <libcmaes/eo_matrix.h>
 #include <limits>
 #include <iostream>
 

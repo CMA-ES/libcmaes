@@ -19,9 +19,9 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cmasolutions.h"
-#include "opti_err.h"
-#include "eigenmvn.h"
+#include <libcmaes/cmasolutions.h>
+#include <libcmaes/opti_err.h>
+#include <libcmaes/eigenmvn.h>
 #include <limits>
 #include <iostream>
 

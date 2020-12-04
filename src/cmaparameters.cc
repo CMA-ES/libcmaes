@@ -19,7 +19,7 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cmaparameters.h"
+#include <libcmaes/cmaparameters.h>
 #include <cmath>
 #include <iostream>
 

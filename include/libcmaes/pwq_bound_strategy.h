@@ -22,8 +22,8 @@
 #ifndef PWQ_BOUND_STRATEGY_H
 #define PWQ_BOUND_STRATEGY_H
 
-#include "eo_matrix.h"
-#include "cmaes_export.h"
+#include <libcmaes/eo_matrix.h>
+#include <libcmaes/cmaes_export.h>
 #include <vector>
 
 namespace libcmaes

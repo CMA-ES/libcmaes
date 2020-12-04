@@ -22,9 +22,9 @@
 #ifndef SURRCMAES_H
 #define SURRCMAES_H
 
-#include "cmaes.h"
-#include "surrogates/rankingsvm.hpp"
-#include "surrogates/rsvm_surr_strategy.hpp"
+#include <libcmaes/cmaes.h>
+#include <libcmaes/surrogates/rankingsvm.hpp>
+#include <libcmaes/surrogates/rsvm_surr_strategy.hpp>
 
 namespace libcmaes
 {

@@ -4,7 +4,7 @@ AC_INIT(libcmaes,0.9.5)
 AC_MSG_NOTICE([libcmaes $PACKAGE_VERSION])
 AC_CONFIG_SRCDIR(Makefile.am)
 AM_INIT_AUTOMAKE([subdir-objects])
-AM_CONFIG_HEADER([libcmaes_config.h])
+AM_CONFIG_HEADER([include/libcmaes/libcmaes_config.h])
 AC_CONFIG_FILES(libcmaes.pc)
 
 #ac_default_prefix=`pwd`

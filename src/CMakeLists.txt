@@ -1,8 +1,3 @@
-set (HAVE_SURROG ${LIBCMAES_ENABLE_SURROG})
-configure_file (libcmaes_config.h.cmake.in libcmaes_config.h)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/libcmaes_config.h
-         DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
-
 set (
   LIBCMAES_SOURCES
   acovarianceupdate.cc
@@ -16,40 +11,39 @@ set (
   cmasolutions.cc
   cmastrategy.cc
   errstats.cc
-  ipopcmastrategy.cc
-  surrogatestrategy.cc)
+  ipopcmastrategy.cc)
 
-set (
-  LIBCMAES_HEADERS
-  cmaes.h
-  opti_err.h
-  eo_matrix.h
-  cmastrategy.h
-  esoptimizer.h
-  esostrategy.h
-  cmasolutions.h
-  parameters.h
-  cmaparameters.h
-  cmastopcriteria.h
-  ipopcmastrategy.h
-  bipopcmastrategy.h
-  covarianceupdate.h
-  acovarianceupdate.h
-  vdcmaupdate.h
-  pwq_bound_strategy.h
-  eigenmvn.h
-  candidate.h
-  genopheno.h
-  noboundstrategy.h
-  scaling.h
-  llogging.h
-  errstats.h
-  pli.h
-  contour.h)
+set(header_path "${PROJECT_SOURCE_DIR}/include/libcmaes")
+set (LIBCMAES_HEADERS
+  ${header_path}/cmaes.h
+  ${header_path}/opti_err.h
+  ${header_path}/eo_matrix.h
+  ${header_path}/cmastrategy.h
+  ${header_path}/esoptimizer.h
+  ${header_path}/esostrategy.h
+  ${header_path}/cmasolutions.h
+  ${header_path}/parameters.h
+  ${header_path}/cmaparameters.h
+  ${header_path}/cmastopcriteria.h
+  ${header_path}/ipopcmastrategy.h
+  ${header_path}/bipopcmastrategy.h
+  ${header_path}/covarianceupdate.h
+  ${header_path}/acovarianceupdate.h
+  ${header_path}/vdcmaupdate.h
+  ${header_path}/pwq_bound_strategy.h
+  ${header_path}/eigenmvn.h
+  ${header_path}/candidate.h
+  ${header_path}/genopheno.h
+  ${header_path}/noboundstrategy.h
+  ${header_path}/scaling.h
+  ${header_path}/llogging.h
+  ${header_path}/errstats.h
+  ${header_path}/pli.h
+  ${header_path}/contour.h)
 
 if (LIBCMAES_ENABLE_SURROG)
   list (APPEND LIBCMAES_SOURCES surrogatestrategy.cc)
-  list (APPEND LIBCMAES_HEADERS surrcmaes.h surrogatestrategy.h)
+  list (APPEND LIBCMAES_HEADERS ${header_path}/surrcmaes.h ${header_path}/surrogatestrategy.h)
 endif ()
 
 if (LIBCMAES_BUILD_SHARED_LIBS)
@@ -59,8 +53,9 @@ else ()
 endif ()
 
 target_include_directories (
-  cmaes PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-               $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+  cmaes PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+               $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+  )
 target_link_libraries (cmaes PUBLIC Eigen3::Eigen)
 if (LIBCMAES_USE_OPENMP)
   target_link_libraries (cmaes PUBLIC OpenMP::OpenMP_CXX)
@@ -83,7 +78,7 @@ set_target_properties (cmaes PROPERTIES SOVERSION 0 VERSION 0.0.0
                                         POSITION_INDEPENDENT_CODE ON)
 
 include (GenerateExportHeader)
-generate_export_header (cmaes)
+generate_export_header (cmaes EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/libcmaes/cmaes_export.h)
 
 install (
   TARGETS cmaes
@@ -93,10 +88,11 @@ install (
   ARCHIVE DESTINATION ${RELATIVE_INSTALL_LIB_DIR}
   INCLUDES DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR})
 
-install (FILES ${LIBCMAES_HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/cmaes_export.h
+
+install (FILES ${LIBCMAES_HEADERS}  ${CMAKE_BINARY_DIR}/include/libcmaes/cmaes_export.h
          DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 
 if (LIBCMAES_ENABLE_SURROG)
-  install (DIRECTORY surrogates
+  install (DIRECTORY ${header_path}/surrogates
            DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 endif ()

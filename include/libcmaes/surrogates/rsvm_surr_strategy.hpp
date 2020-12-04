@@ -19,10 +19,10 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cmaes.h"
-#include "surrogatestrategy.h"
-#include "opti_err.h"
-#include "rankingsvm.hpp"
+#include <libcmaes/cmaes.h>
+#include <libcmaes/surrogatestrategy.h>
+#include <libcmaes/opti_err.h>
+#include <libcmaes/surrogates/rankingsvm.hpp>
 
 #ifndef RSVMSURROGATESTRATEGY_H
 #define RSVMSURROGATESTRATEGY_H
@@ -48,7 +48,7 @@ namespace libcmaes
   }
 
   template <class TGenoPheno> using eostrat = ESOStrategy<CMAParameters<TGenoPheno>,CMASolutions,CMAStopCriteria<TGenoPheno> >;
-  
+
   template<template <class U, class V> class TStrategy, class TCovarianceUpdate=CovarianceUpdate,class TGenoPheno=GenoPheno<NoBoundStrategy>>
   class RSVMSurrogateStrategy : public ACMSurrogateStrategy<TStrategy,TCovarianceUpdate,TGenoPheno>
     {
@@ -76,12 +76,12 @@ namespace libcmaes
 	dMat x_test(c.at(0).get_x_size(),c.size());
 	for (int i=0;i<(int)c.size();i++)
 	  x_test.col(i) = c.at(i).get_x_dvec().transpose();
-	
+
 	dMat x_train;
 	dVec fvalues;
 	std::vector<Candidate> tset = this->_tset;
 	to_mat_vec(tset,x_train,fvalues,true);
-	
+
 	dVec fit;
 	dVec xmean = eostrat<TGenoPheno>::get_solutions().xmean();
 	_rsvm.predict(fit,x_test,x_train,cov,xmean);
@@ -91,9 +91,9 @@ namespace libcmaes
 	return 0;
       };
     }
-      
+
       ~RSVMSurrogateStrategy() {}
-      
+
       RankingSVM<RBFKernel> _rsvm;
       int _rsvm_iter = 1e6; /**< number of iterations for optimizing the ranking SVM */
   };

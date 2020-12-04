@@ -22,12 +22,12 @@
 #ifndef CMASOLUTIONS_H
 #define CMASOLUTIONS_H
 
-#include "libcmaes_config.h"
-#include "candidate.h"
-#include "eo_matrix.h"
-#include "cmaparameters.h"
-#include "cmastopcriteria.h"
-#include "pli.h"
+#include <libcmaes/libcmaes_config.h>
+#include <libcmaes/candidate.h>
+#include <libcmaes/eo_matrix.h>
+#include <libcmaes/cmaparameters.h>
+#include <libcmaes/cmastopcriteria.h>
+#include <libcmaes/pli.h>
 #include <vector>
 #include <algorithm>
 

@@ -22,14 +22,14 @@
 #ifndef CMASTRATEGY_H
 #define CMASTRATEGY_H
 
-#include "esostrategy.h"
-#include "cmaparameters.h"
-#include "cmasolutions.h"
-#include "cmastopcriteria.h"
-#include "covarianceupdate.h"
-#include "acovarianceupdate.h"
-#include "vdcmaupdate.h"
-#include "eigenmvn.h"
+#include <libcmaes/esostrategy.h>
+#include <libcmaes/cmaparameters.h>
+#include <libcmaes/cmasolutions.h>
+#include <libcmaes/cmastopcriteria.h>
+#include <libcmaes/covarianceupdate.h>
+#include <libcmaes/acovarianceupdate.h>
+#include <libcmaes/vdcmaupdate.h>
+#include <libcmaes/eigenmvn.h>
 #include <fstream>
 
 namespace libcmaes

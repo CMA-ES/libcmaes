@@ -20,10 +20,10 @@
  */
 
 
-#include "libcmaes_config.h"
-#include "cmastrategy.h"
-#include "opti_err.h"
-#include "llogging.h"
+#include <libcmaes/libcmaes_config.h>
+#include <libcmaes/cmastrategy.h>
+#include <libcmaes/opti_err.h>
+#include <libcmaes/llogging.h>
 #include <iostream>
 #include <chrono>
 #include <ctime>

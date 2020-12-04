@@ -22,9 +22,9 @@
 #ifndef ACOVARIANCEUPDATE_H
 #define ACOVARIANCEUPDATE_H
 
-#include "cmaparameters.h"
-#include "cmasolutions.h"
-#include "eigenmvn.h"
+#include <libcmaes/cmaparameters.h>
+#include <libcmaes/cmasolutions.h>
+#include <libcmaes/eigenmvn.h>
 
 namespace libcmaes
 {
