@@ -25,8 +25,10 @@ cmasols = lcmaes.pcmaes_pwqb(objfunc,p)
 
 # collect and inspect results
 bcand = cmasols.best_candidate()
+bcand_pheno = lcmaes.get_best_candidate_pheno(cmasols,gp)
 bx = lcmaes.get_candidate_x(bcand)
 print("best x=",bx)
+print('best x in phenotype space=',bcand_pheno)
 print("distribution mean=",lcmaes.get_solution_xmean(cmasols))
 cov = lcmaes.get_solution_cov(cmasols) # numpy array
 print("cov=",cov)
