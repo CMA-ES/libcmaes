@@ -97,6 +97,16 @@ boost::python::list get_candidate_x(const Candidate &c)
   return x;
 }
 
+boost::python::list get_best_candidate_pheno(const CMASolutions &s,
+					     const GenoPheno<pwqBoundStrategy> &gp)
+{
+  boost::python::list gpx;
+  dVec d = gp.pheno(s.best_candidate().get_x_dvec());
+  for (int i=0;i<d.rows();++i)
+    gpx.append(d[i]);
+  return gpx;
+}
+
 PyObject* get_solution_cov_py(const CMASolutions &s)
 {
   npy_intp shape[2] = {s.dim(),s.dim()};
@@ -443,6 +453,7 @@ BOOST_PYTHON_MODULE(lcmaes)
     .def("set_fvalue",&Candidate::set_fvalue,"sets candidate's objective function value")
     ;
   def("get_candidate_x",get_candidate_x,args("cand"),"returns candidate's parameter vector");
+  def("get_best_candidate_pheno",get_best_candidate_pheno,args("cmasol","gp"),"returns candidate's parameter vector in phenotype space");
 
   /*- genopheno object -*/
   class_<GenoPheno<NoBoundStrategy>>("GenoPhenoNB","genotype/phenotype transformation object for problem with unbounded parameters")
