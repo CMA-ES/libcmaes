@@ -54,7 +54,6 @@ namespace libcmaes
       {
 	std::random_device rd;
 	_uhgen = std::mt19937(rd());
-	_uhgen.seed(static_cast<uint64_t>(time(nullptr)));
 	_uhunif = std::uniform_real_distribution<>(0,1);
       }
   }
@@ -71,7 +70,6 @@ namespace libcmaes
       {
 	std::random_device rd;
 	_uhgen = std::mt19937(rd());
-	_uhgen.seed(static_cast<uint64_t>(time(nullptr)));
 	_uhunif = std::uniform_real_distribution<>(0,1);
       }
   }
