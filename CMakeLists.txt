@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1)
 
-project (libcmaes VERSION 0.9.7.0 LANGUAGES C CXX)
+project (libcmaes VERSION 0.9.8.1 LANGUAGES C CXX)
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
@@ -190,3 +190,7 @@ install (
         "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
+
+if(PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  export(PACKAGE libcmaes)
+endif()
