@@ -51,11 +51,28 @@
 */
 namespace Eigen {
 namespace internal {
-template <typename Scalar> struct scalar_normal_dist_op {
+template <typename Scalar> class scalar_normal_dist_op {
+private:
+  void swap(scalar_normal_dist_op &other) {
+    std::swap(rng, other.rng);
+    std::swap(norm, other.norm);
+  }
+
+public:
   static std::mt19937 rng; // The uniform pseudo-random algorithm
   mutable std::normal_distribution<Scalar> norm; // gaussian combinator
 
   EIGEN_EMPTY_STRUCT_CTOR(scalar_normal_dist_op)
+  scalar_normal_dist_op &operator=(scalar_normal_dist_op &&other) {
+    if (this != &other) {
+      swap(other);
+    }
+    return *this;
+  }
+
+  scalar_normal_dist_op(scalar_normal_dist_op &&other) {
+    *this = std::move(other);
+  }
 
   template <typename Index>
   inline const Scalar operator()(Index, Index = 0) const {
@@ -104,18 +121,6 @@ public:
                     // Cholesky decomposition, but it yields access to
                     // eigenvalues and vectors
 
-private:
-  void swap(EigenMultivariateNormal &other) {
-    std::swap(_mean, other._mean);
-    std::swap(randN, other.randN);
-    std::swap(_use_cholesky, other._use_cholesky);
-
-    std::swap(_covar, other._covar);
-    std::swap(_transform, other._transform);
-
-    std::swap(_eigenSolver, other._eigenSolver);
-  }
-
 public:
   EigenMultivariateNormal(const bool &use_cholesky = false,
                           const uint64_t &seed = std::mt19937::default_seed)
@@ -130,32 +135,6 @@ public:
     randN.seed(seed);
     setMean(mean);
     setCovar(covar);
-  }
-
-  EigenMultivariateNormal(const EigenMultivariateNormal &other) {
-    _mean = other._mean;
-
-    randN.rng = other.randN.rng;
-    randN.norm = other.randN.norm;
-
-    _use_cholesky = other._use_cholesky;
-    _covar = other._covar;
-    _transform = other._transform;
-    _eigenSolver = other._eigenSolver;
-  }
-  EigenMultivariateNormal &operator=(const EigenMultivariateNormal &other) {
-    EigenMultivariateNormal temp(other);
-    swap(temp);
-    return *this;
-  }
-  EigenMultivariateNormal(EigenMultivariateNormal &&other) {
-    *this = std::move(other);
-  }
-  EigenMultivariateNormal &operator=(EigenMultivariateNormal &&other) {
-    if (this != &other) {
-      swap(other);
-    }
-    return *this;
   }
 
   void setMean(const Matrix<Scalar, Dynamic, 1> &mean) { _mean = mean; }
