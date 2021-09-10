@@ -36,12 +36,13 @@ FitFunc rosenbrock = [](const double *x, const int N)
 
 ProgressFunc<CMAParameters<>,CMASolutions> select_time = [](const CMAParameters<> &cmaparams, const CMASolutions &cmasols)
 {
+  (void)cmaparams;
   if (cmasols.niter() % 100 == 0)
     std::cerr << cmasols.elapsed_last_iter() << std::endl;
   return 0;
 };
 
-int main(int argc, char *argv[])
+int main()
 {
   int dim = 100; // problem dimensions.
   std::vector<double> x0(dim,10.0);

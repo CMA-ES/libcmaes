@@ -40,7 +40,7 @@ GradFunc grad_fsphere = [](const double *x, const int N)
   return grad;
 };
 
-int main(int argc, char *argv[])
+int main()
 {
   int dim = 10; // problem dimensions.
   std::vector<double> x0(dim,10.0);

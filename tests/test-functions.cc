@@ -108,12 +108,15 @@ myrng rng;
 std::uniform_real_distribution<> uint_dist(0,1);
 FitFunc frand = [](const double *x, const int N)
 {
+  (void)N;
+  (void)x;
   return uint_dist(rng);
 };
 
 // classical test functions for single-objective optimization problems.
 FitFunc ackleys = [](const double *x, const int N)
 {
+  (void)N;
   return -20.0*exp(-0.2*sqrt(0.5*(x[0]*x[0]+x[1]*x[1]))) - exp(0.5*(cos(2.0*M_PI*x[0]) + cos(2.0*M_PI*x[1]))) + 20.0 + exp(1.0);
 };
 
@@ -165,71 +168,85 @@ GradFunc grad_rosenbrock = [](const double *x, const int N)
 
 FitFunc beale = [](const double *x, const int N)
 {
+  (void)N;
   return pow(1.5-x[0]+x[0]*x[1],2) + pow(2.25 - x[0] + x[0]*x[1]*x[1],2) + pow(2.625-x[0]+x[0]*pow(x[1],3),2);
 };
 
 FitFunc goldstein_price = [](const double *x, const int N)
 {
+  (void)N;
   return (1.0 + pow(x[0] + x[1] + 1.0,2)*(19.0-14.0*x[0]+3*x[0]*x[0]-14.0*x[1]+6*x[0]*x[1]+3*x[1]*x[1]))*(30.0+pow(2.0*x[0]-3.0*x[1],2)*(18.0-32.0*x[0]+12.0*x[0]*x[0]+48.0*x[1]-36.0*x[0]*x[1]+27.0*x[1]*x[1]));
 };
 
 FitFunc booth = [](const double *x, const int N)
 {
+  (void)N;
   return pow(x[0]+2.0*x[1]-7,2) + pow(2*x[0]+x[1]-5,2);
 };
 
 FitFunc bukin = [](const double *x, const int N)
 {
+  (void)N;
   return 100.0 * sqrt(fabs(x[1]-0.01*x[0]*x[0])) + 0.01*fabs(x[0]+10.0);
 };
 
 FitFunc matyas = [](const double *x, const int N)
 {
+  (void)N;
   return 0.26*(x[0]*x[0]+x[1]*x[1])-0.48*x[0]*x[1];
 };
 
 FitFunc levi = [](const double *x, const int N)
 {
+  (void)N;
   return pow(sin(3*M_PI*x[0]),2) + pow(x[0]-1,2) * (1.0+pow(sin(3*M_PI*x[1]),2)) + pow(x[1]-1,2)*(1.0+pow(sin(2.0*M_PI*x[1]),2));
 };
 
 FitFunc camel = [](const double *x, const int N)
 {
+  (void)N;
   return 2.0*x[0]*x[0] - 1.05*pow(x[0],4) + pow(x[0],6)/6.0 + x[0]*x[1] + x[1]*x[1];
 };
 
 FitFunc easom = [](const double *x, const int N)
 {
+  (void)N;
   return -cos(x[0])*cos(x[1])*exp(-(pow((x[0]-M_PI),2)+pow((x[1]-M_PI),2)));
 };
 
 FitFunc crossintray = [](const double *x, const int N)
 {
+  (void)N;
   return -0.0001*pow(fabs(sin(x[0])*sin(x[1])*exp(fabs(100.0-sqrt(x[0]*x[0]+x[1]*x[1])/M_PI)))+1.0,0.1);
 };
 
 FitFunc eggholder = [](const double *x, const int N)
 {
+  (void)N;
   return -(x[1]+47)*sin(sqrt(fabs(x[1]+0.5*x[0]+47.0))) - x[0]*sin(sqrt(fabs(x[0]-(x[1] + 47.0))));
 };
 
 FitFunc holdertable = [](const double *x, const int N)
 {
+  (void)N;
   return -fabs(sin(x[0])*cos(x[1])*exp(fabs(1.0-sqrt(x[0]*x[0]+x[1]*x[1])/M_PI)));
 };
 
 FitFunc mccormick = [](const double *x, const int N)
 {
+  (void)N;
   return sin(x[0]+x[1])+pow(x[0]-x[1],2) - 1.5*x[0] + 2.5*x[1] + 1.0;
 };
 
 FitFunc schaffer2 = [](const double *x, const int N)
 {
+  (void)N;
   return 0.5 + (pow(sin(x[0]*x[0]-x[1]*x[1]),2)-0.5) / pow(1.0+0.001*(x[0]*x[0]+x[1]*x[1]),2);
 };
 
 FitFunc schaffer4 = [](const double *x, const int N)
 {
+  (void)N;
   return 0.5 + (cos(sin(fabs(x[0]*x[0]-x[1]*x[1])))-0.5) / pow(1.0+0.001*(x[0]*x[0]+x[1]*x[1]),2);
 };
 
@@ -593,6 +610,7 @@ CMASolutions cmaes_opt()
     {
       pffunc = [](const CMAParameters<TGenoPheno> &cmaparams, const CMASolutions &cmasols, std::ofstream &fplotstream)
 	{
+	  (void)cmaparams;
 	  std::string sep = " ";
 	  fplotstream << fabs(cmasols.best_candidate().get_fvalue()) << sep << cmasols.fevals() << sep << cmasols.sigma() << sep << sqrt(cmasols.max_eigenv()/cmasols.min_eigenv()) << sep << cmasols.elapsed_last_iter() << std::endl;
 	  return 0;
