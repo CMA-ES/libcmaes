@@ -19,14 +19,14 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "cmaes.h"
-#include "errstats.h"
+#include "libcmaes/cmaes.h"
+#include "libcmaes/errstats.h"
 #include <map>
 #include <random>
 #include <limits>
 #include <iostream>
 #include <cmath>
-#include "llogging.h"
+#include "libcmaes/llogging.h"
 
 //#define STRIP_FLAG_HELP 1
 #include <gflags/gflags.h>

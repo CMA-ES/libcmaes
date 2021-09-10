@@ -1,6 +1,6 @@
 macro (cmaes_add_test name)
   add_executable (t_${name} ${name}.cc)
-  target_link_libraries (t_${name} cmaes)
+  target_link_libraries (t_${name} cmaes gflags)
   add_test (NAME ${name} COMMAND t_${name})
   if (WIN32)
     set_tests_properties (
@@ -14,3 +14,4 @@ endmacro ()
 
 cmaes_add_test (simple-test)
 cmaes_add_test (edm)
+cmaes_add_test (test-functions)
