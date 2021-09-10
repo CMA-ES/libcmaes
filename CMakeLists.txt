@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1)
 
-project (libcmaes VERSION 0.9.7.0 LANGUAGES C CXX)
+project (libcmaes VERSION 0.9.8.0 LANGUAGES C CXX)
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
