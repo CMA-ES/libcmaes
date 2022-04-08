@@ -1,3 +1,4 @@
+find_package(gflags REQUIRED)
 macro (cmaes_add_test name)
   add_executable (t_${name} ${name}.cc)
   target_link_libraries (t_${name} cmaes gflags)

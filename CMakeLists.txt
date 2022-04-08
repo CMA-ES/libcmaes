@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.15)
 
 project (libcmaes VERSION 0.10 LANGUAGES C CXX)
 
@@ -24,6 +24,7 @@ option (LIBCMAES_BUILD_TESTS "build tests" OFF)
 option (LIBCMAES_BUILD_EXAMPLES "build examples" ${LIBCMAES_TOP_LEVEL})
 option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
+option (LIBCMAES_USE_CONAN "Use conan to get the dependencies" OFF)
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR lib${LIB_SUFFIX}
@@ -63,6 +64,32 @@ check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # ---------- dependencies ----------
+
+if(LIBCMAES_USE_CONAN)
+  include(conan)
+  set(ConanPkgList eigen/3.4.0)
+  if(LIBCMAES_BUILD_PYTHON)
+    set(ConanPkgList ${ConanPkgList}
+      boost/1.78.0
+      )
+  endif(LIBCMAES_BUILD_PYTHON)
+
+  if(LIBCMAES_BUILD_TESTS)
+    set(ConanPkgList ${ConanPkgList} gflags/2.2.2)
+  endif(LIBCMAES_BUILD_TESTS)
+
+  conan_cmake_configure(REQUIRES ${ConanPkgList}
+                      GENERATORS cmake_find_package)
+
+
+  conan_cmake_autodetect(settings)
+
+  conan_cmake_install(PATH_OR_REFERENCE .
+                    BUILD missing
+                    REMOTE conancenter
+                    SETTINGS ${settings})
+endif()
+
 find_package (Eigen3 3.0.0 REQUIRED)
 
 if (LIBCMAES_USE_OPENMP)
@@ -79,8 +106,7 @@ if (LIBCMAES_USE_OPENMP)
 endif ()
 
 if (LIBCMAES_BUILD_PYTHON)
-  find_package (PythonInterp)
-  find_package (PythonLibs)
+  find_package (Python3 COMPONENTS Interpreter Development NumPy)
   if (NOT TARGET Python::Module AND PYTHONLIBS_FOUND)
     add_library (Python::Module SHARED IMPORTED)
     set_target_properties (
@@ -89,7 +115,7 @@ if (LIBCMAES_BUILD_PYTHON)
                  INTERFACE_INCLUDE_DIRECTORIES ${PYTHON_INCLUDE_DIRS})
   endif ()
 
-  find_package (NumPy)
+  #find_package (NumPy)
 
   # python site dir
   if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
@@ -163,11 +189,11 @@ if (LIBCMAES_BUILD_EXAMPLES)
   add_subdirectory (examples)
 endif ()
 if (LIBCMAES_BUILD_TESTS)
-  enable_testing ()
+  include(CTest)
   add_subdirectory (tests)
 endif ()
 
-if (Boost_FOUND AND NumPy_FOUND)
+if (Boost_FOUND AND Python3_NumPy_FOUND)
   add_subdirectory (python)
 endif ()
 
@@ -192,5 +218,4 @@ configure_file (libcmaesConfig.cmake.in libcmaesConfig.cmake @ONLY)
 install (
   FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
