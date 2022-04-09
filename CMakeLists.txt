@@ -107,22 +107,22 @@ endif ()
 
 if (LIBCMAES_BUILD_PYTHON)
   find_package (Python3 COMPONENTS Interpreter Development NumPy)
-  if (NOT TARGET Python::Module AND PYTHONLIBS_FOUND)
-    add_library (Python::Module SHARED IMPORTED)
+  if (NOT TARGET Python3::Module AND Python3_Development_FOUND)
+    add_library (Python3::Module SHARED IMPORTED)
     set_target_properties (
-      Python::Module
-      PROPERTIES IMPORTED_LOCATION ${PYTHON_LIBRARIES}
-                 INTERFACE_INCLUDE_DIRECTORIES ${PYTHON_INCLUDE_DIRS})
+      Python3::Module
+      PROPERTIES IMPORTED_LOCATION ${Python3_LIBRARIES}
+                 INTERFACE_INCLUDE_DIRECTORIES ${Python3_INCLUDE_DIRS})
   endif ()
 
   #find_package (NumPy)
 
   # python site dir
-  if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
+  if (Python3_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
     # $ENV{VIRTUAL_ENV} does not work because not exported by activate :/
     execute_process (
       COMMAND
-        ${PYTHON_EXECUTABLE} -c "
+        ${Python3_EXECUTABLE} -c "
 import sys;
 if 'real_prefix' in dir(sys):
     print(sys.prefix)"
@@ -135,7 +135,7 @@ if 'real_prefix' in dir(sys):
     endif ()
     execute_process (
       COMMAND
-        ${PYTHON_EXECUTABLE} -c
+        ${Python3_EXECUTABLE} -c
         "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${SITE_DIR_PREFIX}'))"
       OUTPUT_VARIABLE _ABS_PYTHON_SITE_PACKAGES
       RESULT_VARIABLE _exit_code
@@ -148,7 +148,7 @@ if 'real_prefix' in dir(sys):
             ${_ABS_PYTHON_SITE_PACKAGES})
       set (PYTHON_SITE_PACKAGES ${_REL_PYTHON_SITE_PACKAGES})
     else ()
-      message (SEND_ERROR "Could not run ${PYTHON_EXECUTABLE}")
+      message (SEND_ERROR "Could not run ${Python3_EXECUTABLE}")
     endif ()
   endif ()
 
