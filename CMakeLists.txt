@@ -66,12 +66,15 @@ check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 # ---------- dependencies ----------
 
 if(LIBCMAES_USE_CONAN)
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
   include(conan)
   set(ConanPkgList eigen/3.4.0)
+  set(ConanOptions "")
   if(LIBCMAES_BUILD_PYTHON)
     set(ConanPkgList ${ConanPkgList}
       boost/1.78.0
       )
+    set(ConanOptions ${ConanOptions} boost:without_python=False)
   endif(LIBCMAES_BUILD_PYTHON)
 
   if(LIBCMAES_BUILD_TESTS)
@@ -79,7 +82,8 @@ if(LIBCMAES_USE_CONAN)
   endif(LIBCMAES_BUILD_TESTS)
 
   conan_cmake_configure(REQUIRES ${ConanPkgList}
-                      GENERATORS cmake_find_package)
+                      GENERATORS cmake_find_package
+                      OPTIONS ${ConanOptions})
 
 
   conan_cmake_autodetect(settings)
