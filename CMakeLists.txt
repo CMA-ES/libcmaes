@@ -6,11 +6,9 @@ if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif ()
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+include(CompilerOptions)
 
 set (LIBCMAES_TOP_LEVEL NO)
 if (${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
@@ -64,6 +62,17 @@ check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # ---------- dependencies ----------
+if(LIBCMAES_BUILD_PYTHON)
+  find_package (Python3 COMPONENTS Interpreter Development NumPy)
+  if (NOT TARGET Python3::Module AND Python3_Development_FOUND)
+    add_library (Python3::Module SHARED IMPORTED)
+    set_target_properties (
+      Python3::Module
+      PROPERTIES IMPORTED_LOCATION ${Python3_LIBRARIES}
+                  INTERFACE_INCLUDE_DIRECTORIES ${Python3_INCLUDE_DIRS})
+  endif ()
+endif()
+
 
 if(LIBCMAES_USE_CONAN)
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
@@ -74,7 +83,10 @@ if(LIBCMAES_USE_CONAN)
     set(ConanPkgList ${ConanPkgList}
       boost/1.78.0
       )
-    set(ConanOptions ${ConanOptions} boost:without_python=False)
+    set(ConanOptions ${ConanOptions} 
+    boost:without_python=False
+    boost:python_version=${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}
+    boost:python_executable=${Python3_EXECUTABLE})
   endif(LIBCMAES_BUILD_PYTHON)
 
   if(LIBCMAES_BUILD_TESTS)
@@ -118,8 +130,6 @@ if (LIBCMAES_BUILD_PYTHON)
       PROPERTIES IMPORTED_LOCATION ${Python3_LIBRARIES}
                  INTERFACE_INCLUDE_DIRECTORIES ${Python3_INCLUDE_DIRS})
   endif ()
-
-  #find_package (NumPy)
 
   # python site dir
   if (Python3_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
