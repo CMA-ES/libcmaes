@@ -7,7 +7,7 @@ if (APPLE)
                                            "-undefined dynamic_lookup")
 endif ()
 
-#install (TARGETS lcmaes DESTINATION ${PYTHON_SITE_PACKAGES})
+install (TARGETS lcmaes DESTINATION ${PYTHON_SITE_PACKAGES})
 
 set (PYINSTALLCHECK_ENVIRONMENT "PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}")
 

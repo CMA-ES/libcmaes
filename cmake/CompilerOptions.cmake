@@ -16,11 +16,13 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if (MSVC)
+     #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_USE_MATH_DEFINES"  )
+
      set(CMAKE_CXX_FLAGS_DEBUG
        "${CMAKE_CXX_FLAGS_DEBUG} /permissive- /bigobj /w44101")
 
      set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} /permissive- /bigobj /w44101 /Ox")
+        "${CMAKE_CXX_FLAGS_RELEASE} /permissive- /bigobj /Ox /w44101")
 
      set(MSVC_DISABLED_WARNINGS_LIST
       "C4061" # enumerator 'identifier' in switch of enum 'enumeration' is not
@@ -40,7 +42,9 @@ if (MSVC)
               # possible loss of data
       "C4245" # 'initializing' : conversion from 'long' to
               # 'unsigned long', signed/unsigned mismatch
+      "C4251"
       "C4267" # conversion from 'size_t' to 'int', possible loss of data
+      "C4275"
       "C4355"
       "C4371" # layout of class may have changed from a previous version of the
               # compiler due to better packing of member '...'
