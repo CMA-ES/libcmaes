@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.9)
 
 project (libcmaes VERSION 0.10 LANGUAGES C CXX)
 
@@ -66,16 +66,11 @@ check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 find_package (Eigen3 3.0.0 REQUIRED)
 
 if (LIBCMAES_USE_OPENMP)
-  find_package (OpenMP)
-  if (NOT TARGET OpenMP::OpenMP_CXX AND OpenMP_FOUND)
-    find_package (Threads REQUIRED)
-    add_library (OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-    set_property (TARGET OpenMP::OpenMP_CXX PROPERTY INTERFACE_COMPILE_OPTIONS
-                                                     ${OpenMP_CXX_FLAGS})
-    set_property (
-      TARGET OpenMP::OpenMP_CXX PROPERTY INTERFACE_LINK_LIBRARIES
-                                         ${OpenMP_CXX_FLAGS} Threads::Threads)
-  endif ()
+  find_package (OpenMP QUIET)
+  if(NOT OpenMP_CXX_FOUND)
+    message(WARNING "No OPENMP support found. Setting LIBCMAES_USE_OPENMP off.")
+    set(LIBCMAES_USE_OPENMP Off)
+  endif()
 endif ()
 
 if (LIBCMAES_BUILD_PYTHON)
