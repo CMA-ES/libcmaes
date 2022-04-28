@@ -1,0 +1,34 @@
+name: Ubuntu unit tests
+
+on:
+  push:
+    branches: [ master]
+  pull_request:
+    branches: [ master, develop ]
+  workflow_dispatch:
+    
+
+jobs:
+  ubuntu-tests-fullSetup:
+    runs-on: ubuntu-20.04
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          persist-credentials: false
+    - name : installPackages
+      run : sudo apt-get update && sudo apt-get install --no-install-recommends --yes libeigen3-dev libboost-all-dev libgflags-dev
+    - name : install python packages
+      run: pip3 install numpy
+    - name: Get number of CPU cores
+      uses: SimenB/github-actions-cpu-cores@v1
+      id: cpu-cores
+    - name: cmake
+      run: mkdir build && cd build && cmake .. -DLIBCMAES_BUILD_PYTHON=On -DLIBCMAES_BUILD_TESTS=On -DLIBCMAES_USE_OPENMP=On
+    - name: compile
+      run: cd build && cmake --build . -j${{ steps.cpu-cores.outputs.count }}
+    - name: Run ctest
+      run: cd build && ctest -j${{ steps.cpu-cores.outputs.count }} --output-on-failure
+      
+
