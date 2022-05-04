@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.1)
 
-project (libcmaes VERSION 0.10 LANGUAGES C CXX)
+project (libcmaes
+  VERSION 0.10
+  LANGUAGES C CXX
+  DESCRIPTION "A C++11 library for stochastic optimization with CMA-ES")
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
@@ -194,3 +197,27 @@ install (
         "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
+
+# ------------------------ Doxygen --------------------------------------------
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+
+  set(DOXYGEN_USE_MATHJAX YES)
+  set(DOXYGEN_STRIP_FROM_INC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include")
+  set(DOXYGEN_PROJECT_BRIEF ${PROJECT_DESCRIPTION})
+  set(DOXYGEN_EXTRACT_PRIVATE YES)
+  set(DOXYGEN_GENERATE_TREEVIEW YES)
+  set(DOXYGEN_DISTRIBUTE_GROUP_DOC YES)
+  set(DOXYGEN_WARN_IF_UNDOCUMENTED NO)
+  set(DOXYGEN_WARN_IF_DOC_ERROR YES)
+  set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
+
+  doxygen_add_docs(doc
+                     "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+                     "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+                     "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+endif(DOXYGEN_FOUND)
