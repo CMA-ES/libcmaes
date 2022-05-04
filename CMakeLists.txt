@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.15)
 
-project (libcmaes VERSION 0.10 LANGUAGES C CXX)
+project (libcmaes
+  VERSION 0.10
+  LANGUAGES C CXX
+  DESCRIPTION "A C++11 library for stochastic optimization with CMA-ES")
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
@@ -109,16 +112,11 @@ endif()
 find_package (Eigen3 3.0.0 REQUIRED)
 
 if (LIBCMAES_USE_OPENMP)
-  find_package (OpenMP)
-  if (NOT TARGET OpenMP::OpenMP_CXX AND OpenMP_FOUND)
-    find_package (Threads REQUIRED)
-    add_library (OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-    set_property (TARGET OpenMP::OpenMP_CXX PROPERTY INTERFACE_COMPILE_OPTIONS
-                                                     ${OpenMP_CXX_FLAGS})
-    set_property (
-      TARGET OpenMP::OpenMP_CXX PROPERTY INTERFACE_LINK_LIBRARIES
-                                         ${OpenMP_CXX_FLAGS} Threads::Threads)
-  endif ()
+  find_package (OpenMP QUIET)
+  if(NOT OpenMP_CXX_FOUND)
+    message(WARNING "No OPENMP support found. Setting LIBCMAES_USE_OPENMP off.")
+    set(LIBCMAES_USE_OPENMP Off)
+  endif()
 endif ()
 
 if (LIBCMAES_BUILD_PYTHON)
@@ -233,3 +231,27 @@ install (
   FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
+
+# ------------------------ Doxygen --------------------------------------------
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+
+  set(DOXYGEN_USE_MATHJAX YES)
+  set(DOXYGEN_STRIP_FROM_INC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include")
+  set(DOXYGEN_PROJECT_BRIEF ${PROJECT_DESCRIPTION})
+  set(DOXYGEN_EXTRACT_PRIVATE YES)
+  set(DOXYGEN_GENERATE_TREEVIEW YES)
+  set(DOXYGEN_DISTRIBUTE_GROUP_DOC YES)
+  set(DOXYGEN_WARN_IF_UNDOCUMENTED NO)
+  set(DOXYGEN_WARN_IF_DOC_ERROR YES)
+  set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)
+
+  doxygen_add_docs(doc
+                     "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+                     "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+                     "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+endif(DOXYGEN_FOUND)

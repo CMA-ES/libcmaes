@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: 2021 Philipp Basler, Margarete Mühlleitner and Jonas Müller
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Doxygen Deploy
+
+on:
+  push:
+    branches: [ master ]
+  
+    
+    
+jobs:
+  Deploy:
+     runs-on: ubuntu-20.04
+     steps:
+     - uses: actions/checkout@v2
+       with:
+          persist-credentials: false
+     - name: installPackages
+       run: sudo apt-get install --no-install-recommends --yes libgsl-dev libeigen3-dev libnlopt-cxx-dev libboost-all-dev doxygen
+     - name: Get number of CPU cores
+       uses: SimenB/github-actions-cpu-cores@v1
+       id: cpu-cores
+     - name: cmake
+       run:  mkdir build && cd build && cmake .. && cmake --build . -j${{ steps.cpu-cores.outputs.count }} -t doc
+     - name: Deploy
+       uses: JamesIves/github-pages-deploy-action@v4.3.0
+       with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build/html # The folder the action should deploy.
+          target-folder: doc/html
