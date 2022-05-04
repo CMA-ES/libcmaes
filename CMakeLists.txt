@@ -235,7 +235,7 @@ install (
 # ------------------------ Doxygen --------------------------------------------
 
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+if(DOXYGEN_FOUND AND CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
   set(DOXYGEN_USE_MATHJAX YES)
   set(DOXYGEN_STRIP_FROM_INC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -252,6 +252,6 @@ if(DOXYGEN_FOUND)
                      "${CMAKE_CURRENT_SOURCE_DIR}/src/"
                      "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
-else (DOXYGEN_FOUND)
+else ()
   message("Doxygen need to be installed to generate the doxygen documentation")
-endif(DOXYGEN_FOUND)
+endif()
