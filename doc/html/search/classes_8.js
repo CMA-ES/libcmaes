@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ipopcmastrategy',['IPOPCMAStrategy',['../classlibcmaes_1_1IPOPCMAStrategy.html',1,'libcmaes']]]
+  ['noboundstrategy_390',['NoBoundStrategy',['../classlibcmaes_1_1NoBoundStrategy.html',1,'libcmaes']]],
+  ['noscalingstrategy_391',['NoScalingStrategy',['../classlibcmaes_1_1NoScalingStrategy.html',1,'libcmaes']]]
 ];

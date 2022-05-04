@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['genopheno',['GenoPheno',['../classlibcmaes_1_1GenoPheno.html',1,'libcmaes']]]
+  ['ipopcmastrategy_387',['IPOPCMAStrategy',['../classlibcmaes_1_1IPOPCMAStrategy.html',1,'libcmaes']]]
 ];

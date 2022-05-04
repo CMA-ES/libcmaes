@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['libcmaes',['libcmaes',['../namespacelibcmaes.html',1,'']]]
+  ['libcmaes_411',['libcmaes',['../namespacelibcmaes.html',1,'']]]
 ];

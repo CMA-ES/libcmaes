@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['dim',['dim',['../classlibcmaes_1_1CMASolutions.html#ac8d07f19d5e4cdbab456ef9d00acb16e',1,'libcmaes::CMASolutions::dim()'],['../classlibcmaes_1_1Parameters.html#a95a3c04400a77d134bb1e9705189a24e',1,'libcmaes::Parameters::dim()']]],
-  ['do_5ftrain',['do_train',['../classlibcmaes_1_1SurrogateStrategy.html#a9c99ea8b266372930394e3af269865a5',1,'libcmaes::SurrogateStrategy::do_train()'],['../classlibcmaes_1_1SimpleSurrogateStrategy.html#a028ec49272fb22eaf93faee65e58c4e6',1,'libcmaes::SimpleSurrogateStrategy::do_train()'],['../classlibcmaes_1_1ACMSurrogateStrategy.html#a8b9e7417245bf8b8af6eef7decfcf1f8',1,'libcmaes::ACMSurrogateStrategy::do_train()']]]
+  ['dim_434',['dim',['../classlibcmaes_1_1CMASolutions.html#aa9028f539f824567b631fac9cafaa9e8',1,'libcmaes::CMASolutions::dim()'],['../classlibcmaes_1_1Parameters.html#a9ff5a71607fcee1c0e5cc6263296478f',1,'libcmaes::Parameters::dim()']]],
+  ['do_5ftrain_435',['do_train',['../classlibcmaes_1_1SurrogateStrategy.html#aeb094c15651bc41f814c69270f06fad7',1,'libcmaes::SurrogateStrategy::do_train()'],['../classlibcmaes_1_1SimpleSurrogateStrategy.html#a16df554940b0295967e47d9524287d1e',1,'libcmaes::SimpleSurrogateStrategy::do_train()'],['../classlibcmaes_1_1ACMSurrogateStrategy.html#a1e232c7f946c36971bfa3ab1690eef3c',1,'libcmaes::ACMSurrogateStrategy::do_train()']]]
 ];

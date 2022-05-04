@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['b',['B',['../classB.html',1,'']]],
-  ['bipopcmastrategy',['BIPOPCMAStrategy',['../classlibcmaes_1_1BIPOPCMAStrategy.html',1,'libcmaes']]]
+  ['bipopcmastrategy_367',['BIPOPCMAStrategy',['../classlibcmaes_1_1BIPOPCMAStrategy.html',1,'libcmaes']]]
 ];
