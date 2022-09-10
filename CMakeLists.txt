@@ -1,7 +1,9 @@
 cmake_minimum_required (VERSION 3.15)
 
+set(libcmaes_VERSION 0.10.1)
+
 project (libcmaes
-  VERSION 0.10
+  VERSION ${libcmaes_VERSION}
   LANGUAGES C CXX
   DESCRIPTION "A C++11 library for stochastic optimization with CMA-ES")
 
@@ -9,6 +11,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif ()
 
+list (APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 include(CompilerOptions)
@@ -213,12 +216,21 @@ endif ()
 add_library (libcmaes::cmaes ALIAS cmaes)
 
 include (CMakePackageConfigHelpers)
-write_basic_package_version_file (
-  libcmaesConfigVersion.cmake VERSION ${PACKAGE_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+write_basic_package_version_file(
+    libcmaes-config-version.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+
+
+
+configure_package_config_file(
+  libcmaes-config.cmake.in
+  libcmaes-config.cmake
+  INSTALL_DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
 
 # export target to build directory
 export (TARGETS cmaes NAMESPACE libcmaes:: FILE libcmaesTargets.cmake)
+
 # export target on install
 install (
   EXPORT libcmaesTargets
@@ -226,10 +238,9 @@ install (
   NAMESPACE libcmaes::
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
 
-configure_file (libcmaesConfig.cmake.in libcmaesConfig.cmake @ONLY)
 install (
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaes-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/libcmaes-config-version.cmake"
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
 
 # ------------------------ Doxygen --------------------------------------------
