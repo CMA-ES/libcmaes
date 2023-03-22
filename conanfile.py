@@ -8,7 +8,8 @@ from conans.tools import load
 class CmaesConan(ConanFile):
     name = "libcmaes"
 
-    generators = "CMakeDeps", "CMakeToolchain"
+    generators = "CMakeDeps"
+     #, "CMakeToolchain"
 
     # Optional metadata
     license = "MIT"
