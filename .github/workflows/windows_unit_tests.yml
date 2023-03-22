@@ -1,0 +1,39 @@
+name: Windows unit tests
+
+on:
+  push:
+    branches: [ master]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+    
+
+jobs:
+  windows-tests-fullSetup:
+    runs-on: windows-2019
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          persist-credentials: false
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+    - name: Install conan
+      run: pip install conan numpy
+    - name: Refresh Shell
+      run: refreshenv
+    - name: Get number of CPU cores
+      uses: SimenB/github-actions-cpu-cores@v1
+      id: cpu-cores
+    - name: cmake
+      run: cmake -S . -B build -DLIBCMAES_BUILD_PYTHON=On -DLIBCMAES_BUILD_TESTS=On -DLIBCMAES_USE_OPENMP=On -DLIBCMAES_USE_CONAN=On -DCMAKE_BUILD_TYPE=Release
+    - name: compile
+      run: cd build && cmake --build . -j${{ steps.cpu-cores.outputs.count }} --config Release
+    - name: Run ctest
+      run: cd build && ctest -j${{ steps.cpu-cores.outputs.count }} --output-on-failure -C Release
+      
+      
+
