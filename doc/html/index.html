@@ -128,7 +128,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p>Implementation: The library makes use of C++ policy design for modularity, performance and putting the maximum burden on the checks at compile time. The implementation closely follows the algorithms described in (2), (6) and few other publications.</p>
 <h2><a class="anchor" id="autotoc_md1"></a>
 Authors</h2>
-<p>libcmaes is designed and implemented by Emmanuel Benazera with help of Nikolaus Hansen, on behalf of Inria Saclay / Research group TAO and Laboratoir de l'Accélérateur linéaire, research group Appstats.</p>
+<p>libcmaes was designed and implemented by Emmanuel Benazera with help of Nikolaus Hansen and contributors, on behalf of Inria Saclay / Research group TAO and Laboratoire de l'Accélérateur linéaire, research group Appstats.</p>
 <h2><a class="anchor" id="autotoc_md2"></a>
 Build</h2>
 <p>Below are instruction for Linux systems, for building on Mac OSX, see <a href="https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX">https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX</a></p>
@@ -140,7 +140,7 @@ Build</h2>
 <div class="line">make</div>
 </div><!-- fragment --><p>For compiling with CMake: </p><div class="fragment"><div class="line">mkdir build</div>
 <div class="line">cd build</div>
-<div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/</div>
+<div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBCMAES_BUILD_TESTS=ON</div>
 <div class="line">make -j2</div>
 <div class="line">make install</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
