@@ -9,9 +9,13 @@ if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif ()
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+add_compile_options(
+  -Wall
+  -Wextra
+  "$<$<CONFIG:RELEASE>:-O3>"
+  "$<$<CONFIG:DEBUG>:-g>"
+  )
+
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
