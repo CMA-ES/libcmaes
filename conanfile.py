@@ -1,14 +1,16 @@
 import re, os, functools
 
-from conans import tools as tools
+from conan import ConanFile, tools
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
-from conans.tools import load
+from conan.tools.files import load
+
+from conan.tools.scm import Git
 
 class CmaesConan(ConanFile):
     name = "libcmaes"
 
-    generators = "CMakeDeps", "CMakeToolchain"
+    generators = "CMakeDeps"
 
     # Optional metadata
     license = "MIT"
@@ -37,26 +39,28 @@ class CmaesConan(ConanFile):
         pass
 
     def requirements(self):
-        self.requires("eigen/3.4.0")
+        self.requires("eigen/3.4.0", transitive_headers=True)
         
 
     def set_version(self):
-        content = load(os.path.join(self.recipe_folder, "CMakeLists.txt"))
+        content = load(self, os.path.join(self.recipe_folder, "CMakeLists.txt"))
         value=re.search(r"set\(libcmaes_VERSION (.*)\)", content)
-        print(value)
         extracted_version  = value.group(1).strip()
         
-        git = tools.Git(folder=self.recipe_folder)
-        if (git.get_tag() != None):
-            # depending on your workflow you could also
-            # set a non-beta version when on main branch or
-            # on a certain release branch
+        is_git_tag = False
+        git = Git(self,folder=self.recipe_folder)
+        try:
+            git.run("describe --exact-match --tags")
+            is_git_tag = True
+        except Exception:
+            is_git_tag=False
+
+        if is_git_tag:
             self.version = extracted_version
         else:
             # if not tag -> pre-release version
             commit_hash = git.get_commit()[:8]
-            branch_name = git.get_branch()[:9]
-            self.version = f"{extracted_version}-{branch_name}.{commit_hash}"
+            self.version = f"{extracted_version}.{commit_hash}"
 
     def config_options(self):
         pass
@@ -83,5 +87,5 @@ class CmaesConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["cmaes"]
-        self.cpp_info.set_property("cmake_target_aliases",["libcmaes::cmaes"])
-        self.cpp_info.requires = ["eigen::eigen"]
+        #self.cpp_info.set_property("cmake_target_aliases",["libcmaes::cmaes"])
+        #self.cpp_info.requires = ["eigen::eigen"]

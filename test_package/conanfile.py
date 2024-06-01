@@ -2,16 +2,12 @@ import os
 
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
-from conan.tools.build import cross_building
+from conan.tools.build import can_run
 
 
-class CmaesTestConan(ConanFile):
+class helloTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    # VirtualBuildEnv and VirtualRunEnv can be avoided if "tools.env.virtualenv:auto_use" is defined
-    # (it will be defined in Conan 2.0)
-    generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv", "VirtualRunEnv"
-    apply_env = False
-    test_type = "explicit"
+    generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
         self.requires(self.tested_reference_str)
@@ -25,6 +21,7 @@ class CmaesTestConan(ConanFile):
         cmake_layout(self)
 
     def test(self):
-        if not cross_building(self):
-            cmd = os.path.join(self.cpp.build.bindirs[0], "example")
+        if can_run(self):
+            cmd = os.path.join(self.cpp.build.bindir, "example")
             self.run(cmd, env="conanrun")
+
