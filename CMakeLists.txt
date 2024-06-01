@@ -80,38 +80,6 @@ if(LIBCMAES_BUILD_PYTHON)
 endif()
 
 
-if(LIBCMAES_USE_CONAN)
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-  include(conan)
-  set(ConanPkgList eigen/3.4.0)
-  set(ConanOptions "")
-  if(LIBCMAES_BUILD_PYTHON)
-    set(ConanPkgList ${ConanPkgList}
-      boost/1.78.0
-      )
-    set(ConanOptions ${ConanOptions} 
-    boost:without_python=False
-    boost:python_version=${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}
-    boost:python_executable=${Python3_EXECUTABLE})
-  endif(LIBCMAES_BUILD_PYTHON)
-
-  if(LIBCMAES_BUILD_TESTS)
-    set(ConanPkgList ${ConanPkgList} gflags/2.2.2)
-  endif(LIBCMAES_BUILD_TESTS)
-
-  conan_cmake_configure(REQUIRES ${ConanPkgList}
-                      GENERATORS cmake_find_package
-                      OPTIONS ${ConanOptions})
-
-
-  conan_cmake_autodetect(settings)
-
-  conan_cmake_install(PATH_OR_REFERENCE .
-                    BUILD missing
-                    REMOTE conancenter
-                    SETTINGS ${settings})
-endif()
-
 find_package (Eigen3 3.0.0 REQUIRED)
 
 if (LIBCMAES_USE_OPENMP)
