@@ -19,7 +19,7 @@ jobs:
     - name : installPackages
       run : brew install eigen boost boost-python3 libomp gflags
     - name : install python packages
-      run: pip3 install numpy
+      run: pip3 install numpy --break-system-packages
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
       id: cpu-cores
