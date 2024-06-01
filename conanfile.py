@@ -87,5 +87,5 @@ class CmaesConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["cmaes"]
-        #self.cpp_info.set_property("cmake_target_aliases",["libcmaes::cmaes"])
+        self.cpp_info.set_property("cmake_target_name","libcmaes::cmaes")
         #self.cpp_info.requires = ["eigen::eigen"]
