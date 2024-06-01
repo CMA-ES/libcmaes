@@ -24,7 +24,7 @@ jobs:
     - name: Install pip packages
       run: pip install conan numpy setuptools
 
-    - run: choco install eigen
+    - run: conan profile detect
   
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
