@@ -35,4 +35,4 @@ jobs:
           - name: Install conan
             run: pip install conan>2
           - run: conan profile detect
-          - run: conan create .
+          - run: conan create . --build=missing

@@ -26,8 +26,15 @@ class CmaesConan(ConanFile):
         "shared": [True, False],
         "openmp": [True, False],
         "surrog": [True, False],
+        "enable_tests": [True, False],
     }
-    default_options = {"shared": True, "openmp": True, "surrog": True}
+    default_options = {
+        "shared": True,
+        "openmp": True,
+        "surrog": True,
+        "enable_tests": False,
+        "boost/*:without_python": False,
+    }
 
     # Sources are located in the same place as this recipe, copy them to the recipe
     exports_sources = (
@@ -40,7 +47,9 @@ class CmaesConan(ConanFile):
     )
 
     def build_requirements(self):
-        self.test_requires("gflags/2.2.2")
+        if self.options.enable_tests:
+            self.test_requires("gflags/2.2.2")
+            self.test_requires("boost/1.74.0")
 
     def requirements(self):
         self.requires("eigen/3.4.0", transitive_headers=True)
@@ -77,6 +86,8 @@ class CmaesConan(ConanFile):
         tc.variables["LIBCMAES_BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["LIBCMAES_USE_OPENMP"] = self.options.openmp
         tc.variables["LIBCMAES_ENABLE_SURROG"] = self.options.surrog
+        tc.variables["LIBCMAES_BUILD_PYTHON"] = self.options.enable_tests
+        tc.variables["LIBCMAES_BUILD_TESTS"] = self.options.enable_tests
         tc.generate()
 
     def build(self):

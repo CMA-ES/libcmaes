@@ -29,6 +29,15 @@ jobs:
     - name: Get number of CPU cores
       uses: SimenB/github-actions-cpu-cores@v1
       id: cpu-cores
+
+    - run: conan install . --options enable_tests=True --build=boost/1.74.0
+    - run: cmake --list-presets
+    - run: cmake --preset conan-release
+    - run: cmake --build --list-presets
+    - run: cmake --build --preset conan-release -j${{ steps.cpu-cores.outputs.count }}
+    - run: ctest --list-presets
+    - run: ctest --preset conan-release
+
     - name: cmake
       run: cmake -S . -B build -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/conan_provider.cmake -DLIBCMAES_BUILD_PYTHON=On -DLIBCMAES_BUILD_TESTS=On -DLIBCMAES_USE_OPENMP=On -DCMAKE_BUILD_TYPE=Release
     - name: compile
