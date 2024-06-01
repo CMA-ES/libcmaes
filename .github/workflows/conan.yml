@@ -35,5 +35,5 @@ jobs:
               architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
           - name: Install conan
             run: pip install conan>2
-
+          - run: conan profile detect
           - run: conan create .
