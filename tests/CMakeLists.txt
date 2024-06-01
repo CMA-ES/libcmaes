@@ -5,7 +5,7 @@ macro (cmaes_add_test name)
   if(MSVC)
     target_compile_definitions(${name} PUBLIC _USE_MATH_DEFINES)
   endif()
-  add_test (NAME ${name} COMMAND t_${name})
+  add_test (NAME ${name} COMMAND ${name})
   if (WIN32)
     set_tests_properties (
       ${name}
