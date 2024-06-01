@@ -40,7 +40,7 @@ class CmaesConan(ConanFile):
     )
 
     def build_requirements(self):
-        pass
+        self.test_requires("gflags/2.2.2")
 
     def requirements(self):
         self.requires("eigen/3.4.0", transitive_headers=True)
