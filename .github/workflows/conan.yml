@@ -20,8 +20,8 @@ jobs:
     conan:
         strategy:
           matrix:
-            setup: [ {os: ubuntu-latest}, {os: windows-latest}, {os: macos-latest}] 
-        runs-on: ${{matrix.setup.os}}
+            os: [ ubuntu-latest, windows-latest, macos-latest] 
+        runs-on: ${{matrix.os}}
         if: "!contains(github.event.head_commit.message, 'skip-ci')"
     
         steps:
