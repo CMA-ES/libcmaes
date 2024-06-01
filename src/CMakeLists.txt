@@ -78,7 +78,7 @@ set_target_properties (cmaes PROPERTIES SOVERSION 0 VERSION 0.0.0
                                         POSITION_INDEPENDENT_CODE ON)
 
 include (GenerateExportHeader)
-generate_export_header (cmaes EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/libcmaes/cmaes_export.h)
+generate_export_header (cmaes EXPORT_FILE_NAME ${libcmaes_BINARY_DIR}/include/libcmaes/cmaes_export.h)
 
 install (
   TARGETS cmaes
@@ -89,7 +89,7 @@ install (
   INCLUDES DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR})
 
 
-install (FILES ${LIBCMAES_HEADERS}  ${CMAKE_BINARY_DIR}/include/libcmaes/cmaes_export.h
+install (FILES ${LIBCMAES_HEADERS}  ${libcmaes_BINARY_DIR}/include/libcmaes/cmaes_export.h
          DESTINATION ${RELATIVE_INSTALL_INCLUDE_DIR}/libcmaes)
 
 if (LIBCMAES_ENABLE_SURROG)

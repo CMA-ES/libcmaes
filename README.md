@@ -41,7 +41,7 @@ Implementation:
 The library makes use of C++ policy design for modularity, performance and putting the maximum burden on the checks at compile time. The implementation closely follows the algorithms described in (2), (6) and few other publications.
 
 ### Authors
-libcmaes is designed and implemented by Emmanuel Benazera with help of Nikolaus Hansen, on behalf of Inria Saclay / Research group TAO and Laboratoir de l'Accélérateur linéaire, research group Appstats.
+libcmaes was designed and implemented by Emmanuel Benazera with help of Nikolaus Hansen and contributors, on behalf of Inria Saclay / Research group TAO and Laboratoire de l'Accélérateur linéaire, research group Appstats.
 
 ### Build
 Below are instruction for Linux systems, for building on Mac OSX, see https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX
@@ -64,7 +64,7 @@ For compiling with CMake:
 ```
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/
+cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBCMAES_BUILD_TESTS=ON
 make -j2
 make install
 ```
