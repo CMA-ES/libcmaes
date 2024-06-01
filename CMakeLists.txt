@@ -80,7 +80,7 @@ if(LIBCMAES_BUILD_PYTHON)
 endif()
 
 
-find_package (Eigen3 3.0.0 REQUIRED)
+find_package (Eigen3 3.4.0 REQUIRED)
 
 if (LIBCMAES_USE_OPENMP)
   find_package (OpenMP QUIET)
