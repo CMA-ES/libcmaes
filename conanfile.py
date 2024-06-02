@@ -4,6 +4,7 @@ from conan import ConanFile, tools
 from conan import ConanFile
 from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 from conan.tools.files import load
+from conan.tools.env import Environment
 
 from conan.tools.scm import Git
 
@@ -94,6 +95,14 @@ class CmaesConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+
+        environment = Environment()
+        environment.define("CTEST_OUTPUT_ON_FAILURE","1")
+        envvars = environment.vars(self)
+
+        if self.options.enable_tests:
+            with envvars.apply():
+                cmake.test()
 
     def package(self):
         cmake = CMake(self)

@@ -26,17 +26,9 @@ jobs:
 
     - run: conan profile detect
   
-    - name: Get number of CPU cores
-      uses: SimenB/github-actions-cpu-cores@v1
-      id: cpu-cores
 
-    - run: conan install . --options enable_tests=True --build=missing
-    - run: cmake --list-presets
-    - run: cmake --preset conan-default
-    - run: cmake --build --list-presets
-    - run: cmake --build --preset conan-default -j${{ steps.cpu-cores.outputs.count }}
-    - run: ctest --list-presets
-    - run: ctest --preset conan-default --output-on-failure
+    - run: conan create . --options enable_tests=True --build=missing
+
 
 
       
