@@ -49,7 +49,7 @@ class CmaesConan(ConanFile):
     def build_requirements(self):
         if self.options.enable_tests:
             self.test_requires("gflags/2.2.2")
-            self.test_requires("boost/1.74.0")
+            self.test_requires("boost/1.85.0")
 
     def requirements(self):
         self.requires("eigen/3.4.0", transitive_headers=True)

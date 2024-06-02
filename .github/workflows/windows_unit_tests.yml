@@ -30,7 +30,7 @@ jobs:
       uses: SimenB/github-actions-cpu-cores@v1
       id: cpu-cores
 
-    - run: conan install . --options enable_tests=True --build=boost/1.74.0
+    - run: conan install . --options enable_tests=True --build=missing
     - run: cmake --list-presets
     - run: cmake --preset conan-release
     - run: cmake --build --list-presets
