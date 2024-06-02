@@ -69,13 +69,6 @@ make -j2
 make install
 ```
 
-Additionally, you can use [conan](https://conan.io/center/) to take care of the dependencies. For this you run cmake as
-```
-cmake -S . -B build -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBCMAES_USE_CONAN=On 
-cmake --build build -j2 
-cmake --build build -j2 -t install
-```
-
 ### Run examples
 ```
 cd tests

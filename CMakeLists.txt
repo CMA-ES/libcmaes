@@ -28,7 +28,6 @@ option (LIBCMAES_BUILD_TESTS "build tests" OFF)
 option (LIBCMAES_BUILD_EXAMPLES "build examples" ${LIBCMAES_TOP_LEVEL})
 option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
-option (LIBCMAES_USE_CONAN "Use conan to get the dependencies" OFF)
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR lib${LIB_SUFFIX}
