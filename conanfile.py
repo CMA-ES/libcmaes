@@ -45,7 +45,8 @@ class CmaesConan(ConanFile):
         "libcmaes-config.cmake.in",
         "src/*",
         "libcmaes.pc.in",
-        "tests/*"
+        "tests/*",
+        "python/*"
     )
 
     def build_requirements(self):
