@@ -32,18 +32,13 @@ jobs:
 
     - run: conan install . --options enable_tests=True --build=missing
     - run: cmake --list-presets
-    - run: cmake --preset conan-release
+    - run: cmake --preset conan-default
     - run: cmake --build --list-presets
-    - run: cmake --build --preset conan-release -j${{ steps.cpu-cores.outputs.count }}
+    - run: cmake --build --preset conan-default -j${{ steps.cpu-cores.outputs.count }}
     - run: ctest --list-presets
-    - run: ctest --preset conan-release
+    - run: ctest --preset conan-default --output-on-failure
 
-    - name: cmake
-      run: cmake -S . -B build -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=cmake/conan_provider.cmake -DLIBCMAES_BUILD_PYTHON=On -DLIBCMAES_BUILD_TESTS=On -DLIBCMAES_USE_OPENMP=On -DCMAKE_BUILD_TYPE=Release
-    - name: compile
-      run: cd build && cmake --build . -j${{ steps.cpu-cores.outputs.count }} --config Release
-    - name: Run ctest
-      run: cd build && ctest -j${{ steps.cpu-cores.outputs.count }} --output-on-failure -C Release
+
       
       
 
