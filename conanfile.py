@@ -57,7 +57,7 @@ class CmaesConan(ConanFile):
     def requirements(self):
         self.requires("eigen/3.4.0", transitive_headers=True)
 
-        if self.options.openmp and self.settings.os != "windows":
+        if self.options.openmp and self.settings.os != "Windows":
             self.requires("llvm-openmp/17.0.6", transitive_headers=True)
 
     def set_version(self):
