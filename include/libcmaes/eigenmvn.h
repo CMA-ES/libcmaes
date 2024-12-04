@@ -58,18 +58,28 @@ public:
 	static std::mt19937 rng;                        // The uniform pseudo-random algorithm
 	mutable std::normal_distribution<Scalar> norm; // gaussian combinator
 	
-	EIGEN_EMPTY_STRUCT_CTOR(scalar_normal_dist_op)
-    
-    scalar_normal_dist_op &operator=(scalar_normal_dist_op &&other) 
-    {
+    scalar_normal_dist_op() : norm(Scalar(0), Scalar(1)) {}
+
+    scalar_normal_dist_op(const scalar_normal_dist_op& other)
+        : norm(other.norm) {
+    }
+
+    scalar_normal_dist_op& operator=(const scalar_normal_dist_op& other) {
         if (this != &other) {
-            swap(other);
+            norm = other.norm;
         }
         return *this;
     }
-    
-    scalar_normal_dist_op(scalar_normal_dist_op &&other) {
-        *this = std::move(other);
+
+    scalar_normal_dist_op(scalar_normal_dist_op&& other) noexcept
+        : norm(std::move(other.norm)) {
+    }
+
+    scalar_normal_dist_op& operator=(scalar_normal_dist_op&& other) noexcept {
+        if (this != &other) {
+            norm = std::move(other.norm);
+        }
+        return *this;
     }
 
 	template<typename Index>
