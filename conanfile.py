@@ -46,7 +46,7 @@ class CmaesConan(ConanFile):
         "src/*",
         "libcmaes.pc.in",
         "tests/*",
-        "python/*"
+        "python/*",
     )
 
     def build_requirements(self):
@@ -102,7 +102,7 @@ class CmaesConan(ConanFile):
         cmake.build()
 
         environment = Environment()
-        environment.define("CTEST_OUTPUT_ON_FAILURE","1")
+        environment.define("CTEST_OUTPUT_ON_FAILURE", "1")
         envvars = environment.vars(self)
 
         if self.options.enable_tests:
