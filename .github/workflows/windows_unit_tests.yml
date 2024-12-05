@@ -27,7 +27,7 @@ jobs:
     - run: conan profile detect
   
 
-    - run: conan create . --options enable_tests=True --build=missing
+    - run: conan create . --options &:enable_tests=True
 
 
 
