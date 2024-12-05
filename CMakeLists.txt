@@ -9,12 +9,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif ()
 
-add_compile_options(
-  -Wall
-  -Wextra
-  "$<$<CONFIG:RELEASE>:-O3>"
-  "$<$<CONFIG:DEBUG>:-g>"
-  )
+
 
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
