@@ -35,7 +35,7 @@ jobs:
           - name: Install conan
             run: pip install conan>2
           - run: conan profile detect
-          - run: conan create . --build=missing --options shared=True
+          - run: conan create . --build=missing --options shared=True --options enable_tests=True
             name: Build shared
-          - run: conan create . --build=missing --options shared=False
+          - run: conan create . --build=missing --options shared=False --options enable_tests=True
             name: Build static
