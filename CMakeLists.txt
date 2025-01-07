@@ -9,15 +9,15 @@ if (NOT DEFINED CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
 endif ()
 
-if(MSVC)
-    set(CMAKE_CXX_FLAGS "/W4")
-    set(CMAKE_CXX_FLAGS_DEBUG "/Zi /Od")
-    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
-else()
-    set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-    set(CMAKE_CXX_FLAGS_DEBUG "-g")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-endif()
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  set(CMAKE_CXX_FLAGS "/W4")
+  set(CMAKE_CXX_FLAGS_DEBUG "/Zi /Od")
+  set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+else ()
+  set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+  set(CMAKE_CXX_FLAGS_DEBUG "-g")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif ()
 
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
@@ -35,6 +35,18 @@ option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
 option (LIBCMAES_USE_GLOG "Use glog for logging" OFF)
 option (LIBCMAES_USE_GFLAGS "Use gflags for command line parsing" OFF)
+option (LIBCMAES_CRT_DYNAMIC "Use dynamic CRT for MSVC" OFF)
+
+# Use static/dynamic CRT for MSVC
+if (LIBCMAES_CRT_DYNAMIC AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  message(STATUS "Using dynamic CRT for MSVC")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
+else ()
+  message(STATUS "Using static CRT for MSVC")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+endif ()
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR lib${LIB_SUFFIX}
