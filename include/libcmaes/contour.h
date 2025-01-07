@@ -47,11 +47,12 @@ namespace libcmaes
   /**
    * \brief function contour as a set of points and values.
    */
-  class contour
+  template<int T_iDummy>
+  class contour_
   {
   public:
-    contour() {}
-    ~contour() {}
+    contour_() {}
+    ~contour_() {}
 
     /**
      * \brief add a contour point.
@@ -85,7 +86,10 @@ namespace libcmaes
     std::vector<std::pair<double,double>> _points;
   };
 
-  std::ostream& operator<<(std::ostream &out, const contour &c)
+  typedef contour_<0> contour;
+
+  template<int T_iDummy>
+  std::ostream& operator<<(std::ostream &out, const contour_<T_iDummy> &c)
     {
       c.print(out);
       return out;
