@@ -19,6 +19,9 @@
  * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#if defined(_MSC_VER)
+#define _USE_MATH_DEFINES
+#endif
 #include "libcmaes/cmaes.h"
 #include "libcmaes/errstats.h"
 #include <map>
