@@ -33,6 +33,8 @@ option (LIBCMAES_BUILD_TESTS "build tests" OFF)
 option (LIBCMAES_BUILD_EXAMPLES "build examples" ${LIBCMAES_TOP_LEVEL})
 option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
+option (LIBCMAES_USE_GLOG "Use glog for logging" OFF)
+option (LIBCMAES_USE_GFLAGS "Use gflags for command line parsing" OFF)
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR lib${LIB_SUFFIX}
@@ -73,6 +75,14 @@ check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # ---------- dependencies ----------
 find_package (Eigen3 3.0.0 REQUIRED)
+
+if (LIBCMAES_USE_GLOG)
+  find_package (glog REQUIRED)
+endif ()
+
+if (LIBCMAES_USE_GFLAGS)
+  find_package (gflags REQUIRED)
+endif ()
 
 if (LIBCMAES_USE_OPENMP)
   find_package (OpenMP QUIET)
