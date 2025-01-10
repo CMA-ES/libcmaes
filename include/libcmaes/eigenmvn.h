@@ -57,9 +57,12 @@ private:
 public:
 	static std::mt19937 rng;                        // The uniform pseudo-random algorithm
 	mutable std::normal_distribution<Scalar> norm; // gaussian combinator
-	
+#if defined(_MSC_VER) && _MSC_VER > 1900
+	scalar_normal_dist_op() {}
+	scalar_normal_dist_op(const scalar_normal_dist_op&) {}
+#else
 	EIGEN_EMPTY_STRUCT_CTOR(scalar_normal_dist_op)
-    
+#endif    
     scalar_normal_dist_op &operator=(scalar_normal_dist_op &&other) 
     {
         if (this != &other) {

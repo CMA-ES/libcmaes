@@ -1,6 +1,12 @@
 macro (cmaes_add_test name)
   add_executable (${name} ${name}.cc)
   target_link_libraries (${name} cmaes gflags)
+  if (LIBCMAES_USE_GLOG)
+    target_link_libraries (${name} glog)
+    if (WIN32)
+      target_link_libraries (${name} Dbghelp winmm shlwapi)
+    endif()
+  endif ()
   add_test (NAME ${name} COMMAND t_${name})
   if (WIN32)
     set_tests_properties (

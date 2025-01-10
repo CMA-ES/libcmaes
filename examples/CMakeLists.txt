@@ -1,6 +1,12 @@
 macro (cmaes_add_example name)
   add_executable (sample-${name} sample-${name}.cc)
   target_link_libraries (sample-${name} cmaes)
+  if (LIBCMAES_USE_GLOG)
+    target_link_libraries (sample-${name} glog gflags)
+    if (WIN32)
+      target_link_libraries (sample-${name} Dbghelp winmm shlwapi)
+    endif()
+  endif ()
 endmacro ()
 
 cmaes_add_example (code)
