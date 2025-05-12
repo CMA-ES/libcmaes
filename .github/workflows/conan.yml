@@ -32,8 +32,8 @@ jobs:
             with:
               python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
               architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-          - name: Install conan
-            run: pip install conan>2
+          - name: Install conan and cmake
+            run: pip install conan>2 cmake
           - run: conan profile detect
           - run: conan create . --build=missing --options shared=True
             name: Build shared
