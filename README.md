@@ -1,6 +1,6 @@
 ## libcmaes
 
-[![Doxygen](https://img.shields.io/badge/Documentation-Doxygen-success)](https://beniz.github.io/libcmaes/doc/html/index.html)
+[![Doxygen](https://img.shields.io/badge/Documentation-Doxygen-success)](https://cma-es.github.io/libcmaes/doc/html/index.html)
 
 libcmaes is a multithreaded C++11 implementation (with Python bindings) of algorithms of the CMA-ES family for optimization of nonlinear non-convex 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
 
@@ -26,7 +26,7 @@ Current features include:
 Documentation:
 
 - Full documentation is available from https://github.com/beniz/libcmaes/wiki
-- API documentation is available from http://beniz.github.io/libcmaes/doc/html/index.html
+- API documentation is available from https://cma-es.github.io/libcmaes/doc/html/index.html
 
 Dependencies:
 
