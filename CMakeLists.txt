@@ -1,7 +1,9 @@
-cmake_minimum_required (VERSION 3.9)
+cmake_minimum_required (VERSION 3.15)
+
+set(libcmaes_VERSION 0.10.1)
 
 project (libcmaes
-  VERSION 0.10
+  VERSION ${libcmaes_VERSION}
   LANGUAGES C CXX
   DESCRIPTION "A C++11 library for stochastic optimization with CMA-ES")
 
@@ -10,9 +12,10 @@ if (NOT DEFINED CMAKE_BUILD_TYPE)
 endif ()
 
 
-
-
+list (APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+include(CompilerOptions)
 
 set (LIBCMAES_TOP_LEVEL NO)
 if (${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
@@ -65,7 +68,19 @@ check_include_file (sys/types.h HAVE_SYS_TYPES_H)
 check_include_file (sys/stat.h HAVE_SYS_STAT_H)
 
 # ---------- dependencies ----------
-find_package (Eigen3 3.0.0 REQUIRED)
+if(LIBCMAES_BUILD_PYTHON)
+  find_package (Python3 COMPONENTS Interpreter Development NumPy)
+  if (NOT TARGET Python3::Module AND Python3_Development_FOUND)
+    add_library (Python3::Module SHARED IMPORTED)
+    set_target_properties (
+      Python3::Module
+      PROPERTIES IMPORTED_LOCATION ${Python3_LIBRARIES}
+                  INTERFACE_INCLUDE_DIRECTORIES ${Python3_INCLUDE_DIRS})
+  endif ()
+endif()
+
+
+find_package (Eigen3 3.4.0 REQUIRED)
 
 if (LIBCMAES_USE_OPENMP)
   find_package (OpenMP QUIET)
@@ -76,24 +91,21 @@ if (LIBCMAES_USE_OPENMP)
 endif ()
 
 if (LIBCMAES_BUILD_PYTHON)
-  find_package (PythonInterp)
-  find_package (PythonLibs)
-  if (NOT TARGET Python::Module AND PYTHONLIBS_FOUND)
-    add_library (Python::Module SHARED IMPORTED)
+  find_package (Python3 COMPONENTS Interpreter Development NumPy)
+  if (NOT TARGET Python3::Module AND Python3_Development_FOUND)
+    add_library (Python3::Module SHARED IMPORTED)
     set_target_properties (
-      Python::Module
-      PROPERTIES IMPORTED_LOCATION ${PYTHON_LIBRARIES}
-                 INTERFACE_INCLUDE_DIRECTORIES ${PYTHON_INCLUDE_DIRS})
+      Python3::Module
+      PROPERTIES IMPORTED_LOCATION ${Python3_LIBRARIES}
+                 INTERFACE_INCLUDE_DIRECTORIES ${Python3_INCLUDE_DIRS})
   endif ()
 
-  find_package (NumPy)
-
   # python site dir
-  if (PYTHON_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
+  if (Python3_EXECUTABLE AND NOT DEFINED PYTHON_SITE_PACKAGES)
     # $ENV{VIRTUAL_ENV} does not work because not exported by activate :/
     execute_process (
       COMMAND
-        ${PYTHON_EXECUTABLE} -c "
+        ${Python3_EXECUTABLE} -c "
 import sys;
 if 'real_prefix' in dir(sys):
     print(sys.prefix)"
@@ -106,7 +118,7 @@ if 'real_prefix' in dir(sys):
     endif ()
     execute_process (
       COMMAND
-        ${PYTHON_EXECUTABLE} -c
+        ${Python3_EXECUTABLE} -c
         "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${SITE_DIR_PREFIX}'))"
       OUTPUT_VARIABLE _ABS_PYTHON_SITE_PACKAGES
       RESULT_VARIABLE _exit_code
@@ -119,7 +131,7 @@ if 'real_prefix' in dir(sys):
             ${_ABS_PYTHON_SITE_PACKAGES})
       set (PYTHON_SITE_PACKAGES ${_REL_PYTHON_SITE_PACKAGES})
     else ()
-      message (SEND_ERROR "Could not run ${PYTHON_EXECUTABLE}")
+      message (SEND_ERROR "Could not run ${Python3_EXECUTABLE}")
     endif ()
   endif ()
 
@@ -160,11 +172,11 @@ if (LIBCMAES_BUILD_EXAMPLES)
   add_subdirectory (examples)
 endif ()
 if (LIBCMAES_BUILD_TESTS)
-  enable_testing ()
+  include(CTest)
   add_subdirectory (tests)
 endif ()
 
-if (Boost_FOUND AND NumPy_FOUND)
+if (Boost_FOUND AND Python3_NumPy_FOUND)
   add_subdirectory (python)
 endif ()
 
@@ -172,12 +184,21 @@ endif ()
 add_library (libcmaes::cmaes ALIAS cmaes)
 
 include (CMakePackageConfigHelpers)
-write_basic_package_version_file (
-  libcmaesConfigVersion.cmake VERSION ${PACKAGE_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+write_basic_package_version_file(
+    libcmaes-config-version.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+
+
+
+configure_package_config_file(
+  libcmaes-config.cmake.in
+  libcmaes-config.cmake
+  INSTALL_DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
 
 # export target to build directory
 export (TARGETS cmaes NAMESPACE libcmaes:: FILE libcmaesTargets.cmake)
+
 # export target on install
 install (
   EXPORT libcmaesTargets
@@ -185,17 +206,15 @@ install (
   NAMESPACE libcmaes::
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
 
-configure_file (libcmaesConfig.cmake.in libcmaesConfig.cmake @ONLY)
 install (
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/libcmaesConfigVersion.cmake"
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindEigen3.cmake"
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/libcmaes-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/libcmaes-config-version.cmake"
   DESTINATION ${RELATIVE_INSTALL_CMAKE_DIR})
 
 # ------------------------ Doxygen --------------------------------------------
 
 find_package(Doxygen)
-if(DOXYGEN_FOUND)
+if(DOXYGEN_FOUND AND LIBCMAES_TOP_LEVEL)
 
   set(DOXYGEN_USE_MATHJAX YES)
   set(DOXYGEN_STRIP_FROM_INC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -212,6 +231,6 @@ if(DOXYGEN_FOUND)
                      "${CMAKE_CURRENT_SOURCE_DIR}/src/"
                      "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
-else (DOXYGEN_FOUND)
+else ()
   message("Doxygen need to be installed to generate the doxygen documentation")
-endif(DOXYGEN_FOUND)
+endif()

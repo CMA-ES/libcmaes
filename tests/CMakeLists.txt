@@ -1,7 +1,11 @@
+find_package(gflags REQUIRED)
 macro (cmaes_add_test name)
-  add_executable (t_${name} ${name}.cc)
-  target_link_libraries (t_${name} cmaes gflags)
-  add_test (NAME ${name} COMMAND t_${name})
+  add_executable (${name} ${name}.cc)
+  target_link_libraries (${name} cmaes gflags)
+  if(MSVC)
+    target_compile_definitions(${name} PUBLIC _USE_MATH_DEFINES)
+  endif()
+  add_test (NAME ${name} COMMAND ${name})
   if (WIN32)
     set_tests_properties (
       ${name}

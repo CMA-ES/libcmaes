@@ -1,6 +1,6 @@
 ## libcmaes
 
-[![Doxygen](https://img.shields.io/badge/Documentation-Doxygen-success)](https://beniz.github.io/libcmaes/doc/html/index.html)
+[![Doxygen](https://img.shields.io/badge/Documentation-Doxygen-success)](https://cma-es.github.io/libcmaes/doc/html/index.html)
 
 libcmaes is a multithreaded C++11 implementation (with Python bindings) of algorithms of the CMA-ES family for optimization of nonlinear non-convex 'blackbox' functions. The implemented algorithms have a wide range of applications in various disciplines, ranging from pure function minimization, optimization in industrial and scientific applications, to the solving of reinforcement and machine learning problems.
 
@@ -26,7 +26,7 @@ Current features include:
 Documentation:
 
 - Full documentation is available from https://github.com/beniz/libcmaes/wiki
-- API documentation is available from http://beniz.github.io/libcmaes/doc/html/index.html
+- API documentation is available from https://cma-es.github.io/libcmaes/doc/html/index.html
 
 Dependencies:
 
@@ -41,7 +41,7 @@ Implementation:
 The library makes use of C++ policy design for modularity, performance and putting the maximum burden on the checks at compile time. The implementation closely follows the algorithms described in (2), (6) and few other publications.
 
 ### Authors
-libcmaes is designed and implemented by Emmanuel Benazera with help of Nikolaus Hansen, on behalf of Inria Saclay / Research group TAO and Laboratoir de l'Accélérateur linéaire, research group Appstats.
+libcmaes was designed and implemented by Emmanuel Benazera with help of Nikolaus Hansen and contributors, on behalf of Inria Saclay / Research group TAO and Laboratoire de l'Accélérateur linéaire, research group Appstats.
 
 ### Build
 Below are instruction for Linux systems, for building on Mac OSX, see https://github.com/beniz/libcmaes/wiki/Building-libcmaes-on-Mac-OSX
@@ -64,7 +64,7 @@ For compiling with CMake:
 ```
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/
+cmake .. -DCMAKE_INSTALL_PREFIX=~/.local/ -DLIBCMAES_BUILD_TESTS=ON
 make -j2
 make install
 ```

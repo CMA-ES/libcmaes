@@ -1,0 +1,8 @@
+build/
+CMakeLists.txt.user
+CMakeUserPresets.json
+install/
+installFolder/
+conandummy/
+test_package/CMakeUserPresets.json
+lib/

@@ -1,0 +1,41 @@
+name: Run conan
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches: 
+      - master
+      - main
+  workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }} 
+    cancel-in-progress: true
+
+
+jobs:
+    conan:
+        strategy:
+          matrix:
+            os: [ ubuntu-latest, windows-latest, macos-latest] 
+        runs-on: ${{matrix.os}}
+        if: "!contains(github.event.head_commit.message, 'skip-ci')"
+    
+        steps:
+          - uses: actions/checkout@v4
+            with:
+              persist-credentials: false
+          - uses: actions/setup-python@v5
+            with:
+              python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+              architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          - name: Install conan and cmake
+            run: pip install conan>2 cmake
+          - run: conan profile detect
+          - run: conan create . --build=missing --options shared=True
+            name: Build shared
+          - run: conan create . --build=missing --options shared=False
+            name: Build static
