@@ -52,6 +52,12 @@ else ()
   add_library (cmaes STATIC ${LIBCMAES_SOURCES})
 endif ()
 
+
+target_compile_options(cmaes 
+  PRIVATE 
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra> 
+  $<$<CXX_COMPILER_ID:MSVC>:/W4> )
+
 target_include_directories (
   cmaes PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
