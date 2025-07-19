@@ -1,5 +1,5 @@
 var namespaces_dup =
 [
-    [ "Eigen", "namespaceEigen.html", null ],
-    [ "libcmaes", "namespacelibcmaes.html", null ]
+    [ "Eigen", "namespaceEigen.html", "namespaceEigen" ],
+    [ "libcmaes", "namespacelibcmaes.html", "namespacelibcmaes" ]
 ];

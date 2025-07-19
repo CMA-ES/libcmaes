@@ -7,13 +7,17 @@ var hierarchy =
     [ "libcmaes::CMASolutions", "classlibcmaes_1_1CMASolutions.html", null ],
     [ "libcmaes::CMAStopCriteria< TGenoPheno >", "classlibcmaes_1_1CMAStopCriteria.html", null ],
     [ "libcmaes::CMAStopCriteria< GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1CMAStopCriteria.html", null ],
+    [ "libcmaes::CMAStopCriteria< TGenoPheno >", "classlibcmaes_1_1CMAStopCriteria.html", null ],
     [ "libcmaes::contour", "classlibcmaes_1_1contour.html", null ],
     [ "libcmaes::CovarianceUpdate", "classlibcmaes_1_1CovarianceUpdate.html", null ],
     [ "Eigen::EigenMultivariateNormal< Scalar >", "classEigen_1_1EigenMultivariateNormal.html", null ],
     [ "Eigen::EigenMultivariateNormal< double >", "classEigen_1_1EigenMultivariateNormal.html", null ],
     [ "libcmaes::errstats< TGenoPheno >", "classlibcmaes_1_1errstats.html", null ],
-    [ "libcmaes::ESOStrategy< TParameters, TSolutions, TStopCriteria >", "classlibcmaes_1_1ESOStrategy.html", null ],
-    [ "libcmaes::ESOStrategy< CMAParameters< GenoPheno< NoBoundStrategy > >, CMASolutions, CMAStopCriteria< GenoPheno< NoBoundStrategy > > >", "classlibcmaes_1_1ESOStrategy.html", [
+    [ "libcmaes::ESOStrategy< TParameters, TSolutions, TStopCriteria >", "classlibcmaes_1_1ESOStrategy.html", [
+      [ "libcmaes::CMAStrategy< TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1CMAStrategy.html", null ]
+    ] ],
+    [ "libcmaes::ESOStrategy< CMAParameters< GenoPheno< NoBoundStrategy > >, CMASolutions, CMAStopCriteria< GenoPheno< NoBoundStrategy > > >", "classlibcmaes_1_1ESOStrategy.html", null ],
+    [ "libcmaes::ESOStrategy< CMAParameters< TGenoPheno >, CMASolutions, CMAStopCriteria< TGenoPheno > >", "classlibcmaes_1_1ESOStrategy.html", [
       [ "libcmaes::CMAStrategy< TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1CMAStrategy.html", [
         [ "libcmaes::IPOPCMAStrategy< TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1IPOPCMAStrategy.html", [
           [ "libcmaes::BIPOPCMAStrategy< TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1BIPOPCMAStrategy.html", null ]
@@ -27,9 +31,12 @@ var hierarchy =
     [ "libcmaes::linScalingStrategy", "classlibcmaes_1_1linScalingStrategy.html", null ],
     [ "libcmaes::NoBoundStrategy", "classlibcmaes_1_1NoBoundStrategy.html", null ],
     [ "libcmaes::NoScalingStrategy", "classlibcmaes_1_1NoScalingStrategy.html", null ],
-    [ "libcmaes::Parameters< TGenoPheno >", "classlibcmaes_1_1Parameters.html", null ],
-    [ "libcmaes::Parameters< GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1Parameters.html", [
+    [ "libcmaes::Parameters< TGenoPheno >", "classlibcmaes_1_1Parameters.html", [
       [ "libcmaes::CMAParameters< GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1CMAParameters.html", null ],
+      [ "libcmaes::CMAParameters< TGenoPheno >", "classlibcmaes_1_1CMAParameters.html", null ]
+    ] ],
+    [ "libcmaes::Parameters< GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1Parameters.html", null ],
+    [ "libcmaes::Parameters< TGenoPheno >", "classlibcmaes_1_1Parameters.html", [
       [ "libcmaes::CMAParameters< TGenoPheno >", "classlibcmaes_1_1CMAParameters.html", null ]
     ] ],
     [ "libcmaes::pli", "classlibcmaes_1_1pli.html", null ],
@@ -48,12 +55,12 @@ var hierarchy =
       [ "libcmaes::ESOptimizer< TESOStrategy, TParameters, TSolutions >", "classlibcmaes_1_1ESOptimizer.html", null ]
     ] ],
     [ "TStrategy", null, [
-      [ "libcmaes::SurrogateStrategy< TStrategy, TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1SurrogateStrategy.html", null ],
-      [ "libcmaes::SurrogateStrategy< TStrategy, CovarianceUpdate, GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1SurrogateStrategy.html", [
-        [ "libcmaes::ACMSurrogateStrategy< TStrategy, CovarianceUpdate, GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1ACMSurrogateStrategy.html", [
+      [ "libcmaes::SurrogateStrategy< TStrategy, CovarianceUpdate, GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1SurrogateStrategy.html", null ],
+      [ "libcmaes::SurrogateStrategy< TStrategy, TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1SurrogateStrategy.html", [
+        [ "libcmaes::ACMSurrogateStrategy< TStrategy, CovarianceUpdate, GenoPheno< NoBoundStrategy > >", "classlibcmaes_1_1ACMSurrogateStrategy.html", null ],
+        [ "libcmaes::ACMSurrogateStrategy< TStrategy, TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1ACMSurrogateStrategy.html", [
           [ "libcmaes::RSVMSurrogateStrategy< TStrategy, TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1RSVMSurrogateStrategy.html", null ]
         ] ],
-        [ "libcmaes::ACMSurrogateStrategy< TStrategy, TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1ACMSurrogateStrategy.html", null ],
         [ "libcmaes::SimpleSurrogateStrategy< TStrategy, TCovarianceUpdate, TGenoPheno >", "classlibcmaes_1_1SimpleSurrogateStrategy.html", null ]
       ] ]
     ] ],

@@ -1,7 +1,6 @@
 var classlibcmaes_1_1SurrogateStrategy =
 [
     [ "SurrogateStrategy", "classlibcmaes_1_1SurrogateStrategy.html#ae41a007ccbeb8e7741368dc86d00461d", null ],
-    [ "~SurrogateStrategy", "classlibcmaes_1_1SurrogateStrategy.html#a34c03b43693be451985c380861e1ee88", null ],
     [ "add_to_training_set", "classlibcmaes_1_1SurrogateStrategy.html#a93118270307be7fd0a7616c2fe2b2118", null ],
     [ "compute_error", "classlibcmaes_1_1SurrogateStrategy.html#a683a8e97da66368b36e629e29cedb808", null ],
     [ "do_train", "classlibcmaes_1_1SurrogateStrategy.html#aeb094c15651bc41f814c69270f06fad7", null ],

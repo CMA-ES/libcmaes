@@ -1,7 +1,16 @@
 var searchData=
 [
-  ['take_5flinear_5fstep_351',['take_linear_step',['../classlibcmaes_1_1errstats.html#a3f50c74760cac50090346c88b565653c',1,'libcmaes::errstats']]],
-  ['tell_352',['tell',['../classlibcmaes_1_1BIPOPCMAStrategy.html#adc3f5ef544a151efeb96e4d4c83e1858',1,'libcmaes::BIPOPCMAStrategy::tell()'],['../classlibcmaes_1_1CMAStrategy.html#a03d9a4f9338ccd55141323ca309dbdfa',1,'libcmaes::CMAStrategy::tell()'],['../classlibcmaes_1_1ESOStrategy.html#ad35926877abdaed3922b316f57723612',1,'libcmaes::ESOStrategy::tell()'],['../classlibcmaes_1_1IPOPCMAStrategy.html#a9b3b59e7caf752f48b37500d84736137',1,'libcmaes::IPOPCMAStrategy::tell()'],['../classlibcmaes_1_1SimpleSurrogateStrategy.html#a4892de71ff0db4d17fbec5bb7149dbfd',1,'libcmaes::SimpleSurrogateStrategy::tell()'],['../classlibcmaes_1_1ACMSurrogateStrategy.html#a08ac31b1455972caa4eef2f5b1a85bee',1,'libcmaes::ACMSurrogateStrategy::tell()']]],
-  ['tpa_5fupdate_353',['tpa_update',['../classlibcmaes_1_1ESOStrategy.html#a68254de1be47abf4ec22e4692e5aeb32',1,'libcmaes::ESOStrategy']]],
-  ['train_354',['train',['../classRankingSVM.html#a2af14b9f22dd0cefff3fd6bc428b5d5f',1,'RankingSVM::train()'],['../classlibcmaes_1_1SurrogateStrategy.html#abf5c234a03257183d0a997fca95076b4',1,'libcmaes::SurrogateStrategy::train()']]]
+  ['rankedcandidate_0',['RankedCandidate',['../classlibcmaes_1_1RankedCandidate.html',1,'libcmaes']]],
+  ['rankingsvm_1',['RankingSVM',['../classRankingSVM.html',1,'']]],
+  ['rankingsvm_3c_20rbfkernel_20_3e_2',['RankingSVM&lt; RBFKernel &gt;',['../classRankingSVM.html',1,'']]],
+  ['rbfkernel_3',['RBFKernel',['../classRBFKernel.html',1,'']]],
+  ['references_4',['References',['../index.html#autotoc_md8',1,'']]],
+  ['reset_5',['reset',['../classlibcmaes_1_1CMASolutions.html#ab825c9198ee6f7bd9a9b244e567c8624',1,'libcmaes::CMASolutions']]],
+  ['reset_5fas_5ffixed_6',['reset_as_fixed',['../classlibcmaes_1_1CMASolutions.html#a036e5542869da8d603388543f8cc9f86',1,'libcmaes::CMASolutions']]],
+  ['reset_5fftarget_7',['reset_ftarget',['../classlibcmaes_1_1Parameters.html#aec14ab6c39a12e347080fa7e0f2e7c9f',1,'libcmaes::Parameters']]],
+  ['reset_5ftraining_5fset_8',['reset_training_set',['../classlibcmaes_1_1SurrogateStrategy.html#a1ab08946f6f34800f9d926c9d7ae82fd',1,'libcmaes::SurrogateStrategy']]],
+  ['rsvmsurrogatestrategy_9',['RSVMSurrogateStrategy',['../classlibcmaes_1_1RSVMSurrogateStrategy.html',1,'libcmaes']]],
+  ['run_20bbob_202013_20black_20box_20optimization_20benchmark_10',['Run BBOB 2013 Black-Box Optimization Benchmark',['../index.html#autotoc_md7',1,'']]],
+  ['run_20examples_11',['Run examples',['../index.html#autotoc_md3',1,'']]],
+  ['run_5fstatus_12',['run_status',['../classlibcmaes_1_1CMASolutions.html#a03e6debe358fa9bfbb1327764c9754bf',1,'libcmaes::CMASolutions']]]
 ];

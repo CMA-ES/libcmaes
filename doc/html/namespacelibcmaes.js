@@ -17,15 +17,17 @@ var namespacelibcmaes =
     [ "GenoPheno", "classlibcmaes_1_1GenoPheno.html", "classlibcmaes_1_1GenoPheno" ],
     [ "IPOPCMAStrategy", "classlibcmaes_1_1IPOPCMAStrategy.html", "classlibcmaes_1_1IPOPCMAStrategy" ],
     [ "linScalingStrategy", "classlibcmaes_1_1linScalingStrategy.html", "classlibcmaes_1_1linScalingStrategy" ],
-    [ "NoBoundStrategy", "classlibcmaes_1_1NoBoundStrategy.html", "classlibcmaes_1_1NoBoundStrategy" ],
+    [ "NoBoundStrategy", "classlibcmaes_1_1NoBoundStrategy.html", null ],
     [ "NoScalingStrategy", "classlibcmaes_1_1NoScalingStrategy.html", "classlibcmaes_1_1NoScalingStrategy" ],
     [ "Parameters", "classlibcmaes_1_1Parameters.html", "classlibcmaes_1_1Parameters" ],
     [ "pli", "classlibcmaes_1_1pli.html", "classlibcmaes_1_1pli" ],
     [ "pwqBoundStrategy", "classlibcmaes_1_1pwqBoundStrategy.html", "classlibcmaes_1_1pwqBoundStrategy" ],
-    [ "RankedCandidate", "classlibcmaes_1_1RankedCandidate.html", "classlibcmaes_1_1RankedCandidate" ],
+    [ "RankedCandidate", "classlibcmaes_1_1RankedCandidate.html", null ],
     [ "RSVMSurrogateStrategy", "classlibcmaes_1_1RSVMSurrogateStrategy.html", "classlibcmaes_1_1RSVMSurrogateStrategy" ],
     [ "SimpleSurrogateStrategy", "classlibcmaes_1_1SimpleSurrogateStrategy.html", "classlibcmaes_1_1SimpleSurrogateStrategy" ],
-    [ "StopCriteria", "classlibcmaes_1_1StopCriteria.html", "classlibcmaes_1_1StopCriteria" ],
+    [ "StopCriteria", "classlibcmaes_1_1StopCriteria.html", null ],
     [ "SurrogateStrategy", "classlibcmaes_1_1SurrogateStrategy.html", "classlibcmaes_1_1SurrogateStrategy" ],
-    [ "VDCMAUpdate", "classlibcmaes_1_1VDCMAUpdate.html", null ]
+    [ "VDCMAUpdate", "classlibcmaes_1_1VDCMAUpdate.html", null ],
+    [ "CSurrFunc", "namespacelibcmaes.html#ac7e88b4dfdaf94d6fa1e831ed5d9437e", null ],
+    [ "SurrFunc", "namespacelibcmaes.html#a7115c4ca01f7e080f5c39c076242bf00", null ]
 ];

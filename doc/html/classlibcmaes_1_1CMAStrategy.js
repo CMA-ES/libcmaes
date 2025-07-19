@@ -3,7 +3,6 @@ var classlibcmaes_1_1CMAStrategy =
     [ "CMAStrategy", "classlibcmaes_1_1CMAStrategy.html#a855fbfb7dd9745ea764648f8965d1f3e", null ],
     [ "CMAStrategy", "classlibcmaes_1_1CMAStrategy.html#a5455e7245be35c169e4144eb666f94f3", null ],
     [ "CMAStrategy", "classlibcmaes_1_1CMAStrategy.html#a30decb362a4dd4c9557f0989d618aa93", null ],
-    [ "~CMAStrategy", "classlibcmaes_1_1CMAStrategy.html#ad8c70272036d5078ca1f6ac9a99aa9c7", null ],
     [ "ask", "classlibcmaes_1_1CMAStrategy.html#ab7266bc50732458ffcab690bc26380e6", null ],
     [ "optimize", "classlibcmaes_1_1CMAStrategy.html#a68cb0023f51e2824758b1bd1c7512f39", null ],
     [ "optimize", "classlibcmaes_1_1CMAStrategy.html#a920d0459bf636132528e81736175a1d9", null ],
