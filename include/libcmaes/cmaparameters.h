@@ -126,7 +126,7 @@ namespace libcmaes
 		|| this->_algo == 8 //sepBIPOP_CMAES
 		|| this->_algo == 9 //sepaCMAES
 		|| this->_algo == 10 //sepaIPOP_CMAES
-		|| this->_algo == 11 //sepBIPOP_CMAES
+		|| this->_algo == 11 //sepaBIPOP_CMAES
 		|| this->_algo == 12 //VD_CMAES
 		|| this->_algo == 13 //VD_IPOP_CMAES
 		|| this->_algo == 14)) //VD_BIPOP_CMAES
@@ -328,7 +328,7 @@ namespace libcmaes
     };
 
   template<class TGenoPheno>
-    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepipop",10},{"sepbipop",11},{"vdcma",12},{"vdipopcma",13},{"vdbipopcma",14}};
+    std::map<std::string,int> Parameters<TGenoPheno>::_algos = {{"cmaes",0},{"ipop",1},{"bipop",2},{"acmaes",3},{"aipop",4},{"abipop",5},{"sepcmaes",6},{"sepipop",7},{"sepbipop",8},{"sepacmaes",9},{"sepaipop",10},{"sepabipop",11},{"vdcma",12},{"vdipopcma",13},{"vdbipopcma",14}};
 }
 
 #endif
