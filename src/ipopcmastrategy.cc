@@ -58,25 +58,34 @@ namespace libcmaes
 							      const TellFunc &tellf)
   {
     CMASolutions best_run;
+    bool has_max_fevals = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals > 0;
+    int fevals_max = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals;
     for (int r=0;r<CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._nrestarts;r++)
       {
+
 	LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "r: " << r << " / lambda=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda << std::endl;
 	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
-		
+
 	// capture best solution.
 	capture_best_solution(best_run);
-	
+
 	// reset parameters and solutions.
 	lambda_inc();
 	reset_search_state();
-	
+
+	// Update remaining budget
+  int fevals_global = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals;
+  int fevals_remaining = fevals_max - fevals_global;
+
 	// do not restart if max budget function calls is reached.
-	if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals > 0
-	    && CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals >= CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals)
+	if (has_max_fevals && fevals_remaining <= 0)
 	  {
-	    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "IPOP restarts ended on max fevals=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals << ">=" << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals << std::endl;
+	    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "IPOP restarts ended on max fevals=" << fevals_global << ">=" << fevals_max << std::endl;
 	    break;
 	  }
+    LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "IPOP per-run budget set to remaining=" << fevals_remaining << std::endl;
+    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(fevals_remaining);
+
       }
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = best_run;
     if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._run_status >= 0)

@@ -77,12 +77,23 @@ namespace libcmaes
   {
     std::array<int,2> budgets = {{0,0}}; // 0: r1, 1: r2
     CMASolutions best_run;
+    const bool has_max_fevals = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals > 0;
+    const int fevals_max = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._max_fevals;
     for (int r=0;r<CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._nrestarts;r++)
       {
 	while(budgets[0]>budgets[1])
 	  {
 	    r2();
-	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(0.5*budgets[0]);
+	    // cap r2 run by remaining global budget
+	    int fevals_remaining = fevals_max - CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals;
+	    if (has_max_fevals && fevals_remaining <= 0)
+	      break;
+      int half_0 = budgets[0]/2;
+	    int fevals_r2 = has_max_fevals ? std::min(fevals_remaining, half_0) : half_0;
+      LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Running BIPOP R2 phase => r2_max_fevals=" << fevals_r2 <<
+        " budgets[0]=" << budgets[0] << " budgets[1]=" << budgets[1] <<
+        " fevals_remaining=" << fevals_remaining << " / " << fevals_max << std::endl;
+	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(fevals_r2);
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	    CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
 	    budgets[1] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
@@ -93,11 +104,21 @@ namespace libcmaes
 	    r1();
 	    IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::reset_search_state();
 	  }
-	CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(_max_fevals); // resets the budget
+	// cap r1 run by remaining global budget
+	int fevals_remaining = fevals_max - CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals;
+	if (has_max_fevals && fevals_remaining <= 0)
+	  break;
+  int fevals_r1 = has_max_fevals ? fevals_remaining : _max_fevals;
+  LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "Running BIPOP R1 phase => r1_max_fevals=" << fevals_r1 <<
+  " budgets[0]=" << budgets[0] << " budgets[1]=" << budgets[1] <<
+  " fevals_remaining=" << fevals_remaining << " / " << fevals_max << std::endl;
+CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters.set_max_fevals(fevals_r1);
 	CMAStrategy<TCovarianceUpdate,TGenoPheno>::optimize(evalf,askf,tellf);
 	budgets[0] += CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._niter * CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._lambda;
 	IPOPCMAStrategy<TCovarianceUpdate,TGenoPheno>::capture_best_solution(best_run);
       }
+  LOG_IF(INFO,!(CMAStrategy<TCovarianceUpdate,TGenoPheno>::_parameters._quiet)) << "BIPOP restarts ended on max fevals="
+    << CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals << ">=" << fevals_max << std::endl;
     CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions = best_run;
     if (CMAStrategy<TCovarianceUpdate,TGenoPheno>::_solutions._run_status >= 0)
       return OPTI_SUCCESS;
