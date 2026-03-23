@@ -57,7 +57,6 @@ target_include_directories (
                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   )
 
-
 if (LIBCMAES_EIGEN_5)
   include (${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup(TARGETS)
