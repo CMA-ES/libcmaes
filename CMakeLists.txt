@@ -30,7 +30,6 @@ option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
 option (LIBCMAES_EIGEN_5 "Use Eigen v5" OFF)
 
-
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR lib${LIB_SUFFIX}
      CACHE PATH "Installation directory for libraries")
