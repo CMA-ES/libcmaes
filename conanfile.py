@@ -23,13 +23,14 @@ class CmaesConan(ConanFile):
 
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-    
+
     generators = "cmake"
     options = {
         "shared": [True, False],
         "openmp": [True, False],
         "surrog": [True, False],
         "enable_tests": [True, False],
+        "eigen_5": [True, False],
     }
     default_options = {
         "shared": True,
@@ -37,6 +38,7 @@ class CmaesConan(ConanFile):
         "surrog": True,
         "enable_tests": False,
         "boost/*:without_python": False,
+        "eigen_5": False,
     }
 
     # Sources are located in the same place as this recipe, copy them to the recipe
@@ -57,7 +59,10 @@ class CmaesConan(ConanFile):
             self.test_requires("boost/1.85.0")
 
     def requirements(self):
-        self.requires("eigen/5.0.0")
+        if self.options.eigen_5:
+            self.requires("eigen/5.0.0")
+        else:
+            self.requires("eigen/3.4.0", transitive_headers=True)
         if self.options.openmp and self.settings.os != "Windows":
             self.requires("llvm-openmp/17.0.6", transitive_headers=True)
 
@@ -95,6 +100,7 @@ class CmaesConan(ConanFile):
         tc.variables["LIBCMAES_ENABLE_SURROG"] = self.options.surrog
         tc.variables["LIBCMAES_BUILD_PYTHON"] = self.options.enable_tests
         tc.variables["LIBCMAES_BUILD_TESTS"] = self.options.enable_tests
+        tc.variables["LIBCMAES_EIGEN_5"] = self.options.eigen_5
         tc.generate()
 
     def build(self):

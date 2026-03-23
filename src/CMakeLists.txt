@@ -57,10 +57,15 @@ target_include_directories (
                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   )
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup(TARGETS)
 
-target_link_libraries(cmaes PUBLIC CONAN_PKG::eigen)
+if (LIBCMAES_EIGEN_5)
+  include (${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+  conan_basic_setup(TARGETS)
+
+  target_link_libraries (cmaes PUBLIC CONAN_PKG::eigen)
+else ()
+  target_link_libraries (cmaes PUBLIC Eigen3::Eigen)
+endif ()
 
 if (LIBCMAES_USE_OPENMP)
   target_link_libraries (cmaes PUBLIC OpenMP::OpenMP_CXX)

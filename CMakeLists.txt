@@ -28,6 +28,8 @@ option (LIBCMAES_BUILD_TESTS "build tests" OFF)
 option (LIBCMAES_BUILD_EXAMPLES "build examples" ${LIBCMAES_TOP_LEVEL})
 option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
+option (LIBCMAES_EIGEN_5 "Use Eigen v5" OFF)
+
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR lib${LIB_SUFFIX}
@@ -76,6 +78,10 @@ if(LIBCMAES_BUILD_PYTHON)
       PROPERTIES IMPORTED_LOCATION ${Python3_LIBRARIES}
                   INTERFACE_INCLUDE_DIRECTORIES ${Python3_INCLUDE_DIRS})
   endif ()
+endif()
+
+if (NOT LIBCMAES_EIGEN_5)
+  find_package (Eigen3 3.4.0 REQUIRED)
 endif()
 
 if (LIBCMAES_USE_OPENMP)
