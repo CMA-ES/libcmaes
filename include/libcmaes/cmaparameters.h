@@ -57,7 +57,6 @@ namespace libcmaes
        * @param lambda number of offsprings sampled at each step
        * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
        * @param gp genotype / phenotype object
-       * @param sep whether to use sep-CMA-ES, using diagonal covariance matrix (modifies covariance default learning rate)
        */
       CMAParameters(const int &dim,
 		    const double *x0,
@@ -73,7 +72,6 @@ namespace libcmaes
        * @param lambda number of offsprings sampled at each step
        * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
        * @param gp genotype / phenotype object
-       * @param sep whether to use sep-CMA-ES, using diagonal covariance matrix (modifies covariance default learning rate)
        */
       CMAParameters(const std::vector<double> &x0,
 		    const double &sigma,
@@ -86,9 +84,9 @@ namespace libcmaes
        * @param x0 initial search point as vector of problem dimension
        * @param sigma vector of initial distribution step sizes (positive, otherwise automatically set)
        * @param lambda number of offsprings sampled at each step
+       * @param lbounds lower bounds (optional)
+       * @param ubounds upper bounds (optional)
        * @param seed initial random seed, useful for reproducing results (if unspecified, automatically generated from current time)
-       * @param gp genotype / phenotype object
-       * @param sep whether to use sep-CMA-ES, using diagonal covariance matrix (modifies covariance default learning rate)
        */
       CMAParameters(const std::vector<double> &x0,
 		    const std::vector<double> &sigma,
