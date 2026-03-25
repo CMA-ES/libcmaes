@@ -2,14 +2,34 @@ clone_folder: C:\projects\libcmaes
 environment:
   matrix:
     - CMAKE_PLATFORM: "Visual Studio 14 2015"
+      EIGEN_VERSION: "3.3.4"
+      EIGEN_URL: "https://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz"
+      EIGEN_ZIP: "3.3.4.tar.gz"
+      LIBCMAES_EIGEN_5: OFF
+    - CMAKE_PLATFORM: "Visual Studio 14 2015"
+      EIGEN_VERSION: "5.0.0"
+      EIGEN_URL: "https://gitlab.com/libeigen/eigen/-/archive/5.0.0/eigen-5.0.0.tar.gz"
+      EIGEN_ZIP: "eigen-5.0.0.tar.gz"
+      LIBCMAES_EIGEN_5: ON
     - CMAKE_PLATFORM: "Visual Studio 14 2015 Win64"
+      EIGEN_VERSION: "3.3.4"
+      EIGEN_URL: "https://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz"
+      EIGEN_ZIP: "3.3.4.tar.gz"
+      LIBCMAES_EIGEN_5: OFF
+    - CMAKE_PLATFORM: "Visual Studio 14 2015 Win64"
+      EIGEN_VERSION: "5.0.0"
+      EIGEN_URL: "https://gitlab.com/libeigen/eigen/-/archive/5.0.0/eigen-5.0.0.tar.gz"
+      EIGEN_ZIP: "eigen-5.0.0.tar.gz"
+      LIBCMAES_EIGEN_5: ON
 
 install:
   - cinstall: python
-  - appveyor-retry appveyor DownloadFile https://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz
-  - 7z x 3.3.4.tar.gz -oc:\projects > nul
-  - 7z x c:\projects\3.3.4.tar -oc:\projects > nul
-  - cd c:\projects\eigen-eigen-5a0156e40feb
+  - appveyor-retry appveyor DownloadFile "%EIGEN_URL%" -FileName eigen.tar.gz
+  - 7z x eigen.tar.gz -oc:\projects > nul
+  - 7z x c:\projects\eigen.tar -oc:\projects > nul
+  - cd c:\projects
+  - for /d %%i in (eigen-*) do set EIGEN_DIR=%%i
+  - cd %EIGEN_DIR%
   - mkdir build && cd build
   - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\eigen -DCMAKE_BUILD_TYPE=Release ..
   - cmake --build . --config Release --target install
@@ -17,6 +37,6 @@ install:
 build_script:
   - cd c:\projects\libcmaes
   - mkdir build && cd build
-  - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\libcmaes -DEigen3_DIR=c:\Libraries\eigen\share\eigen3\cmake -DBOOST_ROOT="C:/Libraries/boost_1_63_0" ..
+  - cmake -G "%CMAKE_PLATFORM%" -DCMAKE_INSTALL_PREFIX=c:\Libraries\libcmaes -DLIBCMAES_EIGEN_5=%LIBCMAES_EIGEN_5% -DEigen3_DIR=c:\Libraries\eigen\share\eigen3\cmake -DBOOST_ROOT="C:/Libraries/boost_1_63_0" ..
   - cmake --build . --config Release --target install
   - ctest -C Release
