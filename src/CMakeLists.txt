@@ -56,7 +56,9 @@ target_include_directories (
   cmaes PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   )
+
 target_link_libraries (cmaes PUBLIC Eigen3::Eigen)
+
 if (LIBCMAES_USE_OPENMP)
   target_link_libraries (cmaes PUBLIC OpenMP::OpenMP_CXX)
 endif ()

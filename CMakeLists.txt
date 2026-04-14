@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.15)
 
-set(libcmaes_VERSION 0.10.2)
+set(libcmaes_VERSION 0.10.3)
 
 project (libcmaes
   VERSION ${libcmaes_VERSION}
@@ -28,6 +28,7 @@ option (LIBCMAES_BUILD_TESTS "build tests" OFF)
 option (LIBCMAES_BUILD_EXAMPLES "build examples" ${LIBCMAES_TOP_LEVEL})
 option (LIBCMAES_USE_OPENMP "Use OpenMP for multithreading" ON)
 option (LIBCMAES_ENABLE_SURROG "support for surrogates" ON)
+option (LIBCMAES_EIGEN_5 "Use Eigen v5" OFF)
 
 # Offer the user the choice of overriding the installation directories
 set (INSTALL_LIB_DIR lib${LIB_SUFFIX}
@@ -78,8 +79,44 @@ if(LIBCMAES_BUILD_PYTHON)
   endif ()
 endif()
 
+if (LIBCMAES_EIGEN_5)
+  set (LIBCMAES_EIGEN_MIN_VERSION 5.0.0)
+else ()
+  set (LIBCMAES_EIGEN_MIN_VERSION 3.4.0)
+endif ()
 
-find_package (Eigen3 3.4.0 REQUIRED)
+find_package (Eigen3 REQUIRED)
+
+set (LIBCMAES_EIGEN_FOUND_VERSION ${Eigen3_VERSION})
+if (NOT LIBCMAES_EIGEN_FOUND_VERSION AND DEFINED EIGEN3_VERSION_STRING)
+  set (LIBCMAES_EIGEN_FOUND_VERSION ${EIGEN3_VERSION_STRING})
+endif ()
+
+if (NOT LIBCMAES_EIGEN_FOUND_VERSION)
+  message (FATAL_ERROR "Could not determine the Eigen version exposed by package Eigen3.")
+endif ()
+
+set (LIBCMAES_EIGEN_LOCATION "")
+if (DEFINED Eigen3_DIR AND NOT "${Eigen3_DIR}" STREQUAL "")
+  set (LIBCMAES_EIGEN_LOCATION "package dir: ${Eigen3_DIR}")
+elseif (DEFINED EIGEN3_ROOT_DIR AND NOT "${EIGEN3_ROOT_DIR}" STREQUAL "")
+  set (LIBCMAES_EIGEN_LOCATION "root: ${EIGEN3_ROOT_DIR}")
+elseif (DEFINED EIGEN3_INCLUDE_DIRS AND NOT "${EIGEN3_INCLUDE_DIRS}" STREQUAL "")
+  set (LIBCMAES_EIGEN_LOCATION "includes: ${EIGEN3_INCLUDE_DIRS}")
+endif ()
+
+if (LIBCMAES_EIGEN_LOCATION)
+  message (STATUS "Using Eigen ${LIBCMAES_EIGEN_FOUND_VERSION} (${LIBCMAES_EIGEN_LOCATION})")
+else ()
+  message (STATUS "Using Eigen ${LIBCMAES_EIGEN_FOUND_VERSION}")
+endif ()
+
+if (LIBCMAES_EIGEN_FOUND_VERSION VERSION_LESS LIBCMAES_EIGEN_MIN_VERSION)
+  message (
+    FATAL_ERROR
+      "LIBCMAES_EIGEN_5=${LIBCMAES_EIGEN_5} requires Eigen >= ${LIBCMAES_EIGEN_MIN_VERSION}, "
+      "but found ${LIBCMAES_EIGEN_FOUND_VERSION}. Set Eigen3_DIR or CMAKE_PREFIX_PATH to an appropriate Eigen installation.")
+endif ()
 
 if (LIBCMAES_USE_OPENMP)
   find_package (OpenMP QUIET)

@@ -3,7 +3,22 @@
 include(CMakeFindDependencyMacro)
 list (APPEND CMAKE_MODULE_PATH @CMAKE_CURRENT_SOURCE_DIR@/lib/cmake/libcmaes ${CMAKE_CURRENT_LIST_DIR})
 
-find_dependency(Eigen3 @EIGEN3_VERSION@ REQUIRED)
+find_dependency(Eigen3 REQUIRED)
+
+set (_libcmaes_eigen_version "${Eigen3_VERSION}")
+if (NOT _libcmaes_eigen_version AND DEFINED EIGEN3_VERSION_STRING)
+  set (_libcmaes_eigen_version "${EIGEN3_VERSION_STRING}")
+endif ()
+
+if (NOT _libcmaes_eigen_version)
+  message (FATAL_ERROR "Could not determine the Eigen version exposed by package Eigen3.")
+endif ()
+
+if (_libcmaes_eigen_version VERSION_LESS "@LIBCMAES_EIGEN_MIN_VERSION@")
+  message (
+    FATAL_ERROR
+      "libcmaes requires Eigen >= @LIBCMAES_EIGEN_MIN_VERSION@, but found ${_libcmaes_eigen_version}.")
+endif ()
 
 
 if(@LIBCMAES_USE_OPENMP@)

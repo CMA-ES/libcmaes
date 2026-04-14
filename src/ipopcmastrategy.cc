@@ -74,8 +74,8 @@ namespace libcmaes
 	reset_search_state();
 
 	// Update remaining budget
-  int fevals_global = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals;
-  int fevals_remaining = fevals_max - fevals_global;
+	int fevals_global = CMAStrategy<TCovarianceUpdate,TGenoPheno>::_nevals;
+	int fevals_remaining = fevals_max - fevals_global;
 
 	// do not restart if max budget function calls is reached.
 	if (has_max_fevals && fevals_remaining <= 0)
