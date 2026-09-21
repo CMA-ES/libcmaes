@@ -38,4 +38,6 @@ jobs:
           - run: conan create . --build=missing --options shared=True
             name: Build shared
           - run: conan create . --build=missing --options shared=False
-            name: Build static
+            name: Build static with eigen 3
+          - run: conan create . --build=missing --options shared=False --options eigen_5=True
+            name: Build static with eigen 5
